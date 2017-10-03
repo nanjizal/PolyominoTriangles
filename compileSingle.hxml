@@ -1,0 +1,4 @@
+# copy from 
+# canvas
+-cmd cd compile
+-cmd haxe tetrisTrianglesLuxeWeb.hxml

@@ -1,0 +1,4 @@
+#jsprime
+ -cmd haxelib run nme test application.xml jsprime
+#neko
+# -cmd haxelib run nme application.xml neko

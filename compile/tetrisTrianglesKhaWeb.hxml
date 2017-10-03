@@ -1,0 +1,2 @@
+-cmd node Kha/make -t html5
+-cmd node Kha/make --server

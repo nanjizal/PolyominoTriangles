@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<meta title="Tetris Triangles" package="net.nanjizal.tetrisTriangles" version="1.0.0" company="Nanjizal" />
+	<app main="tetrisTriangles.TetrisTrianglesFlash" path="../binOpenFL/Exports" file="TetrisTrianglesFlash" />
+	<source path="../src/" />
+	<haxelib name="openfl" />
+    <haxelib name="justTriangles" />
+    <window width="1024" height="768" unless="mobile" />
+	<!--assets path="../binOpenFL/Assets" rename="assets" exclude="openfl.svg" /-->
+	<!--<icon path="../binLuxe/Assets/openfl.svg" /-->
+</project>
