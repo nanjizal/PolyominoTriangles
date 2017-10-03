@@ -8,7 +8,7 @@ Current code in incomplete, but the bin folders contain html javascript solution
 - [Luxe ->](https://rawgit.com/nanjizal/simpleTetris/master/binLuxe/web/index.html)
 - [Canvas ->](https://rawgit.com/nanjizal/simpleTetris/master/binCanvas/index.html)
 - [SVG ->](https://rawgit.com/nanjizal/simpleTetris/master/binSVG/index.html)                ( bit slow uses 'justDrawing' abstraction, could be improved need work )
-- [NME - jsprime ->](https://rawgit.com/nanjizal/simpleTetris/master/binNME/jsprime/TetrisTrianglesFlash/index.html)
+- [NME - jsprime ->](https://rawgit.com/nanjizal/simpleTetris/master/binNme/jsprime/TetrisTrianglesFlash/index.html)
 - [OpenFL ->](https://rawgit.com/nanjizal/simpleTetris/master/binOpenFL/index.html)
 - [Heaps ->](https://rawgit.com/nanjizal/simpleTetris/master/binHeaps/index.html)
 
