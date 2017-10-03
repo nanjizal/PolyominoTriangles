@@ -7,7 +7,7 @@ Current code in incomplete, but the bin folders contain html javascript solution
 - [Kha ->](https://rawgit.com/nanjizal/simpleTetris/master/binKha2/html5/index.html)        ( Graphics2, Graphics4 version not working well needs tidy )
 - [Luxe ->](https://rawgit.com/nanjizal/simpleTetris/master/binLuxe/web/index.html)
 - [Canvas ->](https://rawgit.com/nanjizal/simpleTetris/master/binCanvas/index.html)
-- [SVG ->](https://rawgit.com/nanjizal/simpleTetris/master/binSvg/index.html)                ( bit slow uses 'justDrawing' abstraction, could be improved need work )
+- [SVG ->](https://rawgit.com/nanjizal/simpleTetris/master/binSVG/index.html)                ( bit slow uses 'justDrawing' abstraction, could be improved need work )
 - [NME - jsprime ->](https://rawgit.com/nanjizal/simpleTetris/master/binNME/jsprime/TetrisTrianglesFlash/index.html)
 - [OpenFL ->](https://rawgit.com/nanjizal/simpleTetris/master/binOpenFL/index.html)
 - [Heaps ->](https://rawgit.com/nanjizal/simpleTetris/master/binHeaps/index.html)
