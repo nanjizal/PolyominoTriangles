@@ -2,15 +2,15 @@
 
 Simple experimental Haxe tetris, WIP
 
-Current code in incomplete, but the bin folders contain html javascript solutions using a range of Haxe toolkits:
+Current code in incomplete, but the bin folders contain html javascript solutions using a range of Haxe toolkits, click on the kit to view the experiment:
 
-- Kha                 ( Graphics2, Graphics4 version not working well needs tidy )
-- Luxe
-- Canvas
-- SVG                 ( bit slow uses 'justDrawing' abstraction, could be improved need work )
-- NME - jsprime
-- OpenFL
-- Heaps
+- ![Kha ->](https://rawgit.com/nanjizal/simpleTetris/master/binKha2/html5/index.html)        ( Graphics2, Graphics4 version not working well needs tidy )
+- ![Luxe ->](https://rawgit.com/nanjizal/simpleTetris/master/binLuxe/web/index.html)
+- ![Canvas ->](https://rawgit.com/nanjizal/simpleTetris/master/binCanvas/index.html)
+- ![SVG ->](https://rawgit.com/nanjizal/simpleTetris/master/binSvg/index.html)                ( bit slow uses 'justDrawing' abstraction, could be improved need work )
+- ![NME - jsprime ->](https://rawgit.com/nanjizal/simpleTetris/master/binNME/jsprime/TetrisTrianglesFlash/index.html)
+- ![OpenFL ->](https://rawgit.com/nanjizal/simpleTetris/master/binOpenFL/index.html)
+- ![Heaps ->](https://rawgit.com/nanjizal/simpleTetris/master/binHeaps/index.html)
 
 Blocks are animated as triangles that are drawn to screen every frame, hitTest is done against the corners of all the bottom block triangles against all triangles of the other blocks, but a different hitTest solution is required.
 
