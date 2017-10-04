@@ -4,7 +4,7 @@ Simple experimental Haxe tetris, WIP
 
 Current code in incomplete, but the bin folders contain html javascript solutions using a range of Haxe toolkits, click on the kit to view the experiment:
 
-- [Kha ->](https://rawgit.com/nanjizal/simpleTetris/master/binKha2/html5/index.html)        ( Graphics2, Graphics4 version not working well needs tidy )
+- [Kha ->](https://rawgit.com/nanjizal/tetrisTriangles/master/binKha2/html5/index.html)        ( Graphics2, Graphics4 version not working well needs tidy )
 - [Luxe ->](https://rawgit.com/nanjizal/simpleTetris/master/binLuxe/web/index.html)
 - [Canvas ->](https://rawgit.com/nanjizal/simpleTetris/master/binCanvas/index.html)
 - [SVG ->](https://rawgit.com/nanjizal/simpleTetris/master/binSVG/index.html)                ( bit slow uses 'justDrawing' abstraction, could be improved need work )
