@@ -12,9 +12,9 @@ Current code in incomplete, but the bin folders contain html javascript solution
 - [OpenFL ->](https://rawgit.com/nanjizal/simpleTetris/master/binOpenFL/index.html)
 - [Heaps ->](https://rawgit.com/nanjizal/simpleTetris/master/binHeaps/index.html)
 
-Blocks are animated as triangles that are drawn to screen every frame, hitTest is done against the corners of all the bottom block triangles against all triangles of the other blocks, but a different hitTest solution is required.
+Blocks are animated by drawing triangles to screen every frame. HitTest is done using point in Triangle algorithm, so checking the corners of all the bottom block ( triangles ) against all triangles of the animating blocks. A different hitTest solution is required for Tetris functionality, but current could be improved perhaps by restoring block to last non hitTest position, perhaps add History for future alternate use.
 
-When shapes hit static blocks such as the bottom thier squares are transfered to the bottom block.
+When block shapes hit the static bottom ( blocks ) thier internal squares are transfered to the bottom block.
 
 At moment just renders tetris blocks rotating and falling with no keyboard control.
 
@@ -23,16 +23,16 @@ Have to improve rotation so that the blocks stay on grid by adjusting position b
 Blocks are hardcode based on offset from centre, so the 'L' shape block is defined
 
 ``` haxe
-    var ts = createTetris( p );
-    ts.addBlock( -1, -1.5 );
+    var ts = createTetris( centrePoint );
+    ts.addBlock( -1, -1.5 ); // based on the current diameter setting 'dia'
     ts.addBlock( -1, -0.5 );
     ts.addBlock( -1, 0.5 );
     ts.addBlock( 0, 0.5 );
 ```
 
-Rotation are calculated on the points of the 'Triangle' class in my 'justTriangles' library, using translations trig and translations back so that rotations are around a blocks centre, it seems fast enough but perhaps could be simpler.
+Rotation are calculated on the points of the 'justTriangle.Triangle' class, by using translations -> trig -> translations similar to matrix calculations but lower overhead, this is so that rotations are around a blocks centre, it seems fast enough but perhaps could be simpler.
 
 Need to add functionality to make blocks snap to grid on hitting bottom, perhaps matrix implementation for squares is needed so that they can be properly be snapped and hitTested more simply and never take another blocks position. 
 
-No pooling is really implemented yet.
+No pooling is really implemented yet but probably needed for the blocks, must add a 'noSquares' parameter or similar.
 
