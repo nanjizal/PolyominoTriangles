@@ -16,8 +16,7 @@ var EReg = function(r,opt) {
 $hxClasses["EReg"] = EReg;
 EReg.__name__ = true;
 EReg.prototype = {
-	r: null
-	,match: function(s) {
+	match: function(s) {
 		if(this.r.global) {
 			this.r.lastIndex = 0;
 		}
@@ -112,10 +111,7 @@ var List = function() {
 $hxClasses["List"] = List;
 List.__name__ = true;
 List.prototype = {
-	h: null
-	,q: null
-	,length: null
-	,add: function(item) {
+	add: function(item) {
 		var x = new _$List_ListNode(item,null);
 		if(this.h == null) {
 			this.h = x;
@@ -137,9 +133,7 @@ var _$List_ListNode = function(item,next) {
 $hxClasses["_List.ListNode"] = _$List_ListNode;
 _$List_ListNode.__name__ = true;
 _$List_ListNode.prototype = {
-	item: null
-	,next: null
-	,__class__: _$List_ListNode
+	__class__: _$List_ListNode
 };
 var _$List_ListIterator = function(head) {
 	this.head = head;
@@ -147,8 +141,7 @@ var _$List_ListIterator = function(head) {
 $hxClasses["_List.ListIterator"] = _$List_ListIterator;
 _$List_ListIterator.__name__ = true;
 _$List_ListIterator.prototype = {
-	head: null
-	,hasNext: function() {
+	hasNext: function() {
 		return this.head != null;
 	}
 	,next: function() {
@@ -168,7 +161,6 @@ Main.initGraphics2 = function() {
 	new tetrisTriangles_TetrisTrianglesKha2();
 };
 Main.initGraphics4 = function() {
-	new tetrisTriangles_TetrisTrianglesKha4();
 };
 Math.__name__ = true;
 var Reflect = function() { };
@@ -253,13 +245,6 @@ Type.createEnum = function(e,constr,params) {
 	}
 	return f;
 };
-Type.getInstanceFields = function(c) {
-	var a = [];
-	for(var i in c.prototype) a.push(i);
-	HxOverrides.remove(a,"__class__");
-	HxOverrides.remove(a,"__properties__");
-	return a;
-};
 var _$UInt_UInt_$Impl_$ = {};
 $hxClasses["_UInt.UInt_Impl_"] = _$UInt_UInt_$Impl_$;
 _$UInt_UInt_$Impl_$.__name__ = true;
@@ -293,8 +278,7 @@ var haxe_IMap = function() { };
 $hxClasses["haxe.IMap"] = haxe_IMap;
 haxe_IMap.__name__ = true;
 haxe_IMap.prototype = {
-	iterator: null
-	,__class__: haxe_IMap
+	__class__: haxe_IMap
 };
 var haxe__$Int64__$_$_$Int64 = function(high,low) {
 	this.high = high;
@@ -303,9 +287,7 @@ var haxe__$Int64__$_$_$Int64 = function(high,low) {
 $hxClasses["haxe._Int64.___Int64"] = haxe__$Int64__$_$_$Int64;
 haxe__$Int64__$_$_$Int64.__name__ = true;
 haxe__$Int64__$_$_$Int64.prototype = {
-	high: null
-	,low: null
-	,__class__: haxe__$Int64__$_$_$Int64
+	__class__: haxe__$Int64__$_$_$Int64
 };
 var haxe_Log = function() { };
 $hxClasses["haxe.Log"] = haxe_Log;
@@ -355,13 +337,7 @@ haxe_Unserializer.run = function(v) {
 	return new haxe_Unserializer(v).unserialize();
 };
 haxe_Unserializer.prototype = {
-	buf: null
-	,pos: null
-	,length: null
-	,cache: null
-	,scache: null
-	,resolver: null
-	,readDigits: function() {
+	readDigits: function() {
 		var k = 0;
 		var s = false;
 		var fpos = this.pos;
@@ -710,10 +686,7 @@ haxe_io_Bytes.ofData = function(b) {
 	return new haxe_io_Bytes(b);
 };
 haxe_io_Bytes.prototype = {
-	length: null
-	,b: null
-	,data: null
-	,blit: function(pos,src,srcpos,len) {
+	blit: function(pos,src,srcpos,len) {
 		if(pos < 0 || srcpos < 0 || len < 0 || pos + len > this.length || srcpos + len > src.length) {
 			throw new js__$Boot_HaxeError(haxe_io_Error.OutsideBounds);
 		}
@@ -842,9 +815,7 @@ var haxe_crypto_BaseCode = function(base) {
 $hxClasses["haxe.crypto.BaseCode"] = haxe_crypto_BaseCode;
 haxe_crypto_BaseCode.__name__ = true;
 haxe_crypto_BaseCode.prototype = {
-	base: null
-	,nbits: null
-	,encodeBytes: function(b) {
+	encodeBytes: function(b) {
 		var nbits = this.nbits;
 		var base = this.base;
 		var size = b.length * 8 / nbits | 0;
@@ -877,8 +848,7 @@ $hxClasses["haxe.ds.IntMap"] = haxe_ds_IntMap;
 haxe_ds_IntMap.__name__ = true;
 haxe_ds_IntMap.__interfaces__ = [haxe_IMap];
 haxe_ds_IntMap.prototype = {
-	h: null
-	,keys: function() {
+	keys: function() {
 		var a = [];
 		for( var key in this.h ) if(this.h.hasOwnProperty(key)) {
 			a.push(key | 0);
@@ -902,8 +872,7 @@ $hxClasses["haxe.ds.ObjectMap"] = haxe_ds_ObjectMap;
 haxe_ds_ObjectMap.__name__ = true;
 haxe_ds_ObjectMap.__interfaces__ = [haxe_IMap];
 haxe_ds_ObjectMap.prototype = {
-	h: null
-	,set: function(key,value) {
+	set: function(key,value) {
 		var id = key.__id__ || (key.__id__ = ++haxe_ds_ObjectMap.count);
 		this.h[id] = value;
 		this.h.__keys__[id] = key;
@@ -936,11 +905,7 @@ var haxe_ds__$StringMap_StringMapIterator = function(map,keys) {
 $hxClasses["haxe.ds._StringMap.StringMapIterator"] = haxe_ds__$StringMap_StringMapIterator;
 haxe_ds__$StringMap_StringMapIterator.__name__ = true;
 haxe_ds__$StringMap_StringMapIterator.prototype = {
-	map: null
-	,keys: null
-	,index: null
-	,count: null
-	,hasNext: function() {
+	hasNext: function() {
 		return this.index < this.count;
 	}
 	,next: function() {
@@ -961,9 +926,7 @@ $hxClasses["haxe.ds.StringMap"] = haxe_ds_StringMap;
 haxe_ds_StringMap.__name__ = true;
 haxe_ds_StringMap.__interfaces__ = [haxe_IMap];
 haxe_ds_StringMap.prototype = {
-	h: null
-	,rh: null
-	,setReserved: function(key,value) {
+	setReserved: function(key,value) {
 		if(this.rh == null) {
 			this.rh = { };
 		}
@@ -1009,8 +972,7 @@ var haxe_io_BytesBuffer = function() {
 $hxClasses["haxe.io.BytesBuffer"] = haxe_io_BytesBuffer;
 haxe_io_BytesBuffer.__name__ = true;
 haxe_io_BytesBuffer.prototype = {
-	b: null
-	,getBytes: function() {
+	getBytes: function() {
 		var bytes = new haxe_io_Bytes(new Uint8Array(this.b).buffer);
 		this.b = null;
 		return bytes;
@@ -1021,8 +983,7 @@ var haxe_io_Input = function() { };
 $hxClasses["haxe.io.Input"] = haxe_io_Input;
 haxe_io_Input.__name__ = true;
 haxe_io_Input.prototype = {
-	bigEndian: null
-	,readByte: function() {
+	readByte: function() {
 		throw new js__$Boot_HaxeError("Not implemented");
 	}
 	,readBytes: function(s,pos,len) {
@@ -1104,11 +1065,7 @@ $hxClasses["haxe.io.BytesInput"] = haxe_io_BytesInput;
 haxe_io_BytesInput.__name__ = true;
 haxe_io_BytesInput.__super__ = haxe_io_Input;
 haxe_io_BytesInput.prototype = $extend(haxe_io_Input.prototype,{
-	b: null
-	,pos: null
-	,len: null
-	,totlen: null
-	,set_position: function(p) {
+	set_position: function(p) {
 		if(p < 0) {
 			p = 0;
 		} else if(p > this.totlen) {
@@ -1152,8 +1109,7 @@ var haxe_io_Output = function() { };
 $hxClasses["haxe.io.Output"] = haxe_io_Output;
 haxe_io_Output.__name__ = true;
 haxe_io_Output.prototype = {
-	bigEndian: null
-	,writeByte: function(c) {
+	writeByte: function(c) {
 		throw new js__$Boot_HaxeError("Not implemented");
 	}
 	,writeBytes: function(s,pos,len) {
@@ -1206,8 +1162,7 @@ $hxClasses["haxe.io.BytesOutput"] = haxe_io_BytesOutput;
 haxe_io_BytesOutput.__name__ = true;
 haxe_io_BytesOutput.__super__ = haxe_io_Output;
 haxe_io_BytesOutput.prototype = $extend(haxe_io_Output.prototype,{
-	b: null
-	,writeByte: function(c) {
+	writeByte: function(c) {
 		this.b.b.push(c);
 	}
 	,writeBytes: function(buf,pos,len) {
@@ -1314,18 +1269,6 @@ haxe_io_FPHelper.doubleToI64 = function(v) {
 	}
 	return i64;
 };
-var haxe_io__$UInt8Array_UInt8Array_$Impl_$ = {};
-$hxClasses["haxe.io._UInt8Array.UInt8Array_Impl_"] = haxe_io__$UInt8Array_UInt8Array_$Impl_$;
-haxe_io__$UInt8Array_UInt8Array_$Impl_$.__name__ = true;
-haxe_io__$UInt8Array_UInt8Array_$Impl_$.fromBytes = function(bytes,bytePos,length) {
-	if(bytePos == null) {
-		bytePos = 0;
-	}
-	if(length == null) {
-		length = bytes.length - bytePos;
-	}
-	return new Uint8Array(bytes.b.bufferValue,bytePos,length);
-};
 var js__$Boot_HaxeError = function(val) {
 	Error.call(this);
 	this.val = val;
@@ -1345,8 +1288,7 @@ js__$Boot_HaxeError.wrap = function(val) {
 };
 js__$Boot_HaxeError.__super__ = Error;
 js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
-	val: null
-	,__class__: js__$Boot_HaxeError
+	__class__: js__$Boot_HaxeError
 });
 var js_Boot = function() { };
 $hxClasses["js.Boot"] = js_Boot;
@@ -1599,9 +1541,7 @@ js_html_compat_ArrayBuffer.sliceImpl = function(begin,end) {
 	return result;
 };
 js_html_compat_ArrayBuffer.prototype = {
-	byteLength: null
-	,a: null
-	,slice: function(begin,end) {
+	slice: function(begin,end) {
 		return new js_html_compat_ArrayBuffer(this.a.slice(begin,end));
 	}
 	,__class__: js_html_compat_ArrayBuffer
@@ -1620,13 +1560,7 @@ var js_html_compat_DataView = function(buffer,byteOffset,byteLength) {
 $hxClasses["js.html.compat.DataView"] = js_html_compat_DataView;
 js_html_compat_DataView.__name__ = true;
 js_html_compat_DataView.prototype = {
-	buf: null
-	,offset: null
-	,length: null
-	,byteLength: null
-	,byteOffset: null
-	,buffer: null
-	,getInt8: function(byteOffset) {
+	getInt8: function(byteOffset) {
 		var v = this.buf.a[this.offset + byteOffset];
 		if(v >= 128) {
 			return v - 256;
@@ -4019,34 +3953,7 @@ justTriangles_Draw.generateMidPoints = function(arr) {
 	return out;
 };
 justTriangles_Draw.prototype = {
-	p0: null
-	,p1: null
-	,p2: null
-	,p3: null
-	,p4: null
-	,p3old: null
-	,p4old: null
-	,p3old2: null
-	,p4old2: null
-	,angleA: null
-	,cosA: null
-	,b2: null
-	,c2: null
-	,a2: null
-	,b: null
-	,c: null
-	,a: null
-	,clockwiseP2: null
-	,angleD: null
-	,halfA: null
-	,beta: null
-	,r: null
-	,_theta: null
-	,angle1: null
-	,angle2: null
-	,thickRatio: null
-	,_thick: null
-	,create2Lines: function(p0_,p1_,p2_,thick) {
+	create2Lines: function(p0_,p1_,p2_,thick) {
 		this.p0 = p0_;
 		this.p1 = p1_;
 		this.p2 = p2_;
@@ -4495,21 +4402,7 @@ justTriangles_Triangle.cross = function(p0,p1) {
 	return p0.x * p1.y - p0.y * p1.x;
 };
 justTriangles_Triangle.prototype = {
-	id: null
-	,colorID: null
-	,windingAdjusted: null
-	,colorA: null
-	,colorB: null
-	,colorC: null
-	,outline: null
-	,depth: null
-	,ax: null
-	,bx: null
-	,cx: null
-	,ay: null
-	,by: null
-	,cy: null
-	,get_x: function() {
+	get_x: function() {
 		return Math.min(Math.min(this.ax,this.bx),this.cx);
 	}
 	,set_x: function(x) {
@@ -4621,314 +4514,17 @@ justTriangles_Triangle.prototype = {
 	}
 	,__class__: justTriangles_Triangle
 };
-var kha__$Assets_ImageList = function() {
-	this.names = ["ball"];
-	this.ballDescription = { files : ["ball.png"], original_height : 50, type : "image", original_width : 50, name : "ball"};
-	this.ballName = "ball";
-	this.ball = null;
-};
-$hxClasses["kha._Assets.ImageList"] = kha__$Assets_ImageList;
-kha__$Assets_ImageList.__name__ = true;
-kha__$Assets_ImageList.prototype = {
-	ball: null
-	,ballName: null
-	,ballDescription: null
-	,ballLoad: function(done) {
-		kha_Assets.loadImage("ball",function(image) {
-			done();
-		});
-	}
-	,ballUnload: function() {
-		this.ball.unload();
-		this.ball = null;
-	}
-	,names: null
-	,__class__: kha__$Assets_ImageList
-};
-var kha__$Assets_SoundList = function() {
-	this.names = [];
-};
-$hxClasses["kha._Assets.SoundList"] = kha__$Assets_SoundList;
-kha__$Assets_SoundList.__name__ = true;
-kha__$Assets_SoundList.prototype = {
-	names: null
-	,__class__: kha__$Assets_SoundList
-};
-var kha__$Assets_BlobList = function() {
-	this.names = ["keep_keep"];
-	this.keep_keepDescription = { files : ["keep.keep"], type : "blob", name : "keep_keep"};
-	this.keep_keepName = "keep_keep";
-	this.keep_keep = null;
-};
-$hxClasses["kha._Assets.BlobList"] = kha__$Assets_BlobList;
-kha__$Assets_BlobList.__name__ = true;
-kha__$Assets_BlobList.prototype = {
-	keep_keep: null
-	,keep_keepName: null
-	,keep_keepDescription: null
-	,keep_keepLoad: function(done) {
-		kha_Assets.loadBlob("keep_keep",function(blob) {
-			done();
-		});
-	}
-	,keep_keepUnload: function() {
-		this.keep_keep.unload();
-		this.keep_keep = null;
-	}
-	,names: null
-	,__class__: kha__$Assets_BlobList
-};
-var kha__$Assets_FontList = function() {
-	this.names = [];
-};
-$hxClasses["kha._Assets.FontList"] = kha__$Assets_FontList;
-kha__$Assets_FontList.__name__ = true;
-kha__$Assets_FontList.prototype = {
-	names: null
-	,__class__: kha__$Assets_FontList
-};
-var kha__$Assets_VideoList = function() {
-	this.names = [];
-};
-$hxClasses["kha._Assets.VideoList"] = kha__$Assets_VideoList;
-kha__$Assets_VideoList.__name__ = true;
-kha__$Assets_VideoList.prototype = {
-	names: null
-	,__class__: kha__$Assets_VideoList
-};
-var kha_Assets = function() { };
-$hxClasses["kha.Assets"] = kha_Assets;
-kha_Assets.__name__ = true;
-kha_Assets.loadEverything = function(callback) {
-	var fileCount = 0;
-	var _g = 0;
-	var _g1 = Type.getInstanceFields(kha__$Assets_BlobList);
-	while(_g < _g1.length) {
-		var blob = _g1[_g];
-		++_g;
-		if(StringTools.endsWith(blob,"Load")) {
-			fileCount += 1;
-		}
-	}
-	var _g2 = 0;
-	var _g11 = Type.getInstanceFields(kha__$Assets_ImageList);
-	while(_g2 < _g11.length) {
-		var image = _g11[_g2];
-		++_g2;
-		if(StringTools.endsWith(image,"Load")) {
-			fileCount += 1;
-		}
-	}
-	var _g3 = 0;
-	var _g12 = Type.getInstanceFields(kha__$Assets_SoundList);
-	while(_g3 < _g12.length) {
-		var sound = _g12[_g3];
-		++_g3;
-		if(StringTools.endsWith(sound,"Load")) {
-			fileCount += 1;
-		}
-	}
-	var _g4 = 0;
-	var _g13 = Type.getInstanceFields(kha__$Assets_FontList);
-	while(_g4 < _g13.length) {
-		var font = _g13[_g4];
-		++_g4;
-		if(StringTools.endsWith(font,"Load")) {
-			fileCount += 1;
-		}
-	}
-	var _g5 = 0;
-	var _g14 = Type.getInstanceFields(kha__$Assets_VideoList);
-	while(_g5 < _g14.length) {
-		var video = _g14[_g5];
-		++_g5;
-		if(StringTools.endsWith(video,"Load")) {
-			fileCount += 1;
-		}
-	}
-	if(fileCount == 0) {
-		callback();
-		return;
-	}
-	var filesLeft = fileCount;
-	var _g6 = 0;
-	var _g15 = Type.getInstanceFields(kha__$Assets_BlobList);
-	while(_g6 < _g15.length) {
-		var blob1 = _g15[_g6];
-		++_g6;
-		if(StringTools.endsWith(blob1,"Load")) {
-			(Reflect.field(kha_Assets.blobs,blob1))(function() {
-				filesLeft -= 1;
-				kha_Assets.progress = 1 - filesLeft / fileCount;
-				if(filesLeft == 0) {
-					callback();
-				}
-			});
-		}
-	}
-	var _g7 = 0;
-	var _g16 = Type.getInstanceFields(kha__$Assets_ImageList);
-	while(_g7 < _g16.length) {
-		var image1 = _g16[_g7];
-		++_g7;
-		if(StringTools.endsWith(image1,"Load")) {
-			(Reflect.field(kha_Assets.images,image1))(function() {
-				filesLeft -= 1;
-				kha_Assets.progress = 1 - filesLeft / fileCount;
-				if(filesLeft == 0) {
-					callback();
-				}
-			});
-		}
-	}
-	var _g8 = 0;
-	var _g17 = Type.getInstanceFields(kha__$Assets_SoundList);
-	while(_g8 < _g17.length) {
-		var sound1 = [_g17[_g8]];
-		++_g8;
-		if(StringTools.endsWith(sound1[0],"Load")) {
-			(Reflect.field(kha_Assets.sounds,sound1[0]))((function(sound2) {
-				return function() {
-					var sound3 = Reflect.field(kha_Assets.sounds,sound2[0].substring(0,sound2[0].length - 4));
-					sound3.uncompress((function() {
-						return function() {
-							filesLeft -= 1;
-							kha_Assets.progress = 1 - filesLeft / fileCount;
-							if(filesLeft == 0) {
-								callback();
-							}
-						};
-					})());
-				};
-			})(sound1));
-		}
-	}
-	var _g9 = 0;
-	var _g18 = Type.getInstanceFields(kha__$Assets_FontList);
-	while(_g9 < _g18.length) {
-		var font1 = _g18[_g9];
-		++_g9;
-		if(StringTools.endsWith(font1,"Load")) {
-			(Reflect.field(kha_Assets.fonts,font1))(function() {
-				filesLeft -= 1;
-				kha_Assets.progress = 1 - filesLeft / fileCount;
-				if(filesLeft == 0) {
-					callback();
-				}
-			});
-		}
-	}
-	var _g10 = 0;
-	var _g19 = Type.getInstanceFields(kha__$Assets_VideoList);
-	while(_g10 < _g19.length) {
-		var video1 = _g19[_g10];
-		++_g10;
-		if(StringTools.endsWith(video1,"Load")) {
-			(Reflect.field(kha_Assets.videos,video1))(function() {
-				filesLeft -= 1;
-				kha_Assets.progress = 1 - filesLeft / fileCount;
-				if(filesLeft == 0) {
-					callback();
-				}
-			});
-		}
-	}
-};
-kha_Assets.loadImage = function(name,done) {
-	var description = Reflect.field(kha_Assets.images,name + "Description");
-	kha_LoaderImpl.loadImageFromDescription(description,function(image) {
-		kha_Assets.images[name] = image;
-		done(image);
-	});
-};
-kha_Assets.loadImageFromPath = function(path,readable,done) {
-	var description = { files : [path], readable : readable};
-	kha_LoaderImpl.loadImageFromDescription(description,done);
-};
-kha_Assets.get_imageFormats = function() {
-	return kha_LoaderImpl.getImageFormats();
-};
-kha_Assets.loadBlob = function(name,done) {
-	var description = Reflect.field(kha_Assets.blobs,name + "Description");
-	kha_LoaderImpl.loadBlobFromDescription(description,function(blob) {
-		kha_Assets.blobs[name] = blob;
-		done(blob);
-	});
-};
-kha_Assets.loadBlobFromPath = function(path,done) {
-	var description = { files : [path]};
-	kha_LoaderImpl.loadBlobFromDescription(description,done);
-};
-kha_Assets.loadSound = function(name,done) {
-	var description = Reflect.field(kha_Assets.sounds,name + "Description");
-	kha_LoaderImpl.loadSoundFromDescription(description,function(sound) {
-		kha_Assets.sounds[name] = sound;
-		done(sound);
-	});
-	return;
-};
-kha_Assets.loadSoundFromPath = function(path,done) {
-	var description = { files : [path]};
-	kha_LoaderImpl.loadSoundFromDescription(description,done);
-	return;
-};
-kha_Assets.get_soundFormats = function() {
-	return kha_LoaderImpl.getSoundFormats();
-};
-kha_Assets.loadFont = function(name,done) {
-	var description = Reflect.field(kha_Assets.fonts,name + "Description");
-	kha_LoaderImpl.loadFontFromDescription(description,function(font) {
-		kha_Assets.fonts[name] = font;
-		done(font);
-	});
-	return;
-};
-kha_Assets.loadFontFromPath = function(path,done) {
-	var description = { files : [path]};
-	kha_LoaderImpl.loadFontFromDescription(description,done);
-	return;
-};
-kha_Assets.get_fontFormats = function() {
-	return ["ttf"];
-};
-kha_Assets.loadVideo = function(name,done) {
-	var description = Reflect.field(kha_Assets.videos,name + "Description");
-	kha_LoaderImpl.loadVideoFromDescription(description,function(video) {
-		kha_Assets.videos[name] = video;
-		done(video);
-	});
-	return;
-};
-kha_Assets.loadVideoFromPath = function(path,done) {
-	var description = { files : [path]};
-	kha_LoaderImpl.loadVideoFromDescription(description,done);
-	return;
-};
-kha_Assets.get_videoFormats = function() {
-	return kha_LoaderImpl.getVideoFormats();
-};
 var kha_Canvas = function() { };
 $hxClasses["kha.Canvas"] = kha_Canvas;
 kha_Canvas.__name__ = true;
 kha_Canvas.prototype = {
-	get_width: null
-	,get_height: null
-	,get_g1: null
-	,get_g2: null
-	,get_g4: null
-	,width: null
-	,height: null
-	,g1: null
-	,g2: null
-	,g4: null
-	,__class__: kha_Canvas
+	__class__: kha_Canvas
 };
 var kha_Resource = function() { };
 $hxClasses["kha.Resource"] = kha_Resource;
 kha_Resource.__name__ = true;
 kha_Resource.prototype = {
-	unload: null
-	,__class__: kha_Resource
+	__class__: kha_Resource
 };
 var kha_Image = function() { };
 $hxClasses["kha.Image"] = kha_Image;
@@ -4997,6 +4593,9 @@ kha_Image.fromBytes = function(bytes,width,height,format,usage) {
 	}
 	return null;
 };
+kha_Image.fromBytes3D = function(bytes,width,height,depth,format,usage) {
+	return null;
+};
 kha_Image.fromEncodedBytes = function(bytes,fileExtention,doneCallback,errorCallback,readable) {
 	if(readable == null) {
 		readable = false;
@@ -5063,35 +4662,27 @@ kha_Image.prototype = {
 	}
 	,clear: function(x,y,z,width,height,depth,color) {
 	}
-	,width: null
 	,get_width: function() {
 		return 0;
 	}
-	,height: null
 	,get_height: function() {
 		return 0;
 	}
-	,depth: null
 	,get_depth: function() {
 		return 1;
 	}
-	,realWidth: null
 	,get_realWidth: function() {
 		return 0;
 	}
-	,realHeight: null
 	,get_realHeight: function() {
 		return 0;
 	}
-	,g1: null
 	,get_g1: function() {
 		return null;
 	}
-	,g2: null
 	,get_g2: function() {
 		return null;
 	}
-	,g4: null
 	,get_g4: function() {
 		return null;
 	}
@@ -5131,17 +4722,7 @@ kha_CanvasImage.upperPowerOfTwo = function(v) {
 };
 kha_CanvasImage.__super__ = kha_Image;
 kha_CanvasImage.prototype = $extend(kha_Image.prototype,{
-	image: null
-	,video: null
-	,data: null
-	,myWidth: null
-	,myHeight: null
-	,format: null
-	,renderTarget: null
-	,frameBuffer: null
-	,graphics1: null
-	,g2canvas: null
-	,get_g1: function() {
+	get_g1: function() {
 		if(this.graphics1 == null) {
 			this.graphics1 = new kha_graphics2_Graphics1(this);
 		}
@@ -5200,7 +4781,6 @@ kha_CanvasImage.prototype = $extend(kha_Image.prototype,{
 		kha_CanvasImage.context.drawImage(this.image,0,0,this.image.width,this.image.height,0,0,this.image.width,this.image.height);
 		this.data = kha_CanvasImage.context.getImageData(0,0,this.image.width,this.image.height);
 	}
-	,texture: null
 	,createTexture: function() {
 		if(kha_SystemImpl.gl == null) {
 			return;
@@ -5231,7 +4811,6 @@ kha_CanvasImage.prototype = $extend(kha_Image.prototype,{
 			kha_SystemImpl.gl.texImage2D(3553,0,6408,6408,5121,this.video);
 		}
 	}
-	,bytes: null
 	,lock: function(level) {
 		if(level == null) {
 			level = 0;
@@ -5380,9 +4959,6 @@ kha__$Color_Color_$Impl_$.set_A = function(this1,f) {
 	this1 = (f * 255 | 0) << 24 | (((this1 & 16711680) >>> 16) * 0.00392156862745098 * 255 | 0) << 16 | (((this1 & 65280) >>> 8) * 0.00392156862745098 * 255 | 0) << 8 | ((this1 & 255) * 0.00392156862745098 * 255 | 0);
 	return f;
 };
-var kha_CompilerDefines = function() { };
-$hxClasses["kha.CompilerDefines"] = kha_CompilerDefines;
-kha_CompilerDefines.__name__ = true;
 var kha_EnvironmentVariables = function() {
 };
 $hxClasses["kha.EnvironmentVariables"] = kha_EnvironmentVariables;
@@ -5398,10 +4974,7 @@ $hxClasses["kha.Font"] = kha_Font;
 kha_Font.__name__ = true;
 kha_Font.__interfaces__ = [kha_Resource];
 kha_Font.prototype = {
-	height: null
-	,width: null
-	,baseline: null
-	,__class__: kha_Font
+	__class__: kha_Font
 };
 var kha_FontStyle = function(bold,italic,underlined) {
 	this.bold = bold;
@@ -5411,10 +4984,7 @@ var kha_FontStyle = function(bold,italic,underlined) {
 $hxClasses["kha.FontStyle"] = kha_FontStyle;
 kha_FontStyle.__name__ = true;
 kha_FontStyle.prototype = {
-	bold: null
-	,italic: null
-	,underlined: null
-	,getBold: function() {
+	getBold: function() {
 		return this.bold;
 	}
 	,getItalic: function() {
@@ -5435,32 +5005,23 @@ $hxClasses["kha.Framebuffer"] = kha_Framebuffer;
 kha_Framebuffer.__name__ = true;
 kha_Framebuffer.__interfaces__ = [kha_Canvas];
 kha_Framebuffer.prototype = {
-	windowId: null
-	,graphics1: null
-	,graphics2: null
-	,graphics4: null
-	,init: function(g1,g2,g4) {
+	init: function(g1,g2,g4) {
 		this.graphics1 = g1;
 		this.graphics2 = g2;
 		this.graphics4 = g4;
 	}
-	,g1: null
 	,get_g1: function() {
 		return this.graphics1;
 	}
-	,g2: null
 	,get_g2: function() {
 		return this.graphics2;
 	}
-	,g4: null
 	,get_g4: function() {
 		return this.graphics4;
 	}
-	,width: null
 	,get_width: function() {
 		return kha_System.windowWidth(this.windowId);
 	}
-	,height: null
 	,get_height: function() {
 		return kha_System.windowHeight(this.windowId);
 	}
@@ -5471,16 +5032,7 @@ var kha_AlignedQuad = function() {
 $hxClasses["kha.AlignedQuad"] = kha_AlignedQuad;
 kha_AlignedQuad.__name__ = true;
 kha_AlignedQuad.prototype = {
-	x0: null
-	,y0: null
-	,s0: null
-	,t0: null
-	,x1: null
-	,y1: null
-	,s1: null
-	,t1: null
-	,xadvance: null
-	,__class__: kha_AlignedQuad
+	__class__: kha_AlignedQuad
 };
 var kha_KravurImage = function(size,ascent,descent,lineGap,width,height,chars,pixels) {
 	this.mySize = size;
@@ -5515,13 +5067,7 @@ var kha_KravurImage = function(size,ascent,descent,lineGap,width,height,chars,pi
 $hxClasses["kha.KravurImage"] = kha_KravurImage;
 kha_KravurImage.__name__ = true;
 kha_KravurImage.prototype = {
-	mySize: null
-	,chars: null
-	,texture: null
-	,width: null
-	,height: null
-	,baseline: null
-	,getTexture: function() {
+	getTexture: function() {
 		return this.texture;
 	}
 	,getBakedQuad: function(char_index,xpos,ypos) {
@@ -5571,6 +5117,16 @@ kha_KravurImage.prototype = {
 		}
 		return width;
 	}
+	,charactersWidth: function(characters,start,length) {
+		var width = 0;
+		var _g1 = start;
+		var _g = start + length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			width += this.getCharWidth(characters[i]);
+		}
+		return width;
+	}
 	,getBaselinePosition: function() {
 		return this.baseline;
 	}
@@ -5584,9 +5140,7 @@ $hxClasses["kha.Kravur"] = kha_Kravur;
 kha_Kravur.__name__ = true;
 kha_Kravur.__interfaces__ = [kha_Font];
 kha_Kravur.prototype = {
-	blob: null
-	,images: null
-	,_get: function(fontSize,glyphs) {
+	_get: function(fontSize,glyphs) {
 		if(!this.images.h.hasOwnProperty(fontSize)) {
 			if(glyphs == null) {
 				glyphs = [];
@@ -5637,6 +5191,9 @@ kha_Kravur.prototype = {
 	,width: function(fontSize,str) {
 		return this._get(fontSize).stringWidth(str);
 	}
+	,widthOfCharacters: function(fontSize,characters,start,length) {
+		return this._get(fontSize).charactersWidth(characters,start,length);
+	}
 	,baseline: function(fontSize) {
 		return this._get(fontSize).getBaselinePosition();
 	}
@@ -5646,144 +5203,6 @@ kha_Kravur.prototype = {
 	}
 	,__class__: kha_Kravur
 };
-var kha_LoaderImpl = function() { };
-$hxClasses["kha.LoaderImpl"] = kha_LoaderImpl;
-kha_LoaderImpl.__name__ = true;
-kha_LoaderImpl.getImageFormats = function() {
-	return ["png","jpg","hdr"];
-};
-kha_LoaderImpl.loadImageFromDescription = function(desc,done) {
-	var readable = Object.prototype.hasOwnProperty.call(desc,"readable") && desc.readable;
-	if(StringTools.endsWith(desc.files[0],".hdr")) {
-		kha_LoaderImpl.loadBlobFromDescription(desc,function(blob) {
-			var hdrImage = kha_internal_HdrFormat.parse(blob.toBytes());
-			var tmp = kha_Image.fromBytes(haxe_io_Bytes.ofData(hdrImage.data.buffer),hdrImage.width,hdrImage.height,kha_graphics4_TextureFormat.RGBA128,readable ? kha_graphics4_Usage.DynamicUsage : kha_graphics4_Usage.StaticUsage);
-			done(tmp);
-		});
-	} else {
-		var img = window.document.createElement("img");
-		img.onload = function(event) {
-			var tmp1 = kha_Image.fromImage(img,readable);
-			done(tmp1);
-		};
-		img.src = desc.files[0];
-		img.crossOrigin = "";
-	}
-};
-kha_LoaderImpl.getSoundFormats = function() {
-	var element = window.document.createElement("audio");
-	var formats = [];
-	if(element.canPlayType("audio/mp4") != "") {
-		formats.push("mp4");
-	}
-	if(kha_SystemImpl._hasWebAudio || element.canPlayType("audio/ogg") != "") {
-		formats.push("ogg");
-	}
-	return formats;
-};
-kha_LoaderImpl.loadSoundFromDescription = function(desc,done) {
-	if(kha_SystemImpl._hasWebAudio) {
-		var element = window.document.createElement("audio");
-		if(element.canPlayType("audio/mp4") != "") {
-			var _g1 = 0;
-			var _g = desc.files.length;
-			while(_g1 < _g) {
-				var i = _g1++;
-				var file = desc.files[i];
-				if(StringTools.endsWith(file,".mp4")) {
-					new kha_js_WebAudioSound(file,done);
-					return;
-				}
-			}
-		}
-		var _g11 = 0;
-		var _g2 = desc.files.length;
-		while(_g11 < _g2) {
-			var i1 = _g11++;
-			var file1 = desc.files[i1];
-			if(StringTools.endsWith(file1,".ogg")) {
-				new kha_js_WebAudioSound(file1,done);
-				return;
-			}
-		}
-	} else if(kha_SystemImpl.mobile) {
-		var element1 = window.document.createElement("audio");
-		if(element1.canPlayType("audio/mp4") != "") {
-			var _g12 = 0;
-			var _g3 = desc.files.length;
-			while(_g12 < _g3) {
-				var i2 = _g12++;
-				var file2 = desc.files[i2];
-				if(StringTools.endsWith(file2,".mp4")) {
-					new kha_js_MobileWebAudioSound(file2,done);
-					return;
-				}
-			}
-		}
-		var _g13 = 0;
-		var _g4 = desc.files.length;
-		while(_g13 < _g4) {
-			var i3 = _g13++;
-			var file3 = desc.files[i3];
-			if(StringTools.endsWith(file3,".ogg")) {
-				new kha_js_MobileWebAudioSound(file3,done);
-				return;
-			}
-		}
-	} else {
-		new kha_js_Sound(desc.files,done);
-	}
-};
-kha_LoaderImpl.getVideoFormats = function() {
-	return ["mp4","webm"];
-};
-kha_LoaderImpl.loadVideoFromDescription = function(desc,done) {
-	kha_js_Video.fromFile(desc.files,done);
-};
-kha_LoaderImpl.loadBlobFromDescription = function(desc,done) {
-	var request = new XMLHttpRequest();
-	request.open("GET",desc.files[0],true);
-	request.responseType = "arraybuffer";
-	request.onreadystatechange = function() {
-		if(request.readyState != 4) {
-			return;
-		}
-		if(request.status >= 200 && request.status < 400 || request.status == 0 && request.statusText == "") {
-			var bytes = null;
-			var arrayBuffer = request.response;
-			if(arrayBuffer != null) {
-				var byteArray = new Uint8Array(arrayBuffer);
-				bytes = haxe_io_Bytes.ofData(byteArray);
-			} else if(request.responseBody != null) {
-				var data = VBArray(request.responseBody).toArray();
-				bytes = new haxe_io_Bytes(new ArrayBuffer(data.length));
-				var _g1 = 0;
-				var _g = data.length;
-				while(_g1 < _g) {
-					var i = _g1++;
-					bytes.b[i] = data[i] & 255;
-				}
-			} else {
-				haxe_Log.trace("Error loading " + desc.files[0],{ fileName : "LoaderImpl.hx", lineNumber : 144, className : "kha.LoaderImpl", methodName : "loadBlobFromDescription"});
-				window.console.log("loadBlob failed");
-			}
-			done(new kha_internal_BytesBlob(bytes));
-		} else {
-			haxe_Log.trace("Error loading " + desc.files[0],{ fileName : "LoaderImpl.hx", lineNumber : 150, className : "kha.LoaderImpl", methodName : "loadBlobFromDescription"});
-			window.console.log("loadBlob failed");
-		}
-	};
-	request.send(null);
-};
-kha_LoaderImpl.loadFontFromDescription = function(desc,done) {
-	kha_LoaderImpl.loadBlobFromDescription(desc,function(blob) {
-		if(kha_SystemImpl.gl == null) {
-			done(new kha_js_Font(new kha_Kravur(blob)));
-		} else {
-			done(new kha_Kravur(blob));
-		}
-	});
-};
 var kha_Rotation = function(center,angle) {
 	this.center = center;
 	this.angle = angle;
@@ -5791,245 +5210,14 @@ var kha_Rotation = function(center,angle) {
 $hxClasses["kha.Rotation"] = kha_Rotation;
 kha_Rotation.__name__ = true;
 kha_Rotation.prototype = {
-	center: null
-	,angle: null
-	,__class__: kha_Rotation
-};
-var kha_TargetRectangle = function(x,y,w,h,s,r) {
-	this.x = x;
-	this.y = y;
-	this.width = w;
-	this.height = h;
-	this.scaleFactor = s;
-	this.rotation = r;
-};
-$hxClasses["kha.TargetRectangle"] = kha_TargetRectangle;
-kha_TargetRectangle.__name__ = true;
-kha_TargetRectangle.prototype = {
-	x: null
-	,y: null
-	,width: null
-	,height: null
-	,scaleFactor: null
-	,rotation: null
-	,__class__: kha_TargetRectangle
-};
-var kha_Scaler = function() { };
-$hxClasses["kha.Scaler"] = kha_Scaler;
-kha_Scaler.__name__ = true;
-kha_Scaler.targetRect = function(width,height,destinationWidth,destinationHeight,rotation) {
-	var scalex;
-	var scaley;
-	var scalew;
-	var scaleh;
-	var scale;
-	switch(rotation[1]) {
-	case 0:
-		if(width / height > destinationWidth / destinationHeight) {
-			scale = destinationWidth / width;
-			scalew = width * scale;
-			scaleh = height * scale;
-			scalex = 0;
-			scaley = (destinationHeight - scaleh) * 0.5;
-		} else {
-			scale = destinationHeight / height;
-			scalew = width * scale;
-			scaleh = height * scale;
-			scalex = (destinationWidth - scalew) * 0.5;
-			scaley = 0;
-		}
-		break;
-	case 1:
-		if(width / height > destinationHeight / destinationWidth) {
-			scale = destinationHeight / width;
-			scalew = width * scale;
-			scaleh = height * scale;
-			scalex = (destinationWidth - scaleh) * 0.5 + scaleh;
-			scaley = 0;
-		} else {
-			scale = destinationWidth / height;
-			scalew = width * scale;
-			scaleh = height * scale;
-			scalex = scaleh;
-			scaley = (destinationHeight - scalew) * 0.5;
-		}
-		break;
-	case 2:
-		if(width / height > destinationWidth / destinationHeight) {
-			scale = destinationWidth / width;
-			scalew = width * scale;
-			scaleh = height * scale;
-			scalex = scalew;
-			scaley = (destinationHeight - scaleh) * 0.5 + scaleh;
-		} else {
-			scale = destinationHeight / height;
-			scalew = width * scale;
-			scaleh = height * scale;
-			scalex = (destinationWidth - scalew) * 0.5 + scalew;
-			scaley = scaleh;
-		}
-		break;
-	case 3:
-		if(width / height > destinationHeight / destinationWidth) {
-			scale = destinationHeight / width;
-			scalew = width * scale;
-			scaleh = height * scale;
-			scalex = (destinationWidth - scaleh) * 0.5;
-			scaley = scalew;
-		} else {
-			scale = destinationWidth / height;
-			scalew = width * scale;
-			scaleh = height * scale;
-			scalex = 0;
-			scaley = (destinationHeight - scalew) * 0.5 + scalew;
-		}
-		break;
-	}
-	return new kha_TargetRectangle(scalex,scaley,scalew,scaleh,scale,rotation);
-};
-kha_Scaler.transformXDirectly = function(x,y,sourceWidth,sourceHeight,destinationWidth,destinationHeight,rotation) {
-	var targetRect = kha_Scaler.targetRect(sourceWidth,sourceHeight,destinationWidth,destinationHeight,rotation);
-	var _g = targetRect.rotation;
-	switch(_g[1]) {
-	case 0:
-		return (x - targetRect.x) / targetRect.scaleFactor | 0;
-	case 1:
-		return (y - targetRect.y) / targetRect.scaleFactor | 0;
-	case 2:
-		return (targetRect.x - x) / targetRect.scaleFactor | 0;
-	case 3:
-		return (targetRect.y - y) / targetRect.scaleFactor | 0;
-	}
-};
-kha_Scaler.transformX = function(x,y,source,destination,rotation) {
-	return kha_Scaler.transformXDirectly(x,y,source.get_width(),source.get_height(),destination.get_width(),destination.get_height(),rotation);
-};
-kha_Scaler.transformYDirectly = function(x,y,sourceWidth,sourceHeight,destinationWidth,destinationHeight,rotation) {
-	var targetRect = kha_Scaler.targetRect(sourceWidth,sourceHeight,destinationWidth,destinationHeight,rotation);
-	var _g = targetRect.rotation;
-	switch(_g[1]) {
-	case 0:
-		return (y - targetRect.y) / targetRect.scaleFactor | 0;
-	case 1:
-		return (targetRect.x - x) / targetRect.scaleFactor | 0;
-	case 2:
-		return (targetRect.y - y) / targetRect.scaleFactor | 0;
-	case 3:
-		return (x - targetRect.x) / targetRect.scaleFactor | 0;
-	}
-};
-kha_Scaler.transformY = function(x,y,source,destination,rotation) {
-	return kha_Scaler.transformYDirectly(x,y,source.get_width(),source.get_height(),destination.get_width(),destination.get_height(),rotation);
-};
-kha_Scaler.scale = function(source,destination,rotation) {
-	var g = destination.get_g2();
-	var transformation = kha_Scaler.getScaledTransformation(source.get_width(),source.get_height(),destination.get_width(),destination.get_height(),rotation);
-	g.setTransformation(transformation);
-	var _this = g.transformations[g.transformations.length - 1];
-	_this._00 = transformation._00;
-	_this._10 = transformation._10;
-	_this._20 = transformation._20;
-	_this._01 = transformation._01;
-	_this._11 = transformation._11;
-	_this._21 = transformation._21;
-	_this._02 = transformation._02;
-	_this._12 = transformation._12;
-	_this._22 = transformation._22;
-	g.set_color(-1);
-	g.set_opacity(1);
-	g.drawImage(source,0,0);
-};
-kha_Scaler.getScaledTransformation = function(width,height,destinationWidth,destinationHeight,rotation) {
-	var rect = kha_Scaler.targetRect(width,height,destinationWidth,destinationHeight,rotation);
-	var sf = rect.scaleFactor;
-	var transformation = new kha_math_FastMatrix3(sf,0,rect.x,0,sf,rect.y,0,0,1);
-	switch(rotation[1]) {
-	case 0:
-		break;
-	case 1:
-		var m__22;
-		var m__21;
-		var m__20;
-		var m__12;
-		var m__11;
-		var m__10;
-		var m__02;
-		var m__01;
-		var m__00;
-		var alpha = Math.PI / 2;
-		m__00 = Math.cos(alpha);
-		m__10 = -Math.sin(alpha);
-		m__20 = 0;
-		m__01 = Math.sin(alpha);
-		m__11 = Math.cos(alpha);
-		m__21 = 0;
-		m__02 = 0;
-		m__12 = 0;
-		m__22 = 1;
-		transformation = new kha_math_FastMatrix3(transformation._00 * m__00 + transformation._10 * m__01 + transformation._20 * m__02,transformation._00 * m__10 + transformation._10 * m__11 + transformation._20 * m__12,transformation._00 * m__20 + transformation._10 * m__21 + transformation._20 * m__22,transformation._01 * m__00 + transformation._11 * m__01 + transformation._21 * m__02,transformation._01 * m__10 + transformation._11 * m__11 + transformation._21 * m__12,transformation._01 * m__20 + transformation._11 * m__21 + transformation._21 * m__22,transformation._02 * m__00 + transformation._12 * m__01 + transformation._22 * m__02,transformation._02 * m__10 + transformation._12 * m__11 + transformation._22 * m__12,transformation._02 * m__20 + transformation._12 * m__21 + transformation._22 * m__22);
-		break;
-	case 2:
-		var m__221;
-		var m__211;
-		var m__201;
-		var m__121;
-		var m__111;
-		var m__101;
-		var m__021;
-		var m__011;
-		var m__001;
-		var alpha1 = Math.PI;
-		m__001 = Math.cos(alpha1);
-		m__101 = -Math.sin(alpha1);
-		m__201 = 0;
-		m__011 = Math.sin(alpha1);
-		m__111 = Math.cos(alpha1);
-		m__211 = 0;
-		m__021 = 0;
-		m__121 = 0;
-		m__221 = 1;
-		transformation = new kha_math_FastMatrix3(transformation._00 * m__001 + transformation._10 * m__011 + transformation._20 * m__021,transformation._00 * m__101 + transformation._10 * m__111 + transformation._20 * m__121,transformation._00 * m__201 + transformation._10 * m__211 + transformation._20 * m__221,transformation._01 * m__001 + transformation._11 * m__011 + transformation._21 * m__021,transformation._01 * m__101 + transformation._11 * m__111 + transformation._21 * m__121,transformation._01 * m__201 + transformation._11 * m__211 + transformation._21 * m__221,transformation._02 * m__001 + transformation._12 * m__011 + transformation._22 * m__021,transformation._02 * m__101 + transformation._12 * m__111 + transformation._22 * m__121,transformation._02 * m__201 + transformation._12 * m__211 + transformation._22 * m__221);
-		break;
-	case 3:
-		var m__222;
-		var m__212;
-		var m__202;
-		var m__122;
-		var m__112;
-		var m__102;
-		var m__022;
-		var m__012;
-		var m__002;
-		var alpha2 = Math.PI * 3 / 2;
-		m__002 = Math.cos(alpha2);
-		m__102 = -Math.sin(alpha2);
-		m__202 = 0;
-		m__012 = Math.sin(alpha2);
-		m__112 = Math.cos(alpha2);
-		m__212 = 0;
-		m__022 = 0;
-		m__122 = 0;
-		m__222 = 1;
-		transformation = new kha_math_FastMatrix3(transformation._00 * m__002 + transformation._10 * m__012 + transformation._20 * m__022,transformation._00 * m__102 + transformation._10 * m__112 + transformation._20 * m__122,transformation._00 * m__202 + transformation._10 * m__212 + transformation._20 * m__222,transformation._01 * m__002 + transformation._11 * m__012 + transformation._21 * m__022,transformation._01 * m__102 + transformation._11 * m__112 + transformation._21 * m__122,transformation._01 * m__202 + transformation._11 * m__212 + transformation._21 * m__222,transformation._02 * m__002 + transformation._12 * m__012 + transformation._22 * m__022,transformation._02 * m__102 + transformation._12 * m__112 + transformation._22 * m__122,transformation._02 * m__202 + transformation._12 * m__212 + transformation._22 * m__222);
-		break;
-	}
-	return transformation;
+	__class__: kha_Rotation
 };
 var kha_TimeTask = function() {
 };
 $hxClasses["kha.TimeTask"] = kha_TimeTask;
 kha_TimeTask.__name__ = true;
 kha_TimeTask.prototype = {
-	task: null
-	,start: null
-	,period: null
-	,duration: null
-	,next: null
-	,id: null
-	,groupId: null
-	,active: null
-	,paused: null
-	,__class__: kha_TimeTask
+	__class__: kha_TimeTask
 };
 var kha_FrameTask = function(task,priority,id) {
 	this.task = task;
@@ -6041,12 +5229,7 @@ var kha_FrameTask = function(task,priority,id) {
 $hxClasses["kha.FrameTask"] = kha_FrameTask;
 kha_FrameTask.__name__ = true;
 kha_FrameTask.prototype = {
-	task: null
-	,priority: null
-	,id: null
-	,active: null
-	,paused: null
-	,__class__: kha_FrameTask
+	__class__: kha_FrameTask
 };
 var kha_Scheduler = function() { };
 $hxClasses["kha.Scheduler"] = kha_Scheduler;
@@ -6061,8 +5244,7 @@ kha_Scheduler.init = function() {
 	}
 	kha_Scheduler.stopped = true;
 	kha_Scheduler.frame_tasks_sorted = true;
-	kha_Scheduler.current = kha_Scheduler.realTime();
-	kha_Scheduler.lastTime = kha_Scheduler.realTime();
+	kha_Scheduler.current = kha_Scheduler.lastTime = kha_Scheduler.realTime();
 	kha_Scheduler.currentFrameTaskId = 0;
 	kha_Scheduler.currentTimeTaskId = 0;
 	kha_Scheduler.currentGroupId = 0;
@@ -6544,94 +5726,76 @@ kha_Shaders.__name__ = true;
 kha_Shaders.init = function() {
 	var blobs = [];
 	var _g = 0;
-	while(_g < 3) {
+	while(_g < 2) {
 		var i = _g++;
-		var data = Reflect.field(kha_Shaders,"simple_fragData" + i);
+		var data = Reflect.field(kha_Shaders,"painter_colored_fragData" + i);
 		var bytes = haxe_Unserializer.run(data);
 		blobs.push(kha_internal_BytesBlob.fromBytes(bytes));
 	}
-	kha_Shaders.simple_frag = new kha_graphics4_FragmentShader(blobs,["simple.frag.essl","simple-relaxed.frag.essl","simple-webgl2.frag.essl"]);
+	kha_Shaders.painter_colored_frag = new kha_graphics4_FragmentShader(blobs,["painter-colored.frag.essl","painter-colored-webgl2.frag.essl"]);
 	var blobs1 = [];
 	var _g1 = 0;
-	while(_g1 < 3) {
+	while(_g1 < 2) {
 		var i1 = _g1++;
-		var data1 = Reflect.field(kha_Shaders,"simple_vertData" + i1);
+		var data1 = Reflect.field(kha_Shaders,"painter_colored_vertData" + i1);
 		var bytes1 = haxe_Unserializer.run(data1);
 		blobs1.push(kha_internal_BytesBlob.fromBytes(bytes1));
 	}
-	kha_Shaders.simple_vert = new kha_graphics4_VertexShader(blobs1,["simple.vert.essl","simple-relaxed.vert.essl","simple-webgl2.vert.essl"]);
+	kha_Shaders.painter_colored_vert = new kha_graphics4_VertexShader(blobs1,["painter-colored.vert.essl","painter-colored-webgl2.vert.essl"]);
 	var blobs2 = [];
 	var _g2 = 0;
-	while(_g2 < 3) {
+	while(_g2 < 2) {
 		var i2 = _g2++;
-		var data2 = Reflect.field(kha_Shaders,"painter_colored_fragData" + i2);
+		var data2 = Reflect.field(kha_Shaders,"painter_image_fragData" + i2);
 		var bytes2 = haxe_Unserializer.run(data2);
 		blobs2.push(kha_internal_BytesBlob.fromBytes(bytes2));
 	}
-	kha_Shaders.painter_colored_frag = new kha_graphics4_FragmentShader(blobs2,["painter-colored.frag.essl","painter-colored-relaxed.frag.essl","painter-colored-webgl2.frag.essl"]);
+	kha_Shaders.painter_image_frag = new kha_graphics4_FragmentShader(blobs2,["painter-image.frag.essl","painter-image-webgl2.frag.essl"]);
 	var blobs3 = [];
 	var _g3 = 0;
-	while(_g3 < 3) {
+	while(_g3 < 2) {
 		var i3 = _g3++;
-		var data3 = Reflect.field(kha_Shaders,"painter_colored_vertData" + i3);
+		var data3 = Reflect.field(kha_Shaders,"painter_image_vertData" + i3);
 		var bytes3 = haxe_Unserializer.run(data3);
 		blobs3.push(kha_internal_BytesBlob.fromBytes(bytes3));
 	}
-	kha_Shaders.painter_colored_vert = new kha_graphics4_VertexShader(blobs3,["painter-colored.vert.essl","painter-colored-relaxed.vert.essl","painter-colored-webgl2.vert.essl"]);
+	kha_Shaders.painter_image_vert = new kha_graphics4_VertexShader(blobs3,["painter-image.vert.essl","painter-image-webgl2.vert.essl"]);
 	var blobs4 = [];
 	var _g4 = 0;
-	while(_g4 < 3) {
+	while(_g4 < 2) {
 		var i4 = _g4++;
-		var data4 = Reflect.field(kha_Shaders,"painter_image_fragData" + i4);
+		var data4 = Reflect.field(kha_Shaders,"painter_text_fragData" + i4);
 		var bytes4 = haxe_Unserializer.run(data4);
 		blobs4.push(kha_internal_BytesBlob.fromBytes(bytes4));
 	}
-	kha_Shaders.painter_image_frag = new kha_graphics4_FragmentShader(blobs4,["painter-image.frag.essl","painter-image-relaxed.frag.essl","painter-image-webgl2.frag.essl"]);
+	kha_Shaders.painter_text_frag = new kha_graphics4_FragmentShader(blobs4,["painter-text.frag.essl","painter-text-webgl2.frag.essl"]);
 	var blobs5 = [];
 	var _g5 = 0;
-	while(_g5 < 3) {
+	while(_g5 < 2) {
 		var i5 = _g5++;
-		var data5 = Reflect.field(kha_Shaders,"painter_image_vertData" + i5);
+		var data5 = Reflect.field(kha_Shaders,"painter_text_vertData" + i5);
 		var bytes5 = haxe_Unserializer.run(data5);
 		blobs5.push(kha_internal_BytesBlob.fromBytes(bytes5));
 	}
-	kha_Shaders.painter_image_vert = new kha_graphics4_VertexShader(blobs5,["painter-image.vert.essl","painter-image-relaxed.vert.essl","painter-image-webgl2.vert.essl"]);
+	kha_Shaders.painter_text_vert = new kha_graphics4_VertexShader(blobs5,["painter-text.vert.essl","painter-text-webgl2.vert.essl"]);
 	var blobs6 = [];
 	var _g6 = 0;
-	while(_g6 < 3) {
+	while(_g6 < 2) {
 		var i6 = _g6++;
-		var data6 = Reflect.field(kha_Shaders,"painter_text_fragData" + i6);
+		var data6 = Reflect.field(kha_Shaders,"painter_video_fragData" + i6);
 		var bytes6 = haxe_Unserializer.run(data6);
 		blobs6.push(kha_internal_BytesBlob.fromBytes(bytes6));
 	}
-	kha_Shaders.painter_text_frag = new kha_graphics4_FragmentShader(blobs6,["painter-text.frag.essl","painter-text-relaxed.frag.essl","painter-text-webgl2.frag.essl"]);
+	kha_Shaders.painter_video_frag = new kha_graphics4_FragmentShader(blobs6,["painter-video.frag.essl","painter-video-webgl2.frag.essl"]);
 	var blobs7 = [];
 	var _g7 = 0;
-	while(_g7 < 3) {
+	while(_g7 < 2) {
 		var i7 = _g7++;
-		var data7 = Reflect.field(kha_Shaders,"painter_text_vertData" + i7);
+		var data7 = Reflect.field(kha_Shaders,"painter_video_vertData" + i7);
 		var bytes7 = haxe_Unserializer.run(data7);
 		blobs7.push(kha_internal_BytesBlob.fromBytes(bytes7));
 	}
-	kha_Shaders.painter_text_vert = new kha_graphics4_VertexShader(blobs7,["painter-text.vert.essl","painter-text-relaxed.vert.essl","painter-text-webgl2.vert.essl"]);
-	var blobs8 = [];
-	var _g8 = 0;
-	while(_g8 < 3) {
-		var i8 = _g8++;
-		var data8 = Reflect.field(kha_Shaders,"painter_video_fragData" + i8);
-		var bytes8 = haxe_Unserializer.run(data8);
-		blobs8.push(kha_internal_BytesBlob.fromBytes(bytes8));
-	}
-	kha_Shaders.painter_video_frag = new kha_graphics4_FragmentShader(blobs8,["painter-video.frag.essl","painter-video-relaxed.frag.essl","painter-video-webgl2.frag.essl"]);
-	var blobs9 = [];
-	var _g9 = 0;
-	while(_g9 < 3) {
-		var i9 = _g9++;
-		var data9 = Reflect.field(kha_Shaders,"painter_video_vertData" + i9);
-		var bytes9 = haxe_Unserializer.run(data9);
-		blobs9.push(kha_internal_BytesBlob.fromBytes(bytes9));
-	}
-	kha_Shaders.painter_video_vert = new kha_graphics4_VertexShader(blobs9,["painter-video.vert.essl","painter-video-relaxed.vert.essl","painter-video-webgl2.vert.essl"]);
+	kha_Shaders.painter_video_vert = new kha_graphics4_VertexShader(blobs7,["painter-video.vert.essl","painter-video-webgl2.vert.essl"]);
 };
 var kha_Sound = function() {
 };
@@ -6639,9 +5803,7 @@ $hxClasses["kha.Sound"] = kha_Sound;
 kha_Sound.__name__ = true;
 kha_Sound.__interfaces__ = [kha_Resource];
 kha_Sound.prototype = {
-	compressedData: null
-	,uncompressedData: null
-	,uncompress: function(done) {
+	uncompress: function(done) {
 		var output = new haxe_io_BytesOutput();
 		var header = kha_audio2_ogg_vorbis_Reader.readAll(this.compressedData,output,true);
 		var soundBytes = output.getBytes();
@@ -6697,6 +5859,15 @@ kha_System.init = function(options,callback) {
 	if(options.windowMode == null) {
 		options.windowMode = kha_WindowMode.Window;
 	}
+	if(options.resizable == null) {
+		options.resizable = false;
+	}
+	if(options.maximizable == null) {
+		options.maximizable = false;
+	}
+	if(options.minimizable == null) {
+		options.minimizable = true;
+	}
 	kha_System.theTitle = options.title;
 	kha_SystemImpl.init(options,callback);
 };
@@ -6739,6 +5910,11 @@ kha_System.notifyOnApplicationState = function(foregroundListener,resumeListener
 };
 kha_System.notifyOnDropFiles = function(dropFilesListener) {
 	kha_System.dropFilesListeners.push(dropFilesListener);
+};
+kha_System.notifyOnCutCopyPaste = function(cutListener,copyListener,pasteListener) {
+	kha_System.cutListener = cutListener;
+	kha_System.copyListener = copyListener;
+	kha_System.pasteListener = pasteListener;
 };
 kha_System.render = function(id,framebuffer) {
 	if(kha_System.renderListeners.length == 0) {
@@ -6852,33 +6028,28 @@ var kha_GamepadStates = function() {
 $hxClasses["kha.GamepadStates"] = kha_GamepadStates;
 kha_GamepadStates.__name__ = true;
 kha_GamepadStates.prototype = {
-	axes: null
-	,buttons: null
-	,__class__: kha_GamepadStates
+	__class__: kha_GamepadStates
 };
 var kha_SystemImpl = function() { };
 $hxClasses["kha.SystemImpl"] = kha_SystemImpl;
 kha_SystemImpl.__name__ = true;
-kha_SystemImpl.initPerformanceTimer = function() {
-	if(window.performance != null && ($_=window.performance,$bind($_,$_.now)) != null) {
-		kha_SystemImpl.performance = window.performance;
-	} else {
-		kha_SystemImpl.performance = window.Date;
-	}
-};
 kha_SystemImpl.errorHandler = function(message,source,lineno,colno,error) {
 	window.console.error(error.stack);
 	return true;
 };
 kha_SystemImpl.init = function(options,callback) {
 	kha_SystemImpl.options = options;
-	kha_SystemImpl.mobile = kha_SystemImpl.isMobile();
-	kha_SystemImpl.chrome = kha_SystemImpl.isChrome();
-	kha_SystemImpl.init2();
-	callback();
+	window.onerror = kha_SystemImpl.errorHandler;
+	var electron = require('electron');
+	electron.webFrame.setZoomLevelLimits(1,1);
+	electron.ipcRenderer.send("asynchronous-message",{ type : "showWindow", title : options.title, width : options.width, height : options.height});
+	window.setTimeout(function() {
+		kha_SystemImpl.init2();
+		callback();
+	},1000);
 };
 kha_SystemImpl.initEx = function(title,options,windowCallback,callback) {
-	haxe_Log.trace("initEx is not supported on the html5 target, running init() with first window options",{ fileName : "SystemImpl.hx", lineNumber : 86, className : "kha.SystemImpl", methodName : "initEx"});
+	haxe_Log.trace("initEx is not supported on the html5 target, running init() with first window options",{ fileName : "SystemImpl.hx", lineNumber : 78, className : "kha.SystemImpl", methodName : "initEx"});
 	kha_SystemImpl.init({ title : title, width : options[0].width, height : options[0].height},callback);
 	if(windowCallback != null) {
 		windowCallback(0);
@@ -6895,6 +6066,14 @@ kha_SystemImpl.isMobile = function() {
 kha_SystemImpl.isChrome = function() {
 	var agent = window.navigator.userAgent;
 	if(agent.indexOf("Chrome") >= 0) {
+		return true;
+	} else {
+		return false;
+	}
+};
+kha_SystemImpl.isFirefox = function() {
+	var agent = window.navigator.userAgent;
+	if(agent.indexOf("Firefox") >= 0) {
 		return true;
 	} else {
 		return false;
@@ -6939,7 +6118,8 @@ kha_SystemImpl.getScreenRotation = function() {
 	return kha_ScreenRotation.RotationNone;
 };
 kha_SystemImpl.getTime = function() {
-	return kha_SystemImpl.performance.now() / 1000;
+	var performance = window.performance ? window.performance : window.Date;
+	return performance.now() / 1000;
 };
 kha_SystemImpl.getVsync = function() {
 	return true;
@@ -6977,8 +6157,35 @@ kha_SystemImpl.init2 = function(backbufferFormat) {
 		var i2 = _g2++;
 		kha_SystemImpl.pressedKeys.push(null);
 	}
+	window.document.addEventListener("copy",function(e_) {
+		var e = e_;
+		if(kha_System.copyListener != null) {
+			var data = kha_System.copyListener();
+			if(data != null) {
+				e.clipboardData.setData("text/plain",data);
+			}
+			e.preventDefault();
+		}
+	});
+	window.document.addEventListener("cut",function(e_1) {
+		var e1 = e_1;
+		if(kha_System.cutListener != null) {
+			var data1 = kha_System.cutListener();
+			if(data1 != null) {
+				e1.clipboardData.setData("text/plain",data1);
+			}
+			e1.preventDefault();
+		}
+	});
+	window.document.addEventListener("paste",function(e_2) {
+		var e2 = e_2;
+		if(kha_System.pasteListener != null) {
+			var tmp = e2.clipboardData.getData("text/plain");
+			kha_System.pasteListener(tmp);
+			e2.preventDefault();
+		}
+	});
 	kha_CanvasImage.init();
-	kha_SystemImpl.initPerformanceTimer();
 	kha_Scheduler.init();
 	kha_SystemImpl.loadFinished();
 	kha_EnvironmentVariables.instance = new kha_js_EnvironmentVariables();
@@ -7032,7 +6239,7 @@ kha_SystemImpl.checkGamepad = function(pad) {
 kha_SystemImpl.loadFinished = function() {
 	var canvas = kha_SystemImpl.khanvas;
 	if(canvas == null) {
-		canvas = window.document.getElementById(kha_CompilerDefines.canvas_id);
+		canvas = window.document.getElementById("khanvas");
 	}
 	canvas.style.cursor = "default";
 	var gl = false;
@@ -7054,7 +6261,7 @@ kha_SystemImpl.loadFinished = function() {
 		kha_SystemImpl.gl2 = true;
 		kha_Shaders.init();
 	} catch( e ) {
-		haxe_Log.trace("Could not initialize WebGL 2, falling back to WebGL.",{ fileName : "SystemImpl.hx", lineNumber : 302, className : "kha.SystemImpl", methodName : "loadFinished"});
+		haxe_Log.trace("Could not initialize WebGL 2, falling back to WebGL.",{ fileName : "SystemImpl.hx", lineNumber : 327, className : "kha.SystemImpl", methodName : "loadFinished"});
 	}
 	if(!kha_SystemImpl.gl2) {
 		try {
@@ -7078,12 +6285,12 @@ kha_SystemImpl.loadFinished = function() {
 				kha_Shaders.init();
 			}
 		} catch( e1 ) {
-			haxe_Log.trace("Could not initialize WebGL, falling back to Canvas.",{ fileName : "SystemImpl.hx", lineNumber : 326, className : "kha.SystemImpl", methodName : "loadFinished"});
+			haxe_Log.trace("Could not initialize WebGL, falling back to Canvas.",{ fileName : "SystemImpl.hx", lineNumber : 351, className : "kha.SystemImpl", methodName : "loadFinished"});
 		}
 	}
 	kha_SystemImpl.setCanvas(canvas);
 	if(gl) {
-		var g4 = gl ? new kha_js_graphics4_Graphics() : null;
+		var g4 = new kha_js_graphics4_Graphics();
 		kha_SystemImpl.frame = new kha_Framebuffer(0,null,null,g4);
 		kha_SystemImpl.frame.init(new kha_graphics2_Graphics1(kha_SystemImpl.frame),new kha_js_graphics4_Graphics2(kha_SystemImpl.frame),g4);
 	} else {
@@ -7289,6 +6496,8 @@ kha_SystemImpl.mouseDown = function(event) {
 		}
 		if(($_=kha_SystemImpl.khanvas,$bind($_,$_.setCapture)) != null) {
 			kha_SystemImpl.khanvas.setCapture();
+		} else {
+			kha_SystemImpl.khanvas.ownerDocument.addEventListener("mousemove",kha_SystemImpl.documentMouseMove,true);
 		}
 		kha_SystemImpl.khanvas.ownerDocument.addEventListener("mouseup",kha_SystemImpl.mouseLeftUp);
 	} else if(event.which == 2) {
@@ -7309,6 +6518,8 @@ kha_SystemImpl.mouseLeftUp = function(event) {
 	kha_SystemImpl.khanvas.ownerDocument.removeEventListener("mouseup",kha_SystemImpl.mouseLeftUp);
 	if(($_=kha_SystemImpl.khanvas,$bind($_,$_.releaseCapture)) != null) {
 		kha_SystemImpl.khanvas.ownerDocument.releaseCapture();
+	} else {
+		kha_SystemImpl.khanvas.ownerDocument.removeEventListener("mousemove",kha_SystemImpl.documentMouseMove,true);
 	}
 	if(kha_SystemImpl.leftMouseCtrlDown) {
 		kha_SystemImpl.mouse.sendUpEvent(0,1,kha_SystemImpl.mouseX,kha_SystemImpl.mouseY);
@@ -7338,6 +6549,10 @@ kha_SystemImpl.mouseRightUp = function(event) {
 	kha_SystemImpl.mouse.sendUpEvent(0,1,kha_SystemImpl.mouseX,kha_SystemImpl.mouseY);
 	kha_SystemImpl.insideInputEvent = false;
 };
+kha_SystemImpl.documentMouseMove = function(event) {
+	event.stopPropagation();
+	kha_SystemImpl.mouseMove(event);
+};
 kha_SystemImpl.mouseMove = function(event) {
 	kha_SystemImpl.insideInputEvent = true;
 	kha_SystemImpl.unlockSoundOnIOS();
@@ -7361,6 +6576,10 @@ kha_SystemImpl.mouseMove = function(event) {
 		} else {
 			movementY = kha_SystemImpl.mouseY - lastMouseY;
 		}
+	}
+	if(kha_SystemImpl.firefox) {
+		movementX = movementX * window.devicePixelRatio | 0;
+		movementY = movementY * window.devicePixelRatio | 0;
 	}
 	kha_SystemImpl.mouse.sendMoveEvent(0,kha_SystemImpl.mouseX,kha_SystemImpl.mouseY,movementX,movementY);
 	kha_SystemImpl.insideInputEvent = false;
@@ -7797,22 +7016,7 @@ kha_WebGLImage.formatByteSize = function(format) {
 };
 kha_WebGLImage.__super__ = kha_Image;
 kha_WebGLImage.prototype = $extend(kha_Image.prototype,{
-	image: null
-	,video: null
-	,data: null
-	,myWidth: null
-	,myHeight: null
-	,format: null
-	,renderTarget: null
-	,frameBuffer: null
-	,renderBuffer: null
-	,texture: null
-	,depthTexture: null
-	,graphics1: null
-	,graphics2: null
-	,graphics4: null
-	,depthStencilFormat: null
-	,get_g1: function() {
+	get_g1: function() {
 		if(this.graphics1 == null) {
 			this.graphics1 = new kha_graphics2_Graphics1(this);
 		}
@@ -8035,7 +7239,6 @@ kha_WebGLImage.prototype = $extend(kha_Image.prototype,{
 			return new Uint8Array(bytes.b.bufferValue);
 		}
 	}
-	,bytes: null
 	,lock: function(level) {
 		if(level == null) {
 			level = 0;
@@ -8103,7 +7306,6 @@ kha_WebGLImage.prototype = $extend(kha_Image.prototype,{
 			this.bytes = null;
 		}
 	}
-	,pixels: null
 	,getPixels: function() {
 		if(this.frameBuffer == null) {
 			return null;
@@ -8188,10 +7390,7 @@ var kha_RendererOptions = function(textureFormat,depthStencilFormat,samplesPerPi
 $hxClasses["kha.RendererOptions"] = kha_RendererOptions;
 kha_RendererOptions.__name__ = true;
 kha_RendererOptions.prototype = {
-	textureFormat: null
-	,depthStencilFormat: null
-	,samplesPerPixel: null
-	,__class__: kha_RendererOptions
+	__class__: kha_RendererOptions
 };
 var kha_WindowedModeOptions = function(minimizable,maximizable,resizable) {
 	this.minimizable = minimizable;
@@ -8201,10 +7400,7 @@ var kha_WindowedModeOptions = function(minimizable,maximizable,resizable) {
 $hxClasses["kha.WindowedModeOptions"] = kha_WindowedModeOptions;
 kha_WindowedModeOptions.__name__ = true;
 kha_WindowedModeOptions.prototype = {
-	minimizable: null
-	,maximizable: null
-	,resizable: null
-	,__class__: kha_WindowedModeOptions
+	__class__: kha_WindowedModeOptions
 };
 var kha_WindowOptions = function(width,height,mode,title,x,y,targetDisplay,rendererOptions,windowedModeOptions) {
 	this.width = width;
@@ -8220,16 +7416,7 @@ var kha_WindowOptions = function(width,height,mode,title,x,y,targetDisplay,rende
 $hxClasses["kha.WindowOptions"] = kha_WindowOptions;
 kha_WindowOptions.__name__ = true;
 kha_WindowOptions.prototype = {
-	width: null
-	,height: null
-	,mode: null
-	,title: null
-	,x: null
-	,y: null
-	,targetDisplay: null
-	,rendererOptions: null
-	,windowedModeOptions: null
-	,__class__: kha_WindowOptions
+	__class__: kha_WindowOptions
 };
 var kha_arrays__$Float32Array_Float32Array_$Impl_$ = {};
 $hxClasses["kha.arrays._Float32Array.Float32Array_Impl_"] = kha_arrays__$Float32Array_Float32Array_$Impl_$;
@@ -8291,18 +7478,7 @@ var kha_audio1_AudioChannel = function() { };
 $hxClasses["kha.audio1.AudioChannel"] = kha_audio1_AudioChannel;
 kha_audio1_AudioChannel.__name__ = true;
 kha_audio1_AudioChannel.prototype = {
-	play: null
-	,pause: null
-	,stop: null
-	,length: null
-	,get_length: null
-	,position: null
-	,get_position: null
-	,get_volume: null
-	,set_volume: null
-	,finished: null
-	,get_finished: null
-	,__class__: kha_audio1_AudioChannel
+	__class__: kha_audio1_AudioChannel
 };
 var kha_audio2_Audio = function() { };
 $hxClasses["kha.audio2.Audio"] = kha_audio2_Audio;
@@ -8362,7 +7538,7 @@ kha_audio2_Audio.stream = function(sound,loop) {
 		loop = false;
 	}
 	var element = window.document.createElement("audio");
-	var blob = new Blob([sound.compressedData.b.bufferValue],{ type : "audio/mp4"});
+	var blob = new Blob([sound.compressedData.b.bufferValue],{ type : "audio/ogg"});
 	element.src = URL.createObjectURL(blob);
 	element.loop = loop;
 	var channel = new kha_js_AEAudioChannel(element);
@@ -8532,12 +7708,7 @@ $hxClasses["kha.audio2.AudioChannel"] = kha_audio2_AudioChannel;
 kha_audio2_AudioChannel.__name__ = true;
 kha_audio2_AudioChannel.__interfaces__ = [kha_audio1_AudioChannel];
 kha_audio2_AudioChannel.prototype = {
-	data: null
-	,myVolume: null
-	,myPosition: null
-	,paused: null
-	,looping: null
-	,nextSamples: function(samples,length,sampleRate) {
+	nextSamples: function(samples,length,sampleRate) {
 		if(this.paused) {
 			var _g1 = 0;
 			var _g = length;
@@ -8585,11 +7756,9 @@ kha_audio2_AudioChannel.prototype = {
 	,stop: function() {
 		this.myPosition = this.data.length;
 	}
-	,length: null
 	,get_length: function() {
 		return this.data.length / 44100 / 2;
 	}
-	,position: null
 	,get_position: function() {
 		return this.myPosition / 44100 / 2;
 	}
@@ -8599,7 +7768,6 @@ kha_audio2_AudioChannel.prototype = {
 	,set_volume: function(value) {
 		return this.myVolume = value;
 	}
-	,finished: null
 	,get_finished: function() {
 		return this.myPosition >= this.data.length;
 	}
@@ -8617,13 +7785,7 @@ var kha_audio2_Buffer = function(size,channels,samplesPerSecond) {
 $hxClasses["kha.audio2.Buffer"] = kha_audio2_Buffer;
 kha_audio2_Buffer.__name__ = true;
 kha_audio2_Buffer.prototype = {
-	channels: null
-	,samplesPerSecond: null
-	,data: null
-	,size: null
-	,readLocation: null
-	,writeLocation: null
-	,__class__: kha_audio2_Buffer
+	__class__: kha_audio2_Buffer
 };
 var kha_audio2_StreamChannel = function(data,loop) {
 	this.paused = false;
@@ -8636,12 +7798,7 @@ $hxClasses["kha.audio2.StreamChannel"] = kha_audio2_StreamChannel;
 kha_audio2_StreamChannel.__name__ = true;
 kha_audio2_StreamChannel.__interfaces__ = [kha_audio1_AudioChannel];
 kha_audio2_StreamChannel.prototype = {
-	reader: null
-	,atend: null
-	,loop: null
-	,myVolume: null
-	,paused: null
-	,nextSamples: function(samples,length,sampleRate) {
+	nextSamples: function(samples,length,sampleRate) {
 		if(this.paused) {
 			var _g1 = 0;
 			var _g = length;
@@ -8675,11 +7832,9 @@ kha_audio2_StreamChannel.prototype = {
 	,stop: function() {
 		this.atend = true;
 	}
-	,length: null
 	,get_length: function() {
 		return this.reader.get_totalMillisecond() / 1000.0;
 	}
-	,position: null
 	,get_position: function() {
 		return this.reader.get_currentMillisecond() / 1000.0;
 	}
@@ -8689,7 +7844,6 @@ kha_audio2_StreamChannel.prototype = {
 	,set_volume: function(value) {
 		return this.myVolume = value;
 	}
-	,finished: null
 	,get_finished: function() {
 		return this.atend;
 	}
@@ -9734,8 +8888,7 @@ kha_audio2_ogg_vorbis_Reader.readAll = function(bytes,output,useFloat) {
 	return decoder.header;
 };
 kha_audio2_ogg_vorbis_Reader.prototype = {
-	decoder: null
-	,get_header: function() {
+	get_header: function() {
 		return this.decoder.header;
 	}
 	,get_totalSample: function() {
@@ -9764,10 +8917,6 @@ kha_audio2_ogg_vorbis_Reader.prototype = {
 		this.set_currentSample(Math.floor(_$UInt_UInt_$Impl_$.toFloat(_g1) * _g));
 		return this.get_currentMillisecond();
 	}
-	,loopStart: null
-	,loopLength: null
-	,seekFunc: null
-	,inputLength: null
 	,read: function(output,samples,channels,sampleRate,useFloat) {
 		if(useFloat == null) {
 			useFloat = false;
@@ -9817,35 +8966,7 @@ var kha_audio2_ogg_vorbis_VorbisDecodeState = function(input) {
 $hxClasses["kha.audio2.ogg.vorbis.VorbisDecodeState"] = kha_audio2_ogg_vorbis_VorbisDecodeState;
 kha_audio2_ogg_vorbis_VorbisDecodeState.__name__ = true;
 kha_audio2_ogg_vorbis_VorbisDecodeState.prototype = {
-	page: null
-	,eof: null
-	,pFirst: null
-	,pLast: null
-	,validBits: null
-	,inputPosition: null
-	,input: null
-	,discardSamplesDeferred: null
-	,segments: null
-	,bytesInSeg: null
-	,channelBuffers: null
-	,channelBufferStart: null
-	,channelBufferEnd: null
-	,currentSample: null
-	,previousWindow: null
-	,previousLength: null
-	,finalY: null
-	,firstDecode: null
-	,nextSeg: null
-	,acc: null
-	,lastSeg: null
-	,lastSegWhich: null
-	,endSegWithKnownLoc: null
-	,knownLocForPacket: null
-	,error: null
-	,currentLoc: null
-	,currentLocValid: null
-	,firstAudioPageOffset: null
-	,setup: function(loc0,loc1) {
+	setup: function(loc0,loc1) {
 		this.inputPosition += 1;
 		var segmentCount = this.input.readByte();
 		this.inputPosition += segmentCount;
@@ -9943,7 +9064,9 @@ kha_audio2_ogg_vorbis_VorbisDecodeState.prototype = {
 		if(this.nextSeg >= this.segments.length) {
 			this.nextSeg = -1;
 		}
-		var b = this.bytesInSeg == 0;
+		if(this.bytesInSeg != 0) {
+			throw new js__$Boot_HaxeError(new kha_audio2_ogg_vorbis_data_ReaderError(kha_audio2_ogg_vorbis_data_ReaderErrorType.OTHER,"",{ fileName : "VorbisDecodeState.hx", lineNumber : 184, className : "kha.audio2.ogg.vorbis.VorbisDecodeState", methodName : "next"}));
+		}
 		this.bytesInSeg = len;
 		return len;
 	}
@@ -10455,6 +9578,9 @@ kha_audio2_ogg_vorbis_VorbisDecodeState.prototype = {
 			vec[i] = this.input.readByte();
 		}
 		var pageHeader = vec;
+		if(!(pageHeader[0] == 79 && pageHeader[1] == 103 && pageHeader[2] == 103 && pageHeader[3] == 83)) {
+			throw new js__$Boot_HaxeError(new kha_audio2_ogg_vorbis_data_ReaderError(kha_audio2_ogg_vorbis_data_ReaderErrorType.OTHER,"",{ fileName : "VorbisDecodeState.hx", lineNumber : 660, className : "kha.audio2.ogg.vorbis.VorbisDecodeState", methodName : "analyzePage"}));
+		}
 		var n = pageHeader[26];
 		this.inputPosition += n;
 		var this3 = new Array(n);
@@ -10556,7 +9682,9 @@ kha_audio2_ogg_vorbis_VorbisDecodeState.prototype = {
 	}
 	,decodeScalarRaw: function(c) {
 		this.prepHuffman();
-		var b = c.sortedCodewords != null || c.codewords != null;
+		if(!(c.sortedCodewords != null || c.codewords != null)) {
+			throw new js__$Boot_HaxeError(new kha_audio2_ogg_vorbis_data_ReaderError(kha_audio2_ogg_vorbis_data_ReaderErrorType.OTHER,"",{ fileName : "VorbisDecodeState.hx", lineNumber : 787, className : "kha.audio2.ogg.vorbis.VorbisDecodeState", methodName : "decodeScalarRaw"}));
+		}
 		var codewordLengths = c.codewordLengths;
 		var codewords = c.codewords;
 		var sortedCodewords = c.sortedCodewords;
@@ -10590,7 +9718,9 @@ kha_audio2_ogg_vorbis_VorbisDecodeState.prototype = {
 			this.validBits = 0;
 			return -1;
 		}
-		var b1 = !c.sparse;
+		if(!(!c.sparse)) {
+			throw new js__$Boot_HaxeError(new kha_audio2_ogg_vorbis_data_ReaderError(kha_audio2_ogg_vorbis_data_ReaderErrorType.OTHER,"",{ fileName : "VorbisDecodeState.hx", lineNumber : 829, className : "kha.audio2.ogg.vorbis.VorbisDecodeState", methodName : "decodeScalarRaw"}));
+		}
 		var _g1 = 0;
 		var _g = c.entries;
 		while(_g1 < _g) {
@@ -10675,22 +9805,7 @@ kha_audio2_ogg_vorbis_VorbisDecoder.start = function(input) {
 	return decoder;
 };
 kha_audio2_ogg_vorbis_VorbisDecoder.prototype = {
-	previousWindow: null
-	,previousLength: null
-	,finalY: null
-	,a: null
-	,b: null
-	,c: null
-	,window: null
-	,bitReverseData: null
-	,channelBuffers: null
-	,channelBufferStart: null
-	,channelBufferEnd: null
-	,header: null
-	,currentSample: null
-	,totalSample: null
-	,decodeState: null
-	,read: function(output,samples,channels,sampleRate,useFloat) {
+	read: function(output,samples,channels,sampleRate,useFloat) {
 		var b = this.header.sampleRate;
 		if((_$UInt_UInt_$Impl_$.toFloat(sampleRate) % _$UInt_UInt_$Impl_$.toFloat(b) | 0) != 0) {
 			throw new js__$Boot_HaxeError("Unsupported sampleRate : can't convert " + Std.string(_$UInt_UInt_$Impl_$.toFloat(this.header.sampleRate)) + " to " + sampleRate);
@@ -11015,7 +10130,7 @@ kha_audio2_ogg_vorbis_VorbisDecoder.prototype = {
 		} else if(len == this.header.blocksize1) {
 			return this.window[1];
 		} else {
-			return null;
+			throw new js__$Boot_HaxeError(new kha_audio2_ogg_vorbis_data_ReaderError(kha_audio2_ogg_vorbis_data_ReaderErrorType.OTHER,"",{ fileName : "VorbisDecoder.hx", lineNumber : 466, className : "kha.audio2.ogg.vorbis.VorbisDecoder", methodName : "getWindow"}));
 		}
 	}
 	,initBlocksize: function(bs,n) {
@@ -12305,6 +11420,9 @@ var kha_audio2_ogg_vorbis_VorbisTools = function() { };
 $hxClasses["kha.audio2.ogg.vorbis.VorbisTools"] = kha_audio2_ogg_vorbis_VorbisTools;
 kha_audio2_ogg_vorbis_VorbisTools.__name__ = true;
 kha_audio2_ogg_vorbis_VorbisTools.assert = function(b,p) {
+	if(!b) {
+		throw new js__$Boot_HaxeError(new kha_audio2_ogg_vorbis_data_ReaderError(kha_audio2_ogg_vorbis_data_ReaderErrorType.OTHER,"",p));
+	}
 };
 kha_audio2_ogg_vorbis_VorbisTools.neighbors = function(x,n) {
 	var low = -1;
@@ -12363,8 +11481,12 @@ kha_audio2_ogg_vorbis_VorbisTools.lookup1Values = function(entries,dim) {
 	if((Math.pow(r + 1,dim) | 0) <= entries) {
 		++r;
 	}
-	var b = Math.pow(r + 1,dim) > entries;
-	var b1 = (Math.pow(r,dim) | 0) <= entries;
+	if(!(Math.pow(r + 1,dim) > entries)) {
+		throw new js__$Boot_HaxeError(new kha_audio2_ogg_vorbis_data_ReaderError(kha_audio2_ogg_vorbis_data_ReaderErrorType.OTHER,"",{ fileName : "VorbisTools.hx", lineNumber : 155, className : "kha.audio2.ogg.vorbis.VorbisTools", methodName : "lookup1Values"}));
+	}
+	if((Math.pow(r,dim) | 0) > entries) {
+		throw new js__$Boot_HaxeError(new kha_audio2_ogg_vorbis_data_ReaderError(kha_audio2_ogg_vorbis_data_ReaderErrorType.OTHER,"",{ fileName : "VorbisTools.hx", lineNumber : 156, className : "kha.audio2.ogg.vorbis.VorbisTools", methodName : "lookup1Values"}));
+	}
 	return r;
 };
 kha_audio2_ogg_vorbis_VorbisTools.computeWindow = function(n,window) {
@@ -13357,23 +12479,7 @@ kha_audio2_ogg_vorbis_data_Codebook.read = function(decodeState) {
 	return c;
 };
 kha_audio2_ogg_vorbis_data_Codebook.prototype = {
-	dimensions: null
-	,entries: null
-	,codewordLengths: null
-	,minimumValue: null
-	,deltaValue: null
-	,valueBits: null
-	,lookupType: null
-	,sequenceP: null
-	,sparse: null
-	,lookupValues: null
-	,multiplicands: null
-	,codewords: null
-	,fastHuffman: null
-	,sortedCodewords: null
-	,sortedValues: null
-	,sortedEntries: null
-	,addEntry: function(huffCode,symbol,count,len,values) {
+	addEntry: function(huffCode,symbol,count,len,values) {
 		if(!this.sparse) {
 			this.codewords[symbol] = huffCode;
 		} else {
@@ -13384,6 +12490,9 @@ kha_audio2_ogg_vorbis_data_Codebook.prototype = {
 	}
 	,includeInSort: function(len) {
 		if(this.sparse) {
+			if(len == 255) {
+				throw new js__$Boot_HaxeError(new kha_audio2_ogg_vorbis_data_ReaderError(kha_audio2_ogg_vorbis_data_ReaderErrorType.OTHER,"",{ fileName : "Codebook.hx", lineNumber : 201, className : "kha.audio2.ogg.vorbis.data.Codebook", methodName : "includeInSort"}));
+			}
 			return true;
 		} else if(len == 255) {
 			return false;
@@ -13409,7 +12518,9 @@ kha_audio2_ogg_vorbis_data_Codebook.prototype = {
 			++k;
 		}
 		if(k == n) {
-			var b = this.sortedEntries == 0;
+			if(this.sortedEntries != 0) {
+				throw new js__$Boot_HaxeError(new kha_audio2_ogg_vorbis_data_ReaderError(kha_audio2_ogg_vorbis_data_ReaderErrorType.OTHER,"",{ fileName : "Codebook.hx", lineNumber : 228, className : "kha.audio2.ogg.vorbis.data.Codebook", methodName : "computeCodewords"}));
+			}
 			return true;
 		}
 		var m = 0;
@@ -13452,6 +12563,9 @@ kha_audio2_ogg_vorbis_data_Codebook.prototype = {
 			if(z != len[i]) {
 				var y = len[i];
 				while(y > z) {
+					if(available[y] != 0) {
+						throw new js__$Boot_HaxeError(new kha_audio2_ogg_vorbis_data_ReaderError(kha_audio2_ogg_vorbis_data_ReaderErrorType.OTHER,"",{ fileName : "Codebook.hx", lineNumber : 272, className : "kha.audio2.ogg.vorbis.data.Codebook", methodName : "computeCodewords"}));
+					}
 					available[y] = res + (1 << 32 - y);
 					--y;
 				}
@@ -13467,7 +12581,20 @@ kha_audio2_ogg_vorbis_data_Codebook.prototype = {
 			while(_g1 < _g) {
 				var i = _g1++;
 				var len = lengths[i];
-				if(this.sparse ? true : len == 255 ? false : len > 10) {
+				var tmp;
+				if(this.sparse) {
+					if(len == 255) {
+						throw new js__$Boot_HaxeError(new kha_audio2_ogg_vorbis_data_ReaderError(kha_audio2_ogg_vorbis_data_ReaderErrorType.OTHER,"",{ fileName : "Codebook.hx", lineNumber : 201, className : "kha.audio2.ogg.vorbis.data.Codebook", methodName : "includeInSort"}));
+					}
+					tmp = true;
+				} else if(len == 255) {
+					tmp = false;
+				} else if(len > 10) {
+					tmp = true;
+				} else {
+					tmp = false;
+				}
+				if(tmp) {
 					var n = this.codewords[i];
 					n = (n & -1431655766) >>> 1 | (n & 1431655765) << 1;
 					n = (n & -858993460) >>> 2 | (n & 858993459) << 2;
@@ -13476,7 +12603,9 @@ kha_audio2_ogg_vorbis_data_Codebook.prototype = {
 					this.sortedCodewords[k++] = n >>> 16 | n << 16;
 				}
 			}
-			var b = k == this.sortedEntries;
+			if(k != this.sortedEntries) {
+				throw new js__$Boot_HaxeError(new kha_audio2_ogg_vorbis_data_ReaderError(kha_audio2_ogg_vorbis_data_ReaderErrorType.OTHER,"",{ fileName : "Codebook.hx", lineNumber : 296, className : "kha.audio2.ogg.vorbis.data.Codebook", methodName : "computeSortedHuffman"}));
+			}
 		} else {
 			var _g11 = 0;
 			var _g2 = this.sortedEntries;
@@ -13498,7 +12627,20 @@ kha_audio2_ogg_vorbis_data_Codebook.prototype = {
 		while(_g12 < _g3) {
 			var i2 = _g12++;
 			var huffLen = this.sparse ? lengths[values[i2]] : lengths[i2];
-			if(this.sparse ? true : huffLen == 255 ? false : huffLen > 10) {
+			var tmp1;
+			if(this.sparse) {
+				if(huffLen == 255) {
+					throw new js__$Boot_HaxeError(new kha_audio2_ogg_vorbis_data_ReaderError(kha_audio2_ogg_vorbis_data_ReaderErrorType.OTHER,"",{ fileName : "Codebook.hx", lineNumber : 201, className : "kha.audio2.ogg.vorbis.data.Codebook", methodName : "includeInSort"}));
+				}
+				tmp1 = true;
+			} else if(huffLen == 255) {
+				tmp1 = false;
+			} else if(huffLen > 10) {
+				tmp1 = true;
+			} else {
+				tmp1 = false;
+			}
+			if(tmp1) {
 				var n2 = this.codewords[i2];
 				n2 = (n2 & -1431655766) >>> 1 | (n2 & 1431655765) << 1;
 				n2 = (n2 & -858993460) >>> 2 | (n2 & 858993459) << 2;
@@ -13872,8 +13014,7 @@ var kha_audio2_ogg_vorbis_data_Comment = function() {
 $hxClasses["kha.audio2.ogg.vorbis.data.Comment"] = kha_audio2_ogg_vorbis_data_Comment;
 kha_audio2_ogg_vorbis_data_Comment.__name__ = true;
 kha_audio2_ogg_vorbis_data_Comment.prototype = {
-	data: null
-	,get_title: function() {
+	get_title: function() {
 		return this.getString("title");
 	}
 	,get_loopStart: function() {
@@ -14731,43 +13872,21 @@ kha_audio2_ogg_vorbis_data_Floor.read = function(decodeState,codebooks) {
 	return floor;
 };
 kha_audio2_ogg_vorbis_data_Floor.prototype = {
-	floor0: null
-	,floor1: null
-	,type: null
-	,__class__: kha_audio2_ogg_vorbis_data_Floor
+	__class__: kha_audio2_ogg_vorbis_data_Floor
 };
 var kha_audio2_ogg_vorbis_data_Floor0 = function() {
 };
 $hxClasses["kha.audio2.ogg.vorbis.data.Floor0"] = kha_audio2_ogg_vorbis_data_Floor0;
 kha_audio2_ogg_vorbis_data_Floor0.__name__ = true;
 kha_audio2_ogg_vorbis_data_Floor0.prototype = {
-	order: null
-	,rate: null
-	,barkMapSize: null
-	,amplitudeBits: null
-	,amplitudeOffset: null
-	,numberOfBooks: null
-	,bookList: null
-	,__class__: kha_audio2_ogg_vorbis_data_Floor0
+	__class__: kha_audio2_ogg_vorbis_data_Floor0
 };
 var kha_audio2_ogg_vorbis_data_Floor1 = function() {
 };
 $hxClasses["kha.audio2.ogg.vorbis.data.Floor1"] = kha_audio2_ogg_vorbis_data_Floor1;
 kha_audio2_ogg_vorbis_data_Floor1.__name__ = true;
 kha_audio2_ogg_vorbis_data_Floor1.prototype = {
-	partitions: null
-	,partitionClassList: null
-	,classDimensions: null
-	,classSubclasses: null
-	,classMasterbooks: null
-	,subclassBooks: null
-	,xlist: null
-	,sortedOrder: null
-	,neighbors: null
-	,floor1Multiplier: null
-	,rangebits: null
-	,values: null
-	,__class__: kha_audio2_ogg_vorbis_data_Floor1
+	__class__: kha_audio2_ogg_vorbis_data_Floor1
 };
 var kha_audio2_ogg_vorbis_data_Header = function() {
 };
@@ -15241,30 +14360,14 @@ kha_audio2_ogg_vorbis_data_Header.read = function(decodeState) {
 	return header1;
 };
 kha_audio2_ogg_vorbis_data_Header.prototype = {
-	maximumBitRate: null
-	,nominalBitRate: null
-	,minimumBitRate: null
-	,sampleRate: null
-	,channel: null
-	,blocksize0: null
-	,blocksize1: null
-	,codebooks: null
-	,floorConfig: null
-	,residueConfig: null
-	,mapping: null
-	,modes: null
-	,comment: null
-	,vendor: null
-	,__class__: kha_audio2_ogg_vorbis_data_Header
+	__class__: kha_audio2_ogg_vorbis_data_Header
 };
 var kha_audio2_ogg_vorbis_data_IntPoint = function() {
 };
 $hxClasses["kha.audio2.ogg.vorbis.data.IntPoint"] = kha_audio2_ogg_vorbis_data_IntPoint;
 kha_audio2_ogg_vorbis_data_IntPoint.__name__ = true;
 kha_audio2_ogg_vorbis_data_IntPoint.prototype = {
-	x: null
-	,y: null
-	,__class__: kha_audio2_ogg_vorbis_data_IntPoint
+	__class__: kha_audio2_ogg_vorbis_data_IntPoint
 };
 var kha_audio2_ogg_vorbis_data_Mapping = function() {
 };
@@ -15780,12 +14883,7 @@ kha_audio2_ogg_vorbis_data_Mapping.read = function(decodeState,channels) {
 	return m;
 };
 kha_audio2_ogg_vorbis_data_Mapping.prototype = {
-	couplingSteps: null
-	,chan: null
-	,submaps: null
-	,submapFloor: null
-	,submapResidue: null
-	,doFloor: function(floors,i,n,target,finalY,step2Flag) {
+	doFloor: function(floors,i,n,target,finalY,step2Flag) {
 		var n2 = n >> 1;
 		var s = this.chan[i].mux;
 		var floor;
@@ -15828,10 +14926,7 @@ var kha_audio2_ogg_vorbis_data_MappingChannel = function() {
 $hxClasses["kha.audio2.ogg.vorbis.data.MappingChannel"] = kha_audio2_ogg_vorbis_data_MappingChannel;
 kha_audio2_ogg_vorbis_data_MappingChannel.__name__ = true;
 kha_audio2_ogg_vorbis_data_MappingChannel.prototype = {
-	magnitude: null
-	,angle: null
-	,mux: null
-	,__class__: kha_audio2_ogg_vorbis_data_MappingChannel
+	__class__: kha_audio2_ogg_vorbis_data_MappingChannel
 };
 var kha_audio2_ogg_vorbis_data_Mode = function() {
 };
@@ -15992,19 +15087,14 @@ kha_audio2_ogg_vorbis_data_Mode.read = function(decodeState) {
 	return m;
 };
 kha_audio2_ogg_vorbis_data_Mode.prototype = {
-	blockflag: null
-	,mapping: null
-	,windowtype: null
-	,transformtype: null
-	,__class__: kha_audio2_ogg_vorbis_data_Mode
+	__class__: kha_audio2_ogg_vorbis_data_Mode
 };
 var kha_audio2_ogg_vorbis_data_Page = function() {
 };
 $hxClasses["kha.audio2.ogg.vorbis.data.Page"] = kha_audio2_ogg_vorbis_data_Page;
 kha_audio2_ogg_vorbis_data_Page.__name__ = true;
 kha_audio2_ogg_vorbis_data_Page.prototype = {
-	flag: null
-	,clone: function() {
+	clone: function() {
 		var page = new kha_audio2_ogg_vorbis_data_Page();
 		page.flag = this.flag;
 		return page;
@@ -16067,12 +15157,7 @@ var kha_audio2_ogg_vorbis_data_ProbedPage = function() {
 $hxClasses["kha.audio2.ogg.vorbis.data.ProbedPage"] = kha_audio2_ogg_vorbis_data_ProbedPage;
 kha_audio2_ogg_vorbis_data_ProbedPage.__name__ = true;
 kha_audio2_ogg_vorbis_data_ProbedPage.prototype = {
-	pageStart: null
-	,pageEnd: null
-	,afterPreviousPageStart: null
-	,firstDecodedSample: null
-	,lastDecodedSample: null
-	,__class__: kha_audio2_ogg_vorbis_data_ProbedPage
+	__class__: kha_audio2_ogg_vorbis_data_ProbedPage
 };
 var kha_audio2_ogg_vorbis_data_ReaderError = function(type,message,posInfos) {
 	if(message == null) {
@@ -16085,10 +15170,7 @@ var kha_audio2_ogg_vorbis_data_ReaderError = function(type,message,posInfos) {
 $hxClasses["kha.audio2.ogg.vorbis.data.ReaderError"] = kha_audio2_ogg_vorbis_data_ReaderError;
 kha_audio2_ogg_vorbis_data_ReaderError.__name__ = true;
 kha_audio2_ogg_vorbis_data_ReaderError.prototype = {
-	type: null
-	,message: null
-	,posInfos: null
-	,__class__: kha_audio2_ogg_vorbis_data_ReaderError
+	__class__: kha_audio2_ogg_vorbis_data_ReaderError
 };
 var kha_audio2_ogg_vorbis_data_ReaderErrorType = $hxClasses["kha.audio2.ogg.vorbis.data.ReaderErrorType"] = { __ename__ : true, __constructs__ : ["NEED_MORE_DATA","INVALID_API_MIXING","OUTOFMEM","FEATURE_NOT_SUPPORTED","TOO_MANY_CHANNELS","FILE_OPEN_FAILURE","SEEK_WITHOUT_LENGTH","UNEXPECTED_EOF","SEEK_INVALID","INVALID_SETUP","INVALID_STREAM","MISSING_CAPTURE_PATTERN","INVALID_STREAM_STRUCTURE_VERSION","CONTINUED_PACKET_FLAG_INVALID","INCORRECT_STREAM_SERIAL_NUMBER","INVALID_FIRST_PAGE","BAD_PACKET_TYPE","CANT_FIND_LAST_PAGE","SEEK_FAILED","OTHER"] };
 kha_audio2_ogg_vorbis_data_ReaderErrorType.NEED_MORE_DATA = ["NEED_MORE_DATA",0];
@@ -16571,15 +15653,7 @@ kha_audio2_ogg_vorbis_data_Residue.read = function(decodeState,codebooks) {
 	return r;
 };
 kha_audio2_ogg_vorbis_data_Residue.prototype = {
-	begin: null
-	,end: null
-	,partSize: null
-	,classifications: null
-	,classbook: null
-	,classdata: null
-	,residueBooks: null
-	,type: null
-	,decode: function(decodeState,header,residueBuffers,ch,n,doNotDecode,channelBuffers) {
+	decode: function(decodeState,header,residueBuffers,ch,n,doNotDecode,channelBuffers) {
 		var codebooks = header.codebooks;
 		var classwords = codebooks[this.classbook].dimensions;
 		var nRead = this.end - this.begin;
@@ -16900,10 +15974,7 @@ var kha_graphics1_Graphics = function() { };
 $hxClasses["kha.graphics1.Graphics"] = kha_graphics1_Graphics;
 kha_graphics1_Graphics.__name__ = true;
 kha_graphics1_Graphics.prototype = {
-	begin: null
-	,end: null
-	,setPixel: null
-	,__class__: kha_graphics1_Graphics
+	__class__: kha_graphics1_Graphics
 };
 var kha_graphics2_Graphics = function() {
 	this.transformations = [];
@@ -16952,6 +16023,8 @@ kha_graphics2_Graphics.prototype = {
 	,fillRect: function(x,y,width,height) {
 	}
 	,drawString: function(text,x,y) {
+	}
+	,drawCharacters: function(text,start,length,x,y) {
 	}
 	,drawLine: function(x1,y1,x2,y2,strength) {
 		if(strength == null) {
@@ -17427,7 +16500,6 @@ kha_graphics2_Graphics.prototype = {
 	}
 	,disableScissor: function() {
 	}
-	,pipe: null
 	,get_pipeline: function() {
 		return this.pipe;
 	}
@@ -17435,10 +16507,6 @@ kha_graphics2_Graphics.prototype = {
 		this.setPipeline(pipeline);
 		return this.pipe = pipeline;
 	}
-	,transformations: null
-	,opacities: null
-	,myFontSize: null
-	,myFontGlyphs: null
 	,setTransformation: function(transformation) {
 	}
 	,setOpacity: function(opacity) {
@@ -17454,10 +16522,7 @@ $hxClasses["kha.graphics2.Graphics1"] = kha_graphics2_Graphics1;
 kha_graphics2_Graphics1.__name__ = true;
 kha_graphics2_Graphics1.__interfaces__ = [kha_graphics1_Graphics];
 kha_graphics2_Graphics1.prototype = {
-	canvas: null
-	,texture: null
-	,pixels: null
-	,begin: function() {
+	begin: function() {
 		if(this.texture == null) {
 			this.texture = kha_Image.create(this.canvas.get_width(),this.canvas.get_height(),kha_graphics4_TextureFormat.RGBA32,kha_graphics4_Usage.ReadableUsage);
 		}
@@ -17486,196 +16551,108 @@ var kha_graphics2_truetype_VectorOfIntPointer = function() {
 $hxClasses["kha.graphics2.truetype.VectorOfIntPointer"] = kha_graphics2_truetype_VectorOfIntPointer;
 kha_graphics2_truetype_VectorOfIntPointer.__name__ = true;
 kha_graphics2_truetype_VectorOfIntPointer.prototype = {
-	value: null
-	,__class__: kha_graphics2_truetype_VectorOfIntPointer
+	__class__: kha_graphics2_truetype_VectorOfIntPointer
 };
 var kha_graphics2_truetype_Stbtt_$temp_$rect = function() {
 };
 $hxClasses["kha.graphics2.truetype.Stbtt_temp_rect"] = kha_graphics2_truetype_Stbtt_$temp_$rect;
 kha_graphics2_truetype_Stbtt_$temp_$rect.__name__ = true;
 kha_graphics2_truetype_Stbtt_$temp_$rect.prototype = {
-	x0: null
-	,y0: null
-	,x1: null
-	,y1: null
-	,__class__: kha_graphics2_truetype_Stbtt_$temp_$rect
+	__class__: kha_graphics2_truetype_Stbtt_$temp_$rect
 };
 var kha_graphics2_truetype_Stbtt_$temp_$glyph_$h_$metrics = function() {
 };
 $hxClasses["kha.graphics2.truetype.Stbtt_temp_glyph_h_metrics"] = kha_graphics2_truetype_Stbtt_$temp_$glyph_$h_$metrics;
 kha_graphics2_truetype_Stbtt_$temp_$glyph_$h_$metrics.__name__ = true;
 kha_graphics2_truetype_Stbtt_$temp_$glyph_$h_$metrics.prototype = {
-	advanceWidth: null
-	,leftSideBearing: null
-	,__class__: kha_graphics2_truetype_Stbtt_$temp_$glyph_$h_$metrics
+	__class__: kha_graphics2_truetype_Stbtt_$temp_$glyph_$h_$metrics
 };
 var kha_graphics2_truetype_Stbtt_$temp_$font_$v_$metrics = function() {
 };
 $hxClasses["kha.graphics2.truetype.Stbtt_temp_font_v_metrics"] = kha_graphics2_truetype_Stbtt_$temp_$font_$v_$metrics;
 kha_graphics2_truetype_Stbtt_$temp_$font_$v_$metrics.__name__ = true;
 kha_graphics2_truetype_Stbtt_$temp_$font_$v_$metrics.prototype = {
-	ascent: null
-	,descent: null
-	,lineGap: null
-	,__class__: kha_graphics2_truetype_Stbtt_$temp_$font_$v_$metrics
+	__class__: kha_graphics2_truetype_Stbtt_$temp_$font_$v_$metrics
 };
 var kha_graphics2_truetype_Stbtt_$temp_$region = function() {
 };
 $hxClasses["kha.graphics2.truetype.Stbtt_temp_region"] = kha_graphics2_truetype_Stbtt_$temp_$region;
 kha_graphics2_truetype_Stbtt_$temp_$region.__name__ = true;
 kha_graphics2_truetype_Stbtt_$temp_$region.prototype = {
-	width: null
-	,height: null
-	,xoff: null
-	,yoff: null
-	,__class__: kha_graphics2_truetype_Stbtt_$temp_$region
+	__class__: kha_graphics2_truetype_Stbtt_$temp_$region
 };
 var kha_graphics2_truetype_Stbtt_$bakedchar = function() {
 };
 $hxClasses["kha.graphics2.truetype.Stbtt_bakedchar"] = kha_graphics2_truetype_Stbtt_$bakedchar;
 kha_graphics2_truetype_Stbtt_$bakedchar.__name__ = true;
 kha_graphics2_truetype_Stbtt_$bakedchar.prototype = {
-	x0: null
-	,y0: null
-	,x1: null
-	,y1: null
-	,xoff: null
-	,yoff: null
-	,xadvance: null
-	,__class__: kha_graphics2_truetype_Stbtt_$bakedchar
+	__class__: kha_graphics2_truetype_Stbtt_$bakedchar
 };
 var kha_graphics2_truetype_Stbtt_$aligned_$quad = function() { };
 $hxClasses["kha.graphics2.truetype.Stbtt_aligned_quad"] = kha_graphics2_truetype_Stbtt_$aligned_$quad;
 kha_graphics2_truetype_Stbtt_$aligned_$quad.__name__ = true;
 kha_graphics2_truetype_Stbtt_$aligned_$quad.prototype = {
-	x0: null
-	,y0: null
-	,s0: null
-	,t0: null
-	,x1: null
-	,y1: null
-	,s1: null
-	,t1: null
-	,__class__: kha_graphics2_truetype_Stbtt_$aligned_$quad
+	__class__: kha_graphics2_truetype_Stbtt_$aligned_$quad
 };
 var kha_graphics2_truetype_Stbtt_$packedchar = function() { };
 $hxClasses["kha.graphics2.truetype.Stbtt_packedchar"] = kha_graphics2_truetype_Stbtt_$packedchar;
 kha_graphics2_truetype_Stbtt_$packedchar.__name__ = true;
 kha_graphics2_truetype_Stbtt_$packedchar.prototype = {
-	x0: null
-	,y0: null
-	,x1: null
-	,y1: null
-	,xoff: null
-	,yoff: null
-	,xadvance: null
-	,xoff2: null
-	,yoff2: null
-	,__class__: kha_graphics2_truetype_Stbtt_$packedchar
+	__class__: kha_graphics2_truetype_Stbtt_$packedchar
 };
 var kha_graphics2_truetype_Stbtt_$pack_$range = function() { };
 $hxClasses["kha.graphics2.truetype.Stbtt_pack_range"] = kha_graphics2_truetype_Stbtt_$pack_$range;
 kha_graphics2_truetype_Stbtt_$pack_$range.__name__ = true;
 kha_graphics2_truetype_Stbtt_$pack_$range.prototype = {
-	font_size: null
-	,first_unicode_codepoint_in_range: null
-	,array_of_unicode_codepoints: null
-	,num_chars: null
-	,chardata_for_range: null
-	,h_oversample: null
-	,v_oversample: null
-	,__class__: kha_graphics2_truetype_Stbtt_$pack_$range
+	__class__: kha_graphics2_truetype_Stbtt_$pack_$range
 };
 var kha_graphics2_truetype_Stbtt_$pack_$context = function() { };
 $hxClasses["kha.graphics2.truetype.Stbtt_pack_context"] = kha_graphics2_truetype_Stbtt_$pack_$context;
 kha_graphics2_truetype_Stbtt_$pack_$context.__name__ = true;
 kha_graphics2_truetype_Stbtt_$pack_$context.prototype = {
-	width: null
-	,height: null
-	,stride_in_bytes: null
-	,padding: null
-	,h_oversample: null
-	,v_oversample: null
-	,pixels: null
-	,__class__: kha_graphics2_truetype_Stbtt_$pack_$context
+	__class__: kha_graphics2_truetype_Stbtt_$pack_$context
 };
 var kha_graphics2_truetype_Stbtt_$fontinfo = function() {
 };
 $hxClasses["kha.graphics2.truetype.Stbtt_fontinfo"] = kha_graphics2_truetype_Stbtt_$fontinfo;
 kha_graphics2_truetype_Stbtt_$fontinfo.__name__ = true;
 kha_graphics2_truetype_Stbtt_$fontinfo.prototype = {
-	data: null
-	,fontstart: null
-	,numGlyphs: null
-	,loca: null
-	,head: null
-	,glyf: null
-	,hhea: null
-	,hmtx: null
-	,kern: null
-	,index_map: null
-	,indexToLocFormat: null
-	,__class__: kha_graphics2_truetype_Stbtt_$fontinfo
+	__class__: kha_graphics2_truetype_Stbtt_$fontinfo
 };
 var kha_graphics2_truetype_Stbtt_$vertex = function() {
 };
 $hxClasses["kha.graphics2.truetype.Stbtt_vertex"] = kha_graphics2_truetype_Stbtt_$vertex;
 kha_graphics2_truetype_Stbtt_$vertex.__name__ = true;
 kha_graphics2_truetype_Stbtt_$vertex.prototype = {
-	x: null
-	,y: null
-	,cx: null
-	,cy: null
-	,type: null
-	,padding: null
-	,__class__: kha_graphics2_truetype_Stbtt_$vertex
+	__class__: kha_graphics2_truetype_Stbtt_$vertex
 };
 var kha_graphics2_truetype_Stbtt_$_$bitmap = function() {
 };
 $hxClasses["kha.graphics2.truetype.Stbtt__bitmap"] = kha_graphics2_truetype_Stbtt_$_$bitmap;
 kha_graphics2_truetype_Stbtt_$_$bitmap.__name__ = true;
 kha_graphics2_truetype_Stbtt_$_$bitmap.prototype = {
-	w: null
-	,h: null
-	,stride: null
-	,pixels: null
-	,pixels_offset: null
-	,__class__: kha_graphics2_truetype_Stbtt_$_$bitmap
+	__class__: kha_graphics2_truetype_Stbtt_$_$bitmap
 };
 var kha_graphics2_truetype_Stbtt_$_$edge = function() {
 };
 $hxClasses["kha.graphics2.truetype.Stbtt__edge"] = kha_graphics2_truetype_Stbtt_$_$edge;
 kha_graphics2_truetype_Stbtt_$_$edge.__name__ = true;
 kha_graphics2_truetype_Stbtt_$_$edge.prototype = {
-	x0: null
-	,y0: null
-	,x1: null
-	,y1: null
-	,invert: null
-	,__class__: kha_graphics2_truetype_Stbtt_$_$edge
+	__class__: kha_graphics2_truetype_Stbtt_$_$edge
 };
 var kha_graphics2_truetype_Stbtt_$_$active_$edge = function() {
 };
 $hxClasses["kha.graphics2.truetype.Stbtt__active_edge"] = kha_graphics2_truetype_Stbtt_$_$active_$edge;
 kha_graphics2_truetype_Stbtt_$_$active_$edge.__name__ = true;
 kha_graphics2_truetype_Stbtt_$_$active_$edge.prototype = {
-	next: null
-	,fx: null
-	,fdx: null
-	,fdy: null
-	,direction: null
-	,sy: null
-	,ey: null
-	,__class__: kha_graphics2_truetype_Stbtt_$_$active_$edge
+	__class__: kha_graphics2_truetype_Stbtt_$_$active_$edge
 };
 var kha_graphics2_truetype_Stbtt_$_$point = function() {
 };
 $hxClasses["kha.graphics2.truetype.Stbtt__point"] = kha_graphics2_truetype_Stbtt_$_$point;
 kha_graphics2_truetype_Stbtt_$_$point.__name__ = true;
 kha_graphics2_truetype_Stbtt_$_$point.prototype = {
-	x: null
-	,y: null
-	,__class__: kha_graphics2_truetype_Stbtt_$_$point
+	__class__: kha_graphics2_truetype_Stbtt_$_$point
 };
 var kha_graphics2_truetype_StbTruetype = function() { };
 $hxClasses["kha.graphics2.truetype.StbTruetype"] = kha_graphics2_truetype_StbTruetype;
@@ -19646,17 +18623,7 @@ kha_graphics4_CubeMap.createRenderTarget = function(size,format,depthStencil,con
 	return new kha_graphics4_CubeMap(size,format,true,depthStencil);
 };
 kha_graphics4_CubeMap.prototype = {
-	myWidth: null
-	,myHeight: null
-	,format: null
-	,renderTarget: null
-	,depthStencilFormat: null
-	,graphics4: null
-	,frameBuffer: null
-	,texture: null
-	,depthTexture: null
-	,isDepthAttachment: null
-	,createTexture: function() {
+	createTexture: function() {
 		if(kha_SystemImpl.gl == null) {
 			return;
 		}
@@ -19791,23 +18758,18 @@ kha_graphics4_CubeMap.prototype = {
 	}
 	,unlock: function() {
 	}
-	,width: null
 	,get_width: function() {
 		return this.myWidth;
 	}
-	,height: null
 	,get_height: function() {
 		return this.myHeight;
 	}
-	,g1: null
 	,get_g1: function() {
 		return null;
 	}
-	,g2: null
 	,get_g2: function() {
 		return null;
 	}
-	,g4: null
 	,get_g4: function() {
 		if(this.graphics4 == null) {
 			this.graphics4 = new kha_js_graphics4_Graphics(this);
@@ -19846,11 +18808,7 @@ kha_graphics4_FragmentShader.fromSource = function(source) {
 	return shader;
 };
 kha_graphics4_FragmentShader.prototype = {
-	sources: null
-	,type: null
-	,shader: null
-	,files: null
-	,'delete': function() {
+	'delete': function() {
 		kha_SystemImpl.gl.deleteShader(this.shader);
 		this.shader = null;
 		this.sources = null;
@@ -19870,46 +18828,7 @@ var kha_graphics4_Graphics = function() { };
 $hxClasses["kha.graphics4.Graphics"] = kha_graphics4_Graphics;
 kha_graphics4_Graphics.__name__ = true;
 kha_graphics4_Graphics.prototype = {
-	begin: null
-	,beginFace: null
-	,beginEye: null
-	,end: null
-	,vsynced: null
-	,refreshRate: null
-	,clear: null
-	,viewport: null
-	,scissor: null
-	,disableScissor: null
-	,setVertexBuffer: null
-	,setVertexBuffers: null
-	,setIndexBuffer: null
-	,setTexture: null
-	,setTextureDepth: null
-	,setVideoTexture: null
-	,setImageTexture: null
-	,setTextureParameters: null
-	,setTexture3DParameters: null
-	,setCubeMap: null
-	,setCubeMapDepth: null
-	,renderTargetsInvertedY: null
-	,instancedRenderingAvailable: null
-	,setPipeline: null
-	,setBool: null
-	,setInt: null
-	,setFloat: null
-	,setFloat2: null
-	,setFloat3: null
-	,setFloat4: null
-	,setFloats: null
-	,setVector2: null
-	,setVector3: null
-	,setVector4: null
-	,setMatrix: null
-	,setMatrix3: null
-	,drawIndexedVertices: null
-	,drawIndexedVerticesInstanced: null
-	,flush: null
-	,__class__: kha_graphics4_Graphics
+	__class__: kha_graphics4_Graphics
 };
 var kha_graphics4_ImageShaderPainter = function(g4) {
 	this.destinationBlend = kha_graphics4_BlendingFactor.Undefined;
@@ -19945,21 +18864,7 @@ kha_graphics4_ImageShaderPainter.initShaders = function() {
 	kha_graphics4_ImageShaderPainter.shaderPipeline.compile();
 };
 kha_graphics4_ImageShaderPainter.prototype = {
-	projectionMatrix: null
-	,projectionLocation: null
-	,textureLocation: null
-	,bufferIndex: null
-	,rectVertexBuffer: null
-	,rectVertices: null
-	,indexBuffer: null
-	,lastTexture: null
-	,bilinear: null
-	,bilinearMipmaps: null
-	,g: null
-	,myPipeline: null
-	,sourceBlend: null
-	,destinationBlend: null
-	,get_pipeline: function() {
+	get_pipeline: function() {
 		return this.myPipeline;
 	}
 	,set_pipeline: function(pipe) {
@@ -20260,21 +19165,7 @@ kha_graphics4_ColoredShaderPainter.initShaders = function() {
 	kha_graphics4_ColoredShaderPainter.shaderPipeline.compile();
 };
 kha_graphics4_ColoredShaderPainter.prototype = {
-	projectionMatrix: null
-	,projectionLocation: null
-	,bufferIndex: null
-	,rectVertexBuffer: null
-	,rectVertices: null
-	,indexBuffer: null
-	,triangleBufferIndex: null
-	,triangleVertexBuffer: null
-	,triangleVertices: null
-	,triangleIndexBuffer: null
-	,g: null
-	,myPipeline: null
-	,sourceBlend: null
-	,destinationBlend: null
-	,get_pipeline: function() {
+	get_pipeline: function() {
 		return this.myPipeline;
 	}
 	,set_pipeline: function(pipe) {
@@ -20384,7 +19275,9 @@ kha_graphics4_ColoredShaderPainter.prototype = {
 	}
 	,drawBuffer: function(trisDone) {
 		if(!trisDone) {
-			this.endTris(true);
+			if(this.triangleBufferIndex > 0) {
+				this.drawTriBuffer(true);
+			}
 		}
 		this.rectVertexBuffer.unlock();
 		this.g.setVertexBuffer(this.rectVertexBuffer);
@@ -20496,22 +19389,7 @@ kha_graphics4_TextShaderPainter.findIndex = function(charcode,fontGlyphs) {
 	return 0;
 };
 kha_graphics4_TextShaderPainter.prototype = {
-	projectionMatrix: null
-	,projectionLocation: null
-	,textureLocation: null
-	,bufferIndex: null
-	,rectVertexBuffer: null
-	,rectVertices: null
-	,indexBuffer: null
-	,font: null
-	,lastTexture: null
-	,g: null
-	,myPipeline: null
-	,fontSize: null
-	,bilinear: null
-	,sourceBlend: null
-	,destinationBlend: null
-	,get_pipeline: function() {
+	get_pipeline: function() {
 		return this.myPipeline;
 	}
 	,set_pipeline: function(pipe) {
@@ -20611,7 +19489,6 @@ kha_graphics4_TextShaderPainter.prototype = {
 	,setFont: function(font) {
 		this.font = js_Boot.__cast(font , kha_Kravur);
 	}
-	,text: null
 	,startString: function(text) {
 		this.text = text;
 	}
@@ -20692,6 +19569,72 @@ kha_graphics4_TextShaderPainter.prototype = {
 		}
 		this.endString();
 	}
+	,drawCharacters: function(text,start,length,opacity,color,x,y,transformation,fontGlyphs) {
+		var font = this.font._get(this.fontSize,fontGlyphs);
+		var tex = font.getTexture();
+		if(this.lastTexture != null && tex != this.lastTexture) {
+			this.drawBuffer();
+		}
+		this.lastTexture = tex;
+		var xpos = x;
+		var ypos = y;
+		var _g1 = start;
+		var _g = start + length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			var q = font.getBakedQuad(kha_graphics4_TextShaderPainter.findIndex(text[i],fontGlyphs),xpos,ypos);
+			if(q != null) {
+				if(this.bufferIndex + 1 >= kha_graphics4_TextShaderPainter.bufferSize) {
+					this.drawBuffer();
+				}
+				this.setRectColors(opacity,color);
+				this.setRectTexCoords(q.s0 * tex.get_width() / tex.get_realWidth(),q.t0 * tex.get_height() / tex.get_realHeight(),q.s1 * tex.get_width() / tex.get_realWidth(),q.t1 * tex.get_height() / tex.get_realHeight());
+				var p0_y;
+				var p0_x;
+				var value_y;
+				var value_x = q.x0;
+				value_y = q.y1;
+				var w = transformation._02 * value_x + transformation._12 * value_y + transformation._22;
+				var x1 = (transformation._00 * value_x + transformation._10 * value_y + transformation._20) / w;
+				var y1 = (transformation._01 * value_x + transformation._11 * value_y + transformation._21) / w;
+				p0_x = x1;
+				p0_y = y1;
+				var p1_y;
+				var p1_x;
+				var value_y1;
+				var value_x1 = q.x0;
+				value_y1 = q.y0;
+				var w1 = transformation._02 * value_x1 + transformation._12 * value_y1 + transformation._22;
+				var x2 = (transformation._00 * value_x1 + transformation._10 * value_y1 + transformation._20) / w1;
+				var y2 = (transformation._01 * value_x1 + transformation._11 * value_y1 + transformation._21) / w1;
+				p1_x = x2;
+				p1_y = y2;
+				var p2_y;
+				var p2_x;
+				var value_y2;
+				var value_x2 = q.x1;
+				value_y2 = q.y0;
+				var w2 = transformation._02 * value_x2 + transformation._12 * value_y2 + transformation._22;
+				var x3 = (transformation._00 * value_x2 + transformation._10 * value_y2 + transformation._20) / w2;
+				var y3 = (transformation._01 * value_x2 + transformation._11 * value_y2 + transformation._21) / w2;
+				p2_x = x3;
+				p2_y = y3;
+				var p3_y;
+				var p3_x;
+				var value_y3;
+				var value_x3 = q.x1;
+				value_y3 = q.y1;
+				var w3 = transformation._02 * value_x3 + transformation._12 * value_y3 + transformation._22;
+				var x4 = (transformation._00 * value_x3 + transformation._10 * value_y3 + transformation._20) / w3;
+				var y4 = (transformation._01 * value_x3 + transformation._11 * value_y3 + transformation._21) / w3;
+				p3_x = x4;
+				p3_y = y4;
+				this.setRectVertices(p0_x,p0_y,p1_x,p1_y,p2_x,p2_y,p3_x,p3_y);
+				xpos += q.xadvance;
+				++this.bufferIndex;
+			}
+		}
+	}
 	,end: function() {
 		if(this.bufferIndex > 0) {
 			this.drawBuffer();
@@ -20737,15 +19680,7 @@ kha_graphics4_Graphics2.upperPowerOfTwo = function(v) {
 };
 kha_graphics4_Graphics2.__super__ = kha_graphics2_Graphics;
 kha_graphics4_Graphics2.prototype = $extend(kha_graphics2_Graphics.prototype,{
-	myColor: null
-	,myFont: null
-	,projectionMatrix: null
-	,imagePainter: null
-	,coloredPainter: null
-	,textPainter: null
-	,canvas: null
-	,g: null
-	,setProjection: function() {
+	setProjection: function() {
 		var width = this.canvas.get_width();
 		var height = this.canvas.get_height();
 		if(js_Boot.__instanceof(this.canvas,kha_Framebuffer)) {
@@ -21174,6 +20109,17 @@ kha_graphics4_Graphics2.prototype = $extend(kha_graphics2_Graphics.prototype,{
 		}
 		this.textPainter.drawString(text,this.get_opacity(),this.get_color(),x,y,this.transformations[this.transformations.length - 1],this.get_fontGlyphs());
 	}
+	,drawCharacters: function(text,start,length,x,y) {
+		this.imagePainter.end();
+		var _this = this.coloredPainter;
+		if(_this.triangleBufferIndex > 0) {
+			_this.drawTriBuffer(false);
+		}
+		if(_this.bufferIndex > 0) {
+			_this.drawBuffer(false);
+		}
+		this.textPainter.drawCharacters(text,start,length,this.get_opacity(),this.get_color(),x,y,this.transformations[this.transformations.length - 1],this.get_fontGlyphs());
+	}
 	,get_font: function() {
 		return this.myFont;
 	}
@@ -21262,7 +20208,6 @@ kha_graphics4_Graphics2.prototype = $extend(kha_graphics2_Graphics.prototype,{
 		p3_y = y5;
 		this.coloredPainter.fillTriangle(this.get_opacity(),this.get_color(),p1_x,p1_y,p2_x,p2_y,p3_x,p3_y);
 	}
-	,myImageScaleQuality: null
 	,get_imageScaleQuality: function() {
 		return this.myImageScaleQuality;
 	}
@@ -21271,7 +20216,6 @@ kha_graphics4_Graphics2.prototype = $extend(kha_graphics2_Graphics.prototype,{
 		this.textPainter.setBilinearFilter(value == kha_graphics2_ImageScaleQuality.High);
 		return this.myImageScaleQuality = value;
 	}
-	,myMipmapScaleQuality: null
 	,get_mipmapScaleQuality: function() {
 		return this.myMipmapScaleQuality;
 	}
@@ -21347,11 +20291,7 @@ var kha_graphics4_IndexBuffer = function(indexCount,usage,canRead) {
 $hxClasses["kha.graphics4.IndexBuffer"] = kha_graphics4_IndexBuffer;
 kha_graphics4_IndexBuffer.__name__ = true;
 kha_graphics4_IndexBuffer.prototype = {
-	buffer: null
-	,_data: null
-	,mySize: null
-	,usage: null
-	,'delete': function() {
+	'delete': function() {
 		this._data = null;
 		kha_SystemImpl.gl.deleteBuffer(this.buffer);
 	}
@@ -21416,36 +20356,9 @@ var kha_graphics4_PipelineStateBase = function() {
 $hxClasses["kha.graphics4.PipelineStateBase"] = kha_graphics4_PipelineStateBase;
 kha_graphics4_PipelineStateBase.__name__ = true;
 kha_graphics4_PipelineStateBase.prototype = {
-	inputLayout: null
-	,vertexShader: null
-	,fragmentShader: null
-	,geometryShader: null
-	,tessellationControlShader: null
-	,tessellationEvaluationShader: null
-	,cullMode: null
-	,depthWrite: null
-	,depthMode: null
-	,stencilMode: null
-	,stencilBothPass: null
-	,stencilDepthFail: null
-	,stencilFail: null
-	,stencilReferenceValue: null
-	,stencilReadMask: null
-	,stencilWriteMask: null
-	,blendSource: null
-	,blendDestination: null
-	,blendOperation: null
-	,alphaBlendSource: null
-	,alphaBlendDestination: null
-	,alphaBlendOperation: null
-	,colorWriteMaskRed: null
-	,colorWriteMaskGreen: null
-	,colorWriteMaskBlue: null
-	,colorWriteMaskAlpha: null
-	,set_colorWriteMask: function(value) {
+	set_colorWriteMask: function(value) {
 		return this.colorWriteMaskRed = this.colorWriteMaskBlue = this.colorWriteMaskGreen = this.colorWriteMaskAlpha = value;
 	}
-	,conservativeRasterization: null
 	,__class__: kha_graphics4_PipelineStateBase
 };
 var kha_graphics4_PipelineState = function() {
@@ -21458,10 +20371,7 @@ $hxClasses["kha.graphics4.PipelineState"] = kha_graphics4_PipelineState;
 kha_graphics4_PipelineState.__name__ = true;
 kha_graphics4_PipelineState.__super__ = kha_graphics4_PipelineStateBase;
 kha_graphics4_PipelineState.prototype = $extend(kha_graphics4_PipelineStateBase.prototype,{
-	program: null
-	,textures: null
-	,textureValues: null
-	,'delete': function() {
+	'delete': function() {
 		kha_SystemImpl.gl.deleteProgram(this.program);
 	}
 	,compile: function() {
@@ -21775,15 +20685,7 @@ var kha_graphics4_VertexBuffer = function(vertexCount,structure,usage,instanceDa
 $hxClasses["kha.graphics4.VertexBuffer"] = kha_graphics4_VertexBuffer;
 kha_graphics4_VertexBuffer.__name__ = true;
 kha_graphics4_VertexBuffer.prototype = {
-	buffer: null
-	,_data: null
-	,mySize: null
-	,myStride: null
-	,sizes: null
-	,offsets: null
-	,usage: null
-	,instanceDataStepRate: null
-	,'delete': function() {
+	'delete': function() {
 		this._data = null;
 		kha_SystemImpl.gl.deleteBuffer(this.buffer);
 	}
@@ -21871,9 +20773,7 @@ var kha_graphics4_VertexElement = function(name,data) {
 $hxClasses["kha.graphics4.VertexElement"] = kha_graphics4_VertexElement;
 kha_graphics4_VertexElement.__name__ = true;
 kha_graphics4_VertexElement.prototype = {
-	name: null
-	,data: null
-	,__class__: kha_graphics4_VertexElement
+	__class__: kha_graphics4_VertexElement
 };
 var kha_graphics4_VertexShader = function(sources,files) {
 	this.sources = [];
@@ -21895,11 +20795,7 @@ kha_graphics4_VertexShader.fromSource = function(source) {
 	return shader;
 };
 kha_graphics4_VertexShader.prototype = {
-	sources: null
-	,type: null
-	,shader: null
-	,files: null
-	,'delete': function() {
+	'delete': function() {
 		kha_SystemImpl.gl.deleteShader(this.shader);
 		this.shader = null;
 		this.sources = null;
@@ -21908,12 +20804,12 @@ kha_graphics4_VertexShader.prototype = {
 };
 var kha_graphics4_VertexStructure = function() {
 	this.elements = [];
+	this.instanced = false;
 };
 $hxClasses["kha.graphics4.VertexStructure"] = kha_graphics4_VertexStructure;
 kha_graphics4_VertexStructure.__name__ = true;
 kha_graphics4_VertexStructure.prototype = {
-	elements: null
-	,add: function(name,data) {
+	add: function(name,data) {
 		this.elements.push(new kha_graphics4_VertexElement(name,data));
 	}
 	,size: function() {
@@ -21972,8 +20868,7 @@ kha_input_Gamepad.get = function(index) {
 	return kha_input_Gamepad.instances[index];
 };
 kha_input_Gamepad.prototype = {
-	index: null
-	,notify: function(axisListener,buttonListener) {
+	notify: function(axisListener,buttonListener) {
 		if(axisListener != null) {
 			this.axisListeners.push(axisListener);
 		}
@@ -21989,9 +20884,6 @@ kha_input_Gamepad.prototype = {
 			HxOverrides.remove(this.buttonListeners,buttonListener);
 		}
 	}
-	,axisListeners: null
-	,buttonListeners: null
-	,id: null
 	,get_id: function() {
 		return kha_SystemImpl.getGamepadId(this.index);
 	}
@@ -22015,9 +20907,6 @@ kha_input_Gamepad.prototype = {
 	}
 	,__class__: kha_input_Gamepad
 };
-var kha_input_KeyCode = function() { };
-$hxClasses["kha.input.KeyCode"] = kha_input_KeyCode;
-kha_input_KeyCode.__name__ = true;
 var kha_network_Controller = function() {
 	this.__id = kha_network_ControllerBuilder.nextId++;
 	this._inputBuffer = new haxe_io_Bytes(new ArrayBuffer(1));
@@ -22025,10 +20914,7 @@ var kha_network_Controller = function() {
 $hxClasses["kha.network.Controller"] = kha_network_Controller;
 kha_network_Controller.__name__ = true;
 kha_network_Controller.prototype = {
-	__id: null
-	,_inputBufferIndex: null
-	,_inputBuffer: null
-	,_id: function() {
+	_id: function() {
 		return this.__id;
 	}
 	,_receive: function(bytes) {
@@ -22078,14 +20964,10 @@ kha_input_Keyboard.prototype = $extend(kha_network_Controller.prototype,{
 	}
 	,hide: function() {
 	}
-	,downListeners: null
-	,upListeners: null
-	,pressListeners: null
 	,sendDownEvent: function(code) {
 		if(kha_network_Session.the() != null) {
-			var bytes = new haxe_io_Bytes(new ArrayBuffer(8));
+			var bytes = new haxe_io_Bytes(new ArrayBuffer(4));
 			bytes.setInt32(0,0);
-			bytes.setInt32(4,code);
 			kha_network_Session.the().sendControllerUpdate(this._id(),bytes);
 		}
 		var _g = 0;
@@ -22098,9 +20980,8 @@ kha_input_Keyboard.prototype = $extend(kha_network_Controller.prototype,{
 	}
 	,sendUpEvent: function(code) {
 		if(kha_network_Session.the() != null) {
-			var bytes = new haxe_io_Bytes(new ArrayBuffer(8));
+			var bytes = new haxe_io_Bytes(new ArrayBuffer(4));
 			bytes.setInt32(0,1);
-			bytes.setInt32(4,code);
 			kha_network_Session.the().sendControllerUpdate(this._id(),bytes);
 		}
 		var _g = 0;
@@ -22130,12 +21011,12 @@ kha_input_Keyboard.prototype = $extend(kha_network_Controller.prototype,{
 	,_receive: function(bytes) {
 		var funcindex = bytes.getInt32(0);
 		if(funcindex == 0) {
-			var input0 = bytes.getInt32(4);
+			var input0 = bytes.b[4];
 			this.sendDownEvent(input0);
 			return;
 		}
 		if(funcindex == 1) {
-			var input01 = bytes.getInt32(4);
+			var input01 = bytes.b[4];
 			this.sendUpEvent(input01);
 			return;
 		}
@@ -22279,11 +21160,6 @@ kha_input_Mouse.prototype = $extend(kha_network_Controller.prototype,{
 	}
 	,showSystemCursor: function() {
 	}
-	,windowDownListeners: null
-	,windowUpListeners: null
-	,windowMoveListeners: null
-	,windowWheelListeners: null
-	,windowLeaveListeners: null
 	,sendLeaveEvent: function(windowId) {
 		if(kha_network_Session.the() != null) {
 			var bytes = new haxe_io_Bytes(new ArrayBuffer(8));
@@ -22479,9 +21355,6 @@ kha_input_Surface.prototype = {
 			this.moveListeners.push(moveListener);
 		}
 	}
-	,touchStartListeners: null
-	,touchEndListeners: null
-	,moveListeners: null
 	,sendTouchStartEvent: function(index,x,y) {
 		var _g = 0;
 		var _g1 = this.touchStartListeners;
@@ -22558,13 +21431,9 @@ kha_internal_BytesBlob.bit = function(value,position) {
 	}
 };
 kha_internal_BytesBlob.prototype = {
-	bytes: null
-	,buffer: null
-	,myFirstLine: null
-	,sub: function(start,length) {
+	sub: function(start,length) {
 		return new kha_internal_BytesBlob(this.bytes.sub(start,length));
 	}
-	,length: null
 	,get_length: function() {
 		return this.bytes.length;
 	}
@@ -22752,186 +21621,6 @@ kha_internal_BytesBlob.prototype = {
 	}
 	,__class__: kha_internal_BytesBlob
 };
-var kha_internal_HdrFormat = function() {
-};
-$hxClasses["kha.internal.HdrFormat"] = kha_internal_HdrFormat;
-kha_internal_HdrFormat.__name__ = true;
-kha_internal_HdrFormat.readBuf = function(buf) {
-	var bytesRead = 0;
-	while(true) {
-		buf[bytesRead++] = kha_internal_HdrFormat.buffer[kha_internal_HdrFormat.fileOffset] & 255;
-		if(!(++kha_internal_HdrFormat.fileOffset < kha_internal_HdrFormat.bufferLength && bytesRead < buf.length)) {
-			break;
-		}
-	}
-	return bytesRead;
-};
-kha_internal_HdrFormat.readBufOffset = function(buf,offset,length) {
-	var bytesRead = 0;
-	while(true) {
-		buf[offset + bytesRead++] = kha_internal_HdrFormat.buffer[kha_internal_HdrFormat.fileOffset] & 255;
-		if(!(++kha_internal_HdrFormat.fileOffset < kha_internal_HdrFormat.bufferLength && bytesRead < length)) {
-			break;
-		}
-	}
-	return bytesRead;
-};
-kha_internal_HdrFormat.readPixelsRaw = function(buffer,data,offset,numpixels) {
-	var numExpected = 4 * numpixels;
-	var numRead = kha_internal_HdrFormat.readBufOffset(data,offset,numExpected);
-	if(numRead < numExpected) {
-		haxe_Log.trace("Error reading raw pixels: got " + numRead + " bytes, expected " + numExpected,{ fileName : "HdrFormat.hx", lineNumber : 43, className : "kha.internal.HdrFormat", methodName : "readPixelsRaw"});
-		return;
-	}
-};
-kha_internal_HdrFormat.readPixelsRawRLE = function(buffer,data,offset,scanline_width,num_scanlines) {
-	var this1 = new Uint8Array(4);
-	var rgbe = this1;
-	var scanline_buffer = null;
-	var ptr;
-	var ptr_end;
-	var count;
-	var this2 = new Uint8Array(2);
-	var buf = this2;
-	var bufferLength = buffer.length;
-	while(num_scanlines > 0) {
-		if(kha_internal_HdrFormat.readBuf(rgbe) < rgbe.length) {
-			haxe_Log.trace("Error reading bytes: expected " + rgbe.length,{ fileName : "HdrFormat.hx", lineNumber : 59, className : "kha.internal.HdrFormat", methodName : "readPixelsRawRLE"});
-			return;
-		}
-		if(rgbe[0] != 2 || rgbe[1] != 2 || (rgbe[2] & 128) != 0) {
-			data[offset++] = rgbe[0] & 255;
-			data[offset++] = rgbe[1] & 255;
-			data[offset++] = rgbe[2] & 255;
-			data[offset++] = rgbe[3] & 255;
-			kha_internal_HdrFormat.readPixelsRaw(buffer,data,offset,scanline_width * num_scanlines - 1);
-			return;
-		}
-		if(((rgbe[2] & 255) << 8 | rgbe[3] & 255) != scanline_width) {
-			haxe_Log.trace("Wrong scanline width " + ((rgbe[2] & 255) << 8 | rgbe[3] & 255) + ", expected " + scanline_width,{ fileName : "HdrFormat.hx", lineNumber : 74, className : "kha.internal.HdrFormat", methodName : "readPixelsRawRLE"});
-			return;
-		}
-		if(scanline_buffer == null) {
-			var this3 = new Uint8Array(4 * scanline_width);
-			scanline_buffer = this3;
-		}
-		ptr = 0;
-		var _g = 0;
-		while(_g < 4) {
-			var i = _g++;
-			ptr_end = (i + 1) * scanline_width;
-			while(ptr < ptr_end) {
-				if(kha_internal_HdrFormat.readBuf(buf) < buf.length) {
-					haxe_Log.trace("Error reading 2-byte buffer",{ fileName : "HdrFormat.hx", lineNumber : 88, className : "kha.internal.HdrFormat", methodName : "readPixelsRawRLE"});
-					return;
-				}
-				if((buf[0] & 255) > 128) {
-					count = (buf[0] & 255) - 128;
-					if(count == 0 || count > ptr_end - ptr) {
-						haxe_Log.trace("Bad scanline data",{ fileName : "HdrFormat.hx", lineNumber : 95, className : "kha.internal.HdrFormat", methodName : "readPixelsRawRLE"});
-						return;
-					}
-					while(count-- > 0) scanline_buffer[ptr++] = buf[1] & 255;
-				} else {
-					count = buf[0] & 255;
-					if(count == 0 || count > ptr_end - ptr) {
-						haxe_Log.trace("Bad scanline data",{ fileName : "HdrFormat.hx", lineNumber : 106, className : "kha.internal.HdrFormat", methodName : "readPixelsRawRLE"});
-						return;
-					}
-					scanline_buffer[ptr++] = buf[1] & 255;
-					if(--count > 0) {
-						if(kha_internal_HdrFormat.readBufOffset(scanline_buffer,ptr,count) < count) {
-							haxe_Log.trace("Error reading non-run data",{ fileName : "HdrFormat.hx", lineNumber : 112, className : "kha.internal.HdrFormat", methodName : "readPixelsRawRLE"});
-							return;
-						}
-						ptr += count;
-					}
-				}
-			}
-		}
-		var _g1 = 0;
-		var _g2 = scanline_width;
-		while(_g1 < _g2) {
-			var i1 = _g1++;
-			data[offset] = scanline_buffer[i1] & 255;
-			data[offset + 1] = scanline_buffer[i1 + scanline_width] & 255;
-			data[offset + 2] = scanline_buffer[i1 + 2 * scanline_width] & 255;
-			data[offset + 3] = scanline_buffer[i1 + 3 * scanline_width] & 255;
-			offset += 4;
-		}
-		--num_scanlines;
-	}
-};
-kha_internal_HdrFormat.readLine = function() {
-	var buf = "";
-	while(true) {
-		var b = kha_internal_HdrFormat.buffer[kha_internal_HdrFormat.fileOffset];
-		if(b == 10) {
-			++kha_internal_HdrFormat.fileOffset;
-			break;
-		}
-		buf += String.fromCharCode(b);
-		if(!(++kha_internal_HdrFormat.fileOffset < kha_internal_HdrFormat.bufferLength)) {
-			break;
-		}
-	}
-	return buf;
-};
-kha_internal_HdrFormat.parse = function(bytes) {
-	kha_internal_HdrFormat.buffer = haxe_io__$UInt8Array_UInt8Array_$Impl_$.fromBytes(bytes);
-	kha_internal_HdrFormat.bufferLength = kha_internal_HdrFormat.buffer.length;
-	kha_internal_HdrFormat.fileOffset = 0;
-	var width = 0;
-	var height = 0;
-	var exposure = 1.0;
-	var gamma = 1.0;
-	var rle = false;
-	var _g = 0;
-	while(_g < 20) {
-		var i = _g++;
-		var line = kha_internal_HdrFormat.readLine();
-		if(kha_internal_HdrFormat.formatPattern.match(line)) {
-			rle = true;
-		} else if(kha_internal_HdrFormat.exposurePattern.match(line)) {
-			exposure = parseFloat(kha_internal_HdrFormat.exposurePattern.matched(1));
-		} else if(kha_internal_HdrFormat.widthHeightPattern.match(line)) {
-			height = Std.parseInt(kha_internal_HdrFormat.widthHeightPattern.matched(1));
-			width = Std.parseInt(kha_internal_HdrFormat.widthHeightPattern.matched(2));
-			break;
-		}
-	}
-	if(!rle) {
-		haxe_Log.trace("File is not run length encoded!",{ fileName : "HdrFormat.hx", lineNumber : 175, className : "kha.internal.HdrFormat", methodName : "parse"});
-		return null;
-	}
-	var this1 = new Uint8Array(width * height * 4);
-	var data = this1;
-	var scanline_width = width;
-	var num_scanlines = height;
-	kha_internal_HdrFormat.readPixelsRawRLE(kha_internal_HdrFormat.buffer,data,0,scanline_width,num_scanlines);
-	var this2 = new Float32Array(width * height * 4);
-	var floatData = this2;
-	var offset = 0;
-	while(offset < data.length) {
-		var r = data[offset] / 255;
-		var g = data[offset + 1] / 255;
-		var b = data[offset + 2] / 255;
-		var e = data[offset + 3];
-		var f = Math.pow(2.0,e - 128.0);
-		r *= f;
-		g *= f;
-		b *= f;
-		floatData[offset] = r;
-		floatData[offset + 1] = g;
-		floatData[offset + 2] = b;
-		floatData[offset + 3] = 1.0;
-		offset += 4;
-	}
-	return { width : width, height : height, data : floatData};
-};
-kha_internal_HdrFormat.prototype = {
-	__class__: kha_internal_HdrFormat
-};
 var kha_js_AEAudioChannel = function(element) {
 	this.stopped = false;
 	this.element = element;
@@ -22940,9 +21629,7 @@ $hxClasses["kha.js.AEAudioChannel"] = kha_js_AEAudioChannel;
 kha_js_AEAudioChannel.__name__ = true;
 kha_js_AEAudioChannel.__interfaces__ = [kha_audio1_AudioChannel];
 kha_js_AEAudioChannel.prototype = {
-	element: null
-	,stopped: null
-	,play: function() {
+	play: function() {
 		this.stopped = false;
 		if(kha_SystemImpl.mobile) {
 			if(kha_SystemImpl.insideInputEvent) {
@@ -22975,7 +21662,6 @@ kha_js_AEAudioChannel.prototype = {
 			haxe_Log.trace(e,{ fileName : "AEAudioChannel.hx", lineNumber : 50, className : "kha.js.AEAudioChannel", methodName : "stop"});
 		}
 	}
-	,length: null
 	,get_length: function() {
 		if(isFinite(this.element.duration)) {
 			return this.element.duration;
@@ -22983,7 +21669,6 @@ kha_js_AEAudioChannel.prototype = {
 			return Infinity;
 		}
 	}
-	,position: null
 	,get_position: function() {
 		return this.element.currentTime;
 	}
@@ -22993,7 +21678,6 @@ kha_js_AEAudioChannel.prototype = {
 	,set_volume: function(value) {
 		return this.element.volume = value;
 	}
-	,finished: null
 	,get_finished: function() {
 		if(!this.stopped) {
 			return this.get_position() >= this.get_length();
@@ -23042,11 +21726,7 @@ kha_js_CanvasGraphics.stringWidth = function(font,text) {
 };
 kha_js_CanvasGraphics.__super__ = kha_graphics2_Graphics;
 kha_js_CanvasGraphics.prototype = $extend(kha_graphics2_Graphics.prototype,{
-	canvas: null
-	,webfont: null
-	,myColor: null
-	,scaleQuality: null
-	,begin: function(clear,clearColor) {
+	begin: function(clear,clearColor) {
 		if(clear == null) {
 			clear = true;
 		}
@@ -23237,23 +21917,7 @@ kha_js_URLParser.parse = function(url) {
 	return new kha_js_URLParser(url);
 };
 kha_js_URLParser.prototype = {
-	url: null
-	,source: null
-	,protocol: null
-	,authority: null
-	,userInfo: null
-	,user: null
-	,password: null
-	,host: null
-	,port: null
-	,relative: null
-	,path: null
-	,directory: null
-	,file: null
-	,query: null
-	,anchor: null
-	,_parts: null
-	,toString: function() {
+	toString: function() {
 		var s = "For Url -> " + this.url + "\n";
 		var _g1 = 0;
 		var _g = this._parts.length;
@@ -23298,13 +21962,14 @@ $hxClasses["kha.js.Font"] = kha_js_Font;
 kha_js_Font.__name__ = true;
 kha_js_Font.__interfaces__ = [kha_Font];
 kha_js_Font.prototype = {
-	kravur: null
-	,images: null
-	,height: function(fontSize) {
+	height: function(fontSize) {
 		return this.kravur._get(fontSize).getHeight();
 	}
 	,width: function(fontSize,str) {
 		return this.kravur._get(fontSize).stringWidth(str);
+	}
+	,widthOfCharacters: function(fontSize,characters,start,length) {
+		return this.kravur._get(fontSize).charactersWidth(characters,start,length);
 	}
 	,baseline: function(fontSize) {
 		return this.kravur._get(fontSize).getBaselinePosition();
@@ -23388,15 +22053,7 @@ $hxClasses["kha.js.MobileWebAudioChannel"] = kha_js_MobileWebAudioChannel;
 kha_js_MobileWebAudioChannel.__name__ = true;
 kha_js_MobileWebAudioChannel.__interfaces__ = [kha_audio1_AudioChannel];
 kha_js_MobileWebAudioChannel.prototype = {
-	buffer: null
-	,loop: null
-	,source: null
-	,gain: null
-	,startTime: null
-	,pauseTime: null
-	,paused: null
-	,stopped: null
-	,createSource: function() {
+	createSource: function() {
 		var _gthis = this;
 		this.source = kha_js_MobileWebAudio._context.createBufferSource();
 		this.source.loop = this.loop;
@@ -23432,11 +22089,9 @@ kha_js_MobileWebAudioChannel.prototype = {
 		this.stopped = true;
 		this.source.stop();
 	}
-	,length: null
 	,get_length: function() {
 		return this.source.buffer.duration;
 	}
-	,position: null
 	,get_position: function() {
 		if(this.stopped) {
 			return this.get_length();
@@ -23453,7 +22108,6 @@ kha_js_MobileWebAudioChannel.prototype = {
 	,set_volume: function(value) {
 		return this.gain.gain.value = value;
 	}
-	,finished: null
 	,get_finished: function() {
 		return this.stopped;
 	}
@@ -23484,8 +22138,7 @@ $hxClasses["kha.js.MobileWebAudioSound"] = kha_js_MobileWebAudioSound;
 kha_js_MobileWebAudioSound.__name__ = true;
 kha_js_MobileWebAudioSound.__super__ = kha_Sound;
 kha_js_MobileWebAudioSound.prototype = $extend(kha_Sound.prototype,{
-	_buffer: null
-	,uncompress: function(done) {
+	uncompress: function(done) {
 		done();
 	}
 	,__class__: kha_js_MobileWebAudioSound
@@ -23517,10 +22170,7 @@ $hxClasses["kha.js.Sound"] = kha_js_Sound;
 kha_js_Sound.__name__ = true;
 kha_js_Sound.__super__ = kha_Sound;
 kha_js_Sound.prototype = $extend(kha_Sound.prototype,{
-	filenames: null
-	,done: null
-	,element: null
-	,errorListener: function(eventInfo) {
+	errorListener: function(eventInfo) {
 		if(this.element.error.code == 4) {
 			var _g1 = 0;
 			var _g = this.filenames.length - 1;
@@ -23575,9 +22225,6 @@ kha_js_Video.fromFile = function(filenames,done) {
 		if(video.element.canPlayType("video/webm") != "" && StringTools.endsWith(filename,".webm")) {
 			video.filenames.push(filename);
 		}
-		if(video.element.canPlayType("video/mp4") != "" && StringTools.endsWith(filename,".mp4")) {
-			video.filenames.push(filename);
-		}
 	}
 	video.element.addEventListener("error",$bind(video,video.errorListener),false);
 	video.element.addEventListener("canplaythrough",$bind(video,video.canPlayThroughListener),false);
@@ -23586,11 +22233,7 @@ kha_js_Video.fromFile = function(filenames,done) {
 };
 kha_js_Video.__super__ = kha_Video;
 kha_js_Video.prototype = $extend(kha_Video.prototype,{
-	filenames: null
-	,element: null
-	,done: null
-	,texture: null
-	,width: function() {
+	width: function() {
 		return this.element.videoWidth;
 	}
 	,height: function() {
@@ -23732,9 +22375,7 @@ $hxClasses["kha.js.graphics4.ConstantLocation"] = kha_js_graphics4_ConstantLocat
 kha_js_graphics4_ConstantLocation.__name__ = true;
 kha_js_graphics4_ConstantLocation.__interfaces__ = [kha_graphics4_ConstantLocation];
 kha_js_graphics4_ConstantLocation.prototype = {
-	value: null
-	,type: null
-	,__class__: kha_js_graphics4_ConstantLocation
+	__class__: kha_js_graphics4_ConstantLocation
 };
 var kha_js_graphics4_Graphics = function(renderTarget) {
 	var this1 = new Array(9);
@@ -23800,21 +22441,7 @@ kha_js_graphics4_Graphics.getBlendOp = function(op) {
 	}
 };
 kha_js_graphics4_Graphics.prototype = {
-	depthTest: null
-	,depthMask: null
-	,colorMaskRed: null
-	,colorMaskGreen: null
-	,colorMaskBlue: null
-	,colorMaskAlpha: null
-	,indicesCount: null
-	,renderTarget: null
-	,renderTargetFrameBuffer: null
-	,renderTargetTexture: null
-	,isCubeMap: null
-	,isDepthAttachment: null
-	,instancedExtension: null
-	,blendMinMaxExtension: null
-	,init: function() {
+	init: function() {
 		if(this.renderTarget == null) {
 			return;
 		}
@@ -24044,6 +22671,8 @@ kha_js_graphics4_Graphics.prototype = {
 	,setTextureDepth: function(stage,texture) {
 		(js_Boot.__cast(texture , kha_WebGLImage)).setDepth((js_Boot.__cast(stage , kha_js_graphics4_TextureUnit)).value);
 	}
+	,setTextureArray: function(unit,texture) {
+	}
 	,setVideoTexture: function(unit,texture) {
 		if(texture == null) {
 			kha_SystemImpl.gl.activeTexture(33984 + (js_Boot.__cast(unit , kha_js_graphics4_TextureUnit)).value);
@@ -24201,7 +22830,6 @@ kha_js_graphics4_Graphics.prototype = {
 	,setVector4: function(location,value) {
 		kha_SystemImpl.gl.uniform4f((js_Boot.__cast(location , kha_js_graphics4_ConstantLocation)).value,value.x,value.y,value.z,value.w);
 	}
-	,matrixCache: null
 	,setMatrix: function(location,matrix) {
 		this.matrixCache[0] = matrix._00;
 		this.matrixCache[1] = matrix._01;
@@ -24221,7 +22849,6 @@ kha_js_graphics4_Graphics.prototype = {
 		this.matrixCache[15] = matrix._33;
 		kha_SystemImpl.gl.uniformMatrix4fv((js_Boot.__cast(location , kha_js_graphics4_ConstantLocation)).value,false,this.matrixCache);
 	}
-	,matrix3Cache: null
 	,setMatrix3: function(location,matrix) {
 		this.matrix3Cache[0] = matrix._00;
 		this.matrix3Cache[1] = matrix._01;
@@ -24373,8 +23000,7 @@ $hxClasses["kha.js.graphics4.TextureUnit"] = kha_js_graphics4_TextureUnit;
 kha_js_graphics4_TextureUnit.__name__ = true;
 kha_js_graphics4_TextureUnit.__interfaces__ = [kha_graphics4_TextureUnit];
 kha_js_graphics4_TextureUnit.prototype = {
-	value: null
-	,__class__: kha_js_graphics4_TextureUnit
+	__class__: kha_js_graphics4_TextureUnit
 };
 var kha_vr_VrInterface = function() {
 };
@@ -24444,18 +23070,7 @@ $hxClasses["kha.js.vr.VrInterface"] = kha_js_vr_VrInterface;
 kha_js_vr_VrInterface.__name__ = true;
 kha_js_vr_VrInterface.__super__ = kha_vr_VrInterface;
 kha_js_vr_VrInterface.prototype = $extend(kha_vr_VrInterface.prototype,{
-	vrEnabled: null
-	,vrDisplay: null
-	,frameData: null
-	,leftProjectionMatrix: null
-	,rightProjectionMatrix: null
-	,leftViewMatrix: null
-	,rightViewMatrix: null
-	,width: null
-	,height: null
-	,vrWidth: null
-	,vrHeight: null
-	,getVRDisplays: function() {
+	getVRDisplays: function() {
 		var _gthis = this;
 		var vrDisplayInstance = navigator.getVRDisplays();
 		vrDisplayInstance.then(function(displays) {
@@ -24645,16 +23260,7 @@ kha_math_FastMatrix3.fromMatrix3 = function(m) {
 	return new kha_math_FastMatrix3(m._00,m._10,m._20,m._01,m._11,m._21,m._02,m._12,m._22);
 };
 kha_math_FastMatrix3.prototype = {
-	_00: null
-	,_10: null
-	,_20: null
-	,_01: null
-	,_11: null
-	,_21: null
-	,_02: null
-	,_12: null
-	,_22: null
-	,__class__: kha_math_FastMatrix3
+	__class__: kha_math_FastMatrix3
 };
 var kha_math_FastMatrix4 = function(_00,_10,_20,_30,_01,_11,_21,_31,_02,_12,_22,_32,_03,_13,_23,_33) {
 	this._00 = _00;
@@ -24710,23 +23316,7 @@ kha_math_FastMatrix4.lookAt = function(eye,at,up) {
 	return new kha_math_FastMatrix4(xaxis.x,xaxis.y,xaxis.z,-(xaxis.x * eye.x + xaxis.y * eye.y + xaxis.z * eye.z),yaxis_x,yaxis_y,yaxis_z,-(yaxis_x * eye.x + yaxis_y * eye.y + yaxis_z * eye.z),-zaxis.x,-zaxis.y,-zaxis.z,zaxis.x * eye.x + zaxis.y * eye.y + zaxis.z * eye.z,0,0,0,1);
 };
 kha_math_FastMatrix4.prototype = {
-	_00: null
-	,_10: null
-	,_20: null
-	,_30: null
-	,_01: null
-	,_11: null
-	,_21: null
-	,_31: null
-	,_02: null
-	,_12: null
-	,_22: null
-	,_32: null
-	,_03: null
-	,_13: null
-	,_23: null
-	,_33: null
-	,__class__: kha_math_FastMatrix4
+	__class__: kha_math_FastMatrix4
 };
 var kha_math_FastVector2 = function(x,y) {
 	if(y == null) {
@@ -24744,9 +23334,7 @@ kha_math_FastVector2.fromVector2 = function(v) {
 	return new kha_math_FastVector2(v.x,v.y);
 };
 kha_math_FastVector2.prototype = {
-	x: null
-	,y: null
-	,get_length: function() {
+	get_length: function() {
 		return Math.sqrt(this.x * this.x + this.y * this.y);
 	}
 	,set_length: function(length) {
@@ -24784,10 +23372,7 @@ kha_math_FastVector3.fromVector3 = function(v) {
 	return new kha_math_FastVector3(v.x,v.y,v.z);
 };
 kha_math_FastVector3.prototype = {
-	x: null
-	,y: null
-	,z: null
-	,get_length: function() {
+	get_length: function() {
 		return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
 	}
 	,set_length: function(length) {
@@ -24830,11 +23415,7 @@ kha_math_FastVector4.fromVector4 = function(v) {
 	return new kha_math_FastVector4(v.x,v.y,v.z,v.w);
 };
 kha_math_FastVector4.prototype = {
-	x: null
-	,y: null
-	,z: null
-	,w: null
-	,get_length: function() {
+	get_length: function() {
 		return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w);
 	}
 	,set_length: function(length) {
@@ -24868,16 +23449,7 @@ var kha_math_Matrix3 = function(_00,_10,_20,_01,_11,_21,_02,_12,_22) {
 $hxClasses["kha.math.Matrix3"] = kha_math_Matrix3;
 kha_math_Matrix3.__name__ = true;
 kha_math_Matrix3.prototype = {
-	_00: null
-	,_10: null
-	,_20: null
-	,_01: null
-	,_11: null
-	,_21: null
-	,_02: null
-	,_12: null
-	,_22: null
-	,__class__: kha_math_Matrix3
+	__class__: kha_math_Matrix3
 };
 var kha_math_Matrix4 = function(_00,_10,_20,_30,_01,_11,_21,_31,_02,_12,_22,_32,_03,_13,_23,_33) {
 	this._00 = _00;
@@ -24930,23 +23502,7 @@ kha_math_Matrix4.lookAt = function(eye,at,up) {
 	return new kha_math_Matrix4(xaxis.x,xaxis.y,xaxis.z,-(xaxis.x * eye.x + xaxis.y * eye.y + xaxis.z * eye.z),yaxis_x,yaxis_y,yaxis_z,-(yaxis_x * eye.x + yaxis_y * eye.y + yaxis_z * eye.z),-zaxis.x,-zaxis.y,-zaxis.z,zaxis.x * eye.x + zaxis.y * eye.y + zaxis.z * eye.z,0,0,0,1);
 };
 kha_math_Matrix4.prototype = {
-	_00: null
-	,_10: null
-	,_20: null
-	,_30: null
-	,_01: null
-	,_11: null
-	,_21: null
-	,_31: null
-	,_02: null
-	,_12: null
-	,_22: null
-	,_32: null
-	,_03: null
-	,_13: null
-	,_23: null
-	,_33: null
-	,__class__: kha_math_Matrix4
+	__class__: kha_math_Matrix4
 };
 var kha_math_Quaternion = function(x,y,z,w) {
 	if(w == null) {
@@ -24982,8 +23538,7 @@ kha_math_Quaternion.fromAxisAngle = function(axis,radians) {
 	return q;
 };
 kha_math_Quaternion.prototype = {
-	values: null
-	,slerp: function(t,q) {
+	slerp: function(t,q) {
 		var epsilon = 0.0005;
 		var dot = this.dot(q);
 		if(dot > 1 - epsilon) {
@@ -25172,9 +23727,7 @@ var kha_math_Vector2 = function(x,y) {
 $hxClasses["kha.math.Vector2"] = kha_math_Vector2;
 kha_math_Vector2.__name__ = true;
 kha_math_Vector2.prototype = {
-	x: null
-	,y: null
-	,get_length: function() {
+	get_length: function() {
 		return Math.sqrt(this.x * this.x + this.y * this.y);
 	}
 	,set_length: function(length) {
@@ -25206,10 +23759,7 @@ var kha_math_Vector3 = function(x,y,z) {
 $hxClasses["kha.math.Vector3"] = kha_math_Vector3;
 kha_math_Vector3.__name__ = true;
 kha_math_Vector3.prototype = {
-	x: null
-	,y: null
-	,z: null
-	,get_length: function() {
+	get_length: function() {
 		return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
 	}
 	,set_length: function(length) {
@@ -25246,11 +23796,7 @@ var kha_math_Vector4 = function(x,y,z,w) {
 $hxClasses["kha.math.Vector4"] = kha_math_Vector4;
 kha_math_Vector4.__name__ = true;
 kha_math_Vector4.prototype = {
-	x: null
-	,y: null
-	,z: null
-	,w: null
-	,get_length: function() {
+	get_length: function() {
 		return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w);
 	}
 	,set_length: function(length) {
@@ -25271,12 +23817,7 @@ var kha_network_Client = function() { };
 $hxClasses["kha.network.Client"] = kha_network_Client;
 kha_network_Client.__name__ = true;
 kha_network_Client.prototype = {
-	get_id: null
-	,id: null
-	,send: null
-	,receive: null
-	,onClose: null
-	,__class__: kha_network_Client
+	__class__: kha_network_Client
 };
 var kha_network_ControllerBuilder = function() { };
 $hxClasses["kha.network.ControllerBuilder"] = kha_network_ControllerBuilder;
@@ -25285,11 +23826,7 @@ var kha_network_Entity = function() { };
 $hxClasses["kha.network.Entity"] = kha_network_Entity;
 kha_network_Entity.__name__ = true;
 kha_network_Entity.prototype = {
-	_id: null
-	,_size: null
-	,_send: null
-	,_receive: null
-	,__class__: kha_network_Entity
+	__class__: kha_network_Entity
 };
 var kha_network_LocalClient = function(id) {
 	this.myId = id;
@@ -25298,18 +23835,15 @@ $hxClasses["kha.network.LocalClient"] = kha_network_LocalClient;
 kha_network_LocalClient.__name__ = true;
 kha_network_LocalClient.__interfaces__ = [kha_network_Client];
 kha_network_LocalClient.prototype = {
-	myId: null
-	,send: function(bytes,mandatory) {
+	send: function(bytes,mandatory) {
 	}
 	,receive: function(receiver) {
 	}
 	,onClose: function(close) {
 	}
-	,controllers: null
 	,get_controllers: function() {
 		return null;
 	}
-	,id: null
 	,get_id: function() {
 		return this.myId;
 	}
@@ -25335,9 +23869,7 @@ var kha_network_Network = function(url,port,errorCallback,closeCallback) {
 $hxClasses["kha.network.Network"] = kha_network_Network;
 kha_network_Network.__name__ = true;
 kha_network_Network.prototype = {
-	socket: null
-	,open: null
-	,send: function(bytes,mandatory) {
+	send: function(bytes,mandatory) {
 		if(this.open) {
 			this.socket.send(bytes.b.bufferValue);
 		}
@@ -25357,9 +23889,7 @@ var kha_network_State = function(time,data) {
 $hxClasses["kha.network.State"] = kha_network_State;
 kha_network_State.__name__ = true;
 kha_network_State.prototype = {
-	time: null
-	,data: null
-	,__class__: kha_network_State
+	__class__: kha_network_State
 };
 var kha_network_Session = function(maxPlayers,address,port) {
 	this.ping = 1;
@@ -25377,22 +23907,7 @@ kha_network_Session.the = function() {
 	return kha_network_Session.instance;
 };
 kha_network_Session.prototype = {
-	entities: null
-	,controllers: null
-	,maxPlayers: null
-	,currentPlayers: null
-	,ping: null
-	,address: null
-	,port: null
-	,startCallback: null
-	,refusedCallback: null
-	,resetCallback: null
-	,localClient: null
-	,network: null
-	,updateTaskId: null
-	,pingTaskId: null
-	,me: null
-	,get_me: function() {
+	get_me: function() {
 		return this.localClient;
 	}
 	,addEntity: function(entity) {
@@ -25671,11 +24186,7 @@ kha_simd_Float32x4.sqrt = function(t) {
 	return new kha_simd_Float32x4(Math.sqrt(t._0),Math.sqrt(t._1),Math.sqrt(t._2),Math.sqrt(t._3));
 };
 kha_simd_Float32x4.prototype = {
-	_0: null
-	,_1: null
-	,_2: null
-	,_3: null
-	,__class__: kha_simd_Float32x4
+	__class__: kha_simd_Float32x4
 };
 var kha_vr_Pose = function() {
 	this.Orientation = new kha_math_Quaternion();
@@ -25684,1188 +24195,160 @@ var kha_vr_Pose = function() {
 $hxClasses["kha.vr.Pose"] = kha_vr_Pose;
 kha_vr_Pose.__name__ = true;
 kha_vr_Pose.prototype = {
-	Orientation: null
-	,Position: null
-	,__class__: kha_vr_Pose
+	__class__: kha_vr_Pose
 };
 var kha_vr_PoseState = function() {
 };
 $hxClasses["kha.vr.PoseState"] = kha_vr_PoseState;
 kha_vr_PoseState.__name__ = true;
 kha_vr_PoseState.prototype = {
-	Pose: null
-	,AngularVelocity: null
-	,LinearVelocity: null
-	,AngularAcceleration: null
-	,LinearAcceleration: null
-	,TimeInSeconds: null
-	,__class__: kha_vr_PoseState
+	__class__: kha_vr_PoseState
 };
 var kha_vr_SensorState = function() {
 };
 $hxClasses["kha.vr.SensorState"] = kha_vr_SensorState;
 kha_vr_SensorState.__name__ = true;
 kha_vr_SensorState.prototype = {
-	Predicted: null
-	,Recorded: null
-	,Temperature: null
-	,Status: null
-	,__class__: kha_vr_SensorState
+	__class__: kha_vr_SensorState
 };
 var kha_vr_TimeWarpImage = function() {
 };
 $hxClasses["kha.vr.TimeWarpImage"] = kha_vr_TimeWarpImage;
 kha_vr_TimeWarpImage.__name__ = true;
 kha_vr_TimeWarpImage.prototype = {
-	Image: null
-	,TexCoordsFromTanAngles: null
-	,Pose: null
-	,__class__: kha_vr_TimeWarpImage
+	__class__: kha_vr_TimeWarpImage
 };
 var kha_vr_TimeWarpParms = function() {
 };
 $hxClasses["kha.vr.TimeWarpParms"] = kha_vr_TimeWarpParms;
 kha_vr_TimeWarpParms.__name__ = true;
 kha_vr_TimeWarpParms.prototype = {
-	LeftImage: null
-	,RightImage: null
-	,LeftOverlay: null
-	,RightOverlay: null
-	,__class__: kha_vr_TimeWarpParms
-};
-var org_poly2tri_AdvancingFront = function(head,tail) {
-	this.search_node = this.head = head;
-	this.tail = tail;
-};
-$hxClasses["org.poly2tri.AdvancingFront"] = org_poly2tri_AdvancingFront;
-org_poly2tri_AdvancingFront.__name__ = true;
-org_poly2tri_AdvancingFront.prototype = {
-	head: null
-	,tail: null
-	,search_node: null
-	,locateNode: function(x) {
-		var node = this.search_node;
-		if(x < node.value) {
-			while(true) {
-				node = node.prev;
-				if(!(node != null)) {
-					break;
-				}
-				if(x >= node.value) {
-					this.search_node = node;
-					return node;
-				}
-			}
-		} else {
-			while(true) {
-				node = node.next;
-				if(!(node != null)) {
-					break;
-				}
-				if(x < node.value) {
-					this.search_node = node.prev;
-					return node.prev;
-				}
-			}
-		}
-		return null;
-	}
-	,locatePoint: function(point) {
-		var px = point.x;
-		var node = this.search_node;
-		var nx = node.point.x;
-		if(px == nx) {
-			if(!point.equals(node.point)) {
-				if(point.equals(node.prev.point)) {
-					node = node.prev;
-				} else if(point.equals(node.next.point)) {
-					node = node.next;
-				} else {
-					throw new js__$Boot_HaxeError("Invalid AdvancingFront.locatePoint call!");
-				}
-			}
-		} else if(px < nx) {
-			while(true) {
-				node = node.prev;
-				if(!(node != null)) {
-					break;
-				}
-				if(point.equals(node.point)) {
-					break;
-				}
-			}
-		} else {
-			while(true) {
-				node = node.next;
-				if(!(node != null)) {
-					break;
-				}
-				if(point.equals(node.point)) {
-					break;
-				}
-			}
-		}
-		if(node != null) {
-			this.search_node = node;
-		}
-		return node;
-	}
-	,__class__: org_poly2tri_AdvancingFront
-};
-var org_poly2tri_Basin = function() {
-	this.width = 0;
-};
-$hxClasses["org.poly2tri.Basin"] = org_poly2tri_Basin;
-org_poly2tri_Basin.__name__ = true;
-org_poly2tri_Basin.prototype = {
-	left_node: null
-	,bottom_node: null
-	,right_node: null
-	,width: null
-	,left_highest: null
-	,clear: function() {
-		this.left_node = null;
-		this.bottom_node = null;
-		this.right_node = null;
-		this.width = 0.0;
-		this.left_highest = false;
-	}
-	,__class__: org_poly2tri_Basin
-};
-var org_poly2tri_Constants = function() { };
-$hxClasses["org.poly2tri.Constants"] = org_poly2tri_Constants;
-org_poly2tri_Constants.__name__ = true;
-var org_poly2tri_Edge = function(p1,p2) {
-	if(p1 == null || p2 == null) {
-		throw new js__$Boot_HaxeError("Edge::new p1 or p2 is null");
-	}
-	var swap = false;
-	if(p1.y > p2.y) {
-		swap = true;
-	} else if(p1.y == p2.y) {
-		if(p1.x == p2.x) {
-			throw new js__$Boot_HaxeError("Edge::repeat points " + Std.string(p1));
-		}
-		swap = p1.x > p2.x;
-	}
-	if(swap) {
-		this.q = p1;
-		this.p = p2;
-	} else {
-		this.p = p1;
-		this.q = p2;
-	}
-	this.q.get_edge_list().push(this);
-};
-$hxClasses["org.poly2tri.Edge"] = org_poly2tri_Edge;
-org_poly2tri_Edge.__name__ = true;
-org_poly2tri_Edge.prototype = {
-	p: null
-	,q: null
-	,toString: function() {
-		return "Edge(" + Std.string(this.p) + ", " + Std.string(this.q) + ")";
-	}
-	,__class__: org_poly2tri_Edge
-};
-var org_poly2tri_EdgeEvent = function() {
-};
-$hxClasses["org.poly2tri.EdgeEvent"] = org_poly2tri_EdgeEvent;
-org_poly2tri_EdgeEvent.__name__ = true;
-org_poly2tri_EdgeEvent.prototype = {
-	constrained_edge: null
-	,right: null
-	,__class__: org_poly2tri_EdgeEvent
-};
-var org_poly2tri_Node = function(point,triangle) {
-	this.point = point;
-	this.triangle = triangle;
-	this.value = this.point.x;
-};
-$hxClasses["org.poly2tri.Node"] = org_poly2tri_Node;
-org_poly2tri_Node.__name__ = true;
-org_poly2tri_Node.prototype = {
-	point: null
-	,triangle: null
-	,prev: null
-	,next: null
-	,value: null
-	,getHoleAngle: function() {
-		var ax = this.next.point.x - this.point.x;
-		var ay = this.next.point.y - this.point.y;
-		var bx = this.prev.point.x - this.point.x;
-		var by = this.prev.point.y - this.point.y;
-		return Math.atan2(ax * by - ay * bx,ax * bx + ay * by);
-	}
-	,getBasinAngle: function() {
-		return Math.atan2(this.point.y - this.next.next.point.y,this.point.x - this.next.next.point.x);
-	}
-	,__class__: org_poly2tri_Node
-};
-var org_poly2tri_Orientation = function() { };
-$hxClasses["org.poly2tri.Orientation"] = org_poly2tri_Orientation;
-org_poly2tri_Orientation.__name__ = true;
-org_poly2tri_Orientation.orient2d = function(pa,pb,pc) {
-	var detleft = (pa.x - pc.x) * (pb.y - pc.y);
-	var detright = (pa.y - pc.y) * (pb.x - pc.x);
-	var val = detleft - detright;
-	if(val > -org_poly2tri_Constants.EPSILON && val < org_poly2tri_Constants.EPSILON) {
-		return 0;
-	}
-	if(val > 0) {
-		return -1;
-	}
-	return 1;
-};
-var org_poly2tri_Point = function(x,y) {
-	this.x = x;
-	this.y = y;
-	this.id = org_poly2tri_Point.C_ID;
-	org_poly2tri_Point.C_ID++;
-};
-$hxClasses["org.poly2tri.Point"] = org_poly2tri_Point;
-org_poly2tri_Point.__name__ = true;
-org_poly2tri_Point.sortPoints = function(points) {
-	points.sort(org_poly2tri_Point.cmpPoints);
-};
-org_poly2tri_Point.cmpPoints = function(l,r) {
-	var ret = l.y - r.y;
-	if(ret == 0) {
-		ret = l.x - r.x;
-	}
-	if(ret < 0) {
-		return -1;
-	}
-	if(ret > 0) {
-		return 1;
-	}
-	return 0;
-};
-org_poly2tri_Point.prototype = {
-	id: null
-	,x: null
-	,y: null
-	,edge_list: null
-	,get_edge_list: function() {
-		if(this.edge_list == null) {
-			this.edge_list = [];
-		}
-		return this.edge_list;
-	}
-	,equals: function(that) {
-		if(this.x == that.x) {
-			return this.y == that.y;
-		} else {
-			return false;
-		}
-	}
-	,toString: function() {
-		return "Point(" + this.x + ", " + this.y + ")";
-	}
-	,__class__: org_poly2tri_Point
-};
-var org_poly2tri_Sweep = function(context) {
-	this.context = context;
-};
-$hxClasses["org.poly2tri.Sweep"] = org_poly2tri_Sweep;
-org_poly2tri_Sweep.__name__ = true;
-org_poly2tri_Sweep.nextFlipPoint = function(ep,eq,ot,op) {
-	var o2d = org_poly2tri_Orientation.orient2d(eq,op,ep);
-	if(o2d == 1) {
-		return ot.pointCCW(op);
-	} else if(o2d == -1) {
-		return ot.pointCW(op);
-	} else {
-		throw new js__$Boot_HaxeError("Sweep:: [Unsupported] Sweep.NextFlipPoint: opposing point on constrained edge!");
-	}
-};
-org_poly2tri_Sweep.prototype = {
-	context: null
-	,triangulate: function() {
-		this.context.initTriangulation();
-		this.context.createAdvancingFront();
-		this.sweepPoints();
-		this.finalizationPolygon();
-	}
-	,sweepPoints: function() {
-		var _g1 = 1;
-		var _g = this.context.points.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			var point = this.context.points[i];
-			var node = this.pointEvent(point);
-			var _g3 = 0;
-			var _g2 = point.get_edge_list().length;
-			while(_g3 < _g2) {
-				var j = _g3++;
-				this.edgeEventByEdge(point.get_edge_list()[j],node);
-			}
-		}
-	}
-	,finalizationPolygon: function() {
-		var t = this.context.front.head.next.triangle;
-		var p = this.context.front.head.next.point;
-		while(!t.getConstrainedEdgeCW(p)) t = t.neighborCCW(p);
-		this.context.meshClean(t);
-	}
-	,pointEvent: function(point) {
-		var node = this.context.locateNode(point);
-		var new_node = this.newFrontTriangle(point,node);
-		if(point.x <= node.point.x + org_poly2tri_Constants.EPSILON) {
-			this.fill(node);
-		}
-		this.fillAdvancingFront(new_node);
-		return new_node;
-	}
-	,edgeEventByEdge: function(edge,node) {
-		this.context.edge_event.constrained_edge = edge;
-		this.context.edge_event.right = edge.p.x > edge.q.x;
-		if(node.triangle.isEdgeSide(edge.p,edge.q)) {
-			return;
-		}
-		this.fillEdgeEvent(edge,node);
-		this.edgeEventByPoints(edge.p,edge.q,node.triangle,edge.q);
-	}
-	,edgeEventByPoints: function(ep,eq,triangle,point) {
-		if(triangle.isEdgeSide(ep,eq)) {
-			return;
-		}
-		var p1 = triangle.pointCCW(point);
-		var o1 = org_poly2tri_Orientation.orient2d(eq,p1,ep);
-		if(o1 == 0) {
-			throw new js__$Boot_HaxeError("Sweep.edgeEvent: Collinear not supported!");
-		}
-		var p2 = triangle.pointCW(point);
-		var o2 = org_poly2tri_Orientation.orient2d(eq,p2,ep);
-		if(o2 == 0) {
-			throw new js__$Boot_HaxeError("Sweep.edgeEvent: Collinear not supported!");
-		}
-		if(o1 == o2) {
-			if(o1 == 1) {
-				triangle = triangle.neighborCCW(point);
-			} else {
-				triangle = triangle.neighborCW(point);
-			}
-			this.edgeEventByPoints(ep,eq,triangle,point);
-		} else {
-			this.flipEdgeEvent(ep,eq,triangle,point);
-		}
-	}
-	,newFrontTriangle: function(point,node) {
-		var triangle = new org_poly2tri_Triangle(point,node.point,node.next.point);
-		triangle.markNeighborTriangle(node.triangle);
-		this.context.addToMap(triangle);
-		var new_node = new org_poly2tri_Node(point);
-		new_node.next = node.next;
-		new_node.prev = node;
-		node.next.prev = new_node;
-		node.next = new_node;
-		if(!this.legalize(triangle)) {
-			this.context.mapTriangleToNodes(triangle);
-		}
-		return new_node;
-	}
-	,fill: function(node) {
-		var triangle = new org_poly2tri_Triangle(node.prev.point,node.point,node.next.point);
-		triangle.markNeighborTriangle(node.prev.triangle);
-		triangle.markNeighborTriangle(node.triangle);
-		this.context.addToMap(triangle);
-		node.prev.next = node.next;
-		node.next.prev = node.prev;
-		if(!this.legalize(triangle)) {
-			this.context.mapTriangleToNodes(triangle);
-		}
-		this.context.removeNode(node);
-	}
-	,fillAdvancingFront: function(n) {
-		var node;
-		var angle;
-		node = n.next;
-		while(node.next != null) {
-			angle = node.getHoleAngle();
-			if(angle > org_poly2tri_Constants.PI_2 || angle < -org_poly2tri_Constants.PI_2) {
-				break;
-			}
-			this.fill(node);
-			node = node.next;
-		}
-		node = n.prev;
-		while(node.prev != null) {
-			angle = node.getHoleAngle();
-			if(angle > org_poly2tri_Constants.PI_2 || angle < -org_poly2tri_Constants.PI_2) {
-				break;
-			}
-			this.fill(node);
-			node = node.prev;
-		}
-		if(n.next != null && n.next.next != null) {
-			angle = n.getBasinAngle();
-			if(angle < org_poly2tri_Constants.PI_3div4) {
-				this.fillBasin(n);
-			}
-		}
-	}
-	,legalize: function(t) {
-		var _g = 0;
-		while(_g < 3) {
-			var i = _g++;
-			if(t.delaunay_edge[i]) {
-				continue;
-			}
-			var ot = t.neighbors[i];
-			if(ot != null) {
-				var p = t.points[i];
-				var op = ot.oppositePoint(t,p);
-				var oi = ot.index(op);
-				if(ot.constrained_edge[oi] || ot.delaunay_edge[oi]) {
-					t.constrained_edge[i] = ot.constrained_edge[oi];
-					continue;
-				}
-				if(org_poly2tri_Utils.insideIncircle(p,t.pointCCW(p),t.pointCW(p),op)) {
-					t.delaunay_edge[i] = true;
-					ot.delaunay_edge[oi] = true;
-					org_poly2tri_Triangle.rotateTrianglePair(t,p,ot,op);
-					var not_legalized = !this.legalize(t);
-					if(not_legalized) {
-						this.context.mapTriangleToNodes(t);
-					}
-					not_legalized = !this.legalize(ot);
-					if(not_legalized) {
-						this.context.mapTriangleToNodes(ot);
-					}
-					t.delaunay_edge[i] = false;
-					ot.delaunay_edge[oi] = false;
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	,fillBasin: function(node) {
-		var tmp = org_poly2tri_Orientation.orient2d(node.point,node.next.point,node.next.next.point) == -1 ? node.next.next : node.next;
-		this.context.basin.left_node = tmp;
-		this.context.basin.bottom_node = this.context.basin.left_node;
-		while(this.context.basin.bottom_node.next != null && this.context.basin.bottom_node.point.y >= this.context.basin.bottom_node.next.point.y) this.context.basin.bottom_node = this.context.basin.bottom_node.next;
-		if(this.context.basin.bottom_node == this.context.basin.left_node) {
-			return;
-		}
-		this.context.basin.right_node = this.context.basin.bottom_node;
-		while(this.context.basin.right_node.next != null && this.context.basin.right_node.point.y < this.context.basin.right_node.next.point.y) this.context.basin.right_node = this.context.basin.right_node.next;
-		if(this.context.basin.right_node == this.context.basin.bottom_node) {
-			return;
-		}
-		this.context.basin.width = this.context.basin.right_node.point.x - this.context.basin.left_node.point.x;
-		this.context.basin.left_highest = this.context.basin.left_node.point.y > this.context.basin.right_node.point.y;
-		this.fillBasinReq(this.context.basin.bottom_node);
-	}
-	,fillBasinReq: function(node) {
-		if(this.isShallow(node)) {
-			return;
-		}
-		this.fill(node);
-		if(node.prev == this.context.basin.left_node && node.next == this.context.basin.right_node) {
-			return;
-		} else if(node.prev == this.context.basin.left_node) {
-			if(org_poly2tri_Orientation.orient2d(node.point,node.next.point,node.next.next.point) == 1) {
-				return;
-			}
-			node = node.next;
-		} else if(node.next == this.context.basin.right_node) {
-			if(org_poly2tri_Orientation.orient2d(node.point,node.prev.point,node.prev.prev.point) == -1) {
-				return;
-			}
-			node = node.prev;
-		} else if(node.prev.point.y < node.next.point.y) {
-			node = node.prev;
-		} else {
-			node = node.next;
-		}
-		this.fillBasinReq(node);
-	}
-	,isShallow: function(node) {
-		var height = this.context.basin.left_highest ? this.context.basin.left_node.point.y - node.point.y : this.context.basin.right_node.point.y - node.point.y;
-		return this.context.basin.width > height;
-	}
-	,fillEdgeEvent: function(edge,node) {
-		if(this.context.edge_event.right) {
-			this.fillRightAboveEdgeEvent(edge,node);
-		} else {
-			this.fillLeftAboveEdgeEvent(edge,node);
-		}
-	}
-	,fillRightAboveEdgeEvent: function(edge,node) {
-		while(node.next.point.x < edge.p.x) if(org_poly2tri_Orientation.orient2d(edge.q,node.next.point,edge.p) == -1) {
-			this.fillRightBelowEdgeEvent(edge,node);
-		} else {
-			node = node.next;
-		}
-	}
-	,fillRightBelowEdgeEvent: function(edge,node) {
-		if(node.point.x >= edge.p.x) {
-			return;
-		}
-		if(org_poly2tri_Orientation.orient2d(node.point,node.next.point,node.next.next.point) == -1) {
-			this.fillRightConcaveEdgeEvent(edge,node);
-		} else {
-			this.fillRightConvexEdgeEvent(edge,node);
-			this.fillRightBelowEdgeEvent(edge,node);
-		}
-	}
-	,fillRightConcaveEdgeEvent: function(edge,node) {
-		this.fill(node.next);
-		if(node.next.point != edge.p) {
-			if(org_poly2tri_Orientation.orient2d(edge.q,node.next.point,edge.p) == -1) {
-				if(org_poly2tri_Orientation.orient2d(node.point,node.next.point,node.next.next.point) == -1) {
-					this.fillRightConcaveEdgeEvent(edge,node);
-				}
-			}
-		}
-	}
-	,fillRightConvexEdgeEvent: function(edge,node) {
-		if(org_poly2tri_Orientation.orient2d(node.next.point,node.next.next.point,node.next.next.next.point) == -1) {
-			this.fillRightConcaveEdgeEvent(edge,node.next);
-		} else if(org_poly2tri_Orientation.orient2d(edge.q,node.next.next.point,edge.p) == -1) {
-			this.fillRightConvexEdgeEvent(edge,node.next);
-		}
-	}
-	,fillLeftAboveEdgeEvent: function(edge,node) {
-		while(node.prev.point.x > edge.p.x) if(org_poly2tri_Orientation.orient2d(edge.q,node.prev.point,edge.p) == 1) {
-			this.fillLeftBelowEdgeEvent(edge,node);
-		} else {
-			node = node.prev;
-		}
-	}
-	,fillLeftBelowEdgeEvent: function(edge,node) {
-		if(node.point.x > edge.p.x) {
-			if(org_poly2tri_Orientation.orient2d(node.point,node.prev.point,node.prev.prev.point) == 1) {
-				this.fillLeftConcaveEdgeEvent(edge,node);
-			} else {
-				this.fillLeftConvexEdgeEvent(edge,node);
-				this.fillLeftBelowEdgeEvent(edge,node);
-			}
-		}
-	}
-	,fillLeftConvexEdgeEvent: function(edge,node) {
-		if(org_poly2tri_Orientation.orient2d(node.prev.point,node.prev.prev.point,node.prev.prev.prev.point) == 1) {
-			this.fillLeftConcaveEdgeEvent(edge,node.prev);
-		} else if(org_poly2tri_Orientation.orient2d(edge.q,node.prev.prev.point,edge.p) == 1) {
-			this.fillLeftConvexEdgeEvent(edge,node.prev);
-		}
-	}
-	,fillLeftConcaveEdgeEvent: function(edge,node) {
-		this.fill(node.prev);
-		if(node.prev.point != edge.p) {
-			if(org_poly2tri_Orientation.orient2d(edge.q,node.prev.point,edge.p) == 1) {
-				if(org_poly2tri_Orientation.orient2d(node.point,node.prev.point,node.prev.prev.point) == 1) {
-					this.fillLeftConcaveEdgeEvent(edge,node);
-				}
-			}
-		}
-	}
-	,flipEdgeEvent: function(ep,eq,t,p) {
-		var ot = t.neighborAcross(p);
-		if(ot == null) {
-			throw new js__$Boot_HaxeError("Sweep::[BUG:FIXME] FLIP failed due to missing triangle!");
-		}
-		var op = ot.oppositePoint(t,p);
-		if(org_poly2tri_Utils.inScanArea(p,t.pointCCW(p),t.pointCW(p),op)) {
-			org_poly2tri_Triangle.rotateTrianglePair(t,p,ot,op);
-			this.context.mapTriangleToNodes(t);
-			this.context.mapTriangleToNodes(ot);
-			if(p == eq && op == ep) {
-				if(eq == this.context.edge_event.constrained_edge.q && ep == this.context.edge_event.constrained_edge.p) {
-					t.markConstrainedEdgeByPoints(ep,eq);
-					ot.markConstrainedEdgeByPoints(ep,eq);
-					this.legalize(t);
-					this.legalize(ot);
-				}
-			} else {
-				var o = org_poly2tri_Orientation.orient2d(eq,op,ep);
-				t = this.nextFlipTriangle(o,t,ot,p,op);
-				this.flipEdgeEvent(ep,eq,t,p);
-			}
-		} else {
-			var newP = org_poly2tri_Sweep.nextFlipPoint(ep,eq,ot,op);
-			this.flipScanEdgeEvent(ep,eq,t,ot,newP);
-			this.edgeEventByPoints(ep,eq,t,p);
-		}
-	}
-	,nextFlipTriangle: function(o,t,ot,p,op) {
-		var edge_index;
-		if(o == -1) {
-			edge_index = ot.edgeIndex(p,op);
-			ot.delaunay_edge[edge_index] = true;
-			this.legalize(ot);
-			ot.clearDelunayEdges();
-			return t;
-		}
-		edge_index = t.edgeIndex(p,op);
-		t.delaunay_edge[edge_index] = true;
-		this.legalize(t);
-		t.clearDelunayEdges();
-		return ot;
-	}
-	,flipScanEdgeEvent: function(ep,eq,flip_triangle,t,p) {
-		var ot = t.neighborAcross(p);
-		if(ot == null) {
-			throw new js__$Boot_HaxeError("Sweep::[BUG:FIXME] FLIP failed due to missing triangle");
-		}
-		var op = ot.oppositePoint(t,p);
-		if(org_poly2tri_Utils.inScanArea(eq,flip_triangle.pointCCW(eq),flip_triangle.pointCW(eq),op)) {
-			this.flipEdgeEvent(eq,op,ot,op);
-		} else {
-			var newP = org_poly2tri_Sweep.nextFlipPoint(ep,eq,ot,op);
-			this.flipScanEdgeEvent(ep,eq,flip_triangle,ot,newP);
-		}
-	}
-	,__class__: org_poly2tri_Sweep
-};
-var org_poly2tri_SweepContext = function() {
-	this.triangles = [];
-	this.points = [];
-	this.edge_list = [];
-	this.map = new haxe_ds_StringMap();
-	this.basin = new org_poly2tri_Basin();
-	this.edge_event = new org_poly2tri_EdgeEvent();
-};
-$hxClasses["org.poly2tri.SweepContext"] = org_poly2tri_SweepContext;
-org_poly2tri_SweepContext.__name__ = true;
-org_poly2tri_SweepContext.prototype = {
-	triangles: null
-	,points: null
-	,edge_list: null
-	,map: null
-	,front: null
-	,head: null
-	,tail: null
-	,basin: null
-	,edge_event: null
-	,addPoints: function(points) {
-		var _g = 0;
-		while(_g < points.length) {
-			var point = points[_g];
-			++_g;
-			this.points.push(point);
-		}
-	}
-	,addPolyline: function(polyline) {
-		this.initEdges(polyline);
-		this.addPoints(polyline);
-	}
-	,initEdges: function(polyline) {
-		var _g1 = 0;
-		var _g = polyline.length;
-		while(_g1 < _g) {
-			var n = _g1++;
-			var nx = polyline[(n + 1) % polyline.length];
-			this.edge_list.push(new org_poly2tri_Edge(polyline[n],nx));
-		}
-	}
-	,addToMap: function(triangle) {
-		var this1 = this.map;
-		var key = triangle.toString();
-		var _this = this1;
-		if(__map_reserved[key] != null) {
-			_this.setReserved(key,triangle);
-		} else {
-			_this.h[key] = triangle;
-		}
-	}
-	,initTriangulation: function() {
-		var xmin = this.points[0].x;
-		var xmax = this.points[0].x;
-		var ymin = this.points[0].y;
-		var ymax = this.points[0].y;
-		var _g = 0;
-		var _g1 = this.points;
-		while(_g < _g1.length) {
-			var p = _g1[_g];
-			++_g;
-			if(p.x > xmax) {
-				xmax = p.x;
-			}
-			if(p.x < xmin) {
-				xmin = p.x;
-			}
-			if(p.y > ymax) {
-				ymax = p.y;
-			}
-			if(p.y < ymin) {
-				ymin = p.y;
-			}
-		}
-		var dx = org_poly2tri_Constants.kAlpha * (xmax - xmin);
-		var dy = org_poly2tri_Constants.kAlpha * (ymax - ymin);
-		this.head = new org_poly2tri_Point(xmax + dx,ymin - dy);
-		this.tail = new org_poly2tri_Point(xmin - dy,ymin - dy);
-		org_poly2tri_Point.sortPoints(this.points);
-	}
-	,locateNode: function(point) {
-		return this.front.locateNode(point.x);
-	}
-	,createAdvancingFront: function() {
-		var triangle = new org_poly2tri_Triangle(this.points[0],this.tail,this.head);
-		this.addToMap(triangle);
-		var head = new org_poly2tri_Node(triangle.points[1],triangle);
-		var middle = new org_poly2tri_Node(triangle.points[0],triangle);
-		var tail = new org_poly2tri_Node(triangle.points[2]);
-		this.front = new org_poly2tri_AdvancingFront(head,tail);
-		head.next = middle;
-		middle.next = tail;
-		middle.prev = head;
-		tail.prev = middle;
-	}
-	,removeNode: function(node) {
-	}
-	,mapTriangleToNodes: function(triangle) {
-		var _g = 0;
-		while(_g < 3) {
-			var n = _g++;
-			if(triangle.neighbors[n] == null) {
-				var neighbor = this.front.locatePoint(triangle.pointCW(triangle.points[n]));
-				if(neighbor != null) {
-					neighbor.triangle = triangle;
-				}
-			}
-		}
-	}
-	,meshClean: function(t) {
-		var tmp = [t];
-		while(true) {
-			var t1 = tmp.pop();
-			if(t1 == null) {
-				break;
-			}
-			if(t1.interior) {
-				continue;
-			}
-			t1.interior = true;
-			this.triangles.push(t1);
-			var _g = 0;
-			while(_g < 3) {
-				var n = _g++;
-				if(!t1.constrained_edge[n]) {
-					tmp.push(t1.neighbors[n]);
-				}
-			}
-		}
-	}
-	,__class__: org_poly2tri_SweepContext
-};
-var org_poly2tri_Triangle = function(p1,p2,p3,fixOrientation,checkOrientation) {
-	if(checkOrientation == null) {
-		checkOrientation = true;
-	}
-	if(fixOrientation == null) {
-		fixOrientation = false;
-	}
-	if(fixOrientation) {
-		if(org_poly2tri_Orientation.orient2d(p1,p2,p3) == 1) {
-			var pt = p3;
-			p3 = p2;
-			p2 = pt;
-		}
-	}
-	if(checkOrientation && org_poly2tri_Orientation.orient2d(p3,p2,p1) != 1) {
-		throw new js__$Boot_HaxeError("Triangle::Triangle must defined with Orientation.CW");
-	}
-	this.points = [p1,p2,p3];
-	this.neighbors = [null,null,null];
-	this.constrained_edge = [false,false,false];
-	this.delaunay_edge = [false,false,false];
-};
-$hxClasses["org.poly2tri.Triangle"] = org_poly2tri_Triangle;
-org_poly2tri_Triangle.__name__ = true;
-org_poly2tri_Triangle.rotateTrianglePair = function(t,p,ot,op) {
-	var n1 = t.neighborCCW(p);
-	var n2 = t.neighborCW(p);
-	var n3 = ot.neighborCCW(op);
-	var n4 = ot.neighborCW(op);
-	var ce1 = t.getConstrainedEdgeCCW(p);
-	var ce2 = t.getConstrainedEdgeCW(p);
-	var ce3 = ot.getConstrainedEdgeCCW(op);
-	var ce4 = ot.getConstrainedEdgeCW(op);
-	var de1 = t.getDelaunayEdgeCCW(p);
-	var de2 = t.getDelaunayEdgeCW(p);
-	var de3 = ot.getDelaunayEdgeCCW(op);
-	var de4 = ot.getDelaunayEdgeCW(op);
-	t.legalize(p,op);
-	ot.legalize(op,p);
-	ot.setDelaunayEdgeCCW(p,de1);
-	t.setDelaunayEdgeCW(p,de2);
-	t.setDelaunayEdgeCCW(op,de3);
-	ot.setDelaunayEdgeCW(op,de4);
-	ot.setConstrainedEdgeCCW(p,ce1);
-	t.setConstrainedEdgeCW(p,ce2);
-	t.setConstrainedEdgeCCW(op,ce3);
-	ot.setConstrainedEdgeCW(op,ce4);
-	t.clearNeigbors();
-	ot.clearNeigbors();
-	if(n1 != null) {
-		ot.markNeighborTriangle(n1);
-	}
-	if(n2 != null) {
-		t.markNeighborTriangle(n2);
-	}
-	if(n3 != null) {
-		t.markNeighborTriangle(n3);
-	}
-	if(n4 != null) {
-		ot.markNeighborTriangle(n4);
-	}
-	t.markNeighborTriangle(ot);
-};
-org_poly2tri_Triangle.prototype = {
-	points: null
-	,neighbors: null
-	,interior: null
-	,constrained_edge: null
-	,delaunay_edge: null
-	,containsPoint: function(point) {
-		if(!(point.equals(this.points[0]) || point.equals(this.points[1]))) {
-			return point.equals(this.points[2]);
-		} else {
-			return true;
-		}
-	}
-	,containsEdgePoints: function(p1,p2) {
-		if(this.containsPoint(p1)) {
-			return this.containsPoint(p2);
-		} else {
-			return false;
-		}
-	}
-	,markNeighbor: function(t,p1,p2) {
-		if(p1.equals(this.points[2]) && p2.equals(this.points[1]) || p1.equals(this.points[1]) && p2.equals(this.points[2])) {
-			this.neighbors[0] = t;
-			return;
-		}
-		if(p1.equals(this.points[0]) && p2.equals(this.points[2]) || p1.equals(this.points[2]) && p2.equals(this.points[0])) {
-			this.neighbors[1] = t;
-			return;
-		}
-		if(p1.equals(this.points[0]) && p2.equals(this.points[1]) || p1.equals(this.points[1]) && p2.equals(this.points[0])) {
-			this.neighbors[2] = t;
-			return;
-		}
-		throw new js__$Boot_HaxeError("Invalid markNeighbor call (1)!");
-	}
-	,markNeighborTriangle: function(that) {
-		if(that.containsEdgePoints(this.points[1],this.points[2])) {
-			this.neighbors[0] = that;
-			that.markNeighbor(this,this.points[1],this.points[2]);
-			return;
-		}
-		if(that.containsEdgePoints(this.points[0],this.points[2])) {
-			this.neighbors[1] = that;
-			that.markNeighbor(this,this.points[0],this.points[2]);
-			return;
-		}
-		if(that.containsEdgePoints(this.points[0],this.points[1])) {
-			this.neighbors[2] = that;
-			that.markNeighbor(this,this.points[0],this.points[1]);
-			return;
-		}
-	}
-	,getPointIndexOffset: function(p,offset) {
-		if(offset == null) {
-			offset = 0;
-		}
-		var no = offset;
-		var _g = 0;
-		while(_g < 3) {
-			var n = _g++;
-			while(no < 0) no += 3;
-			while(no > 2) no -= 3;
-			if(p.equals(this.points[n])) {
-				return no;
-			}
-			++no;
-		}
-		throw new js__$Boot_HaxeError("Triangle::Point not in triangle");
-	}
-	,pointCW: function(p) {
-		return this.points[this.getPointIndexOffset(p,-1)];
-	}
-	,pointCCW: function(p) {
-		return this.points[this.getPointIndexOffset(p,1)];
-	}
-	,neighborCW: function(p) {
-		return this.neighbors[this.getPointIndexOffset(p,1)];
-	}
-	,neighborCCW: function(p) {
-		return this.neighbors[this.getPointIndexOffset(p,-1)];
-	}
-	,getConstrainedEdgeCW: function(p) {
-		return this.constrained_edge[this.getPointIndexOffset(p,1)];
-	}
-	,setConstrainedEdgeCW: function(p,ce) {
-		return this.constrained_edge[this.getPointIndexOffset(p,1)] = ce;
-	}
-	,getConstrainedEdgeCCW: function(p) {
-		return this.constrained_edge[this.getPointIndexOffset(p,-1)];
-	}
-	,setConstrainedEdgeCCW: function(p,ce) {
-		return this.constrained_edge[this.getPointIndexOffset(p,-1)] = ce;
-	}
-	,getDelaunayEdgeCW: function(p) {
-		return this.delaunay_edge[this.getPointIndexOffset(p,1)];
-	}
-	,setDelaunayEdgeCW: function(p,e) {
-		return this.delaunay_edge[this.getPointIndexOffset(p,1)] = e;
-	}
-	,getDelaunayEdgeCCW: function(p) {
-		return this.delaunay_edge[this.getPointIndexOffset(p,-1)];
-	}
-	,setDelaunayEdgeCCW: function(p,e) {
-		return this.delaunay_edge[this.getPointIndexOffset(p,-1)] = e;
-	}
-	,neighborAcross: function(p) {
-		return this.neighbors[this.getPointIndexOffset(p,0)];
-	}
-	,oppositePoint: function(t,p) {
-		return this.pointCW(t.pointCW(p));
-	}
-	,legalize: function(opoint,npoint) {
-		if(npoint == null) {
-			this.legalize(this.points[0],opoint);
-			return;
-		}
-		if(opoint.equals(this.points[0])) {
-			this.points[1] = this.points[0];
-			this.points[0] = this.points[2];
-			this.points[2] = npoint;
-		} else if(opoint.equals(this.points[1])) {
-			this.points[2] = this.points[1];
-			this.points[1] = this.points[0];
-			this.points[0] = npoint;
-		} else if(opoint.equals(this.points[2])) {
-			this.points[0] = this.points[2];
-			this.points[2] = this.points[1];
-			this.points[1] = npoint;
-		} else {
-			throw new js__$Boot_HaxeError("Invalid js.poly2tri.Triangle.Legalize call!");
-		}
-	}
-	,index: function(p) {
-		try {
-			return this.getPointIndexOffset(p,0);
-		} catch( msg ) {
-			if (msg instanceof js__$Boot_HaxeError) msg = msg.val;
-			if( js_Boot.__instanceof(msg,String) ) {
-				haxe_Log.trace(msg,{ fileName : "Triangle.hx", lineNumber : 235, className : "org.poly2tri.Triangle", methodName : "index"});
-			} else throw(msg);
-		}
-		return -1;
-	}
-	,edgeIndex: function(p1,p2) {
-		if(p1.equals(this.points[0])) {
-			if(p2.equals(this.points[1])) {
-				return 2;
-			}
-			if(p2.equals(this.points[2])) {
-				return 1;
-			}
-		} else if(p1.equals(this.points[1])) {
-			if(p2.equals(this.points[2])) {
-				return 0;
-			}
-			if(p2.equals(this.points[0])) {
-				return 2;
-			}
-		} else if(p1.equals(this.points[2])) {
-			if(p2.equals(this.points[0])) {
-				return 1;
-			}
-			if(p2.equals(this.points[1])) {
-				return 0;
-			}
-		}
-		return -1;
-	}
-	,markConstrainedEdgeByIndex: function(index) {
-		this.constrained_edge[index] = true;
-	}
-	,markConstrainedEdgeByEdge: function(edge) {
-		this.markConstrainedEdgeByPoints(edge.p,edge.q);
-	}
-	,markConstrainedEdgeByPoints: function(p,q) {
-		if(q.equals(this.points[0]) && p.equals(this.points[1]) || q.equals(this.points[1]) && p.equals(this.points[0])) {
-			this.constrained_edge[2] = true;
-			return;
-		}
-		if(q.equals(this.points[0]) && p.equals(this.points[2]) || q.equals(this.points[2]) && p.equals(this.points[0])) {
-			this.constrained_edge[1] = true;
-			return;
-		}
-		if(q.equals(this.points[1]) && p.equals(this.points[2]) || q.equals(this.points[2]) && p.equals(this.points[1])) {
-			this.constrained_edge[0] = true;
-			return;
-		}
-	}
-	,isEdgeSide: function(ep,eq) {
-		var index = this.edgeIndex(ep,eq);
-		if(index == -1) {
-			return false;
-		}
-		this.markConstrainedEdgeByIndex(index);
-		var that = this.neighbors[index];
-		if(that != null) {
-			that.markConstrainedEdgeByPoints(ep,eq);
-		}
-		return true;
-	}
-	,clearNeigbors: function() {
-		this.neighbors[0] = null;
-		this.neighbors[1] = null;
-		this.neighbors[2] = null;
-	}
-	,clearDelunayEdges: function() {
-		this.delaunay_edge[0] = false;
-		this.delaunay_edge[1] = false;
-		this.delaunay_edge[2] = false;
-	}
-	,toString: function() {
-		return "Triangle(" + Std.string(this.points[0]) + ", " + Std.string(this.points[1]) + ", " + Std.string(this.points[2]) + ")";
-	}
-	,__class__: org_poly2tri_Triangle
-};
-var org_poly2tri_Utils = function() { };
-$hxClasses["org.poly2tri.Utils"] = org_poly2tri_Utils;
-org_poly2tri_Utils.__name__ = true;
-org_poly2tri_Utils.insideIncircle = function(pa,pb,pc,pd) {
-	var adx = pa.x - pd.x;
-	var ady = pa.y - pd.y;
-	var bdx = pb.x - pd.x;
-	var bdy = pb.y - pd.y;
-	var adxbdy = adx * bdy;
-	var bdxady = bdx * ady;
-	var oabd = adxbdy - bdxady;
-	if(oabd <= 0) {
-		return false;
-	}
-	var cdx = pc.x - pd.x;
-	var cdy = pc.y - pd.y;
-	var cdxady = cdx * ady;
-	var adxcdy = adx * cdy;
-	var ocad = cdxady - adxcdy;
-	if(ocad <= 0) {
-		return false;
-	}
-	var bdxcdy = bdx * cdy;
-	var cdxbdy = cdx * bdy;
-	var alift = adx * adx + ady * ady;
-	var blift = bdx * bdx + bdy * bdy;
-	var clift = cdx * cdx + cdy * cdy;
-	var det = alift * (bdxcdy - cdxbdy) + blift * ocad + clift * oabd;
-	return det > 0;
-};
-org_poly2tri_Utils.inScanArea = function(pa,pb,pc,pd) {
-	var pdx = pd.x;
-	var pdy = pd.y;
-	var adx = pa.x - pdx;
-	var ady = pa.y - pdy;
-	var bdx = pb.x - pdx;
-	var bdy = pb.y - pdy;
-	var adxbdy = adx * bdy;
-	var bdxady = bdx * ady;
-	var oabd = adxbdy - bdxady;
-	if(oabd <= org_poly2tri_Constants.EPSILON) {
-		return false;
-	}
-	var cdx = pc.x - pdx;
-	var cdy = pc.y - pdy;
-	var cdxady = cdx * ady;
-	var adxcdy = adx * cdy;
-	var ocad = cdxady - adxcdy;
-	if(ocad <= org_poly2tri_Constants.EPSILON) {
-		return false;
-	}
-	return true;
-};
-var org_poly2tri_VisiblePolygon = function() {
-	this.reset();
-};
-$hxClasses["org.poly2tri.VisiblePolygon"] = org_poly2tri_VisiblePolygon;
-org_poly2tri_VisiblePolygon.__name__ = true;
-org_poly2tri_VisiblePolygon.prototype = {
-	sweepContext: null
-	,sweep: null
-	,triangulated: null
-	,addPolyline: function(polyline) {
-		this.sweepContext.addPolyline(polyline);
-	}
-	,addPolylineFromFloats: function(pos) {
-		var a = [];
-		var _g1 = 0;
-		var _g = pos.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			if(i % 2 == 1) {
-				continue;
-			}
-			a.push(new org_poly2tri_Point(pos[i],pos[i + 1]));
-		}
-		this.addPolyline(a);
-	}
-	,reset: function() {
-		this.sweepContext = new org_poly2tri_SweepContext();
-		this.sweep = new org_poly2tri_Sweep(this.sweepContext);
-		this.triangulated = false;
-	}
-	,performTriangulationOnce: function() {
-		if(this.triangulated) {
-			return;
-		}
-		this.triangulated = true;
-		this.sweep.triangulate();
-	}
-	,getVerticesAndTriangles: function() {
-		if(!this.triangulated) {
-			return null;
-		}
-		var vertices = [];
-		var ids = [];
-		var _g1 = 0;
-		var _g = this.sweepContext.points.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			var p = this.sweepContext.points[i];
-			vertices.push(p.x);
-			vertices.push(p.y);
-			vertices.push(0);
-			ids[p.id] = i;
-		}
-		var tris = [];
-		var _g2 = 0;
-		var _g11 = this.sweepContext.triangles;
-		while(_g2 < _g11.length) {
-			var t = _g11[_g2];
-			++_g2;
-			var _g21 = 0;
-			while(_g21 < 3) {
-				var i1 = _g21++;
-				tris.push(ids[t.points[i1].id]);
-			}
-		}
-		return { vertices : vertices, triangles : tris};
-	}
-	,getNumTriangles: function() {
-		return this.sweepContext.triangles.length;
-	}
-	,__class__: org_poly2tri_VisiblePolygon
+	__class__: kha_vr_TimeWarpParms
 };
 var tetrisTriangles_TetrisTrianglesKha2 = function() {
 	this.gameColors = [-16777216,-65536,-33024,-256,-16711936,-16776961,-11861886,-7077677,-12303292,-13421773,-15987700,-15658735];
 	this.draw();
+	var w = null;
+	var h = null;
+	var v = null;
+	var this1;
+	if(v == null) {
+		if(w == null) {
+			w = 100;
+		}
+		if(h == null) {
+			h = 100;
+		}
+		var _g = [];
+		var _g2 = 0;
+		var _g1 = h;
+		while(_g2 < _g1) {
+			var y = _g2++;
+			var _g3 = [];
+			var _g5 = 0;
+			var _g4 = w;
+			while(_g5 < _g4) {
+				var x = _g5++;
+				_g3.push(null);
+			}
+			_g.push(_g3);
+		}
+		v = tetrisTriangles_game__$Matrix2D_Matrix2D_$Impl_$._new(w,h,_g);
+	}
+	this1 = v;
+	var m = this1;
+	m[10][2] = 1;
+	var blackSquare = "■";
+	var whiteSquare = "□";
+	var nextLine = "\n";
+	var gridStr = nextLine;
+	var l = m.length;
+	var w1;
+	var row;
+	var _g11 = 0;
+	var _g6 = l;
+	while(_g11 < _g6) {
+		var y1 = _g11++;
+		row = m[y1];
+		w1 = row.length;
+		var _g31 = 0;
+		var _g21 = w1;
+		while(_g31 < _g21) {
+			var x1 = _g31++;
+			if(row[x1] == null) {
+				gridStr += whiteSquare;
+			} else {
+				gridStr += blackSquare;
+			}
+		}
+		gridStr += nextLine;
+	}
+	haxe_Log.trace(gridStr,{ fileName : "TetrisTrianglesKha2.hx", lineNumber : 44, className : "tetrisTriangles.TetrisTrianglesKha2", methodName : "new"});
+	var ly = m.length;
+	var lx = m[0].length;
+	var w2 = lx;
+	var h1 = ly;
+	var v1 = null;
+	var this2;
+	if(v1 == null) {
+		if(w2 == null) {
+			w2 = 100;
+		}
+		if(h1 == null) {
+			h1 = 100;
+		}
+		var _g7 = [];
+		var _g22 = 0;
+		var _g12 = h1;
+		while(_g22 < _g12) {
+			var y2 = _g22++;
+			var _g32 = [];
+			var _g51 = 0;
+			var _g41 = w2;
+			while(_g51 < _g41) {
+				var x2 = _g51++;
+				_g32.push(null);
+			}
+			_g7.push(_g32);
+		}
+		v1 = tetrisTriangles_game__$Matrix2D_Matrix2D_$Impl_$._new(w2,h1,_g7);
+	}
+	this2 = v1;
+	m = this2;
+	var blackSquare1 = "■";
+	var whiteSquare1 = "□";
+	var nextLine1 = "\n";
+	var gridStr1 = nextLine1;
+	var l1 = m.length;
+	var w3;
+	var row1;
+	var _g13 = 0;
+	var _g8 = l1;
+	while(_g13 < _g8) {
+		var y3 = _g13++;
+		row1 = m[y3];
+		w3 = row1.length;
+		var _g33 = 0;
+		var _g23 = w3;
+		while(_g33 < _g23) {
+			var x3 = _g33++;
+			if(row1[x3] == null) {
+				gridStr1 += whiteSquare1;
+			} else {
+				gridStr1 += blackSquare1;
+			}
+		}
+		gridStr1 += nextLine1;
+	}
+	haxe_Log.trace(gridStr1,{ fileName : "TetrisTrianglesKha2.hx", lineNumber : 46, className : "tetrisTriangles.TetrisTrianglesKha2", methodName : "new"});
+	haxe_Log.trace(m,{ fileName : "TetrisTrianglesKha2.hx", lineNumber : 47, className : "tetrisTriangles.TetrisTrianglesKha2", methodName : "new"});
 	kha_System.notifyOnRender($bind(this,this.render));
 	kha_Scheduler.addTimeTask($bind(this,this.update),0,0.0166666666666666664);
 };
 $hxClasses["tetrisTriangles.TetrisTrianglesKha2"] = tetrisTriangles_TetrisTrianglesKha2;
 tetrisTriangles_TetrisTrianglesKha2.__name__ = true;
 tetrisTriangles_TetrisTrianglesKha2.prototype = {
-	gameColors: null
-	,tetrisTriangles: null
-	,draw: function() {
+	draw: function() {
 		justTriangles_Draw.drawTri = justTriangles_Triangle.drawTri;
 		this.tetrisTriangles = new tetrisTriangles_game_TetrisTriangles();
 	}
@@ -26893,6 +24376,7 @@ tetrisTriangles_TetrisTrianglesKha2.prototype = {
 			}
 		}
 		if(count != -1) {
+			_this1.tetrisShapes[count].snap();
 			var newBlocks = _this1.tetrisShapes[count].clearBlocks();
 			var _g11 = 0;
 			var _g4 = newBlocks.length;
@@ -26901,14 +24385,15 @@ tetrisTriangles_TetrisTrianglesKha2.prototype = {
 				_this1.horizontal.pushBlock(newBlocks[i1]);
 			}
 		}
-		if(_this.count % 10 == 0) {
+		var rotationSpeed = 10;
+		if(_this.count % rotationSpeed == 0) {
 			_this.toggle = !_this.toggle;
 		}
 		_this.count += 1.;
 		if(_this.toggle) {
 			_this.count += 1.;
 			var _this2 = _this.tetrisGenerator;
-			var theta = Math.PI / 10;
+			var theta = Math.PI / rotationSpeed;
 			var _g12 = 0;
 			var _g5 = _this2.tetrisShapes.length;
 			while(_g12 < _g5) {
@@ -26921,7 +24406,7 @@ tetrisTriangles_TetrisTrianglesKha2.prototype = {
 		var _g6 = _this3.tetrisShapes.length;
 		while(_g13 < _g6) {
 			var i3 = _g13++;
-			_this3.tetrisShapes[i3].moveDelta(0.0,0.15);
+			_this3.tetrisShapes[i3].moveDelta(0.0,0.1);
 		}
 		var _this4 = _this.tetrisGenerator;
 		_this4._points = _this4.horizontal.getPoints([]);
@@ -26943,6 +24428,7 @@ tetrisTriangles_TetrisTrianglesKha2.prototype = {
 			}
 		}
 		if(count1 != -1) {
+			_this4.tetrisShapes[count1].snap();
 			var newBlocks1 = _this4.tetrisShapes[count1].clearBlocks();
 			var _g15 = 0;
 			var _g8 = newBlocks1.length;
@@ -26985,330 +24471,830 @@ tetrisTriangles_TetrisTrianglesKha2.prototype = {
 	}
 	,__class__: tetrisTriangles_TetrisTrianglesKha2
 };
-var tetrisTriangles_TetrisTrianglesKha4 = function() {
-	this.timeSlice = 0;
-	this.structureLength = 6;
-	this.z = -1;
+var tetrisTriangles_game__$Matrix2D_Matrix2D_$Impl_$ = {};
+$hxClasses["tetrisTriangles.game._Matrix2D.Matrix2D_Impl_"] = tetrisTriangles_game__$Matrix2D_Matrix2D_$Impl_$;
+tetrisTriangles_game__$Matrix2D_Matrix2D_$Impl_$.__name__ = true;
+tetrisTriangles_game__$Matrix2D_Matrix2D_$Impl_$._new = function(w,h,v) {
+	var this1;
+	if(v == null) {
+		if(w == null) {
+			w = 100;
+		}
+		if(h == null) {
+			h = 100;
+		}
+		var _g = [];
+		var _g2 = 0;
+		var _g1 = h;
+		while(_g2 < _g1) {
+			var y = _g2++;
+			var _g3 = [];
+			var _g5 = 0;
+			var _g4 = w;
+			while(_g5 < _g4) {
+				var x = _g5++;
+				_g3.push(null);
+			}
+			_g.push(_g3);
+		}
+		v = tetrisTriangles_game__$Matrix2D_Matrix2D_$Impl_$._new(w,h,_g);
+	}
+	this1 = v;
+	return this1;
+};
+tetrisTriangles_game__$Matrix2D_Matrix2D_$Impl_$.getEmpty = function(w,h) {
 	var _g = [];
+	var _g2 = 0;
+	var _g1 = h;
+	while(_g2 < _g1) {
+		var y = _g2++;
+		var _g3 = [];
+		var _g5 = 0;
+		var _g4 = w;
+		while(_g5 < _g4) {
+			var x = _g5++;
+			_g3.push(null);
+		}
+		_g.push(_g3);
+	}
+	return tetrisTriangles_game__$Matrix2D_Matrix2D_$Impl_$._new(w,h,_g);
+};
+tetrisTriangles_game__$Matrix2D_Matrix2D_$Impl_$.clear = function(this1) {
+	var ly = this1.length;
+	var lx = this1[0].length;
+	var w = lx;
+	var h = ly;
+	var v = null;
+	var this2;
+	if(v == null) {
+		if(w == null) {
+			w = 100;
+		}
+		if(h == null) {
+			h = 100;
+		}
+		var _g = [];
+		var _g2 = 0;
+		var _g1 = h;
+		while(_g2 < _g1) {
+			var y = _g2++;
+			var _g3 = [];
+			var _g5 = 0;
+			var _g4 = w;
+			while(_g5 < _g4) {
+				var x = _g5++;
+				_g3.push(null);
+			}
+			_g.push(_g3);
+		}
+		v = tetrisTriangles_game__$Matrix2D_Matrix2D_$Impl_$._new(w,h,_g);
+	}
+	this2 = v;
+	this1 = this2;
+};
+tetrisTriangles_game__$Matrix2D_Matrix2D_$Impl_$.clone = function(this1) {
+	var _g = [];
+	var _g2 = 0;
+	var _g1 = this1.length;
+	while(_g2 < _g1) {
+		var y = _g2++;
+		var _g3 = [];
+		var _g5 = 0;
+		var _g4 = this1[y].length;
+		while(_g5 < _g4) {
+			var x = _g5++;
+			var t = this1[y][x];
+			if(t != null) {
+				return t.clone();
+			} else {
+				return null;
+			}
+		}
+		_g.push(_g3);
+	}
+	return _g;
+};
+tetrisTriangles_game__$Matrix2D_Matrix2D_$Impl_$.add = function(this1,t,x,y) {
+	this1[y][x] = t;
+};
+tetrisTriangles_game__$Matrix2D_Matrix2D_$Impl_$.isEmpty = function(this1,x,y) {
+	return this1[y][x] == null;
+};
+tetrisTriangles_game__$Matrix2D_Matrix2D_$Impl_$.rowFull = function(this1,y) {
+	var full = true;
+	var row = this1[y];
+	var l = row.length;
 	var _g1 = 0;
-	while(_g1 < 4) {
+	var _g = l;
+	while(_g1 < _g) {
+		var x = _g1++;
+		if(row[x] == null) {
+			full = false;
+			break;
+		}
+	}
+	return full;
+};
+tetrisTriangles_game__$Matrix2D_Matrix2D_$Impl_$.rowEmpty = function(this1,y) {
+	var empty = true;
+	var row = this1[y];
+	var l = row.length;
+	var _g1 = 0;
+	var _g = l;
+	while(_g1 < _g) {
+		var x = _g1++;
+		if(row[x] != null) {
+			empty = false;
+			break;
+		}
+	}
+	return empty;
+};
+tetrisTriangles_game__$Matrix2D_Matrix2D_$Impl_$.clashTest = function(s,t) {
+	var clash = false;
+	var ls = s.length;
+	var lt = t.length;
+	if(ls != lt) {
+		throw new js__$Boot_HaxeError("Can't clash test matrix are not same size");
+	}
+	var rowS;
+	var rowT;
+	var _g1 = 0;
+	var _g = ls;
+	while(_g1 < _g) {
+		var y = _g1++;
+		rowS = s[y];
+		rowT = t[y];
+		var lrs = rowS.length;
+		var lrt = rowT.length;
+		if(lrs != lrt) {
+			throw new js__$Boot_HaxeError("Can't clash test matrix are not same size - failed on row " + y);
+		}
+		var _g3 = 0;
+		var _g2 = lrs;
+		while(_g3 < _g2) {
+			var x = _g3++;
+			if(rowS[x] != null && rowT[x] != null) {
+				clash = true;
+				break;
+			}
+		}
+	}
+	return clash;
+};
+tetrisTriangles_game__$Matrix2D_Matrix2D_$Impl_$.moveLocations = function(this1,locations,dx,dy) {
+	var lp = locations.length;
+	if(dx == dy) {
+		return false;
+	}
+	var loc;
+	var _g1 = 0;
+	var _g = lp;
+	while(_g1 < _g) {
 		var i = _g1++;
-		_g.push(false);
+		loc = locations[i];
+		var x = loc.x;
+		var y = loc.y;
+		this1[y + dy][x + dx] = this1[y][x];
+		this1[y][x] = null;
 	}
-	this.keys = _g;
-	this.initialized = false;
-	this.gameColors = [-16777216,-65536,-33024,-256,-16711936,-16776961,-12582270,-7077677,-12303292,-13421773,-15987700,-15658735];
-	this.pixelLayer = kha_Image.createRenderTarget(1280,720);
-	this.vectorLayer = kha_Image.createRenderTarget(1280,720,kha_graphics4_TextureFormat.RGBA32,1,4);
-	kha_input_Keyboard.get().notify($bind(this,this.keyDown),$bind(this,this.keyUp));
-	justTriangles_Draw.drawTri = justTriangles_Triangle.drawTri;
-	this.tetrisTriangles = new tetrisTriangles_game_TetrisTriangles();
-	var mouse = kha_input_Mouse.get();
-	mouse.notify(null,null,$bind(this,this.mouseMove),null);
-	kha_Assets.loadEverything($bind(this,this.loadingFinished));
+	return true;
 };
-$hxClasses["tetrisTriangles.TetrisTrianglesKha4"] = tetrisTriangles_TetrisTrianglesKha4;
-tetrisTriangles_TetrisTrianglesKha4.__name__ = true;
-tetrisTriangles_TetrisTrianglesKha4.toRGB = function($int) {
-	return { r : ($int >> 16 & 255) / 255, g : ($int >> 8 & 255) / 255, b : ($int & 255) / 255};
+tetrisTriangles_game__$Matrix2D_Matrix2D_$Impl_$.checkerString = function(this1) {
+	var blackSquare = "■";
+	var whiteSquare = "□";
+	var nextLine = "\n";
+	var gridStr = nextLine;
+	var l = this1.length;
+	var w;
+	var row;
+	var _g1 = 0;
+	var _g = l;
+	while(_g1 < _g) {
+		var y = _g1++;
+		row = this1[y];
+		w = row.length;
+		var _g3 = 0;
+		var _g2 = w;
+		while(_g3 < _g2) {
+			var x = _g3++;
+			if(row[x] == null) {
+				gridStr += whiteSquare;
+			} else {
+				gridStr += blackSquare;
+			}
+		}
+		gridStr += nextLine;
+	}
+	return gridStr;
 };
-tetrisTriangles_TetrisTrianglesKha4.prototype = {
-	gameColors: null
-	,pixelLayer: null
-	,vectorLayer: null
-	,initialized: null
-	,xPos: null
-	,yPos: null
-	,keys: null
-	,tetrisTriangles: null
-	,pipeline: null
-	,vertexBuffer: null
-	,indexBuffer: null
-	,mvp: null
-	,mvpID: null
-	,z: null
-	,structureLength: null
-	,setup3d: function() {
-		var structure = new kha_graphics4_VertexStructure();
-		structure.add("pos",kha_graphics4_VertexData.Float3);
-		structure.add("col",kha_graphics4_VertexData.Float3);
-		this.pipeline = new kha_graphics4_PipelineState();
-		this.pipeline.inputLayout = [structure];
-		this.pipeline.fragmentShader = kha_Shaders.simple_frag;
-		this.pipeline.vertexShader = kha_Shaders.simple_vert;
-		this.pipeline.depthWrite = false;
-		this.pipeline.depthMode = kha_graphics4_CompareMode.Less;
-		this.pipeline.compile();
-		this.mvpID = this.pipeline.getConstantLocation("MVP");
-		var projection = kha_math_FastMatrix4.perspectiveProjection(45.0,1.77777777777777768,0.1,100.0);
-		var view = kha_math_FastMatrix4.lookAt(new kha_math_FastVector3(0,0,10),new kha_math_FastVector3(0,0,0),new kha_math_FastVector3(0,1,0));
-		var model__33;
-		var model__32;
-		var model__31;
-		var model__30;
-		var model__23;
-		var model__22;
-		var model__21;
-		var model__20;
-		var model__13;
-		var model__12;
-		var model__11;
-		var model__10;
-		var model__03;
-		var model__02;
-		var model__01;
-		var model__00 = 1;
-		model__10 = 0;
-		model__20 = 0;
-		model__30 = 0;
-		model__01 = 0;
-		model__11 = 1;
-		model__21 = 0;
-		model__31 = 0;
-		model__02 = 0;
-		model__12 = 0;
-		model__22 = 1;
-		model__32 = 0;
-		model__03 = 0;
-		model__13 = 0;
-		model__23 = 0;
-		model__33 = 1;
-		this.mvp = new kha_math_FastMatrix4(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
-		var _this = this.mvp;
-		this.mvp = new kha_math_FastMatrix4(_this._00 * projection._00 + _this._10 * projection._01 + _this._20 * projection._02 + _this._30 * projection._03,_this._00 * projection._10 + _this._10 * projection._11 + _this._20 * projection._12 + _this._30 * projection._13,_this._00 * projection._20 + _this._10 * projection._21 + _this._20 * projection._22 + _this._30 * projection._23,_this._00 * projection._30 + _this._10 * projection._31 + _this._20 * projection._32 + _this._30 * projection._33,_this._01 * projection._00 + _this._11 * projection._01 + _this._21 * projection._02 + _this._31 * projection._03,_this._01 * projection._10 + _this._11 * projection._11 + _this._21 * projection._12 + _this._31 * projection._13,_this._01 * projection._20 + _this._11 * projection._21 + _this._21 * projection._22 + _this._31 * projection._23,_this._01 * projection._30 + _this._11 * projection._31 + _this._21 * projection._32 + _this._31 * projection._33,_this._02 * projection._00 + _this._12 * projection._01 + _this._22 * projection._02 + _this._32 * projection._03,_this._02 * projection._10 + _this._12 * projection._11 + _this._22 * projection._12 + _this._32 * projection._13,_this._02 * projection._20 + _this._12 * projection._21 + _this._22 * projection._22 + _this._32 * projection._23,_this._02 * projection._30 + _this._12 * projection._31 + _this._22 * projection._32 + _this._32 * projection._33,_this._03 * projection._00 + _this._13 * projection._01 + _this._23 * projection._02 + _this._33 * projection._03,_this._03 * projection._10 + _this._13 * projection._11 + _this._23 * projection._12 + _this._33 * projection._13,_this._03 * projection._20 + _this._13 * projection._21 + _this._23 * projection._22 + _this._33 * projection._23,_this._03 * projection._30 + _this._13 * projection._31 + _this._23 * projection._32 + _this._33 * projection._33);
-		var _this1 = this.mvp;
-		this.mvp = new kha_math_FastMatrix4(_this1._00 * view._00 + _this1._10 * view._01 + _this1._20 * view._02 + _this1._30 * view._03,_this1._00 * view._10 + _this1._10 * view._11 + _this1._20 * view._12 + _this1._30 * view._13,_this1._00 * view._20 + _this1._10 * view._21 + _this1._20 * view._22 + _this1._30 * view._23,_this1._00 * view._30 + _this1._10 * view._31 + _this1._20 * view._32 + _this1._30 * view._33,_this1._01 * view._00 + _this1._11 * view._01 + _this1._21 * view._02 + _this1._31 * view._03,_this1._01 * view._10 + _this1._11 * view._11 + _this1._21 * view._12 + _this1._31 * view._13,_this1._01 * view._20 + _this1._11 * view._21 + _this1._21 * view._22 + _this1._31 * view._23,_this1._01 * view._30 + _this1._11 * view._31 + _this1._21 * view._32 + _this1._31 * view._33,_this1._02 * view._00 + _this1._12 * view._01 + _this1._22 * view._02 + _this1._32 * view._03,_this1._02 * view._10 + _this1._12 * view._11 + _this1._22 * view._12 + _this1._32 * view._13,_this1._02 * view._20 + _this1._12 * view._21 + _this1._22 * view._22 + _this1._32 * view._23,_this1._02 * view._30 + _this1._12 * view._31 + _this1._22 * view._32 + _this1._32 * view._33,_this1._03 * view._00 + _this1._13 * view._01 + _this1._23 * view._02 + _this1._33 * view._03,_this1._03 * view._10 + _this1._13 * view._11 + _this1._23 * view._12 + _this1._33 * view._13,_this1._03 * view._20 + _this1._13 * view._21 + _this1._23 * view._22 + _this1._33 * view._23,_this1._03 * view._30 + _this1._13 * view._31 + _this1._23 * view._32 + _this1._33 * view._33);
-		var _this2 = this.mvp;
-		this.mvp = new kha_math_FastMatrix4(_this2._00 * model__00 + _this2._10 * model__01 + _this2._20 * model__02 + _this2._30 * model__03,_this2._00 * model__10 + _this2._10 * model__11 + _this2._20 * model__12 + _this2._30 * model__13,_this2._00 * model__20 + _this2._10 * model__21 + _this2._20 * model__22 + _this2._30 * model__23,_this2._00 * model__30 + _this2._10 * model__31 + _this2._20 * model__32 + _this2._30 * model__33,_this2._01 * model__00 + _this2._11 * model__01 + _this2._21 * model__02 + _this2._31 * model__03,_this2._01 * model__10 + _this2._11 * model__11 + _this2._21 * model__12 + _this2._31 * model__13,_this2._01 * model__20 + _this2._11 * model__21 + _this2._21 * model__22 + _this2._31 * model__23,_this2._01 * model__30 + _this2._11 * model__31 + _this2._21 * model__32 + _this2._31 * model__33,_this2._02 * model__00 + _this2._12 * model__01 + _this2._22 * model__02 + _this2._32 * model__03,_this2._02 * model__10 + _this2._12 * model__11 + _this2._22 * model__12 + _this2._32 * model__13,_this2._02 * model__20 + _this2._12 * model__21 + _this2._22 * model__22 + _this2._32 * model__23,_this2._02 * model__30 + _this2._12 * model__31 + _this2._22 * model__32 + _this2._32 * model__33,_this2._03 * model__00 + _this2._13 * model__01 + _this2._23 * model__02 + _this2._33 * model__03,_this2._03 * model__10 + _this2._13 * model__11 + _this2._23 * model__12 + _this2._33 * model__13,_this2._03 * model__20 + _this2._13 * model__21 + _this2._23 * model__22 + _this2._33 * model__23,_this2._03 * model__30 + _this2._13 * model__31 + _this2._23 * model__32 + _this2._33 * model__33);
-		this.vertexBuffer = new kha_graphics4_VertexBuffer(300000,structure,kha_graphics4_Usage.DynamicUsage);
-		this.indexBuffer = new kha_graphics4_IndexBuffer(300000,kha_graphics4_Usage.DynamicUsage);
-	}
-	,updateVectors: function() {
-		var vbData = this.vertexBuffer.lock();
-		var _g1 = 0;
-		var _g = vbData.length / this.structureLength | 0;
-		while(_g1 < _g) {
-			var i = _g1++;
-			vbData[i * this.structureLength] = tetrisTriangles_TetrisTrianglesKha4.vertices[i * 3];
-			vbData[i * this.structureLength + 1] = tetrisTriangles_TetrisTrianglesKha4.vertices[i * 3 + 1];
-			vbData[i * this.structureLength + 2] = tetrisTriangles_TetrisTrianglesKha4.vertices[i * 3 + 2];
-			vbData[i * this.structureLength + 3] = tetrisTriangles_TetrisTrianglesKha4.colors[i * 3];
-			vbData[i * this.structureLength + 4] = tetrisTriangles_TetrisTrianglesKha4.colors[i * 3 + 1];
-			vbData[i * this.structureLength + 5] = tetrisTriangles_TetrisTrianglesKha4.colors[i * 3 + 2];
-		}
-		this.vertexBuffer.unlock();
-		var indices = [];
-		var _g11 = 0;
-		var _g2 = tetrisTriangles_TetrisTrianglesKha4.vertices.length / 3 | 0;
-		while(_g11 < _g2) {
-			var i1 = _g11++;
-			indices.push(i1);
-		}
-		var iData = this.indexBuffer.lock();
-		var _g12 = 0;
-		var _g3 = iData.length;
-		while(_g12 < _g3) {
-			var i2 = _g12++;
-			iData[i2] = indices[i2];
-		}
-		this.indexBuffer.unlock();
-	}
-	,timeSlice: null
-	,loadingFinished: function() {
-		this.setup3d();
-		this.initialized = true;
-		kha_System.notifyOnRender($bind(this,this.render));
-		kha_Scheduler.addTimeTask($bind(this,this.update),0,0.0166666666666666664);
-	}
-	,keyDown: function(keyCode) {
-		switch(keyCode) {
-		case 37:
-			this.keys[0] = true;
-			break;
-		case 38:
-			this.keys[2] = true;
-			break;
-		case 39:
-			this.keys[1] = true;
-			break;
-		case 40:
-			this.keys[3] = true;
-			break;
-		default:
-		}
-	}
-	,keyUp: function(keyCode) {
-		switch(keyCode) {
-		case 37:
-			this.keys[0] = false;
-			break;
-		case 38:
-			this.keys[2] = false;
-			break;
-		case 39:
-			this.keys[1] = false;
-			break;
-		case 40:
-			this.keys[3] = false;
-			break;
-		default:
-		}
-	}
-	,mouseMove: function(x,y,movementX,movementY) {
-	}
-	,update: function() {
-		if(!this.initialized) {
-			return;
-		}
-		if(this.keys[0]) {
-			this.xPos -= 3;
-		} else if(this.keys[1]) {
-			this.xPos += 3;
-		}
-		if(this.keys[2]) {
-			this.yPos -= 3;
-		} else if(this.keys[3]) {
-			this.yPos += 3;
-		}
-	}
-	,render: function(framebuffer) {
-		if(!this.initialized) {
-			return;
-		}
-		tetrisTriangles_TetrisTrianglesKha4.vertices = [];
-		tetrisTriangles_TetrisTrianglesKha4.colors = [];
-		var _this = this.tetrisTriangles;
-		var _this1 = _this.tetrisGenerator;
-		_this1._points = _this1.horizontal.getPoints([]);
-		var points = _this1._points;
-		var pl = points.length;
-		var tl = _this1.tetrisShapes.length;
-		var count = -1;
-		var _g1 = 0;
-		var _g = tl;
-		while(_g1 < _g) {
-			var i = _g1++;
-			var _g3 = 0;
-			var _g2 = pl;
-			while(_g3 < _g2) {
-				var p = _g3++;
-				if(_this1.tetrisShapes[i].hitTest(points[p])) {
-					count = i;
+var tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$ = {};
+$hxClasses["tetrisTriangles.game._RookAngle.RookAngle_Impl_"] = tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$;
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.__name__ = true;
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$._new = function(angle) {
+	var this1;
+	if(angle < 0) {
+		var angle1 = -angle % (2 * Math.PI);
+		if(angle1 == 0.) {
+			this1 = 0.;
+		} else {
+			var v = angle1;
+			if(v < Math.PI / 4) {
+				this1 = 0.;
+			} else {
+				var v1 = angle1;
+				if(v1 < Math.PI / 2 + Math.PI / 4) {
+					this1 = Math.PI + Math.PI / 2;
+				} else {
+					var v2 = angle1;
+					if(v2 < Math.PI + Math.PI / 4) {
+						this1 = Math.PI;
+					} else {
+						var v3 = angle1;
+						if(v3 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+							this1 = Math.PI / 2;
+						} else {
+							this1 = 0.;
+						}
+					}
 				}
 			}
 		}
-		if(count != -1) {
-			var newBlocks = _this1.tetrisShapes[count].clearBlocks();
-			var _g11 = 0;
-			var _g4 = newBlocks.length;
-			while(_g11 < _g4) {
-				var i1 = _g11++;
-				_this1.horizontal.pushBlock(newBlocks[i1]);
-			}
-		}
-		if(_this.count % 10 == 0) {
-			_this.toggle = !_this.toggle;
-		}
-		_this.count += 1.;
-		if(_this.toggle) {
-			_this.count += 1.;
-			var _this2 = _this.tetrisGenerator;
-			var theta = Math.PI / 10;
-			var _g12 = 0;
-			var _g5 = _this2.tetrisShapes.length;
-			while(_g12 < _g5) {
-				var i2 = _g12++;
-				_this2.tetrisShapes[i2].rotate(theta);
-			}
-		}
-		var _this3 = _this.tetrisGenerator;
-		var _g13 = 0;
-		var _g6 = _this3.tetrisShapes.length;
-		while(_g13 < _g6) {
-			var i3 = _g13++;
-			_this3.tetrisShapes[i3].moveDelta(0.0,0.15);
-		}
-		var _this4 = _this.tetrisGenerator;
-		_this4._points = _this4.horizontal.getPoints([]);
-		var points1 = _this4._points;
-		var pl1 = points1.length;
-		var tl1 = _this4.tetrisShapes.length;
-		var count1 = -1;
-		var _g14 = 0;
-		var _g7 = tl1;
-		while(_g14 < _g7) {
-			var i4 = _g14++;
-			var _g31 = 0;
-			var _g21 = pl1;
-			while(_g31 < _g21) {
-				var p1 = _g31++;
-				if(_this4.tetrisShapes[i4].hitTest(points1[p1])) {
-					count1 = i4;
+	} else {
+		var angle2 = angle % (2 * Math.PI);
+		if(angle2 == 0.) {
+			this1 = 0.;
+		} else {
+			var v4 = angle2;
+			if(v4 < Math.PI / 4) {
+				this1 = 0.;
+			} else {
+				var v5 = angle2;
+				if(v5 < Math.PI / 2 + Math.PI / 4) {
+					this1 = Math.PI / 2;
+				} else {
+					var v6 = angle2;
+					if(v6 < Math.PI + Math.PI / 4) {
+						this1 = Math.PI;
+					} else {
+						var v7 = angle2;
+						if(v7 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+							this1 = Math.PI + Math.PI / 2;
+						} else {
+							this1 = 0.;
+						}
+					}
 				}
 			}
 		}
-		if(count1 != -1) {
-			var newBlocks1 = _this4.tetrisShapes[count1].clearBlocks();
-			var _g15 = 0;
-			var _g8 = newBlocks1.length;
-			while(_g15 < _g8) {
-				var i5 = _g15++;
-				_this4.horizontal.pushBlock(newBlocks1[i5]);
+	}
+	return this1;
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat = function(f) {
+	var this1;
+	if(f < 0) {
+		var angle = -f % (2 * Math.PI);
+		if(angle == 0.) {
+			this1 = 0.;
+		} else {
+			var v = angle;
+			if(v < Math.PI / 4) {
+				this1 = 0.;
+			} else {
+				var v1 = angle;
+				if(v1 < Math.PI / 2 + Math.PI / 4) {
+					this1 = Math.PI + Math.PI / 2;
+				} else {
+					var v2 = angle;
+					if(v2 < Math.PI + Math.PI / 4) {
+						this1 = Math.PI;
+					} else {
+						var v3 = angle;
+						if(v3 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+							this1 = Math.PI / 2;
+						} else {
+							this1 = 0.;
+						}
+					}
+				}
 			}
 		}
-		var w = kha_System.windowWidth() / 2;
-		var h = kha_System.windowHeight() / 2;
-		var g = framebuffer.get_g2();
-		var tri;
-		var triangles = justTriangles_Triangle.triangles;
-		var s = 3;
-		var offX = 5;
-		var offY = 2;
-		var toRGBs = tetrisTriangles_TetrisTrianglesKha4.toRGB;
-		var adjScale = 87.1;
-		var _g16 = 0;
-		var _g9 = triangles.length;
-		while(_g16 < _g9) {
-			var i6 = _g16++;
-			tri = triangles[i6];
-			tetrisTriangles_TetrisTrianglesKha4.vertices.push(s * tri.ax - offX);
-			tetrisTriangles_TetrisTrianglesKha4.vertices.push(s * tri.ay - offY);
-			tetrisTriangles_TetrisTrianglesKha4.vertices.push(-this.z);
-			tetrisTriangles_TetrisTrianglesKha4.vertices.push(s * tri.bx - offX);
-			tetrisTriangles_TetrisTrianglesKha4.vertices.push(s * tri.by - offY);
-			tetrisTriangles_TetrisTrianglesKha4.vertices.push(-this.z);
-			tetrisTriangles_TetrisTrianglesKha4.vertices.push(s * tri.cx - offX);
-			tetrisTriangles_TetrisTrianglesKha4.vertices.push(s * tri.cy - offY);
-			tetrisTriangles_TetrisTrianglesKha4.vertices.push(-this.z);
-			var rgb = toRGBs(js_Boot.__cast(this.gameColors[tri.colorID] , Int));
-			tetrisTriangles_TetrisTrianglesKha4.colors.push(rgb.r);
-			tetrisTriangles_TetrisTrianglesKha4.colors.push(rgb.g);
-			tetrisTriangles_TetrisTrianglesKha4.colors.push(rgb.b);
-			tetrisTriangles_TetrisTrianglesKha4.colors.push(rgb.r);
-			tetrisTriangles_TetrisTrianglesKha4.colors.push(rgb.g);
-			tetrisTriangles_TetrisTrianglesKha4.colors.push(rgb.b);
-			tetrisTriangles_TetrisTrianglesKha4.colors.push(rgb.r);
-			tetrisTriangles_TetrisTrianglesKha4.colors.push(rgb.g);
-			tetrisTriangles_TetrisTrianglesKha4.colors.push(rgb.b);
+	} else {
+		var angle1 = f % (2 * Math.PI);
+		if(angle1 == 0.) {
+			this1 = 0.;
+		} else {
+			var v4 = angle1;
+			if(v4 < Math.PI / 4) {
+				this1 = 0.;
+			} else {
+				var v5 = angle1;
+				if(v5 < Math.PI / 2 + Math.PI / 4) {
+					this1 = Math.PI / 2;
+				} else {
+					var v6 = angle1;
+					if(v6 < Math.PI + Math.PI / 4) {
+						this1 = Math.PI;
+					} else {
+						var v7 = angle1;
+						if(v7 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+							this1 = Math.PI + Math.PI / 2;
+						} else {
+							this1 = 0.;
+						}
+					}
+				}
+			}
 		}
-		this.updateVectors();
-		var g4 = this.vectorLayer.get_g4();
-		var g2 = this.vectorLayer.get_g2();
-		g4.begin();
-		g4.clear(kha__$Color_Color_$Impl_$._new(-16777216));
-		g4.setVertexBuffer(this.vertexBuffer);
-		g4.setIndexBuffer(this.indexBuffer);
-		g4.setPipeline(this.pipeline);
-		g4.setMatrix(this.mvpID,this.mvp);
-		g4.drawIndexedVertices();
-		g4.end();
-		var g21 = framebuffer.get_g2();
-		g21.begin();
-		g21.clear(kha__$Color_Color_$Impl_$._new(-16777216));
-		g21.drawImage(this.vectorLayer,0,0);
-		g21.end();
 	}
-	,__class__: tetrisTriangles_TetrisTrianglesKha4
+	return this1;
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromInt = function(i) {
+	var angle = i * 1.;
+	var this1;
+	if(angle < 0) {
+		var angle1 = -angle % (2 * Math.PI);
+		if(angle1 == 0.) {
+			this1 = 0.;
+		} else {
+			var v = angle1;
+			if(v < Math.PI / 4) {
+				this1 = 0.;
+			} else {
+				var v1 = angle1;
+				if(v1 < Math.PI / 2 + Math.PI / 4) {
+					this1 = Math.PI + Math.PI / 2;
+				} else {
+					var v2 = angle1;
+					if(v2 < Math.PI + Math.PI / 4) {
+						this1 = Math.PI;
+					} else {
+						var v3 = angle1;
+						if(v3 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+							this1 = Math.PI / 2;
+						} else {
+							this1 = 0.;
+						}
+					}
+				}
+			}
+		}
+	} else {
+		var angle2 = angle % (2 * Math.PI);
+		if(angle2 == 0.) {
+			this1 = 0.;
+		} else {
+			var v4 = angle2;
+			if(v4 < Math.PI / 4) {
+				this1 = 0.;
+			} else {
+				var v5 = angle2;
+				if(v5 < Math.PI / 2 + Math.PI / 4) {
+					this1 = Math.PI / 2;
+				} else {
+					var v6 = angle2;
+					if(v6 < Math.PI + Math.PI / 4) {
+						this1 = Math.PI;
+					} else {
+						var v7 = angle2;
+						if(v7 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+							this1 = Math.PI + Math.PI / 2;
+						} else {
+							this1 = 0.;
+						}
+					}
+				}
+			}
+		}
+	}
+	return this1;
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.limit0_2pi = function(angle) {
+	return angle % (2 * Math.PI);
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.rook0_2pi = function(angle) {
+	if(angle == 0.) {
+		return 0.;
+	} else {
+		var v = angle;
+		if(v < Math.PI / 4) {
+			return 0.;
+		} else {
+			var v1 = angle;
+			if(v1 < Math.PI / 2 + Math.PI / 4) {
+				return Math.PI / 2;
+			} else {
+				var v2 = angle;
+				if(v2 < Math.PI + Math.PI / 4) {
+					return Math.PI;
+				} else {
+					var v3 = angle;
+					if(v3 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+						return Math.PI + Math.PI / 2;
+					} else {
+						return 0.;
+					}
+				}
+			}
+		}
+	}
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.negativeRook0_2pi = function(angle) {
+	if(angle == 0.) {
+		return 0.;
+	} else {
+		var v = angle;
+		if(v < Math.PI / 4) {
+			return 0.;
+		} else {
+			var v1 = angle;
+			if(v1 < Math.PI / 2 + Math.PI / 4) {
+				return Math.PI + Math.PI / 2;
+			} else {
+				var v2 = angle;
+				if(v2 < Math.PI + Math.PI / 4) {
+					return Math.PI;
+				} else {
+					var v3 = angle;
+					if(v3 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+						return Math.PI / 2;
+					} else {
+						return 0.;
+					}
+				}
+			}
+		}
+	}
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.compassString = function(this1) {
+	if(this1 == 0.) {
+		return "North";
+	} else {
+		var v = this1;
+		if(v == Math.PI / 2) {
+			return "East";
+		} else {
+			var v1 = this1;
+			if(v1 == Math.PI) {
+				return "South";
+			} else {
+				var v2 = this1;
+				if(v2 == Math.PI + Math.PI / 2) {
+					return "West";
+				} else {
+					return "angle not found " + this1;
+				}
+			}
+		}
+	}
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.radiusString = function(this1) {
+	if(this1 == 0.) {
+		return "0";
+	} else {
+		var v = this1;
+		if(v == Math.PI / 2) {
+			return "pi/2";
+		} else {
+			var v1 = this1;
+			if(v1 == Math.PI) {
+				return "pi";
+			} else {
+				var v2 = this1;
+				if(v2 == Math.PI + Math.PI / 2) {
+					return "3/4 pi";
+				} else {
+					return "angle not found " + this1;
+				}
+			}
+		}
+	}
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.degrees = function(this1) {
+	if(this1 == 0.) {
+		return 0.;
+	} else {
+		var v = this1;
+		if(v == Math.PI / 2) {
+			return 90.;
+		} else {
+			var v1 = this1;
+			if(v1 == Math.PI) {
+				return 180.;
+			} else {
+				var v2 = this1;
+				if(v2 == Math.PI + Math.PI / 2) {
+					return 270.;
+				} else {
+					return 0;
+				}
+			}
+		}
+	}
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.clockRotate = function(this1) {
+	var angle = this1 + 90;
+	var this2;
+	if(angle < 0) {
+		var angle1 = -angle % (2 * Math.PI);
+		if(angle1 == 0.) {
+			this2 = 0.;
+		} else {
+			var v = angle1;
+			if(v < Math.PI / 4) {
+				this2 = 0.;
+			} else {
+				var v1 = angle1;
+				if(v1 < Math.PI / 2 + Math.PI / 4) {
+					this2 = Math.PI + Math.PI / 2;
+				} else {
+					var v2 = angle1;
+					if(v2 < Math.PI + Math.PI / 4) {
+						this2 = Math.PI;
+					} else {
+						var v3 = angle1;
+						if(v3 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+							this2 = Math.PI / 2;
+						} else {
+							this2 = 0.;
+						}
+					}
+				}
+			}
+		}
+	} else {
+		var angle2 = angle % (2 * Math.PI);
+		if(angle2 == 0.) {
+			this2 = 0.;
+		} else {
+			var v4 = angle2;
+			if(v4 < Math.PI / 4) {
+				this2 = 0.;
+			} else {
+				var v5 = angle2;
+				if(v5 < Math.PI / 2 + Math.PI / 4) {
+					this2 = Math.PI / 2;
+				} else {
+					var v6 = angle2;
+					if(v6 < Math.PI + Math.PI / 4) {
+						this2 = Math.PI;
+					} else {
+						var v7 = angle2;
+						if(v7 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+							this2 = Math.PI + Math.PI / 2;
+						} else {
+							this2 = 0.;
+						}
+					}
+				}
+			}
+		}
+	}
+	this1 = this2;
+	return tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this1);
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.antiClockRotate = function(this1) {
+	var angle = this1 - 90;
+	var this2;
+	if(angle < 0) {
+		var angle1 = -angle % (2 * Math.PI);
+		if(angle1 == 0.) {
+			this2 = 0.;
+		} else {
+			var v = angle1;
+			if(v < Math.PI / 4) {
+				this2 = 0.;
+			} else {
+				var v1 = angle1;
+				if(v1 < Math.PI / 2 + Math.PI / 4) {
+					this2 = Math.PI + Math.PI / 2;
+				} else {
+					var v2 = angle1;
+					if(v2 < Math.PI + Math.PI / 4) {
+						this2 = Math.PI;
+					} else {
+						var v3 = angle1;
+						if(v3 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+							this2 = Math.PI / 2;
+						} else {
+							this2 = 0.;
+						}
+					}
+				}
+			}
+		}
+	} else {
+		var angle2 = angle % (2 * Math.PI);
+		if(angle2 == 0.) {
+			this2 = 0.;
+		} else {
+			var v4 = angle2;
+			if(v4 < Math.PI / 4) {
+				this2 = 0.;
+			} else {
+				var v5 = angle2;
+				if(v5 < Math.PI / 2 + Math.PI / 4) {
+					this2 = Math.PI / 2;
+				} else {
+					var v6 = angle2;
+					if(v6 < Math.PI + Math.PI / 4) {
+						this2 = Math.PI;
+					} else {
+						var v7 = angle2;
+						if(v7 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+							this2 = Math.PI + Math.PI / 2;
+						} else {
+							this2 = 0.;
+						}
+					}
+				}
+			}
+		}
+	}
+	this1 = this2;
+	return tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this1);
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.upsideDown = function(this1) {
+	var angle = this1 + 180;
+	var this2;
+	if(angle < 0) {
+		var angle1 = -angle % (2 * Math.PI);
+		if(angle1 == 0.) {
+			this2 = 0.;
+		} else {
+			var v = angle1;
+			if(v < Math.PI / 4) {
+				this2 = 0.;
+			} else {
+				var v1 = angle1;
+				if(v1 < Math.PI / 2 + Math.PI / 4) {
+					this2 = Math.PI + Math.PI / 2;
+				} else {
+					var v2 = angle1;
+					if(v2 < Math.PI + Math.PI / 4) {
+						this2 = Math.PI;
+					} else {
+						var v3 = angle1;
+						if(v3 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+							this2 = Math.PI / 2;
+						} else {
+							this2 = 0.;
+						}
+					}
+				}
+			}
+		}
+	} else {
+		var angle2 = angle % (2 * Math.PI);
+		if(angle2 == 0.) {
+			this2 = 0.;
+		} else {
+			var v4 = angle2;
+			if(v4 < Math.PI / 4) {
+				this2 = 0.;
+			} else {
+				var v5 = angle2;
+				if(v5 < Math.PI / 2 + Math.PI / 4) {
+					this2 = Math.PI / 2;
+				} else {
+					var v6 = angle2;
+					if(v6 < Math.PI + Math.PI / 4) {
+						this2 = Math.PI;
+					} else {
+						var v7 = angle2;
+						if(v7 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+							this2 = Math.PI + Math.PI / 2;
+						} else {
+							this2 = 0.;
+						}
+					}
+				}
+			}
+		}
+	}
+	return this2;
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.pp = function(this1) {
+	var angle = this1 + 90;
+	var this2;
+	if(angle < 0) {
+		var angle1 = -angle % (2 * Math.PI);
+		if(angle1 == 0.) {
+			this2 = 0.;
+		} else {
+			var v = angle1;
+			if(v < Math.PI / 4) {
+				this2 = 0.;
+			} else {
+				var v1 = angle1;
+				if(v1 < Math.PI / 2 + Math.PI / 4) {
+					this2 = Math.PI + Math.PI / 2;
+				} else {
+					var v2 = angle1;
+					if(v2 < Math.PI + Math.PI / 4) {
+						this2 = Math.PI;
+					} else {
+						var v3 = angle1;
+						if(v3 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+							this2 = Math.PI / 2;
+						} else {
+							this2 = 0.;
+						}
+					}
+				}
+			}
+		}
+	} else {
+		var angle2 = angle % (2 * Math.PI);
+		if(angle2 == 0.) {
+			this2 = 0.;
+		} else {
+			var v4 = angle2;
+			if(v4 < Math.PI / 4) {
+				this2 = 0.;
+			} else {
+				var v5 = angle2;
+				if(v5 < Math.PI / 2 + Math.PI / 4) {
+					this2 = Math.PI / 2;
+				} else {
+					var v6 = angle2;
+					if(v6 < Math.PI + Math.PI / 4) {
+						this2 = Math.PI;
+					} else {
+						var v7 = angle2;
+						if(v7 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+							this2 = Math.PI + Math.PI / 2;
+						} else {
+							this2 = 0.;
+						}
+					}
+				}
+			}
+		}
+	}
+	this1 = this2;
+	return tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this1);
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.mm = function(this1) {
+	var angle = this1 - 90;
+	var this2;
+	if(angle < 0) {
+		var angle1 = -angle % (2 * Math.PI);
+		if(angle1 == 0.) {
+			this2 = 0.;
+		} else {
+			var v = angle1;
+			if(v < Math.PI / 4) {
+				this2 = 0.;
+			} else {
+				var v1 = angle1;
+				if(v1 < Math.PI / 2 + Math.PI / 4) {
+					this2 = Math.PI + Math.PI / 2;
+				} else {
+					var v2 = angle1;
+					if(v2 < Math.PI + Math.PI / 4) {
+						this2 = Math.PI;
+					} else {
+						var v3 = angle1;
+						if(v3 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+							this2 = Math.PI / 2;
+						} else {
+							this2 = 0.;
+						}
+					}
+				}
+			}
+		}
+	} else {
+		var angle2 = angle % (2 * Math.PI);
+		if(angle2 == 0.) {
+			this2 = 0.;
+		} else {
+			var v4 = angle2;
+			if(v4 < Math.PI / 4) {
+				this2 = 0.;
+			} else {
+				var v5 = angle2;
+				if(v5 < Math.PI / 2 + Math.PI / 4) {
+					this2 = Math.PI / 2;
+				} else {
+					var v6 = angle2;
+					if(v6 < Math.PI + Math.PI / 4) {
+						this2 = Math.PI;
+					} else {
+						var v7 = angle2;
+						if(v7 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+							this2 = Math.PI + Math.PI / 2;
+						} else {
+							this2 = 0.;
+						}
+					}
+				}
+			}
+		}
+	}
+	this1 = this2;
+	return tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this1);
 };
 var tetrisTriangles_game_TetrisTriangles = function(scale) {
 	if(scale == null) {
@@ -27330,7 +25316,7 @@ var tetrisTriangles_game_TetrisTriangles = function(scale) {
 	var dx = this.dia * this.x;
 	var dy = this.dia * this.y;
 	var sy = this.dia * this.above;
-	this.tetrisGenerator.generateBackground({ x : dx, y : dy},this.wide,this.hi,10,0);
+	this.tetrisGenerator.generateBackground({ x : dx, y : dy},this.wide,this.hi,10,0,9,0);
 	var randX;
 	var _g = 0;
 	while(_g < 30) {
@@ -27344,18 +25330,7 @@ var tetrisTriangles_game_TetrisTriangles = function(scale) {
 $hxClasses["tetrisTriangles.game.TetrisTriangles"] = tetrisTriangles_game_TetrisTriangles;
 tetrisTriangles_game_TetrisTriangles.__name__ = true;
 tetrisTriangles_game_TetrisTriangles.prototype = {
-	dia: null
-	,edge: null
-	,x: null
-	,y: null
-	,right: null
-	,above: null
-	,tetrisGenerator: null
-	,count: null
-	,toggle: null
-	,wide: null
-	,hi: null
-	,update: function() {
+	update: function() {
 		var _this = this.tetrisGenerator;
 		_this._points = _this.horizontal.getPoints([]);
 		var points = _this._points;
@@ -27376,6 +25351,7 @@ tetrisTriangles_game_TetrisTriangles.prototype = {
 			}
 		}
 		if(count != -1) {
+			_this.tetrisShapes[count].snap();
 			var newBlocks = _this.tetrisShapes[count].clearBlocks();
 			var _g11 = 0;
 			var _g4 = newBlocks.length;
@@ -27384,14 +25360,15 @@ tetrisTriangles_game_TetrisTriangles.prototype = {
 				_this.horizontal.pushBlock(newBlocks[i1]);
 			}
 		}
-		if(this.count % 10 == 0) {
+		var rotationSpeed = 10;
+		if(this.count % rotationSpeed == 0) {
 			this.toggle = !this.toggle;
 		}
 		this.count += 1.;
 		if(this.toggle) {
 			this.count += 1.;
 			var _this1 = this.tetrisGenerator;
-			var theta = Math.PI / 10;
+			var theta = Math.PI / rotationSpeed;
 			var _g12 = 0;
 			var _g5 = _this1.tetrisShapes.length;
 			while(_g12 < _g5) {
@@ -27404,7 +25381,7 @@ tetrisTriangles_game_TetrisTriangles.prototype = {
 		var _g6 = _this2.tetrisShapes.length;
 		while(_g13 < _g6) {
 			var i3 = _g13++;
-			_this2.tetrisShapes[i3].moveDelta(0.0,0.15);
+			_this2.tetrisShapes[i3].moveDelta(0.0,0.1);
 		}
 		var _this3 = this.tetrisGenerator;
 		_this3._points = _this3.horizontal.getPoints([]);
@@ -27426,6 +25403,7 @@ tetrisTriangles_game_TetrisTriangles.prototype = {
 			}
 		}
 		if(count1 != -1) {
+			_this3.tetrisShapes[count1].snap();
 			var newBlocks1 = _this3.tetrisShapes[count1].clearBlocks();
 			var _g15 = 0;
 			var _g8 = newBlocks1.length;
@@ -27460,20 +25438,7 @@ var tetrisTriangles_visual_Square = function(id,triangles,x_,y_,col0_id_,col1_id
 $hxClasses["tetrisTriangles.visual.Square"] = tetrisTriangles_visual_Square;
 tetrisTriangles_visual_Square.__name__ = true;
 tetrisTriangles_visual_Square.prototype = {
-	t0: null
-	,t1: null
-	,id: null
-	,col0_id: null
-	,col1_id: null
-	,dia: null
-	,gap: null
-	,dirtyX: null
-	,dirtyY: null
-	,_x: null
-	,_y: null
-	,_x2: null
-	,_y2: null
-	,getPoints: function(arr) {
+	getPoints: function(arr) {
 		var l = arr.length;
 		arr[l++] = { x : this.t0.ax, y : this.t0.ay};
 		arr[l++] = { x : this.t0.bx, y : this.t0.by};
@@ -27683,17 +25648,7 @@ var tetrisTriangles_visual_TetrisGenerator = function(id_,triangles_,dia_,gap_) 
 $hxClasses["tetrisTriangles.visual.TetrisGenerator"] = tetrisTriangles_visual_TetrisGenerator;
 tetrisTriangles_visual_TetrisGenerator.__name__ = true;
 tetrisTriangles_visual_TetrisGenerator.prototype = {
-	tetrisShapes: null
-	,horizontal: null
-	,background: null
-	,id: null
-	,triangles: null
-	,col0_id: null
-	,col1_id: null
-	,dia: null
-	,gap: null
-	,last: null
-	,generateRandom: function(p,col0_id_,col1_id_) {
+	generateRandom: function(p,col0_id_,col1_id_) {
 		this.col0_id = col0_id_;
 		this.col1_id = col1_id_;
 		var random = Math.round(4 * Math.random());
@@ -27715,18 +25670,17 @@ tetrisTriangles_visual_TetrisGenerator.prototype = {
 			tmp2 = this.generate_box(p);
 			break;
 		case 3:
-			tmp2 = this.generate_L(p);
-			break;
-		case 4:
 			tmp2 = this.generate_t(p);
 			break;
-		default:
+		case 4:
 			tmp2 = this.generate_l(p);
+			break;
+		default:
+			tmp2 = this.generate_box(p);
 		}
 		tmp[tmp1] = tmp2;
 		this.last = random;
 	}
-	,_points: null
 	,hitBottom: function() {
 		this._points = this.horizontal.getPoints([]);
 		var points = this._points;
@@ -27747,6 +25701,7 @@ tetrisTriangles_visual_TetrisGenerator.prototype = {
 			}
 		}
 		if(count != -1) {
+			this.tetrisShapes[count].snap();
 			var newBlocks = this.tetrisShapes[count].clearBlocks();
 			var _g11 = 0;
 			var _g4 = newBlocks.length;
@@ -27772,12 +25727,12 @@ tetrisTriangles_visual_TetrisGenerator.prototype = {
 			this.tetrisShapes[i].moveDelta(x,y);
 		}
 	}
-	,createTetris: function(p) {
-		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap);
+	,createTetris: function(p,snapped) {
+		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap,snapped);
 		return ts;
 	}
 	,generate_S: function(p) {
-		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap);
+		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap,tetrisTriangles_visual_Snapped.Zero);
 		var ts1 = ts;
 		ts1.addBlock(-0.5,-1);
 		ts1.addBlock(0.5,0);
@@ -27786,7 +25741,7 @@ tetrisTriangles_visual_TetrisGenerator.prototype = {
 		return ts1;
 	}
 	,generate_l: function(p) {
-		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap);
+		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap,tetrisTriangles_visual_Snapped.Zero);
 		var ts1 = ts;
 		ts1.addBlock(-0.5,-2);
 		ts1.addBlock(-0.5,-1);
@@ -27795,7 +25750,7 @@ tetrisTriangles_visual_TetrisGenerator.prototype = {
 		return ts1;
 	}
 	,generate_box: function(p) {
-		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap);
+		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap,null);
 		var ts1 = ts;
 		ts1.addBlock(-1,-1);
 		ts1.addBlock(0,-1);
@@ -27804,7 +25759,7 @@ tetrisTriangles_visual_TetrisGenerator.prototype = {
 		return ts1;
 	}
 	,generate_L: function(p) {
-		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap);
+		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap,tetrisTriangles_visual_Snapped.Ninety);
 		var ts1 = ts;
 		ts1.addBlock(-1,-1.5);
 		ts1.addBlock(-1,-0.5);
@@ -27813,7 +25768,7 @@ tetrisTriangles_visual_TetrisGenerator.prototype = {
 		return ts1;
 	}
 	,generate_t: function(p) {
-		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap);
+		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap,tetrisTriangles_visual_Snapped.Ninety);
 		var ts1 = ts;
 		ts1.addBlock(-1,-1.5);
 		ts1.addBlock(-1,-0.5);
@@ -27821,15 +25776,24 @@ tetrisTriangles_visual_TetrisGenerator.prototype = {
 		ts1.addBlock(0,-0.5);
 		return ts1;
 	}
-	,generateBackground: function(p,wide,hi,col0_id_,col1_id_) {
+	,generateBackground: function(p,wide,hi,col0_id_,col1_id_,col2_id_,col3_id_) {
 		this.col0_id = col0_id_;
 		this.col1_id = col1_id_;
-		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap);
+		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap,null);
 		var ts1 = ts;
+		var toggle = false;
 		var _g1 = 0;
 		var _g = wide;
 		while(_g1 < _g) {
 			var w = _g1++;
+			if(toggle) {
+				ts1.col0_id = col0_id_;
+				ts1.col1_id = col1_id_;
+			} else {
+				ts1.col0_id = col2_id_;
+				ts1.col1_id = col3_id_;
+			}
+			toggle = !toggle;
 			var _g3 = 0;
 			var _g2 = hi;
 			while(_g3 < _g2) {
@@ -27842,7 +25806,7 @@ tetrisTriangles_visual_TetrisGenerator.prototype = {
 	,generateHoriz: function(p,wide,col0_id_,col1_id_) {
 		this.col0_id = col0_id_;
 		this.col1_id = col1_id_;
-		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap);
+		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap,null);
 		var ts1 = ts;
 		var _g1 = 0;
 		var _g = wide;
@@ -27854,8 +25818,26 @@ tetrisTriangles_visual_TetrisGenerator.prototype = {
 	}
 	,__class__: tetrisTriangles_visual_TetrisGenerator
 };
-var tetrisTriangles_visual_TetrisShape = function(id_,triangles_,centre_,col0_id_,col1_id_,dia_,gap_) {
+var tetrisTriangles_visual_Snapped = $hxClasses["tetrisTriangles.visual.Snapped"] = { __ename__ : true, __constructs__ : ["Always","Zero","Ninety"] };
+tetrisTriangles_visual_Snapped.Always = ["Always",0];
+tetrisTriangles_visual_Snapped.Always.toString = $estr;
+tetrisTriangles_visual_Snapped.Always.__enum__ = tetrisTriangles_visual_Snapped;
+tetrisTriangles_visual_Snapped.Zero = ["Zero",1];
+tetrisTriangles_visual_Snapped.Zero.toString = $estr;
+tetrisTriangles_visual_Snapped.Zero.__enum__ = tetrisTriangles_visual_Snapped;
+tetrisTriangles_visual_Snapped.Ninety = ["Ninety",2];
+tetrisTriangles_visual_Snapped.Ninety.toString = $estr;
+tetrisTriangles_visual_Snapped.Ninety.__enum__ = tetrisTriangles_visual_Snapped;
+var tetrisTriangles_visual_TetrisShape = function(id_,triangles_,centre_,col0_id_,col1_id_,dia_,gap_,snapped_) {
+	this.lastRook = tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(0.);
+	this.rook = tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(0.);
+	this.angle = 0.;
+	if(snapped_ == tetrisTriangles_visual_Snapped.Zero) {
+		centre_.x -= dia_ / 2;
+	}
 	this.centre = centre_;
+	this.snapped = snapped_;
+	this.start = { x : centre_.x, y : centre_.y};
 	this.id = id_;
 	this.triangles = triangles_;
 	this.col0_id = col0_id_;
@@ -27867,15 +25849,7 @@ var tetrisTriangles_visual_TetrisShape = function(id_,triangles_,centre_,col0_id
 $hxClasses["tetrisTriangles.visual.TetrisShape"] = tetrisTriangles_visual_TetrisShape;
 tetrisTriangles_visual_TetrisShape.__name__ = true;
 tetrisTriangles_visual_TetrisShape.prototype = {
-	centre: null
-	,blocks: null
-	,id: null
-	,triangles: null
-	,col0_id: null
-	,col1_id: null
-	,dia: null
-	,gap: null
-	,addBlock: function(x_,y_) {
+	addBlock: function(x_,y_) {
 		var x0 = x_ * this.dia + this.centre.x;
 		var y0 = y_ * this.dia + this.centre.y;
 		this.blocks[this.blocks.length] = new tetrisTriangles_visual_Square(this.id,this.triangles,x0,y0,this.col0_id,this.col1_id,this.dia,this.gap);
@@ -27895,12 +25869,49 @@ tetrisTriangles_visual_TetrisShape.prototype = {
 		return newBlocks;
 	}
 	,rotate: function(theta) {
+		this.angle += theta;
+		this.rook = tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this.angle);
+		var this1 = this.rook;
+		var tmp;
+		if(this1 == 0.) {
+			tmp = "North";
+		} else {
+			var v = this1;
+			if(v == Math.PI / 2) {
+				tmp = "East";
+			} else {
+				var v1 = this1;
+				if(v1 == Math.PI) {
+					tmp = "South";
+				} else {
+					var v2 = this1;
+					if(v2 == Math.PI + Math.PI / 2) {
+						tmp = "West";
+					} else {
+						tmp = "angle not found " + this1;
+					}
+				}
+			}
+		}
+		haxe_Log.trace(tmp,{ fileName : "TetrisShape.hx", lineNumber : 60, className : "tetrisTriangles.visual.TetrisShape", methodName : "rotate"});
 		var l = this.blocks.length;
 		var cos = Math.cos(theta);
 		var sin = Math.sin(theta);
+		var offset;
+		if(this.snapped != null) {
+			var _g = this.snapped;
+			switch(_g[1]) {
+			case 0:
+				break;
+			case 1:case 2:
+				offset = -(this.dia / 2) * cos;
+				this.offsetX(offset);
+				break;
+			}
+		}
 		var _g1 = 0;
-		var _g = l;
-		while(_g1 < _g) {
+		var _g2 = l;
+		while(_g1 < _g2) {
 			var i = _g1++;
 			this.blocks[i].moveDelta(this.centre.x,this.centre.y);
 			var _this = this.blocks[i];
@@ -27953,6 +25964,27 @@ tetrisTriangles_visual_TetrisShape.prototype = {
 			_this.dirtyY = true;
 			this.blocks[i].moveDelta(-this.centre.x,-this.centre.y);
 		}
+		this.lastRook = this.rook;
+	}
+	,rookSnapping: function(cos) {
+		var offset;
+		if(this.snapped != null) {
+			var _g = this.snapped;
+			switch(_g[1]) {
+			case 0:
+				break;
+			case 1:case 2:
+				offset = -(this.dia / 2) * cos;
+				this.offsetX(offset);
+				break;
+			}
+		}
+	}
+	,snap: function() {
+		var angle = this.angle % (2 * Math.PI);
+		var rookFloat = this.rook;
+		var offAngle = rookFloat - angle;
+		this.rotate(offAngle);
 	}
 	,getPoints: function(points) {
 		var l = this.blocks.length;
@@ -27974,6 +26006,9 @@ tetrisTriangles_visual_TetrisShape.prototype = {
 			var i = _g1++;
 			this.blocks[i].moveDelta(dx,dy);
 		}
+	}
+	,offsetX: function(ox) {
+		this.centre.x = this.start.x + ox;
 	}
 	,hitTest: function(p) {
 		var out = false;
@@ -28034,11 +26069,6 @@ justTriangles_Draw.circleSides = 60;
 justTriangles_ShapePoints.quadStep = 0.03;
 justTriangles_ShapePoints.cubicStep = 0.03;
 justTriangles_Triangle.triangles = [];
-kha_Assets.images = new kha__$Assets_ImageList();
-kha_Assets.sounds = new kha__$Assets_SoundList();
-kha_Assets.blobs = new kha__$Assets_BlobList();
-kha_Assets.fonts = new kha__$Assets_FontList();
-kha_Assets.videos = new kha__$Assets_VideoList();
 kha__$Color_Color_$Impl_$.Black = -16777216;
 kha__$Color_Color_$Impl_$.White = -1;
 kha__$Color_Color_$Impl_$.Red = -65536;
@@ -28052,74 +26082,27 @@ kha__$Color_Color_$Impl_$.Pink = -16181;
 kha__$Color_Color_$Impl_$.Orange = -23296;
 kha__$Color_Color_$Impl_$.Transparent = 0;
 kha__$Color_Color_$Impl_$.invMaxChannelValue = 0.00392156862745098;
-kha_CompilerDefines.js = "1";
-kha_CompilerDefines.kha_a1 = "1";
-kha_CompilerDefines.kha_g3 = "1";
-kha_CompilerDefines.kha_html5_js = "1";
-kha_CompilerDefines["source-header"] = "Generated by Haxe 3.4.2";
-kha_CompilerDefines.jquery_ver = "11204";
-kha_CompilerDefines.kha_js = "1";
-kha_CompilerDefines.sys_html5 = "1";
-kha_CompilerDefines.sys_g4 = "1";
-kha_CompilerDefines.sys_g2 = "1";
-kha_CompilerDefines.kha_webgl = "1";
-kha_CompilerDefines.kha = "1";
-kha_CompilerDefines.kha_g2 = "1";
-kha_CompilerDefines.kha_g4 = "1";
-kha_CompilerDefines.sys_g3 = "1";
-kha_CompilerDefines.kha_g1 = "1";
-kha_CompilerDefines.poly2trihx = "1";
-kha_CompilerDefines.sys_a1 = "1";
-kha_CompilerDefines.haxe_ver = "3.402";
-kha_CompilerDefines.canvas_id = "khanvas";
-kha_CompilerDefines.kha_version = "1611";
-kha_CompilerDefines.js_es = "5";
-kha_CompilerDefines.kha_html5 = "1";
-kha_CompilerDefines["js-es5"] = "1";
-kha_CompilerDefines.js_es5 = "1";
-kha_CompilerDefines.sys_a2 = "1";
-kha_CompilerDefines.dce = "std";
-kha_CompilerDefines.sys_g1 = "1";
-kha_CompilerDefines["true"] = "1";
-kha_CompilerDefines.justTriangles = "1";
-kha_CompilerDefines.haxe3 = "1";
-kha_CompilerDefines.kha_a2 = "1";
-kha_CompilerDefines.script_name = "kha";
 kha_FontStyle.Default = new kha_FontStyle(false,false,false);
 kha_Scheduler.timeWarpSaveTime = 1.0;
 kha_Scheduler.DIF_COUNT = 3;
 kha_Scheduler.maxframetime = 0.5;
 kha_Scheduler.startTime = 0;
-kha_Shaders.simple_fragData0 = "s212:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gaGlnaHAgaW50OwoKdmFyeWluZyBoaWdocCB2ZWMzIGZyYWdtZW50Q29sb3I7Cgp2b2lkIG1haW4oKQp7CiAgICBnbF9GcmFnRGF0YVswXSA9IHZlYzQoZnJhZ21lbnRDb2xvciwgMS4wKTsKfQoK";
-kha_Shaders.simple_fragData1 = "s207:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp2YXJ5aW5nIHZlYzMgZnJhZ21lbnRDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIGdsX0ZyYWdEYXRhWzBdID0gdmVjNChmcmFnbWVudENvbG9yLCAxLjApOwp9Cgo";
-kha_Shaders.simple_fragData2 = "s224:I3ZlcnNpb24gMzAwIGVzCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7CgpvdXQgdmVjNCBGcmFnQ29sb3I7CmluIHZlYzMgZnJhZ21lbnRDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIEZyYWdDb2xvciA9IHZlYzQoZnJhZ21lbnRDb2xvciwgMS4wKTsKfQoK";
-kha_Shaders.simple_vertData0 = "s246:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1hdDQgTVZQOwoKYXR0cmlidXRlIHZlYzMgcG9zOwp2YXJ5aW5nIHZlYzMgZnJhZ21lbnRDb2xvcjsKYXR0cmlidXRlIHZlYzMgY29sOwoKdm9pZCBtYWluKCkKewogICAgZ2xfUG9zaXRpb24gPSBNVlAgKiB2ZWM0KHBvcywgMS4wKTsKICAgIGZyYWdtZW50Q29sb3IgPSBjb2w7Cn0KCg";
-kha_Shaders.simple_vertData1 = "s288:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBNVlA7CgphdHRyaWJ1dGUgbWVkaXVtcCB2ZWMzIHBvczsKdmFyeWluZyBtZWRpdW1wIHZlYzMgZnJhZ21lbnRDb2xvcjsKYXR0cmlidXRlIG1lZGl1bXAgdmVjMyBjb2w7Cgp2b2lkIG1haW4oKQp7CiAgICBnbF9Qb3NpdGlvbiA9IE1WUCAqIHZlYzQocG9zLCAxLjApOwogICAgZnJhZ21lbnRDb2xvciA9IGNvbDsKfQoK";
-kha_Shaders.simple_vertData2 = "s268:I3ZlcnNpb24gMzAwIGVzCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBNVlA7CgppbiBtZWRpdW1wIHZlYzMgcG9zOwpvdXQgbWVkaXVtcCB2ZWMzIGZyYWdtZW50Q29sb3I7CmluIG1lZGl1bXAgdmVjMyBjb2w7Cgp2b2lkIG1haW4oKQp7CiAgICBnbF9Qb3NpdGlvbiA9IE1WUCAqIHZlYzQocG9zLCAxLjApOwogICAgZnJhZ21lbnRDb2xvciA9IGNvbDsKfQoK";
 kha_Shaders.painter_colored_fragData0 = "s198:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gaGlnaHAgaW50OwoKdmFyeWluZyBoaWdocCB2ZWM0IGZyYWdtZW50Q29sb3I7Cgp2b2lkIG1haW4oKQp7CiAgICBnbF9GcmFnRGF0YVswXSA9IGZyYWdtZW50Q29sb3I7Cn0KCg";
-kha_Shaders.painter_colored_fragData1 = "s192:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp2YXJ5aW5nIHZlYzQgZnJhZ21lbnRDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIGdsX0ZyYWdEYXRhWzBdID0gZnJhZ21lbnRDb2xvcjsKfQoK";
-kha_Shaders.painter_colored_fragData2 = "s210:I3ZlcnNpb24gMzAwIGVzCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7CgpvdXQgdmVjNCBGcmFnQ29sb3I7CmluIHZlYzQgZnJhZ21lbnRDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIEZyYWdDb2xvciA9IGZyYWdtZW50Q29sb3I7Cn0KCg";
+kha_Shaders.painter_colored_fragData1 = "s210:I3ZlcnNpb24gMzAwIGVzCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7CgpvdXQgdmVjNCBGcmFnQ29sb3I7CmluIHZlYzQgZnJhZ21lbnRDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIEZyYWdDb2xvciA9IGZyYWdtZW50Q29sb3I7Cn0KCg";
 kha_Shaders.painter_colored_vertData0 = "s331:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1hdDQgcHJvamVjdGlvbk1hdHJpeDsKCmF0dHJpYnV0ZSB2ZWMzIHZlcnRleFBvc2l0aW9uOwp2YXJ5aW5nIHZlYzQgZnJhZ21lbnRDb2xvcjsKYXR0cmlidXRlIHZlYzQgdmVydGV4Q29sb3I7Cgp2b2lkIG1haW4oKQp7CiAgICBnbF9Qb3NpdGlvbiA9IHByb2plY3Rpb25NYXRyaXggKiB2ZWM0KHZlcnRleFBvc2l0aW9uLCAxLjApOwogICAgZnJhZ21lbnRDb2xvciA9IHZlcnRleENvbG9yOwp9Cgo";
-kha_Shaders.painter_colored_vertData1 = "s374:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKYXR0cmlidXRlIG1lZGl1bXAgdmVjMyB2ZXJ0ZXhQb3NpdGlvbjsKdmFyeWluZyBtZWRpdW1wIHZlYzQgZnJhZ21lbnRDb2xvcjsKYXR0cmlidXRlIG1lZGl1bXAgdmVjNCB2ZXJ0ZXhDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIGdsX1Bvc2l0aW9uID0gcHJvamVjdGlvbk1hdHJpeCAqIHZlYzQodmVydGV4UG9zaXRpb24sIDEuMCk7CiAgICBmcmFnbWVudENvbG9yID0gdmVydGV4Q29sb3I7Cn0KCg";
-kha_Shaders.painter_colored_vertData2 = "s354:I3ZlcnNpb24gMzAwIGVzCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKaW4gbWVkaXVtcCB2ZWMzIHZlcnRleFBvc2l0aW9uOwpvdXQgbWVkaXVtcCB2ZWM0IGZyYWdtZW50Q29sb3I7CmluIG1lZGl1bXAgdmVjNCB2ZXJ0ZXhDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIGdsX1Bvc2l0aW9uID0gcHJvamVjdGlvbk1hdHJpeCAqIHZlYzQodmVydGV4UG9zaXRpb24sIDEuMCk7CiAgICBmcmFnbWVudENvbG9yID0gdmVydGV4Q29sb3I7Cn0KCg";
+kha_Shaders.painter_colored_vertData1 = "s354:I3ZlcnNpb24gMzAwIGVzCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKaW4gbWVkaXVtcCB2ZWMzIHZlcnRleFBvc2l0aW9uOwpvdXQgbWVkaXVtcCB2ZWM0IGZyYWdtZW50Q29sb3I7CmluIG1lZGl1bXAgdmVjNCB2ZXJ0ZXhDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIGdsX1Bvc2l0aW9uID0gcHJvamVjdGlvbk1hdHJpeCAqIHZlYzQodmVydGV4UG9zaXRpb24sIDEuMCk7CiAgICBmcmFnbWVudENvbG9yID0gdmVydGV4Q29sb3I7Cn0KCg";
 kha_Shaders.painter_image_fragData0 = "s471:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gaGlnaHAgaW50OwoKdW5pZm9ybSBoaWdocCBzYW1wbGVyMkQgdGV4OwoKdmFyeWluZyBoaWdocCB2ZWMyIHRleENvb3JkOwp2YXJ5aW5nIGhpZ2hwIHZlYzQgY29sb3I7Cgp2b2lkIG1haW4oKQp7CiAgICBoaWdocCB2ZWM0IHRleGNvbG9yID0gdGV4dHVyZTJEKHRleCwgdGV4Q29vcmQpICogY29sb3I7CiAgICBoaWdocCB2ZWMzIF8zMiA9IHRleGNvbG9yLnh5eiAqIGNvbG9yLnc7CiAgICB0ZXhjb2xvciA9IHZlYzQoXzMyLngsIF8zMi55LCBfMzIueiwgdGV4Y29sb3Iudyk7CiAgICBnbF9GcmFnRGF0YVswXSA9IHRleGNvbG9yOwp9Cgo";
-kha_Shaders.painter_image_fragData1 = "s444:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp1bmlmb3JtIG1lZGl1bXAgc2FtcGxlcjJEIHRleDsKCnZhcnlpbmcgdmVjMiB0ZXhDb29yZDsKdmFyeWluZyB2ZWM0IGNvbG9yOwoKdm9pZCBtYWluKCkKewogICAgdmVjNCB0ZXhjb2xvciA9IHRleHR1cmUyRCh0ZXgsIHRleENvb3JkKSAqIGNvbG9yOwogICAgdmVjMyBfMzIgPSB0ZXhjb2xvci54eXogKiBjb2xvci53OwogICAgdGV4Y29sb3IgPSB2ZWM0KF8zMi54LCBfMzIueSwgXzMyLnosIHRleGNvbG9yLncpOwogICAgZ2xfRnJhZ0RhdGFbMF0gPSB0ZXhjb2xvcjsKfQoK";
-kha_Shaders.painter_image_fragData2 = "s452:I3ZlcnNpb24gMzAwIGVzCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp1bmlmb3JtIG1lZGl1bXAgc2FtcGxlcjJEIHRleDsKCmluIHZlYzIgdGV4Q29vcmQ7CmluIHZlYzQgY29sb3I7Cm91dCB2ZWM0IEZyYWdDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIHZlYzQgdGV4Y29sb3IgPSB0ZXh0dXJlKHRleCwgdGV4Q29vcmQpICogY29sb3I7CiAgICB2ZWMzIF8zMiA9IHRleGNvbG9yLnh5eiAqIGNvbG9yLnc7CiAgICB0ZXhjb2xvciA9IHZlYzQoXzMyLngsIF8zMi55LCBfMzIueiwgdGV4Y29sb3Iudyk7CiAgICBGcmFnQ29sb3IgPSB0ZXhjb2xvcjsKfQoK";
+kha_Shaders.painter_image_fragData1 = "s452:I3ZlcnNpb24gMzAwIGVzCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp1bmlmb3JtIG1lZGl1bXAgc2FtcGxlcjJEIHRleDsKCmluIHZlYzIgdGV4Q29vcmQ7CmluIHZlYzQgY29sb3I7Cm91dCB2ZWM0IEZyYWdDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIHZlYzQgdGV4Y29sb3IgPSB0ZXh0dXJlKHRleCwgdGV4Q29vcmQpICogY29sb3I7CiAgICB2ZWMzIF8zMiA9IHRleGNvbG9yLnh5eiAqIGNvbG9yLnc7CiAgICB0ZXhjb2xvciA9IHZlYzQoXzMyLngsIF8zMi55LCBfMzIueiwgdGV4Y29sb3Iudyk7CiAgICBGcmFnQ29sb3IgPSB0ZXhjb2xvcjsKfQoK";
 kha_Shaders.painter_image_vertData0 = "s415:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1hdDQgcHJvamVjdGlvbk1hdHJpeDsKCmF0dHJpYnV0ZSB2ZWMzIHZlcnRleFBvc2l0aW9uOwp2YXJ5aW5nIHZlYzIgdGV4Q29vcmQ7CmF0dHJpYnV0ZSB2ZWMyIHRleFBvc2l0aW9uOwp2YXJ5aW5nIHZlYzQgY29sb3I7CmF0dHJpYnV0ZSB2ZWM0IHZlcnRleENvbG9yOwoKdm9pZCBtYWluKCkKewogICAgZ2xfUG9zaXRpb24gPSBwcm9qZWN0aW9uTWF0cml4ICogdmVjNCh2ZXJ0ZXhQb3NpdGlvbiwgMS4wKTsKICAgIHRleENvb3JkID0gdGV4UG9zaXRpb247CiAgICBjb2xvciA9IHZlcnRleENvbG9yOwp9Cgo";
-kha_Shaders.painter_image_vertData1 = "s479:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKYXR0cmlidXRlIG1lZGl1bXAgdmVjMyB2ZXJ0ZXhQb3NpdGlvbjsKdmFyeWluZyBtZWRpdW1wIHZlYzIgdGV4Q29vcmQ7CmF0dHJpYnV0ZSBtZWRpdW1wIHZlYzIgdGV4UG9zaXRpb247CnZhcnlpbmcgbWVkaXVtcCB2ZWM0IGNvbG9yOwphdHRyaWJ1dGUgbWVkaXVtcCB2ZWM0IHZlcnRleENvbG9yOwoKdm9pZCBtYWluKCkKewogICAgZ2xfUG9zaXRpb24gPSBwcm9qZWN0aW9uTWF0cml4ICogdmVjNCh2ZXJ0ZXhQb3NpdGlvbiwgMS4wKTsKICAgIHRleENvb3JkID0gdGV4UG9zaXRpb247CiAgICBjb2xvciA9IHZlcnRleENvbG9yOwp9Cgo";
-kha_Shaders.painter_image_vertData2 = "s444:I3ZlcnNpb24gMzAwIGVzCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKaW4gbWVkaXVtcCB2ZWMzIHZlcnRleFBvc2l0aW9uOwpvdXQgbWVkaXVtcCB2ZWMyIHRleENvb3JkOwppbiBtZWRpdW1wIHZlYzIgdGV4UG9zaXRpb247Cm91dCBtZWRpdW1wIHZlYzQgY29sb3I7CmluIG1lZGl1bXAgdmVjNCB2ZXJ0ZXhDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIGdsX1Bvc2l0aW9uID0gcHJvamVjdGlvbk1hdHJpeCAqIHZlYzQodmVydGV4UG9zaXRpb24sIDEuMCk7CiAgICB0ZXhDb29yZCA9IHRleFBvc2l0aW9uOwogICAgY29sb3IgPSB2ZXJ0ZXhDb2xvcjsKfQoK";
+kha_Shaders.painter_image_vertData1 = "s444:I3ZlcnNpb24gMzAwIGVzCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKaW4gbWVkaXVtcCB2ZWMzIHZlcnRleFBvc2l0aW9uOwpvdXQgbWVkaXVtcCB2ZWMyIHRleENvb3JkOwppbiBtZWRpdW1wIHZlYzIgdGV4UG9zaXRpb247Cm91dCBtZWRpdW1wIHZlYzQgY29sb3I7CmluIG1lZGl1bXAgdmVjNCB2ZXJ0ZXhDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIGdsX1Bvc2l0aW9uID0gcHJvamVjdGlvbk1hdHJpeCAqIHZlYzQodmVydGV4UG9zaXRpb24sIDEuMCk7CiAgICB0ZXhDb29yZCA9IHRleFBvc2l0aW9uOwogICAgY29sb3IgPSB2ZXJ0ZXhDb2xvcjsKfQoK";
 kha_Shaders.painter_text_fragData0 = "s351:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gaGlnaHAgaW50OwoKdW5pZm9ybSBoaWdocCBzYW1wbGVyMkQgdGV4OwoKdmFyeWluZyBoaWdocCB2ZWM0IGZyYWdtZW50Q29sb3I7CnZhcnlpbmcgaGlnaHAgdmVjMiB0ZXhDb29yZDsKCnZvaWQgbWFpbigpCnsKICAgIGdsX0ZyYWdEYXRhWzBdID0gdmVjNChmcmFnbWVudENvbG9yLnh5eiwgdGV4dHVyZTJEKHRleCwgdGV4Q29vcmQpLnggKiBmcmFnbWVudENvbG9yLncpOwp9Cgo";
-kha_Shaders.painter_text_fragData1 = "s340:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp1bmlmb3JtIG1lZGl1bXAgc2FtcGxlcjJEIHRleDsKCnZhcnlpbmcgdmVjNCBmcmFnbWVudENvbG9yOwp2YXJ5aW5nIHZlYzIgdGV4Q29vcmQ7Cgp2b2lkIG1haW4oKQp7CiAgICBnbF9GcmFnRGF0YVswXSA9IHZlYzQoZnJhZ21lbnRDb2xvci54eXosIHRleHR1cmUyRCh0ZXgsIHRleENvb3JkKS54ICogZnJhZ21lbnRDb2xvci53KTsKfQoK";
-kha_Shaders.painter_text_fragData2 = "s348:I3ZlcnNpb24gMzAwIGVzCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp1bmlmb3JtIG1lZGl1bXAgc2FtcGxlcjJEIHRleDsKCm91dCB2ZWM0IEZyYWdDb2xvcjsKaW4gdmVjNCBmcmFnbWVudENvbG9yOwppbiB2ZWMyIHRleENvb3JkOwoKdm9pZCBtYWluKCkKewogICAgRnJhZ0NvbG9yID0gdmVjNChmcmFnbWVudENvbG9yLnh5eiwgdGV4dHVyZSh0ZXgsIHRleENvb3JkKS54ICogZnJhZ21lbnRDb2xvci53KTsKfQoK";
+kha_Shaders.painter_text_fragData1 = "s348:I3ZlcnNpb24gMzAwIGVzCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp1bmlmb3JtIG1lZGl1bXAgc2FtcGxlcjJEIHRleDsKCm91dCB2ZWM0IEZyYWdDb2xvcjsKaW4gdmVjNCBmcmFnbWVudENvbG9yOwppbiB2ZWMyIHRleENvb3JkOwoKdm9pZCBtYWluKCkKewogICAgRnJhZ0NvbG9yID0gdmVjNChmcmFnbWVudENvbG9yLnh5eiwgdGV4dHVyZSh0ZXgsIHRleENvb3JkKS54ICogZnJhZ21lbnRDb2xvci53KTsKfQoK";
 kha_Shaders.painter_text_vertData0 = "s436:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1hdDQgcHJvamVjdGlvbk1hdHJpeDsKCmF0dHJpYnV0ZSB2ZWMzIHZlcnRleFBvc2l0aW9uOwp2YXJ5aW5nIHZlYzIgdGV4Q29vcmQ7CmF0dHJpYnV0ZSB2ZWMyIHRleFBvc2l0aW9uOwp2YXJ5aW5nIHZlYzQgZnJhZ21lbnRDb2xvcjsKYXR0cmlidXRlIHZlYzQgdmVydGV4Q29sb3I7Cgp2b2lkIG1haW4oKQp7CiAgICBnbF9Qb3NpdGlvbiA9IHByb2plY3Rpb25NYXRyaXggKiB2ZWM0KHZlcnRleFBvc2l0aW9uLCAxLjApOwogICAgdGV4Q29vcmQgPSB0ZXhQb3NpdGlvbjsKICAgIGZyYWdtZW50Q29sb3IgPSB2ZXJ0ZXhDb2xvcjsKfQoK";
-kha_Shaders.painter_text_vertData1 = "s500:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKYXR0cmlidXRlIG1lZGl1bXAgdmVjMyB2ZXJ0ZXhQb3NpdGlvbjsKdmFyeWluZyBtZWRpdW1wIHZlYzIgdGV4Q29vcmQ7CmF0dHJpYnV0ZSBtZWRpdW1wIHZlYzIgdGV4UG9zaXRpb247CnZhcnlpbmcgbWVkaXVtcCB2ZWM0IGZyYWdtZW50Q29sb3I7CmF0dHJpYnV0ZSBtZWRpdW1wIHZlYzQgdmVydGV4Q29sb3I7Cgp2b2lkIG1haW4oKQp7CiAgICBnbF9Qb3NpdGlvbiA9IHByb2plY3Rpb25NYXRyaXggKiB2ZWM0KHZlcnRleFBvc2l0aW9uLCAxLjApOwogICAgdGV4Q29vcmQgPSB0ZXhQb3NpdGlvbjsKICAgIGZyYWdtZW50Q29sb3IgPSB2ZXJ0ZXhDb2xvcjsKfQoK";
-kha_Shaders.painter_text_vertData2 = "s466:I3ZlcnNpb24gMzAwIGVzCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKaW4gbWVkaXVtcCB2ZWMzIHZlcnRleFBvc2l0aW9uOwpvdXQgbWVkaXVtcCB2ZWMyIHRleENvb3JkOwppbiBtZWRpdW1wIHZlYzIgdGV4UG9zaXRpb247Cm91dCBtZWRpdW1wIHZlYzQgZnJhZ21lbnRDb2xvcjsKaW4gbWVkaXVtcCB2ZWM0IHZlcnRleENvbG9yOwoKdm9pZCBtYWluKCkKewogICAgZ2xfUG9zaXRpb24gPSBwcm9qZWN0aW9uTWF0cml4ICogdmVjNCh2ZXJ0ZXhQb3NpdGlvbiwgMS4wKTsKICAgIHRleENvb3JkID0gdGV4UG9zaXRpb247CiAgICBmcmFnbWVudENvbG9yID0gdmVydGV4Q29sb3I7Cn0KCg";
+kha_Shaders.painter_text_vertData1 = "s466:I3ZlcnNpb24gMzAwIGVzCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKaW4gbWVkaXVtcCB2ZWMzIHZlcnRleFBvc2l0aW9uOwpvdXQgbWVkaXVtcCB2ZWMyIHRleENvb3JkOwppbiBtZWRpdW1wIHZlYzIgdGV4UG9zaXRpb247Cm91dCBtZWRpdW1wIHZlYzQgZnJhZ21lbnRDb2xvcjsKaW4gbWVkaXVtcCB2ZWM0IHZlcnRleENvbG9yOwoKdm9pZCBtYWluKCkKewogICAgZ2xfUG9zaXRpb24gPSBwcm9qZWN0aW9uTWF0cml4ICogdmVjNCh2ZXJ0ZXhQb3NpdGlvbiwgMS4wKTsKICAgIHRleENvb3JkID0gdGV4UG9zaXRpb247CiAgICBmcmFnbWVudENvbG9yID0gdmVydGV4Q29sb3I7Cn0KCg";
 kha_Shaders.painter_video_fragData0 = "s471:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gaGlnaHAgaW50OwoKdW5pZm9ybSBoaWdocCBzYW1wbGVyMkQgdGV4OwoKdmFyeWluZyBoaWdocCB2ZWMyIHRleENvb3JkOwp2YXJ5aW5nIGhpZ2hwIHZlYzQgY29sb3I7Cgp2b2lkIG1haW4oKQp7CiAgICBoaWdocCB2ZWM0IHRleGNvbG9yID0gdGV4dHVyZTJEKHRleCwgdGV4Q29vcmQpICogY29sb3I7CiAgICBoaWdocCB2ZWMzIF8zMiA9IHRleGNvbG9yLnh5eiAqIGNvbG9yLnc7CiAgICB0ZXhjb2xvciA9IHZlYzQoXzMyLngsIF8zMi55LCBfMzIueiwgdGV4Y29sb3Iudyk7CiAgICBnbF9GcmFnRGF0YVswXSA9IHRleGNvbG9yOwp9Cgo";
-kha_Shaders.painter_video_fragData1 = "s444:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp1bmlmb3JtIG1lZGl1bXAgc2FtcGxlcjJEIHRleDsKCnZhcnlpbmcgdmVjMiB0ZXhDb29yZDsKdmFyeWluZyB2ZWM0IGNvbG9yOwoKdm9pZCBtYWluKCkKewogICAgdmVjNCB0ZXhjb2xvciA9IHRleHR1cmUyRCh0ZXgsIHRleENvb3JkKSAqIGNvbG9yOwogICAgdmVjMyBfMzIgPSB0ZXhjb2xvci54eXogKiBjb2xvci53OwogICAgdGV4Y29sb3IgPSB2ZWM0KF8zMi54LCBfMzIueSwgXzMyLnosIHRleGNvbG9yLncpOwogICAgZ2xfRnJhZ0RhdGFbMF0gPSB0ZXhjb2xvcjsKfQoK";
-kha_Shaders.painter_video_fragData2 = "s452:I3ZlcnNpb24gMzAwIGVzCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp1bmlmb3JtIG1lZGl1bXAgc2FtcGxlcjJEIHRleDsKCmluIHZlYzIgdGV4Q29vcmQ7CmluIHZlYzQgY29sb3I7Cm91dCB2ZWM0IEZyYWdDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIHZlYzQgdGV4Y29sb3IgPSB0ZXh0dXJlKHRleCwgdGV4Q29vcmQpICogY29sb3I7CiAgICB2ZWMzIF8zMiA9IHRleGNvbG9yLnh5eiAqIGNvbG9yLnc7CiAgICB0ZXhjb2xvciA9IHZlYzQoXzMyLngsIF8zMi55LCBfMzIueiwgdGV4Y29sb3Iudyk7CiAgICBGcmFnQ29sb3IgPSB0ZXhjb2xvcjsKfQoK";
+kha_Shaders.painter_video_fragData1 = "s452:I3ZlcnNpb24gMzAwIGVzCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp1bmlmb3JtIG1lZGl1bXAgc2FtcGxlcjJEIHRleDsKCmluIHZlYzIgdGV4Q29vcmQ7CmluIHZlYzQgY29sb3I7Cm91dCB2ZWM0IEZyYWdDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIHZlYzQgdGV4Y29sb3IgPSB0ZXh0dXJlKHRleCwgdGV4Q29vcmQpICogY29sb3I7CiAgICB2ZWMzIF8zMiA9IHRleGNvbG9yLnh5eiAqIGNvbG9yLnc7CiAgICB0ZXhjb2xvciA9IHZlYzQoXzMyLngsIF8zMi55LCBfMzIueiwgdGV4Y29sb3Iudyk7CiAgICBGcmFnQ29sb3IgPSB0ZXhjb2xvcjsKfQoK";
 kha_Shaders.painter_video_vertData0 = "s415:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1hdDQgcHJvamVjdGlvbk1hdHJpeDsKCmF0dHJpYnV0ZSB2ZWMzIHZlcnRleFBvc2l0aW9uOwp2YXJ5aW5nIHZlYzIgdGV4Q29vcmQ7CmF0dHJpYnV0ZSB2ZWMyIHRleFBvc2l0aW9uOwp2YXJ5aW5nIHZlYzQgY29sb3I7CmF0dHJpYnV0ZSB2ZWM0IHZlcnRleENvbG9yOwoKdm9pZCBtYWluKCkKewogICAgZ2xfUG9zaXRpb24gPSBwcm9qZWN0aW9uTWF0cml4ICogdmVjNCh2ZXJ0ZXhQb3NpdGlvbiwgMS4wKTsKICAgIHRleENvb3JkID0gdGV4UG9zaXRpb247CiAgICBjb2xvciA9IHZlcnRleENvbG9yOwp9Cgo";
-kha_Shaders.painter_video_vertData1 = "s479:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKYXR0cmlidXRlIG1lZGl1bXAgdmVjMyB2ZXJ0ZXhQb3NpdGlvbjsKdmFyeWluZyBtZWRpdW1wIHZlYzIgdGV4Q29vcmQ7CmF0dHJpYnV0ZSBtZWRpdW1wIHZlYzIgdGV4UG9zaXRpb247CnZhcnlpbmcgbWVkaXVtcCB2ZWM0IGNvbG9yOwphdHRyaWJ1dGUgbWVkaXVtcCB2ZWM0IHZlcnRleENvbG9yOwoKdm9pZCBtYWluKCkKewogICAgZ2xfUG9zaXRpb24gPSBwcm9qZWN0aW9uTWF0cml4ICogdmVjNCh2ZXJ0ZXhQb3NpdGlvbiwgMS4wKTsKICAgIHRleENvb3JkID0gdGV4UG9zaXRpb247CiAgICBjb2xvciA9IHZlcnRleENvbG9yOwp9Cgo";
-kha_Shaders.painter_video_vertData2 = "s444:I3ZlcnNpb24gMzAwIGVzCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKaW4gbWVkaXVtcCB2ZWMzIHZlcnRleFBvc2l0aW9uOwpvdXQgbWVkaXVtcCB2ZWMyIHRleENvb3JkOwppbiBtZWRpdW1wIHZlYzIgdGV4UG9zaXRpb247Cm91dCBtZWRpdW1wIHZlYzQgY29sb3I7CmluIG1lZGl1bXAgdmVjNCB2ZXJ0ZXhDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIGdsX1Bvc2l0aW9uID0gcHJvamVjdGlvbk1hdHJpeCAqIHZlYzQodmVydGV4UG9zaXRpb24sIDEuMCk7CiAgICB0ZXhDb29yZCA9IHRleFBvc2l0aW9uOwogICAgY29sb3IgPSB2ZXJ0ZXhDb2xvcjsKfQoK";
+kha_Shaders.painter_video_vertData1 = "s444:I3ZlcnNpb24gMzAwIGVzCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKaW4gbWVkaXVtcCB2ZWMzIHZlcnRleFBvc2l0aW9uOwpvdXQgbWVkaXVtcCB2ZWMyIHRleENvb3JkOwppbiBtZWRpdW1wIHZlYzIgdGV4UG9zaXRpb247Cm91dCBtZWRpdW1wIHZlYzQgY29sb3I7CmluIG1lZGl1bXAgdmVjNCB2ZXJ0ZXhDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIGdsX1Bvc2l0aW9uID0gcHJvamVjdGlvbk1hdHJpeCAqIHZlYzQodmVydGV4UG9zaXRpb24sIDEuMCk7CiAgICB0ZXhDb29yZCA9IHRleFBvc2l0aW9uOwogICAgY29sb3IgPSB2ZXJ0ZXhDb2xvcjsKfQoK";
 kha_System.renderListeners = [];
 kha_System.foregroundListeners = [];
 kha_System.resumeListeners = [];
@@ -28130,6 +26113,7 @@ kha_System.dropFilesListeners = [];
 kha_SystemImpl.mobile = false;
 kha_SystemImpl.mobileAudioPlaying = false;
 kha_SystemImpl.chrome = false;
+kha_SystemImpl.firefox = false;
 kha_SystemImpl.insideInputEvent = false;
 kha_SystemImpl.maxGamepads = 4;
 kha_SystemImpl.leftMouseCtrlDown = false;
@@ -28237,201 +26221,8 @@ kha_graphics4_ColoredShaderPainter.triangleBufferSize = 100;
 kha_graphics4_TextShaderPainter.bufferSize = 100;
 kha_input_Gamepad.__meta__ = { fields : { sendAxisEvent : { input : null}, sendButtonEvent : { input : null}}};
 kha_input_Gamepad.instances = [];
-kha_input_KeyCode.Unknown = 0;
-kha_input_KeyCode.Back = 1;
-kha_input_KeyCode.Cancel = 3;
-kha_input_KeyCode.Help = 6;
-kha_input_KeyCode.Backspace = 8;
-kha_input_KeyCode.Tab = 9;
-kha_input_KeyCode.Clear = 12;
-kha_input_KeyCode.Return = 13;
-kha_input_KeyCode.Shift = 16;
-kha_input_KeyCode.Control = 17;
-kha_input_KeyCode.Alt = 18;
-kha_input_KeyCode.Pause = 19;
-kha_input_KeyCode.CapsLock = 20;
-kha_input_KeyCode.Kana = 21;
-kha_input_KeyCode.Hangul = 21;
-kha_input_KeyCode.Eisu = 22;
-kha_input_KeyCode.Junja = 23;
-kha_input_KeyCode.Final = 24;
-kha_input_KeyCode.Hanja = 25;
-kha_input_KeyCode.Kanji = 25;
-kha_input_KeyCode.Escape = 27;
-kha_input_KeyCode.Convert = 28;
-kha_input_KeyCode.NonConvert = 29;
-kha_input_KeyCode.Accept = 30;
-kha_input_KeyCode.ModeChange = 31;
-kha_input_KeyCode.Space = 32;
-kha_input_KeyCode.PageUp = 33;
-kha_input_KeyCode.PageDown = 34;
-kha_input_KeyCode.End = 35;
-kha_input_KeyCode.Home = 36;
-kha_input_KeyCode.Left = 37;
-kha_input_KeyCode.Up = 38;
-kha_input_KeyCode.Right = 39;
-kha_input_KeyCode.Down = 40;
-kha_input_KeyCode.Select = 41;
-kha_input_KeyCode.Print = 42;
-kha_input_KeyCode.Execute = 43;
-kha_input_KeyCode.PrintScreen = 44;
-kha_input_KeyCode.Insert = 45;
-kha_input_KeyCode.Delete = 46;
-kha_input_KeyCode.Zero = 48;
-kha_input_KeyCode.One = 49;
-kha_input_KeyCode.Two = 50;
-kha_input_KeyCode.Three = 51;
-kha_input_KeyCode.Four = 52;
-kha_input_KeyCode.Five = 53;
-kha_input_KeyCode.Six = 54;
-kha_input_KeyCode.Seven = 55;
-kha_input_KeyCode.Eight = 56;
-kha_input_KeyCode.Nine = 57;
-kha_input_KeyCode.Colon = 58;
-kha_input_KeyCode.Semicolon = 59;
-kha_input_KeyCode.LessThan = 60;
-kha_input_KeyCode.Equals = 61;
-kha_input_KeyCode.GreaterThan = 62;
-kha_input_KeyCode.QuestionMark = 63;
-kha_input_KeyCode.At = 64;
-kha_input_KeyCode.A = 65;
-kha_input_KeyCode.B = 66;
-kha_input_KeyCode.C = 67;
-kha_input_KeyCode.D = 68;
-kha_input_KeyCode.E = 69;
-kha_input_KeyCode.F = 70;
-kha_input_KeyCode.G = 71;
-kha_input_KeyCode.H = 72;
-kha_input_KeyCode.I = 73;
-kha_input_KeyCode.J = 74;
-kha_input_KeyCode.K = 75;
-kha_input_KeyCode.L = 76;
-kha_input_KeyCode.M = 77;
-kha_input_KeyCode.N = 78;
-kha_input_KeyCode.O = 79;
-kha_input_KeyCode.P = 80;
-kha_input_KeyCode.Q = 81;
-kha_input_KeyCode.R = 82;
-kha_input_KeyCode.S = 83;
-kha_input_KeyCode.T = 84;
-kha_input_KeyCode.U = 85;
-kha_input_KeyCode.V = 86;
-kha_input_KeyCode.W = 87;
-kha_input_KeyCode.X = 88;
-kha_input_KeyCode.Y = 89;
-kha_input_KeyCode.Z = 90;
-kha_input_KeyCode.Win = 91;
-kha_input_KeyCode.ContextMenu = 93;
-kha_input_KeyCode.Sleep = 95;
-kha_input_KeyCode.Numpad0 = 96;
-kha_input_KeyCode.Numpad1 = 97;
-kha_input_KeyCode.Numpad2 = 98;
-kha_input_KeyCode.Numpad3 = 99;
-kha_input_KeyCode.Numpad4 = 100;
-kha_input_KeyCode.Numpad5 = 101;
-kha_input_KeyCode.Numpad6 = 102;
-kha_input_KeyCode.Numpad7 = 103;
-kha_input_KeyCode.Numpad8 = 104;
-kha_input_KeyCode.Numpad9 = 105;
-kha_input_KeyCode.Multiply = 106;
-kha_input_KeyCode.Add = 107;
-kha_input_KeyCode.Separator = 108;
-kha_input_KeyCode.Subtract = 109;
-kha_input_KeyCode.Decimal = 110;
-kha_input_KeyCode.Divide = 111;
-kha_input_KeyCode.F1 = 112;
-kha_input_KeyCode.F2 = 113;
-kha_input_KeyCode.F3 = 114;
-kha_input_KeyCode.F4 = 115;
-kha_input_KeyCode.F5 = 116;
-kha_input_KeyCode.F6 = 117;
-kha_input_KeyCode.F7 = 118;
-kha_input_KeyCode.F8 = 119;
-kha_input_KeyCode.F9 = 120;
-kha_input_KeyCode.F10 = 121;
-kha_input_KeyCode.F11 = 122;
-kha_input_KeyCode.F12 = 123;
-kha_input_KeyCode.F13 = 124;
-kha_input_KeyCode.F14 = 125;
-kha_input_KeyCode.F15 = 126;
-kha_input_KeyCode.F16 = 127;
-kha_input_KeyCode.F17 = 128;
-kha_input_KeyCode.F18 = 129;
-kha_input_KeyCode.F19 = 130;
-kha_input_KeyCode.F20 = 131;
-kha_input_KeyCode.F21 = 132;
-kha_input_KeyCode.F22 = 133;
-kha_input_KeyCode.F23 = 134;
-kha_input_KeyCode.F24 = 135;
-kha_input_KeyCode.NumLock = 144;
-kha_input_KeyCode.ScrollLock = 145;
-kha_input_KeyCode.WinOemFjJisho = 146;
-kha_input_KeyCode.WinOemFjMasshou = 147;
-kha_input_KeyCode.WinOemFjTouroku = 148;
-kha_input_KeyCode.WinOemFjLoya = 149;
-kha_input_KeyCode.WinOemFjRoya = 150;
-kha_input_KeyCode.Circumflex = 160;
-kha_input_KeyCode.Exclamation = 161;
-kha_input_KeyCode.DoubleQuote = 162;
-kha_input_KeyCode.Hash = 163;
-kha_input_KeyCode.Dollar = 164;
-kha_input_KeyCode.Percent = 165;
-kha_input_KeyCode.Ampersand = 166;
-kha_input_KeyCode.Underscore = 167;
-kha_input_KeyCode.OpenParen = 168;
-kha_input_KeyCode.CloseParen = 169;
-kha_input_KeyCode.Asterisk = 170;
-kha_input_KeyCode.Plus = 171;
-kha_input_KeyCode.Pipe = 172;
-kha_input_KeyCode.HyphenMinus = 173;
-kha_input_KeyCode.OpenCurlyBracket = 174;
-kha_input_KeyCode.CloseCurlyBracket = 175;
-kha_input_KeyCode.Tilde = 176;
-kha_input_KeyCode.VolumeMute = 181;
-kha_input_KeyCode.VolumeDown = 182;
-kha_input_KeyCode.VolumeUp = 183;
-kha_input_KeyCode.Comma = 188;
-kha_input_KeyCode.Period = 190;
-kha_input_KeyCode.Slash = 191;
-kha_input_KeyCode.BackQuote = 192;
-kha_input_KeyCode.OpenBracket = 219;
-kha_input_KeyCode.BackSlash = 220;
-kha_input_KeyCode.CloseBracket = 221;
-kha_input_KeyCode.Quote = 222;
-kha_input_KeyCode.Meta = 224;
-kha_input_KeyCode.AltGr = 225;
-kha_input_KeyCode.WinIcoHelp = 227;
-kha_input_KeyCode.WinIco00 = 228;
-kha_input_KeyCode.WinIcoClear = 230;
-kha_input_KeyCode.WinOemReset = 233;
-kha_input_KeyCode.WinOemJump = 234;
-kha_input_KeyCode.WinOemPA1 = 235;
-kha_input_KeyCode.WinOemPA2 = 236;
-kha_input_KeyCode.WinOemPA3 = 237;
-kha_input_KeyCode.WinOemWSCTRL = 238;
-kha_input_KeyCode.WinOemCUSEL = 239;
-kha_input_KeyCode.WinOemATTN = 240;
-kha_input_KeyCode.WinOemFinish = 241;
-kha_input_KeyCode.WinOemCopy = 242;
-kha_input_KeyCode.WinOemAuto = 243;
-kha_input_KeyCode.WinOemENLW = 244;
-kha_input_KeyCode.WinOemBackTab = 245;
-kha_input_KeyCode.ATTN = 246;
-kha_input_KeyCode.CRSEL = 247;
-kha_input_KeyCode.EXSEL = 248;
-kha_input_KeyCode.EREOF = 249;
-kha_input_KeyCode.Play = 250;
-kha_input_KeyCode.Zoom = 251;
-kha_input_KeyCode.PA1 = 253;
-kha_input_KeyCode.WinOemClear = 254;
 kha_input_Keyboard.__meta__ = { fields : { sendDownEvent : { input : null}, sendUpEvent : { input : null}, sendPressEvent : { input : null}}};
 kha_input_Mouse.__meta__ = { fields : { sendLeaveEvent : { input : null}, sendDownEvent : { input : null}, sendUpEvent : { input : null}, sendMoveEvent : { input : null}, sendWheelEvent : { input : null}}};
-kha_internal_HdrFormat.radiancePattern = new EReg("#\\?RADIANCE","i");
-kha_internal_HdrFormat.commentPattern = new EReg("#.*","i");
-kha_internal_HdrFormat.gammaPattern = new EReg("GAMMA=","i");
-kha_internal_HdrFormat.exposurePattern = new EReg("EXPOSURE=\\s*([0-9]*[.][0-9]*)","i");
-kha_internal_HdrFormat.formatPattern = new EReg("FORMAT=32-bit_rle_rgbe","i");
-kha_internal_HdrFormat.widthHeightPattern = new EReg("-Y ([0-9]+) \\+X ([0-9]+)","i");
 kha_js_AEAudioChannel.todo = [];
 kha_js_Sound.loading = [];
 kha_math_FastMatrix3.width = 3;
@@ -28457,17 +26248,7 @@ kha_network_Session.RPC_SERVER = 0;
 kha_network_Session.RPC_ALL = 1;
 kha_network_SyncBuilder.nextId = 0;
 kha_network_SyncBuilder.objects = [];
-org_poly2tri_Constants.kAlpha = 0.3;
-org_poly2tri_Constants.EPSILON = 1e-12;
-org_poly2tri_Constants.PI_2 = Math.PI / 2;
-org_poly2tri_Constants.PI_3div4 = 3 * Math.PI / 4;
-org_poly2tri_Orientation.CW = 1;
-org_poly2tri_Orientation.CCW = -1;
-org_poly2tri_Orientation.COLLINEAR = 0;
-org_poly2tri_Point.C_ID = 0;
-org_poly2tri_Triangle.CW_OFFSET = 1;
-org_poly2tri_Triangle.CCW_OFFSET = -1;
-tetrisTriangles_TetrisTrianglesKha4.vertices = [];
-tetrisTriangles_TetrisTrianglesKha4.colors = [];
 Main.main();
 })(typeof exports != "undefined" ? exports : typeof window != "undefined" ? window : typeof self != "undefined" ? self : this, typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);
+
+//# sourceMappingURL=kha.js.map
