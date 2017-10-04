@@ -3,7 +3,7 @@ package;
 
 import kha.System;
 import tetrisTriangles.TetrisTrianglesKha2;
-import tetrisTriangles.TetrisTrianglesKha4;
+//import tetrisTriangles.TetrisTrianglesKha4;
 import kha.Scheduler;
 class Main {
     public static function main() {
@@ -14,6 +14,6 @@ class Main {
         new TetrisTrianglesKha2();
     }
     static function initGraphics4():Void {
-        new TetrisTrianglesKha4();
+        //new TetrisTrianglesKha4();
     }
 }

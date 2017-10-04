@@ -39,11 +39,11 @@ class TetrisGenerator {
                 case 2:
                     generate_box( p );
                 case 3:
-                    generate_L( p );
-                case 4: 
                     generate_t( p );
-                default:
+                case 4: 
                     generate_l( p );
+                default:
+                    generate_box( p );
             }
         last = random;
     }
@@ -62,6 +62,7 @@ class TetrisGenerator {
             }
         }
         if( count != -1 ) {
+            tetrisShapes[count].snap();
             var newBlocks = tetrisShapes[ count ].clearBlocks();
             for( i in 0...newBlocks.length ){
                 horizontal.pushBlock( newBlocks[i] );
@@ -78,13 +79,19 @@ class TetrisGenerator {
             tetrisShapes[i].moveDelta( x, y );
         }
     }
-    public inline function createTetris( p: Point ){
-        var ts = new TetrisShape( id, triangles, p, col0_id, col1_id, dia, gap );
+    /*public function offsetX( ox: Float ){
+       for( i in 0...tetrisShapes.length ){
+            tetrisShapes[i].offsetX( ox );
+       }
+    }*/
+
+    public inline function createTetris( p: Point, ?snapped: Snapped ){
+        var ts = new TetrisShape( id, triangles, p, col0_id, col1_id, dia, gap, snapped );
         return ts;
     }
     // predefined tetris shapes relative to centre
     function generate_S( p: Point ): TetrisShape {
-        var ts = createTetris( p );
+        var ts = createTetris( p, Snapped.Zero );
         ts.addBlock( -0.5, -1 );
         ts.addBlock( 0.5, 0 );
         ts.addBlock( 0.5, -1 );
@@ -92,7 +99,7 @@ class TetrisGenerator {
         return ts;
     }
     function generate_l( p: Point ): TetrisShape {
-        var ts = createTetris( p );
+        var ts = createTetris( p, Snapped.Zero );
         ts.addBlock( -0.5, -2 );
         ts.addBlock( -0.5, -1 );
         ts.addBlock( -0.5, 0 );
@@ -108,7 +115,7 @@ class TetrisGenerator {
         return ts;
     }
     function generate_L( p: Point ): TetrisShape {
-        var ts = createTetris( p );
+        var ts = createTetris( p, Snapped.Ninety );
         ts.addBlock( -1, -1.5 );
         ts.addBlock( -1, -0.5 );
         ts.addBlock( -1, 0.5 );
@@ -116,18 +123,28 @@ class TetrisGenerator {
         return ts;
     }
     function generate_t( p: Point ): TetrisShape {
-        var ts = createTetris( p );
+        var ts = createTetris( p, Snapped.Ninety );
         ts.addBlock( -1, -1.5 );
         ts.addBlock( -1, -0.5 );
         ts.addBlock( -1, 0.5 );
         ts.addBlock( 0, -0.5 );
         return ts;
     }
-    public function generateBackground( p: Point, wide: Int , hi: Int, col0_id_: Int, col1_id_: Int ){
+    public function generateBackground( p: Point, wide: Int , hi: Int, col0_id_: Int, col1_id_: Int, col2_id_: Int, col3_id_: Int ){
         col0_id      = col0_id_;
         col1_id      = col1_id_;
         var ts = createTetris( p );
+        var toggle = false;
         for( w in 0...wide ){
+            // color rows horizontally differently
+            if( toggle ) {
+                ts.col0_id      = col0_id_;
+                ts.col1_id      = col1_id_;
+            } else {
+                ts.col0_id      = col2_id_;
+                ts.col1_id      = col3_id_;
+            }
+            toggle = !toggle;
             for( h in 0...hi ){
                 ts.addBlock( w, h );
             }

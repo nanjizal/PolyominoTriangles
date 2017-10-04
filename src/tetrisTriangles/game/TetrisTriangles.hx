@@ -20,7 +20,7 @@ class TetrisTriangles {
         var dx = dia*x;
         var dy = dia*y;
         var sy = dia*above;
-        tetrisGenerator.generateBackground( { x: dx, y: dy }, wide, hi, 10, 0 );
+        tetrisGenerator.generateBackground( { x: dx, y: dy }, wide, hi, 10, 0, 9, 0 );
         var randX: Float;
         for( i in 0...30 ){
             var m = i % 6;// restart colors
@@ -32,15 +32,16 @@ class TetrisTriangles {
     }
     public inline function update(){
         tetrisGenerator.hitBottom();
-        if( count % 10 == 0 ) toggle = !toggle;
+        var rotationSpeed = 10;// 50 for testing
+        if( count % rotationSpeed == 0 ) toggle = !toggle; 
         count += 1.;
         if( toggle ) {
             count += 1.; 
-            tetrisGenerator.rotate( Math.PI/ 10 );
+            tetrisGenerator.rotate( Math.PI/ rotationSpeed );
             //tetrisGenerator.rotate( Math.PI/ 2 );
             //toggle = false;
         }
-        tetrisGenerator.moveDelta( 0.0, 0.15 );
+        tetrisGenerator.moveDelta( 0.0, 0.1 );// testing 0.015
         tetrisGenerator.hitBottom();
     }
 }

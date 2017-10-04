@@ -2,21 +2,36 @@ package tetrisTriangles.visual;
 import justTriangles.Triangle;
 import justTriangles.Point;
 import tetrisTriangles.visual.Square;
+import tetrisTriangles.game.RookAngle;
+
+enum Snapped {
+    Always;
+    Zero;
+    Ninety;
+}
 
 class TetrisShape{
-    var centre: Point;
-    var blocks: Array<Square>;
+    var start:      Point;
+    var snapped:    Snapped;
+    var centre:     Point;
+    var blocks:     Array<Square>;
     var id:         Int;
     var triangles:  Array<Triangle>;
-    var col0_id:    Int;
-    var col1_id:    Int;
+    public var col0_id:    Int;
+    public var col1_id:    Int;
     var dia:        Float;
     var gap:        Float;
+    var angle:      Float = 0.;
+    var rook:       RookAngle = 0.;
+    var lastRook:   RookAngle = 0.;
     public function new(    id_: Int, triangles_: Array<Triangle>
                         ,   centre_: Point
                         ,   col0_id_: Int, col1_id_: Int
-                        ,   dia_: Float, gap_: Float ){
+                        ,   dia_: Float, gap_: Float, ?snapped_: Snapped ){
+        if( snapped_ == Zero ) centre_.x -= dia_/2;// keep shapes with pivot between squares snapped.
         centre      = centre_;
+        snapped     = snapped_;
+        start       = { x: centre_.x, y: centre_.y };
         id          = id_;
         triangles   = triangles_;
         col0_id     = col0_id_;
@@ -40,14 +55,38 @@ class TetrisShape{
         return newBlocks;
     }
     public function rotate( theta: Float ){
+        angle += theta;
+        rook = angle;
+        trace( rook.compassString() );
         var l = blocks.length;
         var cos = Math.cos( theta );
         var sin = Math.sin( theta );
+        rookSnapping( cos );
         for( i in 0...l ){
             blocks[ i ].moveDelta( centre.x, centre.y );
             blocks[ i ].rotateAround( centre, cos, sin );
             blocks[ i ].moveDelta( -centre.x, -centre.y );
         }
+        lastRook = rook;
+    }
+    inline function rookSnapping( cos: Float ){
+        var offset: Float;
+        if( snapped!=null){
+            switch( snapped ){
+                case Zero | Ninety:
+                    offset = -(dia/2)*cos;
+                    offsetX( offset );
+                case Always:
+                default:
+            }
+        }
+    }
+    public function snap(){
+        // assumes positive only rotation for moment
+        var angle = angle%(2*Math.PI);
+        var rookFloat: Float = rook;
+        var offAngle: Float = rookFloat - angle;
+        rotate( offAngle );
     }
     public function getPoints( points: Array<Point> ){
         var l = blocks.length;
@@ -56,14 +95,18 @@ class TetrisShape{
         }
         return points;
     }
-    //@:access( justTriangles.Triangle )
     public function moveDelta( dx: Float, dy: Float ){
         centre.x += dx;
         centre.y += dy;
+        //trace( 'centre.x ' + centre.x/dia + '  centre.y ' + centre.y/dia );
         var l = blocks.length;
         for( i in 0...l ){
             blocks[ i ].moveDelta( dx, dy );
         }
+        
+    }
+    public function offsetX( ox: Float ){
+        centre.x = start.x + ox;
     }
     public function hitTest( p: Point ): Bool {
         var out: Bool = false;

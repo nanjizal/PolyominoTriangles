@@ -8,6 +8,9 @@ import justTriangles.Triangle;
 import justTriangles.Point;
 import justTriangles.Draw;
 import tetrisTriangles.game.TetrisTriangles;
+import tetrisTriangles.game.Matrix2D;
+import tetrisTriangles.game.RookAngle;
+
 /*
 import justTriangles.PathContext;
 import justTriangles.ShapePoints;
@@ -36,6 +39,12 @@ class TetrisTrianglesKha2 {
     var tetrisTriangles: TetrisTriangles;
     public function new() {
         draw();
+        var m = new Matrix2D<Int>();
+        m.add( 1, 2, 10 );
+        trace( m.checkerString() );
+        m.clear();
+        trace( m.checkerString() );
+        trace( m );
         System.notifyOnRender(render);
         Scheduler.addTimeTask(update, 0, 1 / 60);
     }
