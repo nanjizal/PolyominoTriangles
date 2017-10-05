@@ -41,7 +41,6 @@ class TetrisTrianglesCanvas {
     }
     
     function render( i: Int ):Void{
-        trace('updating surface ');
         tetrisTriangles.update();
         renderTriangles();
     }

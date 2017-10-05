@@ -1,7 +1,8 @@
 package tetrisTriangles.game;
 // Rook Angle as in the castle in chess
 abstract RookAngle( Float ) to Float {
-    public inline function new( angle: Float ){
+    public inline 
+    function new( angle: Float ){
         this = if( angle < 0 ){
             negativeRook0_2pi( limit0_2pi( -angle ) );
         } else {
@@ -9,68 +10,55 @@ abstract RookAngle( Float ) to Float {
         }
     }
     @:from
-    static public function fromFloat(f:Float) {
+    static public 
+    function fromFloat(f:Float) {
         return new RookAngle( f );
     }
     @:from
-    static public function fromInt(i:Int) {
+    static public 
+    function fromInt(i:Int) {
         return new RookAngle( i*1. );
     }
-    public inline static function limit0_2pi( angle: Float ): Float {
-        return angle%(2*Math.PI);
+    public inline static 
+    function limit0_2pi( angle: Float ): Float {
+        return angle % ( 2 * Math.PI );
     }
-    // work out if the angle is closest to 0, 90, 180, 270
-    public inline static function rook0_2pi( angle: Float ): Float {
-        return switch angle {
+    public inline static 
+    function rook0_2pi( angle: Float ): Float { 
+        return switch angle {               // work out angle closest to 0, 90, 180, 270
             case 0.:
                 0.;
-          // 0 -> 45 degrees
-          // output 0 
-          case v if ( v < (Math.PI/4) ): 
-                0.;
-          // 45 -> 90+45 degrees
-          case v if ( v < (Math.PI/2 + Math.PI/4) ): 
-              // 90 degrees
-              Math.PI/2;
-          // 90+45 -> 180+45 degrees
-          case v if ( v < (Math.PI + Math.PI/4) ): 
-              // 180 degrees
-              Math.PI;
-          // 180+45 -> 270+45
-          case v if ( v < Math.PI + Math.PI/2 + Math.PI/4 ):
-              // 270 degrees
-              ( Math.PI + Math.PI/2 );
+          case v if ( v < (Math.PI/4) ):                        // 0 -> 45 degrees
+                0.;                         // output 0 
+          case v if ( v < (Math.PI/2 + Math.PI/4) ):            // 45 -> 90+45 degrees
+              Math.PI/2;                    // 90 degrees
+          case v if ( v < (Math.PI + Math.PI/4) ):              // 90+45 -> 180+45 degrees
+              Math.PI;                      // 180 degrees
+          case v if ( v < Math.PI + Math.PI/2 + Math.PI/4 ):    // 180+45 -> 270+45
+              ( Math.PI + Math.PI/2 );      // 270 degrees
           case _:
               0.;
         }
     }
-    // work out if the angle is closest to 0, 90, 180, 270
-    public inline static function negativeRook0_2pi( angle: Float ): Float {
-        return switch angle {
+    public inline static 
+    function negativeRook0_2pi( angle: Float ): Float {
+        return switch angle {               // work out angle closest to 0, 90, 180, 270
             case 0.:
                 0.;
-          // 0 -> 45 degrees
-          // output 0 
-          case v if ( v < (Math.PI/4) ): 
-                0.;
-          // 45 -> 90+45 degrees
-          case v if ( v < (Math.PI/2 + Math.PI/4) ): 
-              // 270 degrees
-              ( Math.PI + Math.PI/2 );
-          // 90+45 -> 180+45 degrees
-          case v if ( v < (Math.PI + Math.PI/4) ): 
-              // 180 degrees
-              Math.PI;
-          // 180+45 -> 270+45
-          case v if ( v < Math.PI + Math.PI/2 + Math.PI/4 ):
-              // 90 degrees
-              Math.PI/2;
+          case v if ( v < (Math.PI/4) ):    // 0 -> 45 degrees
+                0.;                         // output 0 
+          case v if ( v < (Math.PI/2 + Math.PI/4) ):            // 45 -> 90+45 degrees
+              ( Math.PI + Math.PI/2 );      // 270 degrees
+          case v if ( v < (Math.PI + Math.PI/4) ):              // 90+45 -> 180+45 degrees
+              Math.PI;                      // 180 degrees
+          case v if ( v < Math.PI + Math.PI/2 + Math.PI/4 ):    // 180+45 -> 270+45
+              Math.PI/2;                    // 90 degrees
           case _:
               0.;
         }
     }
-    
-    public inline function compassString(): String {
+    public inline 
+    function compassString(): String {
         return switch( this ){
             case 0.:
                 'North';
@@ -84,7 +72,8 @@ abstract RookAngle( Float ) to Float {
                 'angle not found '+ this;
         }
     }
-    public inline function radiusString(): String {
+    public inline 
+    function radiusString(): String {
         return switch( this ){
             case 0.:
                 '0';
@@ -98,7 +87,8 @@ abstract RookAngle( Float ) to Float {
                 'angle not found '+ this;
         }
     }
-    public inline function degrees(): Float {
+    public inline 
+    function degrees(): Float {
         return switch( this ){
             case 0.:
                 0.;
@@ -112,22 +102,24 @@ abstract RookAngle( Float ) to Float {
                 0;
         }
     }
-    public inline function clockRotate(): RookAngle {
-        this = new RookAngle( this + 90 );
-        return this;
+    public inline 
+    function clockRotate(): RookAngle {
+        return this = new RookAngle( this + 90 );
     }
-    public inline function antiClockRotate(): RookAngle {
-        this = new RookAngle( this - 90 );
-        return this;
+    public inline 
+    function antiClockRotate(): RookAngle {
+        return this = new RookAngle( this - 90 );
     }
-    public inline function upsideDown(): RookAngle {
-        return new RookAngle( this + 180 );
+    public inline 
+    function upsideDown(): RookAngle {
+        return this = new RookAngle( this + 180 );
     }
-    @:op(A++) public function pp(): RookAngle {
+    @:op(A++) public 
+    function pp(): RookAngle {
          return clockRotate();
     }
-    @:op(A--) public function mm(): RookAngle {
+    @:op(A--) public 
+    function mm(): RookAngle {
          return antiClockRotate();
     }
-    
 }

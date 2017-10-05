@@ -4,4 +4,5 @@ project.addSources('src');
 //project.addShaders('src/Shaders/**');
 project.addLibrary('poly2trihx');
 project.addLibrary('justTriangles');
+project.addLibrary('Nodule');
 resolve(project);

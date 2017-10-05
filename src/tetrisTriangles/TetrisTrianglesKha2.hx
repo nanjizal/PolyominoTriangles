@@ -3,22 +3,12 @@ import kha.Framebuffer;
 import kha.Scheduler;
 import kha.System;
 import kha.Color;
+import kha.Assets;
+import kha.Font;
 import kha.graphics2.Graphics;
 import justTriangles.Triangle;
-import justTriangles.Point;
 import justTriangles.Draw;
-import tetrisTriangles.game.TetrisTriangles;
-import tetrisTriangles.game.Matrix2D;
-import tetrisTriangles.game.RookAngle;
-
-/*
-import justTriangles.PathContext;
-import justTriangles.ShapePoints;
-import justTriangles.QuickPaths;
-import justTriangles.SvgPath;
-import justTriangles.PathContextTrace;
-using justTriangles.QuickPaths;
-*/
+import tetrisTriangles.game.Tetris;
 @:enum
     abstract GameColors( Int ) from Int to Int {
         var Violet = 0xFF9400D3;
@@ -36,27 +26,26 @@ using justTriangles.QuickPaths;
     }
 class TetrisTrianglesKha2 {
     var gameColors: Array<GameColors> = [ Black, Red, Orange, Yellow, Green, Blue, Indigo, Violet, LightGrey, MidGrey, DarkGrey, NearlyBlack ]; 
-    var tetrisTriangles: TetrisTriangles;
+    var tetrisTriangles: Tetris;
+    var droidSans: Font;
     public function new() {
+        Assets.loadEverything(loadAll);
+    } 
+    public function loadAll() {
         draw();
-        var m = new Matrix2D<Int>();
-        m.add( 1, 2, 10 );
-        trace( m.checkerString() );
-        m.clear();
-        trace( m.checkerString() );
-        trace( m );
+        droidSans = Assets.fonts.DroidSans; 
         System.notifyOnRender(render);
         Scheduler.addTimeTask(update, 0, 1 / 60);
     }
     public function draw(){
         Draw.drawTri = Triangle.drawTri;
-        tetrisTriangles = new TetrisTriangles();
+        tetrisTriangles = new Tetris();
     }
     function update(): Void {}
     function render(framebuffer: Framebuffer): Void {
         tetrisTriangles.update();
         var g = framebuffer.g2;
-        g.begin();
+        g.begin(0xFF181818);
         renderTriangles( g );
         g.end();
     }
