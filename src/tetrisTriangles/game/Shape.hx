@@ -9,7 +9,7 @@ enum Snapped {
     Ninety;
     Fix;
 }
-class Shape{
+class Shape {
     var start:              Point;
     var snapped:            Snapped;
     var centre:             Point;
@@ -52,7 +52,7 @@ class Shape{
         var x0 = x_ * dia + centre.x;
         var y0 = y_ * dia + centre.y;
         var temp = triangles; // TODO: make virtualBlocks non visual just for hitTest pass empty array.
-        virtualBlocks[ blocks.length ]  = new Square( id, temp,      x0, y0,    1,    1, dia, gap );
+        virtualBlocks[ blocks.length ]  = new Square( id, temp,      x0, y0,    13,    13, dia, gap );
         blocks[ blocks.length ]         = new Square( id, triangles, x0, y0, col0, col1, dia, gap );
     }
     public function pushBlock( square: Square ){
@@ -80,7 +80,8 @@ class Shape{
         }
         lastRook = rook;
     }
-    inline function rotateVirtual( rook: Float ){
+    inline 
+    function rotateVirtual( rook: Float ){
         var cos = Math.cos( Math.PI/2 );
         var sin = Math.sin( Math.PI/2 );
         if( rook != lastRook ){
@@ -92,7 +93,8 @@ class Shape{
             }
         }
     }
-    inline function rookSnapping( cos: Float, sin: Float ){
+    inline 
+    function rookSnapping( cos: Float, sin: Float ){
         var offset: Float;
         if( snapped != null ){
             switch( snapped ){
@@ -103,9 +105,13 @@ class Shape{
                     offset = ( dia/2 ) * cos;
                     offsetX( offset );
                 case Always:
+                    offsetX( 0 );
                 default:
             }
         }
+    }
+    function offsetX( ox: Float ){ // cheat to allow column snapping on rotation.
+        centre.x = start.x + ox;
     }
     public inline 
     function snap(){
@@ -125,8 +131,13 @@ class Shape{
         }
         return points;
     }
-    // TODO: for sideways movement remember to create a new getter that updates start.x or something
-    public function moveDelta( dx: Float, dy: Float ){
+    public function moveX( dx: Float ){
+        start.x += dx;
+        var l = blocks.length;
+        for( i in 0...l ) blocks[ i ].moveDelta( dx, 0. );
+        for( i in 0...l ) virtualBlocks[ i ].moveDelta( dx, 0. );
+    }
+    public function moveDelta( dx: Float, dy: Float ){// TODO: for sideways movement remember to create a new getter that updates start.x or something
         if( blocks.length == 0 ) return;
         if( blocks == null ) return;
         centre.x += dx;
@@ -134,51 +145,6 @@ class Shape{
         var l = blocks.length;
         for( i in 0...l ) blocks[ i ].moveDelta( dx, dy );
         for( i in 0...l ) virtualBlocks[ i ].moveDelta( dx, dy );
-    }
-    public inline function discretePosition( p:{x:Float,y:Float}):{x:Int,y:Int}{
-        return {  x: Math.round( p.x / dia ) - offX
-                , y: Math.round( p.y / dia ) - offY 
-                };
-    }
-    var centres: Array< { x: Float, y: Float} >;
-    public function getCentres():Array< { x: Float, y: Float }>{
-        var l = blocks.length;
-        var square: Square;
-        centres = new Array< { x: Float, y: Float } >();
-        for( i in 0...l ) centres[ i ] = blocks[ i ].getQuickCentre();
-        return centres;
-    }
-    var centresInt: Array< { x: Int, y: Int} >;
-    public function getCentreInt():Array< { x: Int, y: Int } >{
-        var l = blocks.length;
-        centresInt = new Array< { x: Int, y: Int } >();
-        for( i in 0...l ){
-            centresInt[ i ] = blocks[ i ].getCentreInt();
-        }
-        return centresInt;
-    }
-    /*public function getPosition(){
-        var l = blocks.length;
-        var square: Square;
-        for( i in 0...l ){
-            square = blocks[ i ];
-            var sqrCentre = square.getCentre();
-            gridPositionUpdate( Math.round( sqrCentre.x/dia ) - offX, Math.round( sqrCentre.y/dia ) - offY );
-        }
-    }*/
-    public function offsetX( ox: Float ){
-        centre.x = start.x + ox;
-    }
-    public function hitTest( p: Point ): Bool {
-        var out = false;
-        var l = blocks.length;
-        for( i in 0...l ){
-            if( blocks[ i ].hitTest( { x: p.x, y: p.y } ) ){
-                out = true;
-                break;
-            }
-        }
-        return out;
     }
     public function hitInt( p: { x: Int, y: Int } ): Bool {
         var out = false;
@@ -193,9 +159,58 @@ class Shape{
         }
         return out;
     }
+    var centresInt: Array< { x: Int, y: Int} >;
+    public function getCentreInt():Array< { x: Int, y: Int } >{
+        var l = blocks.length;
+        centresInt = new Array< { x: Int, y: Int } >();
+        for( i in 0...l ){
+            centresInt[ i ] = blocks[ i ].getCentreInt();
+        }
+        return centresInt;
+    }
+    // OLD hitTest code not currently required?
+    /*
+    public inline 
+    function discretePosition( p:{x:Float,y:Float}):{x:Int,y:Int}{
+        return {  x: Math.round( p.x / dia ) - offX
+                , y: Math.round( p.y / dia ) - offY 
+                };
+    }*/
+    /*
+    var centres: Array< { x: Float, y: Float} >;
+    public function getCentres():Array< { x: Float, y: Float }>{
+        var l = blocks.length;
+        var square: Square;
+        centres = new Array< { x: Float, y: Float } >();
+        for( i in 0...l ) centres[ i ] = blocks[ i ].getQuickCentre();
+        return centres;
+    }
+    */
+    /*public function getPosition(){
+        var l = blocks.length;
+        var square: Square;
+        for( i in 0...l ){
+            square = blocks[ i ];
+            var sqrCentre = square.getCentre();
+            gridPositionUpdate( Math.round( sqrCentre.x/dia ) - offX, Math.round( sqrCentre.y/dia ) - offY );
+        }
+    }*/
+    /*
+    public function hitTest( p: Point ): Bool {
+        var out = false;
+        var l = blocks.length;
+        for( i in 0...l ){
+            if( blocks[ i ].hitTest( { x: p.x, y: p.y } ) ){
+                out = true;
+                break;
+            }
+        }
+        return out;
+    }*/
+    /*
     public inline function close( v0: { x: Float, y: Float }, v1: { x: Float, y: Float } ): Bool {
   		var dx = v0.x - v1.x;
   		var dy = v0.y - v1.y;
   		return ( ( dx * dx + dy * dy ) < ( dia * dia ) );
-	}
+	}*/
 }

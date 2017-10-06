@@ -4,6 +4,15 @@ import tetrisTriangles.game.Templates;
 import tetrisTriangles.game.Controller;
 import justTriangles.Triangle;
 import justTriangles.Point;
+@:enum
+    abstract TetrisShape( String ) to String from String {
+    var tetris_S = 'tetris_S';
+    var tetris_L = 'tetris_L';
+    var tetris_box = 'tetris_box';
+    var tetris_t = 'tetris_t';
+    var tetris_l = 'tetris_l';
+    var tetris_random = 'tetris_random';
+}
 class Controller {
     var shapes      = new Array<Shape>();
     var bottom:     Shape;
@@ -17,7 +26,7 @@ class Controller {
     var offX:       Int;
     var offY:       Int;
     var last        = -1;
-    
+    var random      = 0;
     //var _points: Array<Point>;
     var _pointInt: Array<{x:Int,y:Int}>;
     
@@ -31,29 +40,45 @@ class Controller {
         offX         = offX_;
         offY         = offY_;
     }
-    public function randomShape( p: Point, col0_: Int, col1_: Int ){
+    public function createShape( p: Point, col0_: Int, col1_: Int, ?shape: TetrisShape = tetris_random ){
         var templates = new Templates( createTetris );
         col0      = col0_;
         col1      = col1_;
-        var random  = Std.int( 4*Math.random() );
-        if( random == last ) {
-            randomShape( p, col0_, col1_ );
-            return;
-        }
-        shapes[ shapes.length ] = switch( random ){
-                case 0:
-                    templates.S( p );
-                case 1: 
-                    templates.l( p );
-                case 2:
-                    templates.box( p );
-                case 3:
-                    templates.t( p );
-                case 4: 
-                    templates.l( p );
-                default:
-                    templates.S( p );
-            }
+        switch( shape ){ // normally works as random tetris shape
+            case tetris_random:
+                var random  = Std.int( 4*Math.random() );
+                if( random == last ) {
+                    createShape( p, col0_, col1_ );
+                    return;
+                }
+                shapes[ shapes.length ] = switch( random ){
+                        case 0:
+                            templates.S( p );
+                        case 1:
+                            templates.L( p );
+                        case 2:
+                            templates.box( p );
+                        case 3:
+                            templates.t( p );
+                        case 4: 
+                            templates.l( p );
+                        default:
+                            templates.S( p );
+                    }
+            default: 
+                shapes[ shapes.length ] = switch( shape ){ // used to allow testing of only one shape ( add TetrisShape in the method call );
+                    case tetris_S:
+                        templates.S( p );
+                    case tetris_L:
+                        templates.L( p );
+                    case tetris_box:
+                        templates.box( p );
+                    case tetris_t:
+                        templates.l( p );
+                    default:
+                        templates.box( p );
+                }
+        } 
         last = random;
     }
     public inline function hitBottom(){
@@ -85,6 +110,10 @@ class Controller {
     public inline function rotate( theta ){
         var l = shapes.length;
         for( i in 0...l ) shapes[i].rotate( theta );
+    }
+    public inline function moveX( x: Float ){
+        var l = shapes.length;
+        for( i in 0...l ) shapes[i].moveX( x );
     }
     public inline function moveDelta( x: Float, y: Float ){
         var l = shapes.length;
