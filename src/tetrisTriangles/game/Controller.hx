@@ -103,21 +103,44 @@ class Controller {
             shapes[ count ].snap();
             var newBlocks = shapes[ count ].clearBlocks();
             var l = newBlocks.length;
-            for( i in 0...l ) bottom.pushBlock( newBlocks[i] );
+            for( i in 0...l ) bottom.pushBlock( newBlocks[ i ] );
         }
         //background.getPosition();
     }
     public inline function rotate( theta ){
         var l = shapes.length;
-        for( i in 0...l ) shapes[i].rotate( theta );
+        for( i in 0...l ) shapes[ i ].rotate( theta );
     }
-    public inline function moveX( x: Float ){
+    public inline function moveX( x: Float, leftStop: Float, rightStop: Float ){
         var l = shapes.length;
-        for( i in 0...l ) shapes[i].moveX( x );
+        var shape: Shape;
+        for( i in 0...l ) {
+            shape = shapes[ i ];
+            if( shape.blocks != null && shape.blocks.length != 0 ){
+                var sides0 = Shape.getShapeSides( shape.blocks );  // does not fully account for rotation and bounds.
+                var sides1 = Shape.getShapeSides( shape.virtualBlocks ); // but rotation his handled by shape :(
+                var sides = { x: Math.min( sides0.x, sides1.x ), right: Math.max( sides0.right, sides1.right ) }
+                if( sides != null ) { 
+                    if( x < 0 ){
+                         if( sides.x + x > leftStop ){
+                            shape.moveX( x );   
+                         } else { // stopped by edges
+                            shape.moveX( leftStop - sides.x );
+                         }
+                    } else if( x > 0 ){
+                        if( sides.right + x < rightStop ){
+                            shape.moveX( x );
+                        } else { // stopped by edges
+                            shape.moveX( rightStop - sides.right );
+                        }
+                    }
+                }
+            }
+        }
     }
     public inline function moveDelta( x: Float, y: Float ){
         var l = shapes.length;
-        for( i in 0...l ) shapes[i].moveDelta( x, y );
+        for( i in 0...l ) shapes[ i ].moveDelta( x, y );
     }
     public inline function createTetris( p: Point, ?snapped: Snapped ){
         var ts = new Shape( id, triangles, p, col0, col1, dia, gap, snapped, offX, offY );

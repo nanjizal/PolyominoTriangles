@@ -23,9 +23,13 @@ class Tetris {
     var toggleY             = false;    
     var jx                  = 0.;
     var jy                  = 0.;
-    public function new( scale: Float = 1 ){
+    var leftStop:           Float;
+    var rightStop:          Float;
+    public function new( scale: Float = 1 ){ // scale is used to help with rendering differences between toolkits.
         dia = scale * dia;
         edge = scale * edge;
+        leftStop = dia*x;
+        rightStop = dia*x + wide*dia;
         var offX = -4;
         var offY = -8;
         controller = new Controller( 0, Triangle.triangles, dia, edge, offX, offY );
@@ -114,7 +118,7 @@ class Tetris {
                 }
             }
         }
-        if( toggleX ) controller.moveX( djx );
+        if( toggleX ) controller.moveX( djx, leftStop, rightStop );
         controller.moveDelta( 0.0, fallSpeed + djy );
 
         /* Non smooth mouse movement alternative to above complexity

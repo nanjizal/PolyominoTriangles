@@ -13,8 +13,8 @@ class Shape {
     var start:              Point;
     var snapped:            Snapped;
     var centre:             Point;
-    var blocks:             Array<Square>;
-    var virtualBlocks:      Array<Square>;
+    public var blocks:             Array<Square>;
+    public var virtualBlocks:      Array<Square>;
     var id:                 Int;
     var triangles:          Array<Triangle>;
     public var col0:        Int;
@@ -167,6 +167,49 @@ class Shape {
             centresInt[ i ] = blocks[ i ].getCentreInt();
         }
         return centresInt;
+    }
+    public static inline
+    function getShapeBounds( sqr: Array<Square> ){
+        return if( sqr == null ) {
+            null;
+        } else if( sqr.length == 0 ){
+            null;
+        } else {
+            var l = sqr.length;
+            var square = sqr[ 0 ];
+            var bx = square.x;
+            var by = square.y;
+            var br = square.right;
+            var bb = square.bottom;
+            for( i in 1...l ){
+                square = sqr[ i ];
+                bx = Math.min( bx, square.x );
+                by = Math.min( by, square.y );
+                br = Math.max( br, square.right );
+                bb = Math.max( br, square.bottom );
+            }
+            { x: bx, y: by, right: br, bottom: bb };
+        }
+    }
+    // quite costly to get whole shape bounds so perhaps only left ( x ) and right;
+    public static inline
+    function getShapeSides( sqr: Array<Square> ){
+        return if( sqr == null ) {
+            null;
+        } else if( sqr.length == 0 ){
+            null;
+        } else {
+            var l = sqr.length;
+            var square = sqr[ 0 ];
+            var bx = square.x;
+            var br = square.right;
+            for( i in 1...l ){
+                square = sqr[ i ];
+                bx = Math.min( bx, square.x );
+                br = Math.max( br, square.right );
+            }
+            { x: bx, right: br };
+        }
     }
     // OLD hitTest code not currently required?
     /*

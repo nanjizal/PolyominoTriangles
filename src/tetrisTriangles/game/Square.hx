@@ -133,7 +133,9 @@ class Square {
     }
     public var x( get, set ): Float;
     function get_x() {
-        return ( dirtyX )? Math.min( t0.x, t1.x ): _x;
+        // dirtyX not working :( 
+        // return ( dirtyX )? Math.min( t0.x, t1.x ): _x;
+        return Math.min( t0.x, t1.x );
     }
     function set_x( x_: Float ): Float {
         cX = x_ + dia/2;
