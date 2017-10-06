@@ -53,7 +53,7 @@ class Tetris {
         toggle = true;
         count = 1.0;
     }
-    public inline 
+    inline 
     function updateRotation(){
         if( toggle ) {
             controller.rotate( Math.PI/ rotationSpeed );
@@ -64,7 +64,7 @@ class Tetris {
         }
         count += 1.;
     }
-    public function move( x: Int, y: Int ){ // nice to make smoother but would be potentially more buggy so leave for now.
+    public function move( x: Int, y: Int ){
         if( toggleX ) return;
         if( toggleY ) return;
         if( x != 0 ) toggleX = true;
@@ -72,8 +72,8 @@ class Tetris {
         jumpX = x * dia;
         jumpY = y * dia;
     }
-    public inline 
-    function updateMove(){ // variable names could be improved!
+    inline 
+    function updateMove(){ // variable names could be improved
         var djx = 0.;
         var djy = 0.;
         if( toggleX ){ // smooth x movement 
