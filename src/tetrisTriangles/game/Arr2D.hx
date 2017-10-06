@@ -53,7 +53,7 @@ abstract Arr2D(Array<Int>) from Array<Int> to Array<Int> {
 		return this[ id( x, y, h) ] == 1; 
 	}
 	public inline
-    function rowFull( y: Int ){
+	function rowFull( y: Int ){
 		var w = this[0];
 		var h = this[1];
 		var s = id( 0, y, h );
