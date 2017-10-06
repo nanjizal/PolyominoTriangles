@@ -1,6 +1,7 @@
 package tetrisTriangles.game;
 import tetrisTriangles.game.Shape;
 import tetrisTriangles.game.Templates;
+import tetrisTriangles.game.Controller;
 import justTriangles.Triangle;
 import justTriangles.Point;
 class Controller {
