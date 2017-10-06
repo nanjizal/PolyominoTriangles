@@ -1,6 +1,7 @@
 package tetrisTriangles.game;
 import justTriangles.Triangle;
 import tetrisTriangles.game.Controller;
+import tetrisTriangles.game.Arr2D;
 class Tetris {
     var dia                = 0.15;// /2
     var edge               = 0.01; // disabled in code as gets in way of hitTest for momment, this is the spacing between squares.
@@ -26,6 +27,15 @@ class Tetris {
     var leftStop:           Float;
     var rightStop:          Float;
     public function new( scale: Float = 1 ){ // scale is used to help with rendering differences between toolkits.
+        var a0 = new Arr2D(3,3);
+        var i = 0;
+        for( iy in 0...3 ){
+            for( ix in 0...3 ){
+                a0.addOne( ix, iy );
+            }    
+        }
+        var a1 = new Arr2D( 3, 3 );
+        trace( Arr2D.overlap( a0, a1 ) );
         dia = scale * dia;
         edge = scale * edge;
         leftStop = dia*x;
