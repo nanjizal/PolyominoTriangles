@@ -57,7 +57,7 @@ abstract Array2D<T>(Array<Array<Null<T>>>) from Array<Array<Null<T>>> to Array<A
     }
     public inline
     function isEmpty( x: Int, y: Int ){
-        return ( this[ y ][ x ] == null );
+        return ( this[ y ][ x ] ==0 );
     }
     public inline
     function rowFull( y: Int ){

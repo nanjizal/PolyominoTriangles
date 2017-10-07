@@ -30,7 +30,7 @@ class Layout{
 		var y = originP.y;
         for( i in 0...noBlocks ){
             var m = i % 6 + 1; // restart colors
-            var randX = dia + dia * Math.round( Math.random() * ( wide - 0.5 ));
+            randX = dia + dia * Math.round( Math.random() * ( wide - 0.5 ));
             controller.createShape( { x: x + randX, y: y - i * aboveY }, m , m + 1 );// , TetrisShape.tetris_L );  <- can choose on shape.
         }
     }

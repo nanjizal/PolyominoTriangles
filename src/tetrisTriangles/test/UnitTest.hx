@@ -1,19 +1,11 @@
 package tetrisTriangles.test;
-import tetrisTriangles.game.Arr2D;
+import tetrisTriangles.test.Arr2DTest;
 class UnitTest {
 	public function new(){
-		//
+		var r = new haxe.unit.TestRunner();
+		trace( 'Running unit test');
+		r.add( new Arr2DTest() );
+		r.run();
+		trace( r );
 	}
-// Test Arr2D unit tests not setup yet! Just put here for later.. ?
-    function testArr2D(){
-        var a0 = new Arr2D(3,3);
-        var i = 0;
-        for( iy in 0...3 ){
-            for( ix in 0...3 ){
-                a0.addOne( ix, iy );
-            }    
-        }
-        var a1 = new Arr2D( 3, 3 );
-        trace( Arr2D.overlap( a0, a1 ) );
-    }
 }

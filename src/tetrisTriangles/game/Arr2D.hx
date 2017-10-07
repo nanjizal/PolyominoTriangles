@@ -30,6 +30,15 @@ abstract Arr2D(Array<Int>) from Array<Int> to Array<Int> {
         this = new Arr2D( w, h );
     }
 	public inline
+	function fill(){
+		var i = 2;
+		var l = this.length; 
+		while( i < l ){
+			this[ i ] = 1;
+			i++;
+		}
+	}
+	public inline
     function addOne( x: Int, y: Int ){ // use this to add entries.
 		var h = this[ 1 ];
         this[ id( x, y, h) ] = 1; 
@@ -57,16 +66,18 @@ abstract Arr2D(Array<Int>) from Array<Int> to Array<Int> {
 		var w = this[0];
 		var h = this[1];
 		var s = id( 0, y, h );
+		trace( 's'+ s );
 		var e = s + w;
-		if( e < this.length ) return true;
-		var empty = true;
+		trace( 'e' + e );
+		//if( e < this.length ) return true;
+		var ful = true;
 		for( i in s...e ){
-			if( this[ i ] != 0 ){
-				empty = false;
+			if( this[ i ] == 0 ){
+				ful = false;
 				break;
 			}
 		}
-		return empty;
+		return ful;
 	}
 	public inline 
 	function clash( arrP: Array<{x: Int,y: Int }> ){
@@ -75,7 +86,7 @@ abstract Arr2D(Array<Int>) from Array<Int> to Array<Int> {
 		var clash = false;
 		for( i in 0...lp ){
 			p = arrP[ i ];
-			if( isZero( p.x, p.y ) ) {
+			if( isOne( p.x, p.y ) ) {
 				clash = true;
 				break;
 			}
@@ -90,38 +101,35 @@ abstract Arr2D(Array<Int>) from Array<Int> to Array<Int> {
 			p = arrP[ i ];
 			addOne( p.x, p.y );
 		}
-		return clash;
 	}
 	public static inline
 	function overlap( a: Arr2D, b: Arr2D ){
 		var la = a.length;
 		var lb = b.length;
 		if( la != lb ) throw 'can t compare Arr2D';
-		var overlapped = true;
+		var overlapped = false;
 		var ai: Int;
 		var bi: Int;
 		for( i in 2...la ){
 			ai = a[i];
 			bi = b[i];
-			if( 	( ai == 0 && bi != 0 ) 
-				||  ( bi == 0 && ai != 0 )
-				||  ( ai == 0 && bi == 0 ) ){
-					overlapped = false;
+			if( ai == 1 && bi == 1 ){
+				// then they overlap
+				overlapped = true;
+				break;
 			}
 		}
 		return overlapped;
 	}
-	// assumes all squares are to be 1, does not check!
+	// assumes all squares are to be 0 or 1, does not check!
 	public inline
 	function merge( b: Arr2D ){
 		var a = this;
-		return if( !overlap( a, b ) ){
+		return if( overlap( a, b ) ){
 			false;
 		} else {
 			var la = a.length;
-			var lb = b.length;
 			var ai: Int;
-			var bi: Int;
 			for( i in 2...la ){
 				ai = a[ i ];
 				if( ai == 0 ){

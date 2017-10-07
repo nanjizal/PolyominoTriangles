@@ -4,6 +4,7 @@ import tetrisTriangles.game.Controller;
 import tetrisTriangles.game.Layout;
 import tetrisTriangles.game.Rotation;
 import tetrisTriangles.game.Movement;
+import tetrisTriangles.test.UnitTest;
 class Tetris {
     var controller:         Controller;
     var dia                = 0.15;// /2
@@ -16,6 +17,7 @@ class Tetris {
     var rotation:          Rotation;
     var movement:          Movement;
     public function new( scale: Float = 1 ){ // scale is used to help with rendering differences between toolkits.
+        new UnitTest();
         scaleDimensions( scale );
         createTetris();
         layout();
