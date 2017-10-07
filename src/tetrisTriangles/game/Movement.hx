@@ -78,7 +78,7 @@ class Movement{
         controller.moveDelta( 0.0, fallSpeed + djy );
 	}
 	public inline  // Non smooth mouse movement alternative to above complexity, currently not needed
-	function updateSimple(){
+	function updateSimple(){ // ( would require slight adjustment to move )
 		controller.moveX( jumpX, leftStop, rightStop );
 		controller.moveDelta( 0.0, fallSpeed + jumpY );
 		jumpX = 0.;
