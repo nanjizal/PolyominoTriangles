@@ -7,7 +7,6 @@ import tetrisTriangles.game.Movement;
 class Tetris {
     var dia                = 0.15;// /2
     var edge               = 0.01; // disabled in code as gets in way of hitTest for momment, this is the spacing between squares.
-    var above              = 7;
     var controller:         Controller;
     var wide               = 21; // dimensions of the grid
     var hi                 = 15;
@@ -33,9 +32,8 @@ class Tetris {
         controller = new Controller( 0, Triangle.triangles, dia, edge, offX, offY - 4 );
     }
     function layout(){
-        var sy = dia*above;
         var originP = { x: dia*offX, y: dia*offY };
-        new Layout( controller, originP, wide, hi, dia, sy );
+        new Layout( controller, originP, wide, hi, dia );
     }
     function interaction(){
         rotation = new Rotation( controller );

@@ -2,6 +2,7 @@ package tetrisTriangles.game;
 // Setup position of Controller visual elements
 class Layout{
 	var controller: Controller;
+	var above       = 7;
 	var noBlocks    = 30;//1
 	var originP:    { x: Float, y: Float };
 	var wide: 		Int;
@@ -9,7 +10,7 @@ class Layout{
 	var dia: 		Float;
 	public function new( 	controller_: 	Controller,  originP_: 	{ x: Float, y: Float }
 						, 	wide_: 			Int, 		 hi_: 		Int
-						, 	dia_: 			Float, 		 sy: 		Float ){
+						, 	dia_: 			Float ){
 		controller = controller_;
 		wide = wide_;
 		hi = hi_;
@@ -17,7 +18,7 @@ class Layout{
 		originP = originP_;
         var bottomP = { x: originP.x, y: originP.y + dia * hi };
         background();
-        fallingBlocks( noBlocks, sy );
+        fallingBlocks( noBlocks, above * dia );
         bottom( bottomP );
 	}
 	function background(){
