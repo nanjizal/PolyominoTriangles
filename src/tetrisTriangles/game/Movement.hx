@@ -76,15 +76,12 @@ class Movement{
         }
         if( toggleX ) controller.moveX( djx, leftStop, rightStop );
         controller.moveDelta( 0.0, fallSpeed + djy );
-
-        /* Non smooth mouse movement alternative to above complexity
-            controller.moveX( jumpX ); 
-            controller.moveDelta( 0.0, fallSpeed + jumpY );
-
-            // jumpX = 0.;
-            // jumpY = 0.;
-        }
-        */
+	}
+	public inline  // Non smooth mouse movement alternative to above complexity, currently not needed
+	function updateSimple(){
+		controller.moveX( jumpX, leftStop, rightStop );
+		controller.moveDelta( 0.0, fallSpeed + jumpY );
+		jumpX = 0.;
+    	jumpY = 0.;
     }
-
 }
