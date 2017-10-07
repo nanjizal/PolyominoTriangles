@@ -20,8 +20,8 @@ class Square {
     public function new(    id:         Int
                         ,   triangles:  Array<Triangle>
                         ,   x_:         Float,      y_:     Float
-                        ,   col0_:      Int,        col1_:  Int
-                        ,   dia_:       Float,      gap_:   Float ){
+                        ,   dia_:       Float,      gap_:   Float 
+                        ,   col0_:      Int,        col1_:  Int ){
         gap_    = 0.;
         _x      = x_ + gap_;
         _y      = y_ + gap_;

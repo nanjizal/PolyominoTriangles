@@ -6,11 +6,11 @@ import justTriangles.Triangle;
 import justTriangles.Point;
 @:enum
     abstract TetrisShape( String ) to String from String {
-    var tetris_S = 'tetris_S';
-    var tetris_L = 'tetris_L';
-    var tetris_box = 'tetris_box';
-    var tetris_t = 'tetris_t';
-    var tetris_l = 'tetris_l';
+    var tetris_S     = 'tetris_S';
+    var tetris_L      = 'tetris_L';
+    var tetris_box    = 'tetris_box';
+    var tetris_t      = 'tetris_t';
+    var tetris_l      = 'tetris_l';
     var tetris_random = 'tetris_random';
 }
 class Controller {

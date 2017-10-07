@@ -52,8 +52,8 @@ class Shape {
         var x0 = x_ * dia + centre.x;
         var y0 = y_ * dia + centre.y;
         var temp = triangles; // TODO: make virtualBlocks non visual just for hitTest pass empty array.
-        virtualBlocks[ blocks.length ]  = new Square( id, temp,      x0, y0,    13,    13, dia, gap );
-        blocks[ blocks.length ]         = new Square( id, triangles, x0, y0, col0, col1, dia, gap );
+        virtualBlocks[ blocks.length ]  = new Square( id, temp,      x0, y0, dia, gap,   13,   13 );
+        blocks[ blocks.length ]         = new Square( id, triangles, x0, y0, dia, gap, col0, col1 );
     }
     public function pushBlock( square: Square ){
         blocks[ blocks.length ] = square;
