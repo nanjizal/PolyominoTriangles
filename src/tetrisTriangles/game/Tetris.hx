@@ -5,13 +5,14 @@ import tetrisTriangles.game.Layout;
 import tetrisTriangles.game.Rotation;
 import tetrisTriangles.game.Movement;
 class Tetris {
+    var controller:         Controller;
     var dia                = 0.15;// /2
     var edge               = 0.01; // disabled in code as gets in way of hitTest for momment, this is the spacing between squares.
-    var controller:         Controller;
     var wide               = 21; // dimensions of the grid
     var hi                 = 15;
     var offX               = -4; // visual offsets
     var offY               = -4;
+    var _layout:           Layout;
     var rotation:          Rotation;
     var movement:          Movement;
     public function new( scale: Float = 1 ){ // scale is used to help with rendering differences between toolkits.
@@ -33,7 +34,7 @@ class Tetris {
     }
     function layout(){
         var originP = { x: dia*offX, y: dia*offY };
-        new Layout( controller, originP, wide, hi, dia );
+        _layout = new Layout( controller, originP, wide, hi, dia );
     }
     function interaction(){
         rotation = new Rotation( controller );

@@ -9,7 +9,7 @@ class Movement{
     var jumpX               = .0;   // for movement smoothing
     var jumpY               = .0;
     var toggleX             = false;
-    var toggleY             = false;    
+    var toggleY             = false;
     var jx                  = 0.;
     var jy                  = 0.;
     public var leftStop:    Float;
