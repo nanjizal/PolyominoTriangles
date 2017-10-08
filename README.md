@@ -2,6 +2,8 @@
 
 Simple experimental Haxe tetris, WIP
 
+<img width="1665" alt="tetristriangles" src="https://user-images.githubusercontent.com/20134338/31321459-4e9a4a72-ac7e-11e7-9594-b837273e5f7e.png">
+
 Current code in incomplete, but the bin folders contain html javascript solutions using a range of Haxe toolkits, click on the kit to view the experiment:
 
 - [Kha ->](https://rawgit.com/nanjizal/tetrisTriangles/master/binKha2/html5/index.html)        ( Graphics2, Graphics4 version not working well needs tidy )
