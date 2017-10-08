@@ -55,7 +55,7 @@ class Templates { // predefined tetris shapes relative to centre
     public inline  /** bottom row of tetris**/
     function bottom( p: Point, wide: Int ): Shape {
         var ts = createTetris( p, Snapped.Always );
-        for( w in 0...wide ) ts.addBlock( w, 0 );
+        for( w in 0...wide ) ts.addBlock( w, 0, false, true );
         return ts;
     }
 }

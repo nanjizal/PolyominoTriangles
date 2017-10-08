@@ -3,6 +3,13 @@ import tetrisTriangles.game.Arr2D;
 class Arr2DTest extends haxe.unit.TestCase {
 	var filledArr2D: 	Arr2D;
 	var emptyArr2D: 	Arr2D;
+	public static function UnitTest(){
+		var r = new haxe.unit.TestRunner();
+		trace( 'Running unit test');
+		r.add( new Arr2DTest() );
+		r.run();
+		trace( r );
+	}
     public function testClear(){
 		filledArr2D.clear();
 		assertTrue( filledArr2D.toString() == emptyArr2D.toString() );
@@ -78,7 +85,22 @@ class Arr2DTest extends haxe.unit.TestCase {
 	public function testOverlap(){
        assertFalse( Arr2D.overlap( filledArr2D, emptyArr2D ) );
     }
-	
+	public function testID(){
+		var str = '4,3,0,0,0,0,1,0,0,0,1,0,0,0';
+		var a0 = new Arr2D( 4, 3 );
+		a0.addOne( 0, 2 );
+		a0.addOne( 0, 1 );
+		assertTrue( a0.toString() == str );
+		var count = 2;
+		var w = 3;
+		var h = 4;
+        for( y in 0...h ){
+            for( x in 0...w ){// x
+                assertTrue( Arr2D.id( x, y, w, h ) == count );
+                count++;
+            }
+        }
+	}
 	public function testMerge( b: Arr2D ){
 		emptyArr2D.addOne( 0, 1 );
 		emptyArr2D.addOne( 1, 1 );
@@ -94,6 +116,18 @@ class Arr2DTest extends haxe.unit.TestCase {
 		assertFalse( emptyArr2D.rowFull( 0 ) );
 		assertTrue(  emptyArr2D.rowFull( 1 ) );
 		assertTrue(  emptyArr2D.rowFull( 2 ) );
+	}
+	public function testRowToString(){
+		var str = '\n1  0  0  ';
+		emptyArr2D.addOne( 0, 0 );
+		assertTrue( emptyArr2D.rowToString(0) == str );
+	}
+	public function testPrettyString(){
+		var str = 	'\n1  0  0  ' 
+				+ 	'\n0  0  0  '
+				+   '\n0  0  0  ';
+		emptyArr2D.addOne( 0, 0 );
+		assertTrue( emptyArr2D.prettyString() == str );
 	}
   	override public function setup() {
     	createfilledArr2D();

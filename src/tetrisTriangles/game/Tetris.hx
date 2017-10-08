@@ -5,23 +5,26 @@ import tetrisTriangles.game.Layout;
 import tetrisTriangles.game.Rotation;
 import tetrisTriangles.game.Movement;
 import tetrisTriangles.test.UnitTest;
+import tetrisTriangles.test.Arr2DTest;
+import tetrisTriangles.game.Arr2D;
 class Tetris {
     var controller:         Controller;
-    var dia                = 0.15;// /2
+    var dia                = 0.15/1.6;// /2
     var edge               = 0.01; // disabled in code as gets in way of hitTest for momment, this is the spacing between squares.
-    var wide               = 21; // dimensions of the grid
-    var hi                 = 15;
-    var offX               = -4; // visual offsets
-    var offY               = -4;
-    var _layout:           Layout;
+    var wide               = 32;//32; // dimensions of the grid 21
+    var hi                 = 22;//23; // 15
+    var offX               = 0;//-4; // visual offsets
+    var offY               = 0;//-4;
+    var layout:           Layout;
     var rotation:          Rotation;
     var movement:          Movement;
     public function new( scale: Float = 1 ){ // scale is used to help with rendering differences between toolkits.
-        new UnitTest();
+        // Arr2DTest.UnitTest();
         scaleDimensions( scale );
         createTetris();
-        layout();
         interaction();
+        startGame();
+        move( 0, 1 );
     }    
     function scaleDimensions( scale: Float ){
         dia = scale * dia;
@@ -32,11 +35,17 @@ class Tetris {
         movement.rightStop = dia * offX + wide * dia;
     }
     function createTetris(){
-        controller = new Controller( 0, Triangle.triangles, dia, edge, offX, offY - 4 );
+        controller = new Controller( 0, Triangle.triangles, wide, hi, dia, edge, offX, offY - 4 );
     }
-    function layout(){
+    function startGame(){
         var originP = { x: dia*offX, y: dia*offY };
-        _layout = new Layout( controller, originP, wide, hi, dia );
+        layout = new Layout( controller, originP, wide, hi, dia );
+        controller.onTetrisShapeLanded = layout.createTile;
+        controller.onGameEnd = gameEnd;
+    }
+    var end: Bool = false;
+    function gameEnd(){
+        end = true;
     }
     function interaction(){
         rotation = new Rotation( controller );
@@ -45,15 +54,19 @@ class Tetris {
     }
     public inline 
     function update(){
-        controller.hitBottom();
-        rotation.update();
-        movement.update();
-        controller.hitBottom();
+        if( end ) return;
+        if( !controller.hitBottom() ){ 
+            rotation.update();
+            movement.update();
+            controller.hitBottom();
+        }
     }
-    public function rotate( i: Int ){
+    public inline
+    function rotate( i: Int ){
         rotation.rotate( i ); 
     }
-    public function move( x: Int, y: Int ){
+    public inline
+    function move( x: Int, y: Int ){
         movement.move( x, y );
     }
 }

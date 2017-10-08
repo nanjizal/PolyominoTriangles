@@ -40,35 +40,50 @@ abstract Arr2D(Array<Int>) from Array<Int> to Array<Int> {
 	}
 	public inline
     function addOne( x: Int, y: Int ){ // use this to add entries.
+		var w = this[ 0 ];
 		var h = this[ 1 ];
-        this[ id( x, y, h) ] = 1; 
+        this[ id( x, y, w, h) ] = 1; 
     }
 	public inline
     function addZero( x: Int, y: Int ){ // use this to add entries.
+		var w = this[ 0 ];
 		var h = this[ 1 ];
-        this[ id( x, y, h) ] = 0; 
+        this[ id( x, y, w, h) ] = 0; 
     }
-	inline static function id( x: Int, y: Int, h: Int ){
-		return Std.int( 2 + ( h * y ) + x );
+	//public inline
+	//function get_width(
+	public inline static 
+	function id( x: Int, y: Int, w: Int, h: Int ){
+		return Std.int( 2 + ( w * y ) + x );
 	}
+	//   Thinking Test example
+	//
+	//   w = 3  h = 4    x = 0  y = 2   target 8
+	//   0 0 0      2  3  4
+	//   1 0 0      5  6  7
+	//   1 0 0      8  9 10
+	//   1 0 0     11 12 13
+	//
+	//
+
 	public inline
 	function isZero( x: Int, y: Int ){
+		var w = this[ 0 ];
 		var h = this[ 1 ];
-		return this[ id( x, y, h) ] == 0; 
+		return this[ id( x, y, w, h ) ] == 0; 
 	}
 	public inline
-	function isOne( x: Int, y: Int ){
+	function isOne( x: Int, y: Int ): Bool {
+		var w = this[ 0 ];
 		var h = this[ 1 ];
-		return this[ id( x, y, h) ] == 1; 
+		return this[ id( x, y, w, h ) ] == 1; 
 	}
 	public inline
-	function rowFull( y: Int ){
-		var w = this[0];
-		var h = this[1];
-		var s = id( 0, y, h );
-		trace( 's'+ s );
+	function rowFull( y: Int ): Bool {
+		var w = this[ 0 ];
+		var h = this[ 1 ];
+		var s = id( 0, y, w, h );
 		var e = s + w;
-		trace( 'e' + e );
 		//if( e < this.length ) return true;
 		var ful = true;
 		for( i in s...e ){
@@ -79,14 +94,43 @@ abstract Arr2D(Array<Int>) from Array<Int> to Array<Int> {
 		}
 		return ful;
 	}
+	public inline
+	function rowEmpty( y: Int ): Bool {
+		var w = this[ 0 ];
+		var h = this[ 1 ];
+		var s = id( 0, y, w, h );
+		var e = s + w;
+		//if( e < this.length ) return true;
+		var emp = true;
+		for( i in s...e ){
+			if( this[ i ] == 1 ){
+				emp = false;
+				break;
+			}
+		}
+		return emp;
+	}
+	public inline
+	function rowToString( y: Int ): String{
+		var w = this[ 0 ];
+		var h = this[ 1 ];
+		var s = id( 0, y, w, h );
+		var e = s + w;
+		//if( e < this.length ) return true;
+		var str = '\n';
+		for( i in s...e ){
+			str = str + this[ i ] + '  ';
+		}
+		return str;
+	}
 	public inline 
-	function clash( arrP: Array<{x: Int,y: Int }> ){
+	function clash( arrP: Array<{x: Int,y: Int }> , ?offX: Int = 0, ?offY: Int = 0 ): Bool {
 		var lp = arrP.length;
 		var p: { x: Int, y: Int };
 		var clash = false;
 		for( i in 0...lp ){
 			p = arrP[ i ];
-			if( isOne( p.x, p.y ) ) {
+			if( isOne( p.x + offX, p.y + offY ) ) {
 				clash = true;
 				break;
 			}
@@ -94,16 +138,17 @@ abstract Arr2D(Array<Int>) from Array<Int> to Array<Int> {
 		return clash;
 	}
 	public inline
-	function addPoints( arrP: Array<{x: Int,y: Int }> ){
+	function addPoints( arrP: Array<{x: Int,y: Int }>, ?offX: Int = 0, ?offY: Int = 0 ){
 		var lp = arrP.length;
 		var p: { x: Int, y: Int };
 		for( i in 0...lp ){
 			p = arrP[ i ];
-			addOne( p.x, p.y );
+			//trace( 'adding ' + ( p.x + offX ) + '  ' + ( p.y + offY ) );
+			addOne( p.x + offX, p.y + offY );
 		}
 	}
 	public static inline
-	function overlap( a: Arr2D, b: Arr2D ){
+	function overlap( a: Arr2D, b: Arr2D ): Bool {
 		var la = a.length;
 		var lb = b.length;
 		if( la != lb ) throw 'can t compare Arr2D';
@@ -138,5 +183,14 @@ abstract Arr2D(Array<Int>) from Array<Int> to Array<Int> {
 			}
 			true;
 		}
+	}
+	public inline
+	function prettyString(){
+		var h = this[ 1 ];
+		var str = '';
+		for( y in 0...h ){
+			str = str + rowToString( y );
+		}
+		return str;
 	}
 }

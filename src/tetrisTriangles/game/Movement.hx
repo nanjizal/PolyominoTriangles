@@ -4,7 +4,7 @@ import tetrisTriangles.game.Controller;
 class Movement{
 	var controller: 		Controller;
 	var dia:				Float;
-	var fallSpeed           = 0.01;
+	var fallSpeed           = 0.01;// 0.01
     var jumpSpeed           = 7;
     var jumpX               = .0;   // for movement smoothing
     var jumpY               = .0;

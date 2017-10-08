@@ -28,10 +28,13 @@ import tetrisTriangles.game.Tetris;
         var NearlyBlack = 0xFF111111;
         var White       = 0xFFFFFFFF;
         var BlueAlpha   = 0x660000FF;
+        var GreenAlpha  = 0x3300FF00;
+        var RedAlpha    = 0x66FF0000;
     }
 class TetrisTrianglesKha2 {
     var gameColors:         Array<GameColors> = [ Black, Red, Orange, Yellow, Green, Blue, Indigo, Violet
-                                                , LightGrey, MidGrey, DarkGrey, NearlyBlack, White, BlueAlpha ]; 
+                                                , LightGrey, MidGrey, DarkGrey, NearlyBlack, White
+                                                , BlueAlpha, GreenAlpha, RedAlpha ]; 
     var tetris:             Tetris;
     var droidSans:          Font;
     var leftDown:           Bool = false;
@@ -114,13 +117,14 @@ class TetrisTrianglesKha2 {
         var tri: Triangle;
         var triangles = Triangle.triangles;
         var s = 300;
-        var o = 200;
+        var ox = 35;//200;
+        var oy = 20;
         for( i in 0...triangles.length ){
             tri = triangles[ i ];
             g.color = cast( gameColors[ tri.colorID ], kha.Color );
-            g.fillTriangle( o + tri.ax * s, o + tri.ay * s
-                        ,   o + tri.bx * s, o + tri.by * s
-                        ,   o + tri.cx * s, o + tri.cy * s );
+            g.fillTriangle( ox + tri.ax * s, oy + tri.ay * s
+                        ,   ox + tri.bx * s, oy + tri.by * s
+                        ,   ox + tri.cx * s, oy + tri.cy * s );
         }
     }
 }

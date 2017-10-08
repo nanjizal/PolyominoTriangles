@@ -26,6 +26,7 @@ class Shape {
     var lastRook:           RookAngle = 0.;
     var offX:               Int;
     var offY:               Int;
+    public var locked:      Bool = false;
     public function new(    id_:        Int,        triangles_: Array<Triangle>
                         ,   centre_:    Point
                         ,   col0_:      Int,        col1_:  Int
@@ -48,12 +49,27 @@ class Shape {
         blocks      = new Array<Square>();
         virtualBlocks = new Array<Square>();
     }
-    public function addBlock( x_: Float, y_: Float ){
+    public inline
+    function changeColor( col0_: Int, col1_: Int ){
+        for( b in blocks ){
+            col0 = col0_;
+            col1 = col1_;
+            b.changeColor( col0_, col1_ );
+        } 
+    }
+    public function addBlock( x_: Float, y_: Float, ?addVirtual: Bool = true, ?show: Bool = true ): Square {
         var x0 = x_ * dia + centre.x;
         var y0 = y_ * dia + centre.y;
-        var temp = triangles; // TODO: make virtualBlocks non visual just for hitTest pass empty array.
-        virtualBlocks[ blocks.length ]  = new Square( id, temp,      x0, y0, dia, gap,   13,   13 );
-        blocks[ blocks.length ]         = new Square( id, triangles, x0, y0, dia, gap, col0, col1 );
+        var temp = [];
+        //triangles; // TODO: make virtualBlocks non visual just for hitTest pass empty array.
+        var tri = triangles;
+        if( !show ) tri = [];
+        if( addVirtual ) {
+            virtualBlocks[ blocks.length ]  = new Square( id, temp, x0, y0, dia, gap, 13, 13 );
+        }
+        var sq = new Square( id, tri, x0, y0, dia, gap, col0, col1 );
+        blocks[ blocks.length ] = sq; 
+        return sq;
     }
     public function pushBlock( square: Square ){
         blocks[ blocks.length ] = square;
@@ -63,6 +79,7 @@ class Shape {
         for( i in 0...blocks.length ) newBlocks[ i ] = blocks[ i ];
         blocks          = new Array<Square>();
         virtualBlocks   = new Array<Square>(); // need to remove properly..
+        locked = true;
         return newBlocks;
     }
     public function rotate( theta: Float ){
@@ -123,6 +140,17 @@ class Shape {
         var rookFloat: Float = rook;
         var offAngle:  Float = rookFloat - beta;
         rotate( offAngle );
+
+        var newLoc: { x: Int, y: Int };
+        var lastLoc: { x: Int, y: Int };
+        for( i in 0...lastLocation.length ){
+            newLoc = newLocation[i];
+            lastLoc = lastLocation[i];
+            blocks[i].x = lastLoc.x*dia;
+            blocks[i].y = lastLoc.y*dia;
+            virtualBlocks[i].x = lastLoc.x*dia;
+            virtualBlocks[i].y = lastLoc.y*dia ;
+        }
     }
     public function getPoints( points: Array<Point> ){
         var l = blocks.length;
@@ -159,14 +187,31 @@ class Shape {
         }
         return out;
     }
-    var centresInt: Array< { x: Int, y: Int} >;
-    public function getCentreInt():Array< { x: Int, y: Int } >{
+    public var lastLocation: Array< { x: Int, y: Int} > = [];
+    public var newLocation: Array< { x: Int, y: Int} > = [];
+    public function getLocation(){
+        lastLocation = newLocation;
+        var arr = new Array< { x: Int, y: Int} >();
+        newLocation = arr;
+        if( locked ) return arr;
+        return getVirtualCentreInt( newLocation );
+    }
+    public function getCentreInt(  centresInt: Array< { x: Int, y: Int} > ):Array< { x: Int, y: Int } >{
         var l = blocks.length;
-        centresInt = new Array< { x: Int, y: Int } >();
+        var lc = centresInt.length;
+        if( locked ) return centresInt;
         for( i in 0...l ){
-            centresInt[ i ] = blocks[ i ].getCentreInt();
+            centresInt[ i + lc ] = blocks[ i ].getCentreInt();
         }
         return centresInt;
+    }
+    public function getVirtualCentreInt(virtualInt: Array< { x: Int, y: Int} >):Array< { x: Int, y: Int } >{
+        var l = virtualBlocks.length;
+        if( locked ) return virtualInt;
+        for( i in 0...l ){
+            virtualInt[ i ] = virtualBlocks[ i ].getCentreInt();
+        }
+        return virtualInt;
     }
     public static inline
     function getShapeBounds( sqr: Array<Square> ){

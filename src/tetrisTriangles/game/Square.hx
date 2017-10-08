@@ -55,6 +55,19 @@ class Square {
         triangles[ l++ ] = t0;
         triangles[ l++ ] = t1;
     }
+    public inline
+    function changeColor( col0_: Int, col1_: Int ){
+        col0 = col0_;
+        col1 = col1_;
+        t0.colorID = col0_;
+        t1.colorID = col1_;
+        t0.colorA = col0_;
+        t0.colorB = col0_;
+        t0.colorC = col0_;
+        t1.colorA = col1_;
+        t1.colorB = col1_;
+        t1.colorC = col1_;
+    }
     public function getPoints( arr: Array<Point> ){ // TODO: consider Array<Float>
         var l = arr.length;
         arr[ l++ ] = { x: t0.ax, y: t0.ay };
@@ -81,22 +94,29 @@ class Square {
     public inline function rotateAround( p: Point, cos: Float, sin: Float ){
         rotateTriangle( t0, p, cos, sin );
         rotateTriangle( t1, p, cos, sin );
+        // rotateCentre( p, cos, sin ); // this is not working so commented out for moment.
+    }
+    public inline function rotateCentre( p: Point, cos: Float, sin: Float ){
+        var x: Float;
+        var y: Float;
+        x   = cX;
+        y   = cY;
+        cX -= p.x;
+        cY -= p.y;
+        cX  = x * cos - y * sin;
+        cY  = x * sin + y * cos; 
+        cX += p.x;
+        cY += p.y;
     }
     // TODO: refactor to Triangles?
     @:access( justTriangles.Triangle.moveDelta )
     public inline function rotateTriangle( t: Triangle, p: Point, cos: Float, sin: Float ){
         dirtyX = true;
         dirtyY = true;
-        cX -= p.x;
-        cY -= p.y;
         t.moveDelta( -p.x, -p.y );
         t.moveDelta( -p.x, -p.y );
         var x: Float;
         var y: Float;
-        x       = cX;
-        y       = cY;
-        cX      = x * cos - y * sin;
-        cY      = x * sin + y * cos; 
         x       = t.ax;
         y       = t.ay;
         t.ax    = x * cos - y * sin;
@@ -111,8 +131,6 @@ class Square {
         t.cy    = x * sin + y * cos;
         t.moveDelta( p.x, p.y );
         t.moveDelta( p.x, p.y );
-        cX += p.x;
-        cY += p.y;
         dirtyX = true; // don't calculate just save that x, y coordinates are dirty.
         dirtyY = true;
     }
@@ -142,13 +160,13 @@ class Square {
         var x0 = t0.x;
         var x1 = t1.x;
         if( x0 < x1 ){
-            var dx  = x0 - x_;
+            var dx  = x_ - x0;
             t0.x    = x_;
-            t1.x    = x_ + dx;
+            t1.x    += dx;
         } else {
-            var dx  = x1 - x_;
-            t0.x    = x_ + dx;
+            var dx  = x_ - x1;
             t1.x    = x_;
+            t0.x    += dx;
         }
         _x = x_;
         dirtyX = false;
@@ -163,13 +181,13 @@ class Square {
         var y0 = t0.y;
         var y1 = t1.y;
         if( y0 < y1 ){
-            var dy  = y0 - y_;
+            var dy  = y_ - y0;
             t0.y    = y_;
-            t1.y    = y_ + dy;
+            t1.y    += dy;
         } else {
-            var dy  = y1 - y_;
-            t0.y    = y_ + dy;
+            var dy  = y_ - y1;
             t1.y    = y_;
+            t0.y    += dy;
         }
         dirtyY = false;
         _y = y_;
