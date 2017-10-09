@@ -84,4 +84,12 @@ class Movement{
 		jumpX = 0.;
     	jumpY = 0.;
     }
+    public function reset(){
+        toggleY = false;
+        toggleX = false;
+        jumpX = 0.;
+    	jumpY = 0.;
+        jy = 0.;
+        jx = 0.;
+    }
 }

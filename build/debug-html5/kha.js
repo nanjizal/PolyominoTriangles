@@ -27917,6 +27917,14 @@ tetrisTriangles_game_Movement.prototype = {
 		this.jumpX = 0.;
 		this.jumpY = 0.;
 	}
+	,reset: function() {
+		this.toggleY = false;
+		this.toggleX = false;
+		this.jumpX = 0.;
+		this.jumpY = 0.;
+		this.jy = 0.;
+		this.jx = 0.;
+	}
 	,__class__: tetrisTriangles_game_Movement
 };
 var tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$ = {};
@@ -29714,6 +29722,7 @@ tetrisTriangles_game_Tetris.prototype = {
 	}
 	,newShape: function() {
 		this.rotation.reset();
+		this.movement.reset();
 		this.layout.createTile();
 	}
 	,end: null

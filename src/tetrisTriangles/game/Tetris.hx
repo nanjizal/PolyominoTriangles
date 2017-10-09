@@ -48,6 +48,7 @@ class Tetris {
     }
     function newShape(){
         rotation.reset();
+        movement.reset();
         layout.createTile();
     }
     var end: Bool = false;
