@@ -28,4 +28,8 @@ class Rotation{
         }
         count += 1.;
     }
+	public function reset(){
+		toggle = false;
+		count = 0;
+	}
 }

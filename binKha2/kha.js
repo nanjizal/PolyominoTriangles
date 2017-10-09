@@ -28392,6 +28392,10 @@ tetrisTriangles_game_Rotation.prototype = {
 		}
 		this.count += 1.;
 	}
+	,reset: function() {
+		this.toggle = false;
+		this.count = 0;
+	}
 	,__class__: tetrisTriangles_game_Rotation
 };
 var tetrisTriangles_game_Snapped = $hxClasses["tetrisTriangles.game.Snapped"] = { __ename__ : true, __constructs__ : ["Always","Zero","Ninety","Fix"] };
@@ -29529,8 +29533,12 @@ tetrisTriangles_game_Tetris.prototype = {
 	,startGame: function() {
 		var originP = { x : this.dia * this.offX, y : this.dia * this.offY};
 		this.layout = new tetrisTriangles_game_Layout(this.controller,originP,this.wide,this.hi,this.dia);
-		this.controller.onTetrisShapeLanded = ($_=this.layout,$bind($_,$_.createTile));
+		this.controller.onTetrisShapeLanded = $bind(this,this.newShape);
 		this.controller.onGameEnd = $bind(this,this.gameEnd);
+	}
+	,newShape: function() {
+		this.rotation.reset();
+		this.layout.createTile();
 	}
 	,end: null
 	,gameEnd: function() {

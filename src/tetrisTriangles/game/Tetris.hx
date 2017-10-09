@@ -43,8 +43,12 @@ class Tetris {
     function startGame(){
         var originP = { x: dia*offX, y: dia*offY };
         layout = new Layout( controller, originP, wide, hi, dia );
-        controller.onTetrisShapeLanded = layout.createTile;
+        controller.onTetrisShapeLanded = newShape;
         controller.onGameEnd = gameEnd;
+    }
+    function newShape(){
+        rotation.reset();
+        layout.createTile();
     }
     var end: Bool = false;
     function gameEnd(){
