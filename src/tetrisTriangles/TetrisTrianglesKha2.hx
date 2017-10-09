@@ -12,7 +12,9 @@ import kha.input.KeyCode;
 import justTriangles.Triangle;
 import justTriangles.Draw;
 import tetrisTriangles.game.Tetris;
-@:enum
+// current sub 'Main' class used for development and the entry point for graphics2 Kha project development.
+// Kha is the main development toolkit used the other classes with similar names are for other toolkits not yet updated.
+@:enum  // really not totally ideal needs more thought these are the triangle colors used as simple Ints see gameColors array.
     abstract GameColors( Int ) from Int to Int {
         var Violet      = 0xFF9400D3;
         var Indigo      = 0xFF4b0082;

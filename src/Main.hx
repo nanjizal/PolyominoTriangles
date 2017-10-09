@@ -1,6 +1,6 @@
 // Kha needs Main as entry point you can't just have any named file
 package;
-
+// graphics4 commented out as the shaders mess up the Kode graphics2 build.
 import kha.System;
 import tetrisTriangles.TetrisTrianglesKha2;
 //import tetrisTriangles.TetrisTrianglesKha4;

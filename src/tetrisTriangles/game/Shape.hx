@@ -3,6 +3,8 @@ import justTriangles.Triangle;
 import justTriangles.Point;
 import tetrisTriangles.game.Square;
 import tetrisTriangles.game.RookAngle;
+// the Tetris shape, either the animated shapes or the hitarea/bottom and also for background drawing.
+// uses square that uses triangle for render.
 enum Snapped {
     Always;
     Zero;
@@ -10,23 +12,23 @@ enum Snapped {
     Fix;
 }
 class Shape {
-    var start:              Point;
-    var snapped:            Snapped;
-    var centre:             Point;
-    public var blocks:             Array<Square>;
-    public var virtualBlocks:      Array<Square>;
-    var id:                 Int;
-    var triangles:          Array<Triangle>;
-    public var col0:        Int;
+    var start:              Point;                  // used to help with x position movement.
+    var snapped:            Snapped;                // related to how center needs to be offset when rotated.
+    var centre:             Point;                  // used for hitTesting
+    public var blocks:             Array<Square>;   // squares making up the shape. 
+    public var virtualBlocks:      Array<Square>;   // 'rook' resolved squares see rook below.
+    var id:                 Int;                    // technical detail related to triangle render not critical.
+    var triangles:          Array<Triangle>;        // render triangles
+    public var col0:        Int;            // colors
     public var col1:        Int;
-    var dia:                Float;
-    var gap:                Float;
-    var angle:              Float = 0.;
-    var rook:               RookAngle = 0.;
-    var lastRook:           RookAngle = 0.;
-    var offX:               Int;
+    var dia:                Float;          // diameter of square
+    var gap:                Float;          // not currently used?
+    var angle:              Float = 0.;      // current rotation
+    var rook:               RookAngle = 0.;  // resolving angle to 0,90,270,0 degrees.
+    var lastRook:           RookAngle = 0.;  // previous rook
+    var offX:               Int;             // offsets now set to 0 and not really needed?
     var offY:               Int;
-    public var locked:      Bool = false;
+    public var locked:      Bool = false;    // locked if blocks added to bottom, ie no longer animating.
     public function new(    id_:        Int,        triangles_: Array<Triangle>
                         ,   centre_:    Point
                         ,   col0_:      Int,        col1_:  Int

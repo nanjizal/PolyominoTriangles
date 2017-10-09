@@ -7,8 +7,6 @@ import justTriangles.Triangle;
 import justTriangles.Point;
 class Controller {
     var inertArr:   Arr2D;
-    var animArr:    Arr2D;
-    var testArr:    Arr2D;
     var shapes      = new Array<Shape>();
     var shapeGenerator: ShapeGenerator;
     var bottom:     Shape;
@@ -31,8 +29,6 @@ class Controller {
                         ,   offX_:  Int,    offY_:      Int     ){
         id           = id_;
         inertArr     = new Arr2D( wide_ - 1, hi_ );
-        animArr      = new Arr2D( wide_ - 1, hi_ );
-        testArr      = new Arr2D( wide_ - 1, hi_ );
         wide         = wide_;
         hi           = hi_;
         triangles    = triangles_;
@@ -86,7 +82,7 @@ class Controller {
     public inline 
     function shapesOnBg(){
         var shapeLocations = shapeLocations();
-        background.drawTetris( shapeLocations, 0, 0 );// -offX, 4 );
+        background.drawTetris( shapeLocations, 0, 0 );
     }   
     public inline 
     function rotate( theta ){
@@ -135,7 +131,7 @@ class Controller {
                             , col0_:    Int,    col1_:  Int
                             , col2_:    Int,    col3_:  Int ){
         var bg = createTetris( p );
-        background = new Background( bg, wide, hi + 1, col0_, col1_, col0_, col1_ );//col2_, col3_ );
+        background = new Background( bg, wide, hi + 1, col0_, col1_, col0_, col1_ );//col2_, col3_ ); // allows cols to be differently colored for dev.
     }
     public inline
     function addHitPointsInt( arrP: Array<{ x: Int, y: Int }> ) { // adds points to the hitTest
@@ -144,7 +140,7 @@ class Controller {
     }
     public inline
     function offSetAddPoints( arr2d: Arr2D, arrP: Array<{ x: Int, y: Int }> ){
-        arr2d.addPoints( arrP, 0, 0 );//-offX - 1, 4 );//-offX, -offY );
+        arr2d.addPoints( arrP, 0, 0 );
     }
     public function createBottom( p: Point, wide: Int , col0_: Int, col1_: Int ){
         var templates = new Templates( createTetris );

@@ -1,6 +1,6 @@
 package tetrisTriangles.game;
 import tetrisTriangles.game.Controller;
-// Main Tetris rotation control
+// Main Tetris rotation control, to help with animating the rotation.
 class Rotation{
 	var controller: 	Controller;
 	var toggle          = false;

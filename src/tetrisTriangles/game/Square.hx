@@ -1,6 +1,7 @@
 package tetrisTriangles.game;
 import justTriangles.Point;
 import justTriangles.Triangle;
+// uses two triangles to help construct the visual shapes.
 class Square {
     var t0:     Triangle;
     var t1:     Triangle;

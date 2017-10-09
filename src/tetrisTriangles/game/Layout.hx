@@ -27,10 +27,10 @@ class Layout{
 	function background(){
         controller.createBg( originP, wide, hi, 10, 0, 9, 0 );
     }
-    function fallingBlocks( noBlocks: Int, aboveY: Float ){
+    function fallingBlocks( noBlocks: Int, aboveY: Float ){ // starting block but can generate lots for testing.
         var randX   = 0.;
 		var x = originP.x;
-		var y = originP.y;// + 5*dia;
+		var y = originP.y;
         for( i in 0...noBlocks ){
             var m = i % 6 + 1; // restart colors
             randX = dia + dia * Math.round( Math.random() * ( wide - 0.5 ));
@@ -39,8 +39,8 @@ class Layout{
     }
 	public function createTile(){
 		var x = originP.x;
-		var y = originP.y;// + 5*dia;
-		var m = shapeid % 6 + 1; // restart colors
+		var y = originP.y;
+		var m = shapeid % 6 + 1; // restart colors, perhaps heavy could use greater than..
         var randX = dia + dia * Math.round( Math.random() * ( wide - 1.5 ));
     	var shape = controller.createShape( { x: x + randX, y: y }, m , m + 1 );// , TetrisShape.tetris_l );//  <- can choose on shape.
 	    shapeid++;

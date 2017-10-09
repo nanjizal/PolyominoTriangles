@@ -1,5 +1,5 @@
 package tetrisTriangles.game;
-// Rook Angle as in the castle in chess
+// Rook Angle as in the castle in chess, it allows analog rotations to be approximated to 90 angles 0,90,270,0
 abstract RookAngle( Float ) to Float {
     public inline 
     function new( angle: Float ){

@@ -4,15 +4,15 @@ import tetrisTriangles.game.Controller;
 class Movement{
 	var controller: 		Controller;
 	var dia:				Float;
-	var fallSpeed           = 0.01;// 0.01
+	var fallSpeed           = 0.01; // controls downwards falling speed
     var jumpSpeed           = 7;
     var jumpX               = .0;   // for movement smoothing
     var jumpY               = .0;
-    var toggleX             = false;
+    var toggleX             = false; // used to turn on the animation of keyboard movement. 
     var toggleY             = false;
     var jx                  = 0.;
     var jy                  = 0.;
-    public var leftStop:    Float;
+    public var leftStop:    Float;  // defines the left and right bounds.
     public var rightStop:   Float;
 	public function new( controller_: Controller, dia_: Float ){
 		controller  = controller_;

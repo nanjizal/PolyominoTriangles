@@ -2,6 +2,8 @@ package tetrisTriangles.game;
 import tetrisTriangles.game.Templates;
 import tetrisTriangles.game.Shape;
 import justTriangles.Point;
+// not much of a class just moved the random shape generation out of controller
+// just to reduce the complexity of controller so this is really part of controller
 @:enum
     abstract TetrisShape( String ) to String from String {
     var tetris_S     = 'tetris_S';
