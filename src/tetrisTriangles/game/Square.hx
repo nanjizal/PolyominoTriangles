@@ -81,10 +81,9 @@ class Square {
     }
     @:access( justTriangles.Triangle.moveDelta )
     public function moveDelta( dx: Float, dy: Float ){
-        cX += dx;
-        cY += dy;
         t0.moveDelta( dx, dy );
         t1.moveDelta( dx, dy );
+        calculateCentre();
     } 
     // try to use rotateAround if rotating lots of squares
     public inline function rotateAroundTheta( p: Point, theta ){
@@ -95,19 +94,23 @@ class Square {
     public inline function rotateAround( p: Point, cos: Float, sin: Float ){
         rotateTriangle( t0, p, cos, sin );
         rotateTriangle( t1, p, cos, sin );
-        // rotateCentre( p, cos, sin ); // this is not working so commented out for moment.
+        calculateCentre();
     }
-    public inline function rotateCentre( p: Point, cos: Float, sin: Float ){
-        var x: Float;
-        var y: Float;
-        x   = cX;
-        y   = cY;
-        cX -= p.x;
-        cY -= p.y;
-        cX  = x * cos - y * sin;
-        cY  = x * sin + y * cos; 
-        cX += p.x;
-        cY += p.y;
+    public inline function calculateCentre(){
+        var dx = t0.bx;
+        var dy = t0.cy;
+        var ex = t0.cx;
+        var ey = t0.cy;
+        cX = if( dx < ex ){ // dx is left
+            dx + ( ex - dx )/2;
+        } else { // ex is left
+            ex + ( dx - ex )/2;
+        }
+        cY = if( dy < ey ){ // dy is top
+            dy + ( ey - dy )/2;
+        } else {
+            dy + ( dy - ey )/2;
+        }
     }
     // TODO: refactor to Triangles?
     @:access( justTriangles.Triangle.moveDelta )
@@ -136,10 +139,8 @@ class Square {
         dirtyY = true;
     }
     // faster and more acurate?
-    public function getQuickCentre():{ x: Float, y: Float }{
-        return { x: cX, y: cY };
-    }
     public function getCentreInt():{ x: Int, y: Int }{
+        // calculated diagonals
         return { x: Std.int( cX/dia ), y: Std.int( cY/dia ) };
     }
     public var right( get, never ): Float;
@@ -157,7 +158,6 @@ class Square {
         return Math.min( t0.x, t1.x );
     }
     function set_x( x_: Float ): Float {
-        cX = x_ + dia/2;
         var x0 = t0.x;
         var x1 = t1.x;
         if( x0 < x1 ){
@@ -169,6 +169,7 @@ class Square {
             t1.x    = x_;
             t0.x    += dx;
         }
+        calculateCentre();
         _x = x_;
         dirtyX = false;
         return x_;
@@ -178,7 +179,6 @@ class Square {
         return ( dirtyY )? Math.min( t0.y, t1.y ): _y;
     }
     function set_y( y_: Float ): Float {
-        cY = y_ + dia/2;
         var y0 = t0.y;
         var y1 = t1.y;
         if( y0 < y1 ){
@@ -190,6 +190,7 @@ class Square {
             t1.y    = y_;
             t0.y    += dy;
         }
+        calculateCentre();
         dirtyY = false;
         _y = y_;
         return y_;

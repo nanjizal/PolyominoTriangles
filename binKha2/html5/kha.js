@@ -26915,58 +26915,6 @@ var tetrisTriangles_game_Controller = function(id_,triangles_,wide_,hi_,dia_,gap
 	}
 	this1 = v;
 	this.inertArr = this1;
-	var w1 = wide_ - 1;
-	var h1 = hi_;
-	var v1 = null;
-	var this2;
-	if(v1 == null) {
-		if(w1 == null) {
-			w1 = 100;
-		}
-		if(h1 == null) {
-			h1 = 100;
-		}
-		var l1 = w1 * h1 + 2;
-		var _g3 = [];
-		var _g21 = 0;
-		var _g11 = l1;
-		while(_g21 < _g11) {
-			var e1 = _g21++;
-			_g3.push(0);
-		}
-		var arr1 = _g3;
-		arr1[0] = w1;
-		arr1[1] = h1;
-		v1 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w1,h1,arr1);
-	}
-	this2 = v1;
-	this.animArr = this2;
-	var w2 = wide_ - 1;
-	var h2 = hi_;
-	var v2 = null;
-	var this3;
-	if(v2 == null) {
-		if(w2 == null) {
-			w2 = 100;
-		}
-		if(h2 == null) {
-			h2 = 100;
-		}
-		var l2 = w2 * h2 + 2;
-		var _g4 = [];
-		var _g22 = 0;
-		var _g12 = l2;
-		while(_g22 < _g12) {
-			var e2 = _g22++;
-			_g4.push(0);
-		}
-		var arr2 = _g4;
-		arr2[0] = w2;
-		arr2[1] = h2;
-		v2 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w2,h2,arr2);
-	}
-	this3 = v2;
-	this.testArr = this3;
 	this.wide = wide_;
 	this.hi = hi_;
 	this.triangles = triangles_;
@@ -26980,8 +26928,6 @@ $hxClasses["tetrisTriangles.game.Controller"] = tetrisTriangles_game_Controller;
 tetrisTriangles_game_Controller.__name__ = ["tetrisTriangles","game","Controller"];
 tetrisTriangles_game_Controller.prototype = {
 	inertArr: null
-	,animArr: null
-	,testArr: null
 	,shapes: null
 	,shapeGenerator: null
 	,bottom: null
@@ -28694,6 +28640,12 @@ tetrisTriangles_game_Shape.prototype = {
 				t1.moveDelta(p.x,p.y);
 				_this.dirtyX = true;
 				_this.dirtyY = true;
+				var dx = _this.t0.bx;
+				var dy = _this.t0.cy;
+				var ex = _this.t0.cx;
+				var ey = _this.t0.cy;
+				_this.cX = dx < ex ? dx + (ex - dx) / 2 : ex + (dx - ex) / 2;
+				_this.cY = dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2;
 				this.virtualBlocks[i].moveDelta(-this.centre.x,-this.centre.y);
 			}
 		}
@@ -28750,6 +28702,12 @@ tetrisTriangles_game_Shape.prototype = {
 			t3.moveDelta(p1.x,p1.y);
 			_this1.dirtyX = true;
 			_this1.dirtyY = true;
+			var dx1 = _this1.t0.bx;
+			var dy1 = _this1.t0.cy;
+			var ex1 = _this1.t0.cx;
+			var ey1 = _this1.t0.cy;
+			_this1.cX = dx1 < ex1 ? dx1 + (ex1 - dx1) / 2 : ex1 + (dx1 - ex1) / 2;
+			_this1.cY = dy1 < ey1 ? dy1 + (ey1 - dy1) / 2 : dy1 + (dy1 - ey1) / 2;
 			this.blocks[i1].moveDelta(-this.centre.x,-this.centre.y);
 		}
 		this.lastRook = this.rook;
@@ -28812,6 +28770,12 @@ tetrisTriangles_game_Shape.prototype = {
 				t1.moveDelta(p.x,p.y);
 				_this.dirtyX = true;
 				_this.dirtyY = true;
+				var dx = _this.t0.bx;
+				var dy = _this.t0.cy;
+				var ex = _this.t0.cx;
+				var ey = _this.t0.cy;
+				_this.cX = dx < ex ? dx + (ex - dx) / 2 : ex + (dx - ex) / 2;
+				_this.cY = dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2;
 				this.virtualBlocks[i].moveDelta(-this.centre.x,-this.centre.y);
 			}
 		}
@@ -29228,10 +29192,14 @@ tetrisTriangles_game_Square.prototype = {
 		return arr;
 	}
 	,moveDelta: function(dx,dy) {
-		this.cX += dx;
-		this.cY += dy;
 		this.t0.moveDelta(dx,dy);
 		this.t1.moveDelta(dx,dy);
+		var dx1 = this.t0.bx;
+		var dy1 = this.t0.cy;
+		var ex = this.t0.cx;
+		var ey = this.t0.cy;
+		this.cX = dx1 < ex ? dx1 + (ex - dx1) / 2 : ex + (dx1 - ex) / 2;
+		this.cY = dy1 < ey ? dy1 + (ey - dy1) / 2 : dy1 + (dy1 - ey) / 2;
 	}
 	,rotateAroundTheta: function(p,theta) {
 		var cos = Math.cos(theta);
@@ -29282,6 +29250,12 @@ tetrisTriangles_game_Square.prototype = {
 		t1.moveDelta(p.x,p.y);
 		this.dirtyX = true;
 		this.dirtyY = true;
+		var dx = this.t0.bx;
+		var dy = this.t0.cy;
+		var ex = this.t0.cx;
+		var ey = this.t0.cy;
+		this.cX = dx < ex ? dx + (ex - dx) / 2 : ex + (dx - ex) / 2;
+		this.cY = dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2;
 	}
 	,rotateAround: function(p,cos,sin) {
 		var t = this.t0;
@@ -29330,18 +29304,20 @@ tetrisTriangles_game_Square.prototype = {
 		t1.moveDelta(p.x,p.y);
 		this.dirtyX = true;
 		this.dirtyY = true;
+		var dx = this.t0.bx;
+		var dy = this.t0.cy;
+		var ex = this.t0.cx;
+		var ey = this.t0.cy;
+		this.cX = dx < ex ? dx + (ex - dx) / 2 : ex + (dx - ex) / 2;
+		this.cY = dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2;
 	}
-	,rotateCentre: function(p,cos,sin) {
-		var x;
-		var y;
-		x = this.cX;
-		y = this.cY;
-		this.cX -= p.x;
-		this.cY -= p.y;
-		this.cX = x * cos - y * sin;
-		this.cY = x * sin + y * cos;
-		this.cX += p.x;
-		this.cY += p.y;
+	,calculateCentre: function() {
+		var dx = this.t0.bx;
+		var dy = this.t0.cy;
+		var ex = this.t0.cx;
+		var ey = this.t0.cy;
+		this.cX = dx < ex ? dx + (ex - dx) / 2 : ex + (dx - ex) / 2;
+		this.cY = dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2;
 	}
 	,rotateTriangle: function(t,p,cos,sin) {
 		this.dirtyX = true;
@@ -29367,9 +29343,6 @@ tetrisTriangles_game_Square.prototype = {
 		this.dirtyX = true;
 		this.dirtyY = true;
 	}
-	,getQuickCentre: function() {
-		return { x : this.cX, y : this.cY};
-	}
 	,getCentreInt: function() {
 		return { x : this.cX / this.dia | 0, y : this.cY / this.dia | 0};
 	}
@@ -29383,7 +29356,6 @@ tetrisTriangles_game_Square.prototype = {
 		return Math.min(this.t0.get_x(),this.t1.get_x());
 	}
 	,set_x: function(x_) {
-		this.cX = x_ + this.dia / 2;
 		var x0 = this.t0.get_x();
 		var x1 = this.t1.get_x();
 		if(x0 < x1) {
@@ -29397,6 +29369,12 @@ tetrisTriangles_game_Square.prototype = {
 			var _g1 = this.t0;
 			_g1.set_x(_g1.get_x() + dx1);
 		}
+		var dx2 = this.t0.bx;
+		var dy = this.t0.cy;
+		var ex = this.t0.cx;
+		var ey = this.t0.cy;
+		this.cX = dx2 < ex ? dx2 + (ex - dx2) / 2 : ex + (dx2 - ex) / 2;
+		this.cY = dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2;
 		this._x = x_;
 		this.dirtyX = false;
 		return x_;
@@ -29409,7 +29387,6 @@ tetrisTriangles_game_Square.prototype = {
 		}
 	}
 	,set_y: function(y_) {
-		this.cY = y_ + this.dia / 2;
 		var y0 = this.t0.get_y();
 		var y1 = this.t1.get_y();
 		if(y0 < y1) {
@@ -29423,6 +29400,12 @@ tetrisTriangles_game_Square.prototype = {
 			var _g1 = this.t0;
 			_g1.set_y(_g1.get_y() + dy1);
 		}
+		var dx = this.t0.bx;
+		var dy2 = this.t0.cy;
+		var ex = this.t0.cx;
+		var ey = this.t0.cy;
+		this.cX = dx < ex ? dx + (ex - dx) / 2 : ex + (dx - ex) / 2;
+		this.cY = dy2 < ey ? dy2 + (ey - dy2) / 2 : dy2 + (dy2 - ey) / 2;
 		this.dirtyY = false;
 		this._y = y_;
 		return y_;
@@ -30732,25 +30715,19 @@ kha__$Color_Color_$Impl_$.invMaxChannelValue = 0.00392156862745098;
 kha_CompilerDefines.js = "1";
 kha_CompilerDefines.kha_a1 = "1";
 kha_CompilerDefines.kha_g3 = "1";
+kha_CompilerDefines.kha_g4 = "1";
 kha_CompilerDefines.kha_html5_js = "1";
 kha_CompilerDefines["source-header"] = "Generated by Haxe 3.4.2";
+kha_CompilerDefines.sys_g3 = "1";
+kha_CompilerDefines.kha_g1 = "1";
+kha_CompilerDefines.sys_a1 = "1";
+kha_CompilerDefines.haxe_ver = "3.402";
 kha_CompilerDefines.jquery_ver = "11204";
 kha_CompilerDefines.kha_js = "1";
 kha_CompilerDefines.sys_html5 = "1";
-kha_CompilerDefines.sys_g4 = "1";
-kha_CompilerDefines.Nodule = "1";
-kha_CompilerDefines.sys_g2 = "1";
-kha_CompilerDefines.kha_webgl = "1";
-kha_CompilerDefines.kha = "1";
-kha_CompilerDefines.kha_g2 = "1";
-kha_CompilerDefines.kha_g4 = "1";
-kha_CompilerDefines.sys_g3 = "1";
-kha_CompilerDefines.kha_g1 = "1";
-kha_CompilerDefines.poly2trihx = "1";
-kha_CompilerDefines.sys_a1 = "1";
-kha_CompilerDefines.haxe_ver = "3.402";
 kha_CompilerDefines.canvas_id = "khanvas";
 kha_CompilerDefines.kha_version = "1611";
+kha_CompilerDefines.sys_g4 = "1";
 kha_CompilerDefines.js_es = "5";
 kha_CompilerDefines.kha_html5 = "1";
 kha_CompilerDefines["js-es5"] = "1";
@@ -30759,7 +30736,10 @@ kha_CompilerDefines.sys_a2 = "1";
 kha_CompilerDefines.dce = "std";
 kha_CompilerDefines.sys_g1 = "1";
 kha_CompilerDefines["true"] = "1";
-kha_CompilerDefines.justTriangles = "1";
+kha_CompilerDefines.sys_g2 = "1";
+kha_CompilerDefines.kha_webgl = "1";
+kha_CompilerDefines.kha = "1";
+kha_CompilerDefines.kha_g2 = "1";
 kha_CompilerDefines.haxe3 = "1";
 kha_CompilerDefines.kha_a2 = "1";
 kha_CompilerDefines.script_name = "kha";

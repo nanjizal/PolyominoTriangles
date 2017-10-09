@@ -28816,6 +28816,12 @@ tetrisTriangles_game_Shape.prototype = {
 				t1.moveDelta(p.x,p.y);
 				_this.dirtyX = true;
 				_this.dirtyY = true;
+				var dx = _this.t0.bx;
+				var dy = _this.t0.cy;
+				var ex = _this.t0.cx;
+				var ey = _this.t0.cy;
+				_this.cX = dx < ex ? dx + (ex - dx) / 2 : ex + (dx - ex) / 2;
+				_this.cY = dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2;
 				this.virtualBlocks[i].moveDelta(-this.centre.x,-this.centre.y);
 			}
 		}
@@ -28872,6 +28878,12 @@ tetrisTriangles_game_Shape.prototype = {
 			t3.moveDelta(p1.x,p1.y);
 			_this1.dirtyX = true;
 			_this1.dirtyY = true;
+			var dx1 = _this1.t0.bx;
+			var dy1 = _this1.t0.cy;
+			var ex1 = _this1.t0.cx;
+			var ey1 = _this1.t0.cy;
+			_this1.cX = dx1 < ex1 ? dx1 + (ex1 - dx1) / 2 : ex1 + (dx1 - ex1) / 2;
+			_this1.cY = dy1 < ey1 ? dy1 + (ey1 - dy1) / 2 : dy1 + (dy1 - ey1) / 2;
 			this.blocks[i1].moveDelta(-this.centre.x,-this.centre.y);
 		}
 		this.lastRook = this.rook;
@@ -28934,6 +28946,12 @@ tetrisTriangles_game_Shape.prototype = {
 				t1.moveDelta(p.x,p.y);
 				_this.dirtyX = true;
 				_this.dirtyY = true;
+				var dx = _this.t0.bx;
+				var dy = _this.t0.cy;
+				var ex = _this.t0.cx;
+				var ey = _this.t0.cy;
+				_this.cX = dx < ex ? dx + (ex - dx) / 2 : ex + (dx - ex) / 2;
+				_this.cY = dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2;
 				this.virtualBlocks[i].moveDelta(-this.centre.x,-this.centre.y);
 			}
 		}
@@ -29350,10 +29368,14 @@ tetrisTriangles_game_Square.prototype = {
 		return arr;
 	}
 	,moveDelta: function(dx,dy) {
-		this.cX += dx;
-		this.cY += dy;
 		this.t0.moveDelta(dx,dy);
 		this.t1.moveDelta(dx,dy);
+		var dx1 = this.t0.bx;
+		var dy1 = this.t0.cy;
+		var ex = this.t0.cx;
+		var ey = this.t0.cy;
+		this.cX = dx1 < ex ? dx1 + (ex - dx1) / 2 : ex + (dx1 - ex) / 2;
+		this.cY = dy1 < ey ? dy1 + (ey - dy1) / 2 : dy1 + (dy1 - ey) / 2;
 	}
 	,rotateAroundTheta: function(p,theta) {
 		var cos = Math.cos(theta);
@@ -29404,6 +29426,12 @@ tetrisTriangles_game_Square.prototype = {
 		t1.moveDelta(p.x,p.y);
 		this.dirtyX = true;
 		this.dirtyY = true;
+		var dx = this.t0.bx;
+		var dy = this.t0.cy;
+		var ex = this.t0.cx;
+		var ey = this.t0.cy;
+		this.cX = dx < ex ? dx + (ex - dx) / 2 : ex + (dx - ex) / 2;
+		this.cY = dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2;
 	}
 	,rotateAround: function(p,cos,sin) {
 		var t = this.t0;
@@ -29452,18 +29480,20 @@ tetrisTriangles_game_Square.prototype = {
 		t1.moveDelta(p.x,p.y);
 		this.dirtyX = true;
 		this.dirtyY = true;
+		var dx = this.t0.bx;
+		var dy = this.t0.cy;
+		var ex = this.t0.cx;
+		var ey = this.t0.cy;
+		this.cX = dx < ex ? dx + (ex - dx) / 2 : ex + (dx - ex) / 2;
+		this.cY = dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2;
 	}
-	,rotateCentre: function(p,cos,sin) {
-		var x;
-		var y;
-		x = this.cX;
-		y = this.cY;
-		this.cX -= p.x;
-		this.cY -= p.y;
-		this.cX = x * cos - y * sin;
-		this.cY = x * sin + y * cos;
-		this.cX += p.x;
-		this.cY += p.y;
+	,calculateCentre: function() {
+		var dx = this.t0.bx;
+		var dy = this.t0.cy;
+		var ex = this.t0.cx;
+		var ey = this.t0.cy;
+		this.cX = dx < ex ? dx + (ex - dx) / 2 : ex + (dx - ex) / 2;
+		this.cY = dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2;
 	}
 	,rotateTriangle: function(t,p,cos,sin) {
 		this.dirtyX = true;
@@ -29489,9 +29519,6 @@ tetrisTriangles_game_Square.prototype = {
 		this.dirtyX = true;
 		this.dirtyY = true;
 	}
-	,getQuickCentre: function() {
-		return { x : this.cX, y : this.cY};
-	}
 	,getCentreInt: function() {
 		return { x : this.cX / this.dia | 0, y : this.cY / this.dia | 0};
 	}
@@ -29505,7 +29532,6 @@ tetrisTriangles_game_Square.prototype = {
 		return Math.min(this.t0.get_x(),this.t1.get_x());
 	}
 	,set_x: function(x_) {
-		this.cX = x_ + this.dia / 2;
 		var x0 = this.t0.get_x();
 		var x1 = this.t1.get_x();
 		if(x0 < x1) {
@@ -29519,6 +29545,12 @@ tetrisTriangles_game_Square.prototype = {
 			var _g1 = this.t0;
 			_g1.set_x(_g1.get_x() + dx1);
 		}
+		var dx2 = this.t0.bx;
+		var dy = this.t0.cy;
+		var ex = this.t0.cx;
+		var ey = this.t0.cy;
+		this.cX = dx2 < ex ? dx2 + (ex - dx2) / 2 : ex + (dx2 - ex) / 2;
+		this.cY = dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2;
 		this._x = x_;
 		this.dirtyX = false;
 		return x_;
@@ -29531,7 +29563,6 @@ tetrisTriangles_game_Square.prototype = {
 		}
 	}
 	,set_y: function(y_) {
-		this.cY = y_ + this.dia / 2;
 		var y0 = this.t0.get_y();
 		var y1 = this.t1.get_y();
 		if(y0 < y1) {
@@ -29545,6 +29576,12 @@ tetrisTriangles_game_Square.prototype = {
 			var _g1 = this.t0;
 			_g1.set_y(_g1.get_y() + dy1);
 		}
+		var dx = this.t0.bx;
+		var dy2 = this.t0.cy;
+		var ex = this.t0.cx;
+		var ey = this.t0.cy;
+		this.cX = dx < ex ? dx + (ex - dx) / 2 : ex + (dx - ex) / 2;
+		this.cY = dy2 < ey ? dy2 + (ey - dy2) / 2 : dy2 + (dy2 - ey) / 2;
 		this.dirtyY = false;
 		this._y = y_;
 		return y_;
