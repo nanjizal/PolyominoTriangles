@@ -182,7 +182,7 @@ class Shape {
         var p2: { x: Int, y: Int };
         for( i in 0...l ){
             p2 = virtualBlocks[ i ].getCentreInt();
-            if( p2.x == p.x && p2.y == p.y ){
+            if( p2.x == p.x && p2.y == p.y  ){
                 out = true;
                 break;
             }

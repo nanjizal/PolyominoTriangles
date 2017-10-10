@@ -76,7 +76,9 @@ class Controller {
         var newBlocks = shape.clearBlocks();
         shape.changeColor( 8, 8 );
         var l = newBlocks.length;
-        for( i in 0...l ) bottom.pushBlock( newBlocks[ i ] );
+        for( i in 0...l ) {
+            bottom.pushBlock( newBlocks[ i ] );
+        }
         addHitPointsInt( shape.lastLocation );
     }
     public inline 

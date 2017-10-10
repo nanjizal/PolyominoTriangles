@@ -98,7 +98,7 @@ class Square {
     }
     public inline function calculateCentre(){
         var dx = t0.bx;
-        var dy = t0.cy;
+        var dy = t0.by;
         var ex = t0.cx;
         var ey = t0.cy;
         cX = if( dx < ex ){ // dx is left
