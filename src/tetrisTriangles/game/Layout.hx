@@ -34,19 +34,20 @@ class Layout{
         for( i in 0...noBlocks ){
             var m = i % 6 + 1; // restart colors
             randX = dia + dia * Math.round( Math.random() * ( wide - 0.5 ));
-			/*
-			TODO: add in this and next method
-			#if 'use_tetris_S'
-				var shape = controller.createShape( { x: x + randX, y: y - i * aboveY }, m , m + 1, TetrisShape.tetris_S );
-			#elseif  
-				var shape = controller.createShape( { x: x + randX, y: y - i * aboveY }, m , m + 1, TetrisShape.tetris_S );
-project.addDefine('use_tetris_L');
-project.addDefine('use_tetris_box');
-project.addDefine('use_tetris_t');
-project.addDefine('use_tetris_l');
-			*/
 
-            var shape = controller.createShape( { x: x + randX, y: y - i * aboveY }, m , m + 1 );//, TetrisShape.tetris_l );//  <- can choose on shape.
+			#if use_tetris_S
+				var shape = controller.createShape( { x: x + randX, y: y - i * aboveY }, m , m + 1, TetrisShape.tetris_S );
+			#elseif use_tetris_L
+				var shape = controller.createShape( { x: x + randX, y: y - i * aboveY }, m , m + 1, TetrisShape.tetris_L );
+			#elseif use_tetris_box
+				var shape = controller.createShape( { x: x + randX, y: y - i * aboveY }, m , m + 1, TetrisShape.tetris_box );
+			#elseif use_tetris_t
+				var shape = controller.createShape( { x: x + randX, y: y - i * aboveY }, m , m + 1, TetrisShape.tetris_t );
+			#elseif use_tetris_l
+				var shape = controller.createShape( { x: x + randX, y: y - i * aboveY }, m , m + 1, TetrisShape.tetris_l );
+			#else 
+            	var shape = controller.createShape( { x: x + randX, y: y - i * aboveY }, m , m + 1 );//, TetrisShape.tetris_l );//  <- can choose on shape.
+			#end
 		}
     }
 	public function createTile(){
@@ -54,7 +55,20 @@ project.addDefine('use_tetris_l');
 		var y = originP.y;
 		var m = shapeid % 6 + 1; // restart colors, perhaps heavy could use greater than..
         var randX = dia + dia * Math.round( Math.random() * ( wide - 1.5 ));
-    	var shape = controller.createShape( { x: x + randX, y: y }, m , m + 1 );// , TetrisShape.tetris_l );//  <- can choose on shape.
+		#if use_tetris_S
+			var shape = controller.createShape( { x: x + randX, y: y }, m , m + 1, TetrisShape.tetris_S );
+		#elseif use_tetris_L
+			var shape = controller.createShape( { x: x + randX, y: y }, m , m + 1, TetrisShape.tetris_L );
+		#elseif use_tetris_box
+			var shape = controller.createShape( { x: x + randX, y: y }, m , m + 1, TetrisShape.tetris_box );
+		#elseif use_tetris_t
+			var shape = controller.createShape( { x: x + randX, y: y }, m , m + 1, TetrisShape.tetris_t );
+		#elseif use_tetris_l
+			var shape = controller.createShape( { x: x + randX, y: y }, m , m + 1, TetrisShape.tetris_l );
+		#else 
+    		var shape = controller.createShape( { x: x + randX, y: y }, m , m + 1 );//, TetrisShape.tetris_l );//  <- can choose on shape.
+		#end
+    	// var shape = controller.createShape( { x: x + randX, y: y }, m , m + 1 );// , TetrisShape.tetris_l );//  <- can choose on shape.
 	    shapeid++;
 	}
     function bottom( p: { x: Float, y: Float } ){
