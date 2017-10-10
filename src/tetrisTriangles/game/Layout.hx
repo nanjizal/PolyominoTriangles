@@ -34,6 +34,18 @@ class Layout{
         for( i in 0...noBlocks ){
             var m = i % 6 + 1; // restart colors
             randX = dia + dia * Math.round( Math.random() * ( wide - 0.5 ));
+			/*
+			TODO: add in this and next method
+			#if 'use_tetris_S'
+				var shape = controller.createShape( { x: x + randX, y: y - i * aboveY }, m , m + 1, TetrisShape.tetris_S );
+			#elseif  
+				var shape = controller.createShape( { x: x + randX, y: y - i * aboveY }, m , m + 1, TetrisShape.tetris_S );
+project.addDefine('use_tetris_L');
+project.addDefine('use_tetris_box');
+project.addDefine('use_tetris_t');
+project.addDefine('use_tetris_l');
+			*/
+
             var shape = controller.createShape( { x: x + randX, y: y - i * aboveY }, m , m + 1 );//, TetrisShape.tetris_l );//  <- can choose on shape.
 		}
     }

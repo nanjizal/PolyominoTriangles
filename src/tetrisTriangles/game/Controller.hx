@@ -53,13 +53,15 @@ class Controller {
     }
     public inline 
     function hitBottom(){
-        // shapesOnBg();  // allow to see where block is in binary
+        #if drawOnBackground
+            shapesOnBg();  // allow to see where block is in binary
+        #end
         var l = shapes.length;
         var shape: Shape;
         var hit = false;
         for( i in 0...l ){
             shape = shapes[ i ];
-            var clash = inertArr.clash( shape.getLocation(), 0, 0 );//-offX - 1, 4 );
+            var clash = inertArr.clash( shape.getLocation(), 0, 0 );    
             if( clash ){
                 shapeKill( shape, i );
                 hit = true;
@@ -84,6 +86,7 @@ class Controller {
     public inline 
     function shapesOnBg(){
         var shapeLocations = shapeLocations();
+        bottom.getCentreInt( shapeLocations );
         background.drawTetris( shapeLocations, 0, 0 );
     }   
     public inline 

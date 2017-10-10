@@ -129,11 +129,40 @@ class Triangle {
         var sin = Math.sin( theta );
         rotateTrig( p, cos, sin );
     }
+    /*
+        var px = p.x;
+        var py = p.y;
+        ax -= px;
+        ay -= py;
+        bx -= px;
+        by -= py;
+        cx -= px;
+        cy -= py;
+        var dx: Float;
+        var dy: Float;
+        dx  = ax;
+        dy  = ay;
+        ax  = dx * cos - dy * sin;
+        ay  = dx * sin + dy * cos; 
+        dx  = bx;
+        dy  = by;
+        bx  = dx * cos - dy * sin;
+        by  = dx * sin + dy * cos; 
+        dx  = cx;
+        dy  = cy;
+        cx  = dx * cos - dy * sin;
+        cy  = dx * sin + dy * cos;
+        ax += px;
+        ay += py;
+        bx += px;
+        by += py;
+        cx += px;
+        cy += py;
+*/
     public inline 
     function rotateTrig( p: Point, cos: Float, sin: Float ){
         var px = p.x;
         var py = p.y;
-        moveDelta( -px, -py );
         moveDelta( -px, -py );
         var dx: Float;
         var dy: Float;
@@ -149,7 +178,6 @@ class Triangle {
         dy  = cy;
         cx  = dx * cos - dy * sin;
         cy  = dx * sin + dy * cos;
-        moveDelta( px, py );
         moveDelta( px, py );
     }
     // draws Triangle with horizontal strips 1px high.

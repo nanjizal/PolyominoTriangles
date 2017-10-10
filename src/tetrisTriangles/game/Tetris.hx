@@ -65,8 +65,10 @@ class Tetris {
         if( end ) return;
         if( !controller.hitBottom() ){ 
             rotation.update();
-            movement.update();
-            controller.hitBottom();
+            if(!controller.hitBottom()){
+                movement.update();
+            }
+            //controller.hitBottom();
         }
     }
     public inline

@@ -62,15 +62,26 @@ class Shape {
     public function addBlock( x_: Float, y_: Float, ?addVirtual: Bool = true, ?show: Bool = true ): Square {
         var x0 = x_ * dia + centre.x;
         var y0 = y_ * dia + centre.y;
-        var temp = [];
+        #if ( showVirtualBlocksAbove || showVirtualBlocksBelow ) 
+            var temp = triangles;
+        #else 
+            var temp = [];
+        #end
         //triangles; // TODO: make virtualBlocks non visual just for hitTest pass empty array.
         var tri = triangles;
+        
         if( !show ) tri = [];
-        if( addVirtual ) {
-            virtualBlocks[ blocks.length ]  = new Square( id, temp, x0, y0, dia, gap, 13, 13 );
-        }
+        #if showVirtualBoxAbove 
+            // 
+        #else 
+            if( addVirtual ) virtualBlocks[ blocks.length ]  = new Square( id, temp, x0, y0, dia, gap, 13, 13 );
+        #end
         var sq = new Square( id, tri, x0, y0, dia, gap, col0, col1 );
+        #if showVirtualBlocksAbove
+            if( addVirtual ) virtualBlocks[ blocks.length ]  = new Square( id, temp, x0, y0, dia, gap, 13, 13 );
+        #end
         blocks[ blocks.length ] = sq; 
+        
         return sq;
     }
     public function pushBlock( square: Square ){
@@ -92,11 +103,8 @@ class Shape {
         var sin = Math.sin( theta );
         rookSnapping( cos, sin );
         rotateVirtual( rook );
-        for( i in 0...l ){
-            blocks[ i ].moveDelta( centre.x, centre.y );
-            blocks[ i ].rotateAround( centre, cos, sin );
-            blocks[ i ].moveDelta( -centre.x, -centre.y );
-        }
+        // blocks.map( v -> v.rotateSquare( centre, cos, sin ) ); // future ...
+        for( i in 0...l ) blocks[ i ].rotateAround( centre, cos, sin );
         lastRook = rook;
     }
     inline 
@@ -104,12 +112,9 @@ class Shape {
         var cos = Math.cos( Math.PI/2 );
         var sin = Math.sin( Math.PI/2 );
         if( rook != lastRook ){
+            // virtualBlocks.map( v -> v.rotateSquare( centre, cos, sin ) ); // future ...
             var l = virtualBlocks.length;
-            for( i in 0...l ){
-                virtualBlocks[ i ].moveDelta( centre.x, centre.y );
-                virtualBlocks[ i ].rotateAround( centre, cos, sin );
-                virtualBlocks[ i ].moveDelta( -centre.x, -centre.y );
-            }
+            for( i in 0...l ) virtualBlocks[ i ].rotateAround( centre, cos, sin );
         }
     }
     inline 
@@ -207,7 +212,7 @@ class Shape {
         }
         return centresInt;
     }
-    public function getVirtualCentreInt(virtualInt: Array< { x: Int, y: Int} >):Array< { x: Int, y: Int } >{
+    public function getVirtualCentreInt( virtualInt: Array< { x: Int, y: Int} >):Array< { x: Int, y: Int } >{
         var l = virtualBlocks.length;
         if( locked ) return virtualInt;
         for( i in 0...l ){
