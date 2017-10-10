@@ -151,7 +151,8 @@ class Controller {
         bottom = templates.bottom( p, wide );
         var arr = new Array< { x: Int, y: Int} >();
         var bottomPositions = bottom.getCentreInt( arr );
-        addHitPointsInt( bottomPositions );
+        //addHitPointsInt( bottomPositions );
+        inertArr.addPoints( bottomPositions, 0, -1 );
     }
 
 

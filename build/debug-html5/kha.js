@@ -4989,6 +4989,100 @@ justTriangles_Triangle.prototype = {
 			return false;
 		}
 	}
+	,rotate: function(p,theta) {
+		var cos = Math.cos(theta);
+		var sin = Math.sin(theta);
+		var px = p.x;
+		var py = p.y;
+		var dx = -px;
+		var dy = -py;
+		this.ax += dx;
+		this.ay += dy;
+		this.bx += dx;
+		this.by += dy;
+		this.cx += dx;
+		this.cy += dy;
+		var dx1 = -px;
+		var dy1 = -py;
+		this.ax += dx1;
+		this.ay += dy1;
+		this.bx += dx1;
+		this.by += dy1;
+		this.cx += dx1;
+		this.cy += dy1;
+		var dx2;
+		var dy2;
+		dx2 = this.ax;
+		dy2 = this.ay;
+		this.ax = dx2 * cos - dy2 * sin;
+		this.ay = dx2 * sin + dy2 * cos;
+		dx2 = this.bx;
+		dy2 = this.by;
+		this.bx = dx2 * cos - dy2 * sin;
+		this.by = dx2 * sin + dy2 * cos;
+		dx2 = this.cx;
+		dy2 = this.cy;
+		this.cx = dx2 * cos - dy2 * sin;
+		this.cy = dx2 * sin + dy2 * cos;
+		this.ax += px;
+		this.ay += py;
+		this.bx += px;
+		this.by += py;
+		this.cx += px;
+		this.cy += py;
+		this.ax += px;
+		this.ay += py;
+		this.bx += px;
+		this.by += py;
+		this.cx += px;
+		this.cy += py;
+	}
+	,rotateTrig: function(p,cos,sin) {
+		var px = p.x;
+		var py = p.y;
+		var dx = -px;
+		var dy = -py;
+		this.ax += dx;
+		this.ay += dy;
+		this.bx += dx;
+		this.by += dy;
+		this.cx += dx;
+		this.cy += dy;
+		var dx1 = -px;
+		var dy1 = -py;
+		this.ax += dx1;
+		this.ay += dy1;
+		this.bx += dx1;
+		this.by += dy1;
+		this.cx += dx1;
+		this.cy += dy1;
+		var dx2;
+		var dy2;
+		dx2 = this.ax;
+		dy2 = this.ay;
+		this.ax = dx2 * cos - dy2 * sin;
+		this.ay = dx2 * sin + dy2 * cos;
+		dx2 = this.bx;
+		dy2 = this.by;
+		this.bx = dx2 * cos - dy2 * sin;
+		this.by = dx2 * sin + dy2 * cos;
+		dx2 = this.cx;
+		dy2 = this.cy;
+		this.cx = dx2 * cos - dy2 * sin;
+		this.cy = dx2 * sin + dy2 * cos;
+		this.ax += px;
+		this.ay += py;
+		this.bx += px;
+		this.by += py;
+		this.cx += px;
+		this.cy += py;
+		this.ax += px;
+		this.ay += py;
+		this.bx += px;
+		this.by += py;
+		this.cx += px;
+		this.cy += py;
+	}
 	,drawStrips: function(drawRect) {
 		var xi = Math.floor(this.get_x());
 		var yi = Math.floor(this.get_y());
@@ -26220,103 +26314,26 @@ tetrisTriangles_TetrisTrianglesKha2.prototype = {
 		if(!_this.end) {
 			var _this1 = _this.controller;
 			var l = _this1.shapes.length;
-			var arr = [];
+			var shape;
+			var hit = false;
 			var _g1 = 0;
 			var _g = l;
 			while(_g1 < _g) {
 				var i = _g1++;
-				_this1.shapes[i].getCentreInt(arr);
-			}
-			var shapeLocations = arr;
-			var _this2 = _this1.background;
-			var col0_ = _this2.bgCol0;
-			var col1_ = _this2.bgCol1;
-			var col2_ = _this2.bgCol2;
-			var col3_ = _this2.bgCol3;
-			var c0;
-			var c1;
-			var toggle = false;
-			var indx = 0;
-			var _g11 = 0;
-			var _g2 = _this2.wide;
-			while(_g11 < _g2) {
-				var w = _g11++;
-				if(toggle) {
-					c0 = col0_;
-					c1 = col1_;
-				} else {
-					c0 = col2_;
-					c1 = col3_;
-				}
-				toggle = !toggle;
-				var _g3 = 0;
-				var _g21 = _this2.hi;
-				while(_g3 < _g21) {
-					var h = _g3++;
-					var h1 = _this2.hi;
-					indx = 2 + _this2.wide * h + w | 0;
-					var _this3 = _this2.bgSquares[indx];
-					_this3.col0 = c0;
-					_this3.col1 = c1;
-					_this3.t0.colorID = c0;
-					_this3.t1.colorID = c1;
-					_this3.t0.colorA = c0;
-					_this3.t0.colorB = c0;
-					_this3.t0.colorC = c0;
-					_this3.t1.colorA = c1;
-					_this3.t1.colorB = c1;
-					_this3.t1.colorC = c1;
-				}
-			}
-			var ls = shapeLocations.length;
-			var pos;
-			var indx1 = 0;
-			var dx = 0;
-			var dy = 0;
-			var _g12 = 0;
-			var _g4 = ls;
-			while(_g12 < _g4) {
-				var i1 = _g12++;
-				pos = shapeLocations[i1];
-				dx = pos.x;
-				dy = pos.y;
-				if(dx > 0 && dx < _this2.wide && dy > 0 && dy < _this2.hi) {
-					var h2 = _this2.hi;
-					indx1 = 2 + _this2.wide * dy + dx | 0;
-					var _this4 = _this2.bgSquares[indx1];
-					_this4.col0 = 14;
-					_this4.col1 = 14;
-					_this4.t0.colorID = 14;
-					_this4.t1.colorID = 14;
-					_this4.t0.colorA = 14;
-					_this4.t0.colorB = 14;
-					_this4.t0.colorC = 14;
-					_this4.t1.colorA = 14;
-					_this4.t1.colorB = 14;
-					_this4.t1.colorC = 14;
-				}
-			}
-			var l1 = _this1.shapes.length;
-			var shape;
-			var hit = false;
-			var _g13 = 0;
-			var _g5 = l1;
-			while(_g13 < _g5) {
-				var i2 = _g13++;
-				shape = _this1.shapes[i2];
+				shape = _this1.shapes[i];
 				var this1 = _this1.inertArr;
 				var arrP = shape.getLocation();
 				var lp = arrP.length;
 				var p;
 				var clash = false;
-				var _g14 = 0;
-				var _g6 = lp;
-				while(_g14 < _g6) {
-					var i3 = _g14++;
-					p = arrP[i3];
-					var w1 = this1[0];
-					var h3 = this1[1];
-					if(this1[2 + w1 * p.y + p.x | 0] == 1) {
+				var _g11 = 0;
+				var _g2 = lp;
+				while(_g11 < _g2) {
+					var i1 = _g11++;
+					p = arrP[i1];
+					var w = this1[0];
+					var h = this1[1];
+					if(this1[2 + w * p.y + p.x | 0] == 1) {
 						clash = true;
 						break;
 					}
@@ -26333,23 +26350,23 @@ tetrisTriangles_TetrisTrianglesKha2.prototype = {
 					shape.rotate(offAngle);
 					var newLoc;
 					var lastLoc;
-					var _g15 = 0;
-					var _g7 = shape.lastLocation.length;
-					while(_g15 < _g7) {
-						var i4 = _g15++;
-						newLoc = shape.newLocation[i4];
-						lastLoc = shape.lastLocation[i4];
-						shape.blocks[i4].set_x(lastLoc.x * shape.dia);
-						shape.blocks[i4].set_y(lastLoc.y * shape.dia);
-						shape.virtualBlocks[i4].set_x(lastLoc.x * shape.dia);
-						shape.virtualBlocks[i4].set_y(lastLoc.y * shape.dia);
+					var _g12 = 0;
+					var _g3 = shape.lastLocation.length;
+					while(_g12 < _g3) {
+						var i2 = _g12++;
+						newLoc = shape.newLocation[i2];
+						lastLoc = shape.lastLocation[i2];
+						shape.blocks[i2].set_x(lastLoc.x * shape.dia);
+						shape.blocks[i2].set_y(lastLoc.y * shape.dia);
+						shape.virtualBlocks[i2].set_x(lastLoc.x * shape.dia);
+						shape.virtualBlocks[i2].set_y(lastLoc.y * shape.dia);
 					}
 					var newBlocks = shape.clearBlocks();
-					var _g8 = 0;
-					var _g16 = shape.blocks;
-					while(_g8 < _g16.length) {
-						var b = _g16[_g8];
-						++_g8;
+					var _g4 = 0;
+					var _g13 = shape.blocks;
+					while(_g4 < _g13.length) {
+						var b = _g13[_g4];
+						++_g4;
 						shape.col0 = 8;
 						shape.col1 = 8;
 						b.col0 = 8;
@@ -26363,40 +26380,40 @@ tetrisTriangles_TetrisTrianglesKha2.prototype = {
 						b.t1.colorB = 8;
 						b.t1.colorC = 8;
 					}
-					var l2 = newBlocks.length;
-					var _g17 = 0;
-					var _g9 = l2;
-					while(_g17 < _g9) {
-						var i5 = _g17++;
-						_this1.bottom.pushBlock(newBlocks[i5]);
+					var l1 = newBlocks.length;
+					var _g14 = 0;
+					var _g5 = l1;
+					while(_g14 < _g5) {
+						var i3 = _g14++;
+						_this1.bottom.pushBlock(newBlocks[i3]);
 					}
 					var arrP1 = shape.lastLocation;
 					var arr2d = _this1.inertArr;
 					var lp1 = arrP1.length;
 					var p1;
-					var _g18 = 0;
-					var _g10 = lp1;
-					while(_g18 < _g10) {
-						var i6 = _g18++;
-						p1 = arrP1[i6];
-						var w2 = arr2d[0];
-						var h4 = arr2d[1];
-						arr2d[2 + w2 * p1.y + p1.x | 0] = 1;
+					var _g15 = 0;
+					var _g6 = lp1;
+					while(_g15 < _g6) {
+						var i4 = _g15++;
+						p1 = arrP1[i4];
+						var w1 = arr2d[0];
+						var h1 = arr2d[1];
+						arr2d[2 + w1 * p1.y + p1.x | 0] = 1;
 					}
 					hit = true;
 				}
 			}
 			var this2 = _this1.inertArr;
-			var w3 = this2[0];
-			var h5 = this2[1];
-			var s = 2 + w3 * 0 | 0;
-			var e = s + w3;
+			var w2 = this2[0];
+			var h2 = this2[1];
+			var s = 2 + w2 * 0 | 0;
+			var e = s + w2;
 			var emp = true;
-			var _g19 = s;
-			var _g20 = e;
-			while(_g19 < _g20) {
-				var i7 = _g19++;
-				if(this2[i7] == 1) {
+			var _g16 = s;
+			var _g7 = e;
+			while(_g16 < _g7) {
+				var i5 = _g16++;
+				if(this2[i5] == 1) {
 					emp = false;
 					break;
 				}
@@ -26409,75 +26426,75 @@ tetrisTriangles_TetrisTrianglesKha2.prototype = {
 				_this1.onTetrisShapeLanded();
 			}
 			if(!hit) {
-				var _this5 = _this.rotation;
-				if(_this5.toggle) {
-					var _this6 = _this5.controller;
-					var theta = Math.PI / _this5.rotationSpeed;
-					var l3 = _this6.shapes.length;
-					var _g110 = 0;
-					var _g22 = l3;
-					while(_g110 < _g22) {
-						var i8 = _g110++;
-						_this6.shapes[i8].rotate(theta);
+				var _this2 = _this.rotation;
+				if(_this2.toggle) {
+					var _this3 = _this2.controller;
+					var theta = Math.PI / _this2.rotationSpeed;
+					var l2 = _this3.shapes.length;
+					var _g17 = 0;
+					var _g8 = l2;
+					while(_g17 < _g8) {
+						var i6 = _g17++;
+						_this3.shapes[i6].rotate(theta);
 					}
 				}
-				if(_this5.count % (_this5.rotationSpeed / 2) == 0.) {
-					_this5.count = 0.;
-					_this5.toggle = false;
+				if(_this2.count % (_this2.rotationSpeed / 2) == 0.) {
+					_this2.count = 0.;
+					_this2.toggle = false;
 				}
-				_this5.count += 1.;
-				var _this7 = _this.movement;
+				_this2.count += 1.;
+				var _this4 = _this.movement;
 				var djx = 0.;
 				var djy = 0.;
-				if(_this7.toggleX) {
-					if(_this7.jumpX > 0) {
-						djx = _this7.jumpX / _this7.jumpSpeed;
-						_this7.jx += djx;
-						if(_this7.jx > _this7.jumpX + djx / 2) {
-							_this7.toggleX = false;
-							_this7.jx = 0.;
+				if(_this4.toggleX) {
+					if(_this4.jumpX > 0) {
+						djx = _this4.jumpX / _this4.jumpSpeed;
+						_this4.jx += djx;
+						if(_this4.jx > _this4.jumpX + djx / 2) {
+							_this4.toggleX = false;
+							_this4.jx = 0.;
 							djx = 0.;
 						}
 					} else {
-						djx = _this7.jumpX / _this7.jumpSpeed;
-						_this7.jx += djx;
-						if(_this7.jx < _this7.jumpX + djx / 2) {
-							_this7.toggleX = false;
-							_this7.jx = 0.;
+						djx = _this4.jumpX / _this4.jumpSpeed;
+						_this4.jx += djx;
+						if(_this4.jx < _this4.jumpX + djx / 2) {
+							_this4.toggleX = false;
+							_this4.jx = 0.;
 							djx = 0.;
 						}
 					}
 				}
-				if(_this7.toggleY) {
-					if(_this7.jumpY > 0) {
-						djy = _this7.jumpY / _this7.jumpSpeed;
-						_this7.jy += djy;
-						if(_this7.jy > _this7.jumpY + djy / 2) {
-							_this7.toggleY = false;
-							_this7.jy = 0.;
+				if(_this4.toggleY) {
+					if(_this4.jumpY > 0) {
+						djy = _this4.jumpY / _this4.jumpSpeed;
+						_this4.jy += djy;
+						if(_this4.jy > _this4.jumpY + djy / 2) {
+							_this4.toggleY = false;
+							_this4.jy = 0.;
 							djy = 0.;
 						}
 					} else {
-						djy = _this7.jumpY / _this7.jumpSpeed;
-						_this7.jy += djx;
-						if(_this7.jy < _this7.jumpY + djy / 2) {
-							_this7.toggleY = false;
-							_this7.jy = 0.;
+						djy = _this4.jumpY / _this4.jumpSpeed;
+						_this4.jy += djx;
+						if(_this4.jy < _this4.jumpY + djy / 2) {
+							_this4.toggleY = false;
+							_this4.jy = 0.;
 							djy = 0.;
 						}
 					}
 				}
-				if(_this7.toggleX) {
-					var _this8 = _this7.controller;
-					var leftStop = _this7.leftStop;
-					var rightStop = _this7.rightStop;
-					var l4 = _this8.shapes.length;
+				if(_this4.toggleX) {
+					var _this5 = _this4.controller;
+					var leftStop = _this4.leftStop;
+					var rightStop = _this4.rightStop;
+					var l3 = _this5.shapes.length;
 					var shape1;
-					var _g111 = 0;
-					var _g23 = l4;
-					while(_g111 < _g23) {
-						var i9 = _g111++;
-						shape1 = _this8.shapes[i9];
+					var _g18 = 0;
+					var _g9 = l3;
+					while(_g18 < _g9) {
+						var i7 = _g18++;
+						shape1 = _this5.shapes[i7];
 						if(shape1.blocks != null && shape1.blocks.length != 0) {
 							var sqr = shape1.blocks;
 							var sides0;
@@ -26486,15 +26503,15 @@ tetrisTriangles_TetrisTrianglesKha2.prototype = {
 							} else if(sqr.length == 0) {
 								sides0 = null;
 							} else {
-								var l5 = sqr.length;
+								var l4 = sqr.length;
 								var square = sqr[0];
 								var bx = square.get_x();
 								var br = square.get_right();
-								var _g112 = 1;
-								var _g24 = l5;
-								while(_g112 < _g24) {
-									var i10 = _g112++;
-									square = sqr[i10];
+								var _g19 = 1;
+								var _g10 = l4;
+								while(_g19 < _g10) {
+									var i8 = _g19++;
+									square = sqr[i8];
 									bx = Math.min(bx,square.get_x());
 									br = Math.max(br,square.get_right());
 								}
@@ -26507,15 +26524,15 @@ tetrisTriangles_TetrisTrianglesKha2.prototype = {
 							} else if(sqr1.length == 0) {
 								sides1 = null;
 							} else {
-								var l6 = sqr1.length;
+								var l5 = sqr1.length;
 								var square1 = sqr1[0];
 								var bx1 = square1.get_x();
 								var br1 = square1.get_right();
-								var _g113 = 1;
-								var _g25 = l6;
-								while(_g113 < _g25) {
-									var i11 = _g113++;
-									square1 = sqr1[i11];
+								var _g110 = 1;
+								var _g20 = l5;
+								while(_g110 < _g20) {
+									var i9 = _g110++;
+									square1 = sqr1[i9];
 									bx1 = Math.min(bx1,square1.get_x());
 									br1 = Math.max(br1,square1.get_right());
 								}
@@ -26540,114 +26557,37 @@ tetrisTriangles_TetrisTrianglesKha2.prototype = {
 						}
 					}
 				}
-				var _this9 = _this7.controller;
-				var y = _this7.fallSpeed + djy;
-				var l7 = _this9.shapes.length;
-				var _g114 = 0;
-				var _g26 = l7;
-				while(_g114 < _g26) {
-					var i12 = _g114++;
-					_this9.shapes[i12].moveDelta(0.0,y);
+				var _this6 = _this4.controller;
+				var y = _this4.fallSpeed + djy;
+				var l6 = _this6.shapes.length;
+				var _g111 = 0;
+				var _g21 = l6;
+				while(_g111 < _g21) {
+					var i10 = _g111++;
+					_this6.shapes[i10].moveDelta(0.0,y);
 				}
-				var _this10 = _this.controller;
-				var l8 = _this10.shapes.length;
-				var arr1 = [];
-				var _g115 = 0;
-				var _g27 = l8;
-				while(_g115 < _g27) {
-					var i13 = _g115++;
-					_this10.shapes[i13].getCentreInt(arr1);
-				}
-				var shapeLocations1 = arr1;
-				var _this11 = _this10.background;
-				var col0_1 = _this11.bgCol0;
-				var col1_1 = _this11.bgCol1;
-				var col2_1 = _this11.bgCol2;
-				var col3_1 = _this11.bgCol3;
-				var c01;
-				var c11;
-				var toggle1 = false;
-				var indx2 = 0;
-				var _g116 = 0;
-				var _g28 = _this11.wide;
-				while(_g116 < _g28) {
-					var w4 = _g116++;
-					if(toggle1) {
-						c01 = col0_1;
-						c11 = col1_1;
-					} else {
-						c01 = col2_1;
-						c11 = col3_1;
-					}
-					toggle1 = !toggle1;
-					var _g31 = 0;
-					var _g29 = _this11.hi;
-					while(_g31 < _g29) {
-						var h6 = _g31++;
-						var h7 = _this11.hi;
-						indx2 = 2 + _this11.wide * h6 + w4 | 0;
-						var _this12 = _this11.bgSquares[indx2];
-						_this12.col0 = c01;
-						_this12.col1 = c11;
-						_this12.t0.colorID = c01;
-						_this12.t1.colorID = c11;
-						_this12.t0.colorA = c01;
-						_this12.t0.colorB = c01;
-						_this12.t0.colorC = c01;
-						_this12.t1.colorA = c11;
-						_this12.t1.colorB = c11;
-						_this12.t1.colorC = c11;
-					}
-				}
-				var ls1 = shapeLocations1.length;
-				var pos1;
-				var indx3 = 0;
-				var dx1 = 0;
-				var dy1 = 0;
-				var _g117 = 0;
-				var _g30 = ls1;
-				while(_g117 < _g30) {
-					var i14 = _g117++;
-					pos1 = shapeLocations1[i14];
-					dx1 = pos1.x;
-					dy1 = pos1.y;
-					if(dx1 > 0 && dx1 < _this11.wide && dy1 > 0 && dy1 < _this11.hi) {
-						var h8 = _this11.hi;
-						indx3 = 2 + _this11.wide * dy1 + dx1 | 0;
-						var _this13 = _this11.bgSquares[indx3];
-						_this13.col0 = 14;
-						_this13.col1 = 14;
-						_this13.t0.colorID = 14;
-						_this13.t1.colorID = 14;
-						_this13.t0.colorA = 14;
-						_this13.t0.colorB = 14;
-						_this13.t0.colorC = 14;
-						_this13.t1.colorA = 14;
-						_this13.t1.colorB = 14;
-						_this13.t1.colorC = 14;
-					}
-				}
-				var l9 = _this10.shapes.length;
+				var _this7 = _this.controller;
+				var l7 = _this7.shapes.length;
 				var shape2;
 				var hit1 = false;
-				var _g118 = 0;
-				var _g32 = l9;
-				while(_g118 < _g32) {
-					var i15 = _g118++;
-					shape2 = _this10.shapes[i15];
-					var this3 = _this10.inertArr;
+				var _g112 = 0;
+				var _g22 = l7;
+				while(_g112 < _g22) {
+					var i11 = _g112++;
+					shape2 = _this7.shapes[i11];
+					var this3 = _this7.inertArr;
 					var arrP2 = shape2.getLocation();
 					var lp2 = arrP2.length;
 					var p2;
 					var clash2 = false;
-					var _g119 = 0;
-					var _g33 = lp2;
-					while(_g119 < _g33) {
-						var i16 = _g119++;
-						p2 = arrP2[i16];
-						var w5 = this3[0];
-						var h9 = this3[1];
-						if(this3[2 + w5 * p2.y + p2.x | 0] == 1) {
+					var _g113 = 0;
+					var _g23 = lp2;
+					while(_g113 < _g23) {
+						var i12 = _g113++;
+						p2 = arrP2[i12];
+						var w3 = this3[0];
+						var h3 = this3[1];
+						if(this3[2 + w3 * p2.y + p2.x | 0] == 1) {
 							clash2 = true;
 							break;
 						}
@@ -26664,23 +26604,23 @@ tetrisTriangles_TetrisTrianglesKha2.prototype = {
 						shape2.rotate(offAngle1);
 						var newLoc1;
 						var lastLoc1;
-						var _g120 = 0;
-						var _g34 = shape2.lastLocation.length;
-						while(_g120 < _g34) {
-							var i17 = _g120++;
-							newLoc1 = shape2.newLocation[i17];
-							lastLoc1 = shape2.lastLocation[i17];
-							shape2.blocks[i17].set_x(lastLoc1.x * shape2.dia);
-							shape2.blocks[i17].set_y(lastLoc1.y * shape2.dia);
-							shape2.virtualBlocks[i17].set_x(lastLoc1.x * shape2.dia);
-							shape2.virtualBlocks[i17].set_y(lastLoc1.y * shape2.dia);
+						var _g114 = 0;
+						var _g24 = shape2.lastLocation.length;
+						while(_g114 < _g24) {
+							var i13 = _g114++;
+							newLoc1 = shape2.newLocation[i13];
+							lastLoc1 = shape2.lastLocation[i13];
+							shape2.blocks[i13].set_x(lastLoc1.x * shape2.dia);
+							shape2.blocks[i13].set_y(lastLoc1.y * shape2.dia);
+							shape2.virtualBlocks[i13].set_x(lastLoc1.x * shape2.dia);
+							shape2.virtualBlocks[i13].set_y(lastLoc1.y * shape2.dia);
 						}
 						var newBlocks1 = shape2.clearBlocks();
-						var _g35 = 0;
-						var _g121 = shape2.blocks;
-						while(_g35 < _g121.length) {
-							var b1 = _g121[_g35];
-							++_g35;
+						var _g25 = 0;
+						var _g115 = shape2.blocks;
+						while(_g25 < _g115.length) {
+							var b1 = _g115[_g25];
+							++_g25;
 							shape2.col0 = 8;
 							shape2.col1 = 8;
 							b1.col0 = 8;
@@ -26694,50 +26634,50 @@ tetrisTriangles_TetrisTrianglesKha2.prototype = {
 							b1.t1.colorB = 8;
 							b1.t1.colorC = 8;
 						}
-						var l10 = newBlocks1.length;
-						var _g122 = 0;
-						var _g36 = l10;
-						while(_g122 < _g36) {
-							var i18 = _g122++;
-							_this10.bottom.pushBlock(newBlocks1[i18]);
+						var l8 = newBlocks1.length;
+						var _g116 = 0;
+						var _g26 = l8;
+						while(_g116 < _g26) {
+							var i14 = _g116++;
+							_this7.bottom.pushBlock(newBlocks1[i14]);
 						}
 						var arrP3 = shape2.lastLocation;
-						var arr2d1 = _this10.inertArr;
+						var arr2d1 = _this7.inertArr;
 						var lp3 = arrP3.length;
 						var p3;
-						var _g123 = 0;
-						var _g37 = lp3;
-						while(_g123 < _g37) {
-							var i19 = _g123++;
-							p3 = arrP3[i19];
-							var w6 = arr2d1[0];
-							var h10 = arr2d1[1];
-							arr2d1[2 + w6 * p3.y + p3.x | 0] = 1;
+						var _g117 = 0;
+						var _g27 = lp3;
+						while(_g117 < _g27) {
+							var i15 = _g117++;
+							p3 = arrP3[i15];
+							var w4 = arr2d1[0];
+							var h4 = arr2d1[1];
+							arr2d1[2 + w4 * p3.y + p3.x | 0] = 1;
 						}
 						hit1 = true;
 					}
 				}
-				var this4 = _this10.inertArr;
-				var w7 = this4[0];
-				var h11 = this4[1];
-				var s1 = 2 + w7 * 0 | 0;
-				var e1 = s1 + w7;
+				var this4 = _this7.inertArr;
+				var w5 = this4[0];
+				var h5 = this4[1];
+				var s1 = 2 + w5 * 0 | 0;
+				var e1 = s1 + w5;
 				var emp1 = true;
-				var _g124 = s1;
-				var _g38 = e1;
-				while(_g124 < _g38) {
-					var i20 = _g124++;
-					if(this4[i20] == 1) {
+				var _g118 = s1;
+				var _g28 = e1;
+				while(_g118 < _g28) {
+					var i16 = _g118++;
+					if(this4[i16] == 1) {
 						emp1 = false;
 						break;
 					}
 				}
 				var end1 = !emp1;
 				if(end1) {
-					_this10.onGameEnd();
+					_this7.onGameEnd();
 				}
-				if(_this10.onTetrisShapeLanded != null && hit1 && !end1) {
-					_this10.onTetrisShapeLanded();
+				if(_this7.onTetrisShapeLanded != null && hit1 && !end1) {
+					_this7.onTetrisShapeLanded();
 				}
 			}
 		}
@@ -26748,11 +26688,11 @@ tetrisTriangles_TetrisTrianglesKha2.prototype = {
 		var s2 = 300;
 		var ox = 35;
 		var oy = 20;
-		var _g125 = 0;
-		var _g39 = triangles.length;
-		while(_g125 < _g39) {
-			var i21 = _g125++;
-			tri = triangles[i21];
+		var _g119 = 0;
+		var _g29 = triangles.length;
+		while(_g119 < _g29) {
+			var i17 = _g119++;
+			tri = triangles[i17];
 			g.set_color(js_Boot.__cast(this.gameColors[tri.colorID] , Int));
 			g.fillTriangle(ox + tri.ax * s2,oy + tri.ay * s2,ox + tri.bx * s2,oy + tri.by * s2,ox + tri.cx * s2,oy + tri.cy * s2);
 		}
@@ -27297,103 +27237,26 @@ tetrisTriangles_game_Controller.prototype = {
 	}
 	,hitBottom: function() {
 		var l = this.shapes.length;
-		var arr = [];
+		var shape;
+		var hit = false;
 		var _g1 = 0;
 		var _g = l;
 		while(_g1 < _g) {
 			var i = _g1++;
-			this.shapes[i].getCentreInt(arr);
-		}
-		var shapeLocations = arr;
-		var _this = this.background;
-		var col0_ = _this.bgCol0;
-		var col1_ = _this.bgCol1;
-		var col2_ = _this.bgCol2;
-		var col3_ = _this.bgCol3;
-		var c0;
-		var c1;
-		var toggle = false;
-		var indx = 0;
-		var _g11 = 0;
-		var _g2 = _this.wide;
-		while(_g11 < _g2) {
-			var w = _g11++;
-			if(toggle) {
-				c0 = col0_;
-				c1 = col1_;
-			} else {
-				c0 = col2_;
-				c1 = col3_;
-			}
-			toggle = !toggle;
-			var _g3 = 0;
-			var _g21 = _this.hi;
-			while(_g3 < _g21) {
-				var h = _g3++;
-				var h1 = _this.hi;
-				indx = 2 + _this.wide * h + w | 0;
-				var _this1 = _this.bgSquares[indx];
-				_this1.col0 = c0;
-				_this1.col1 = c1;
-				_this1.t0.colorID = c0;
-				_this1.t1.colorID = c1;
-				_this1.t0.colorA = c0;
-				_this1.t0.colorB = c0;
-				_this1.t0.colorC = c0;
-				_this1.t1.colorA = c1;
-				_this1.t1.colorB = c1;
-				_this1.t1.colorC = c1;
-			}
-		}
-		var ls = shapeLocations.length;
-		var pos;
-		var indx1 = 0;
-		var dx = 0;
-		var dy = 0;
-		var _g12 = 0;
-		var _g4 = ls;
-		while(_g12 < _g4) {
-			var i1 = _g12++;
-			pos = shapeLocations[i1];
-			dx = pos.x;
-			dy = pos.y;
-			if(dx > 0 && dx < _this.wide && dy > 0 && dy < _this.hi) {
-				var h2 = _this.hi;
-				indx1 = 2 + _this.wide * dy + dx | 0;
-				var _this2 = _this.bgSquares[indx1];
-				_this2.col0 = 14;
-				_this2.col1 = 14;
-				_this2.t0.colorID = 14;
-				_this2.t1.colorID = 14;
-				_this2.t0.colorA = 14;
-				_this2.t0.colorB = 14;
-				_this2.t0.colorC = 14;
-				_this2.t1.colorA = 14;
-				_this2.t1.colorB = 14;
-				_this2.t1.colorC = 14;
-			}
-		}
-		var l1 = this.shapes.length;
-		var shape;
-		var hit = false;
-		var _g13 = 0;
-		var _g5 = l1;
-		while(_g13 < _g5) {
-			var i2 = _g13++;
-			shape = this.shapes[i2];
+			shape = this.shapes[i];
 			var this1 = this.inertArr;
 			var arrP = shape.getLocation();
 			var lp = arrP.length;
 			var p;
 			var clash = false;
-			var _g14 = 0;
-			var _g6 = lp;
-			while(_g14 < _g6) {
-				var i3 = _g14++;
-				p = arrP[i3];
-				var w1 = this1[0];
-				var h3 = this1[1];
-				if(this1[2 + w1 * p.y + p.x | 0] == 1) {
+			var _g11 = 0;
+			var _g2 = lp;
+			while(_g11 < _g2) {
+				var i1 = _g11++;
+				p = arrP[i1];
+				var w = this1[0];
+				var h = this1[1];
+				if(this1[2 + w * p.y + p.x | 0] == 1) {
 					clash = true;
 					break;
 				}
@@ -27410,23 +27273,23 @@ tetrisTriangles_game_Controller.prototype = {
 				shape.rotate(offAngle);
 				var newLoc;
 				var lastLoc;
-				var _g15 = 0;
-				var _g7 = shape.lastLocation.length;
-				while(_g15 < _g7) {
-					var i4 = _g15++;
-					newLoc = shape.newLocation[i4];
-					lastLoc = shape.lastLocation[i4];
-					shape.blocks[i4].set_x(lastLoc.x * shape.dia);
-					shape.blocks[i4].set_y(lastLoc.y * shape.dia);
-					shape.virtualBlocks[i4].set_x(lastLoc.x * shape.dia);
-					shape.virtualBlocks[i4].set_y(lastLoc.y * shape.dia);
+				var _g12 = 0;
+				var _g3 = shape.lastLocation.length;
+				while(_g12 < _g3) {
+					var i2 = _g12++;
+					newLoc = shape.newLocation[i2];
+					lastLoc = shape.lastLocation[i2];
+					shape.blocks[i2].set_x(lastLoc.x * shape.dia);
+					shape.blocks[i2].set_y(lastLoc.y * shape.dia);
+					shape.virtualBlocks[i2].set_x(lastLoc.x * shape.dia);
+					shape.virtualBlocks[i2].set_y(lastLoc.y * shape.dia);
 				}
 				var newBlocks = shape.clearBlocks();
-				var _g8 = 0;
-				var _g16 = shape.blocks;
-				while(_g8 < _g16.length) {
-					var b = _g16[_g8];
-					++_g8;
+				var _g4 = 0;
+				var _g13 = shape.blocks;
+				while(_g4 < _g13.length) {
+					var b = _g13[_g4];
+					++_g4;
 					shape.col0 = 8;
 					shape.col1 = 8;
 					b.col0 = 8;
@@ -27440,40 +27303,40 @@ tetrisTriangles_game_Controller.prototype = {
 					b.t1.colorB = 8;
 					b.t1.colorC = 8;
 				}
-				var l2 = newBlocks.length;
-				var _g17 = 0;
-				var _g9 = l2;
-				while(_g17 < _g9) {
-					var i5 = _g17++;
-					this.bottom.pushBlock(newBlocks[i5]);
+				var l1 = newBlocks.length;
+				var _g14 = 0;
+				var _g5 = l1;
+				while(_g14 < _g5) {
+					var i3 = _g14++;
+					this.bottom.pushBlock(newBlocks[i3]);
 				}
 				var arrP1 = shape.lastLocation;
 				var arr2d = this.inertArr;
 				var lp1 = arrP1.length;
 				var p1;
-				var _g18 = 0;
-				var _g10 = lp1;
-				while(_g18 < _g10) {
-					var i6 = _g18++;
-					p1 = arrP1[i6];
-					var w2 = arr2d[0];
-					var h4 = arr2d[1];
-					arr2d[2 + w2 * p1.y + p1.x | 0] = 1;
+				var _g15 = 0;
+				var _g6 = lp1;
+				while(_g15 < _g6) {
+					var i4 = _g15++;
+					p1 = arrP1[i4];
+					var w1 = arr2d[0];
+					var h1 = arr2d[1];
+					arr2d[2 + w1 * p1.y + p1.x | 0] = 1;
 				}
 				hit = true;
 			}
 		}
 		var this2 = this.inertArr;
-		var w3 = this2[0];
-		var h5 = this2[1];
-		var s = 2 + w3 * 0 | 0;
-		var e = s + w3;
+		var w2 = this2[0];
+		var h2 = this2[1];
+		var s = 2 + w2 * 0 | 0;
+		var e = s + w2;
 		var emp = true;
-		var _g19 = s;
-		var _g20 = e;
-		while(_g19 < _g20) {
-			var i7 = _g19++;
-			if(this2[i7] == 1) {
+		var _g16 = s;
+		var _g7 = e;
+		while(_g16 < _g7) {
+			var i5 = _g16++;
+			if(this2[i5] == 1) {
 				emp = false;
 				break;
 			}
@@ -27826,7 +27689,7 @@ tetrisTriangles_game_Controller.prototype = {
 		this.bottom = ts;
 		var arr = [];
 		var bottomPositions = this.bottom.getCentreInt(arr);
-		var arr2d = this.inertArr;
+		var this1 = this.inertArr;
 		var lp = bottomPositions.length;
 		var p1;
 		var _g11 = 0;
@@ -27834,9 +27697,9 @@ tetrisTriangles_game_Controller.prototype = {
 		while(_g11 < _g2) {
 			var i = _g11++;
 			p1 = bottomPositions[i];
-			var w1 = arr2d[0];
-			var h = arr2d[1];
-			arr2d[2 + w1 * p1.y + p1.x | 0] = 1;
+			var w1 = this1[0];
+			var h = this1[1];
+			this1[2 + w1 * (p1.y + -1) + p1.x | 0] = 1;
 		}
 	}
 	,__class__: tetrisTriangles_game_Controller
@@ -29013,58 +28876,96 @@ tetrisTriangles_game_Shape.prototype = {
 				this.virtualBlocks[i].moveDelta(this.centre.x,this.centre.y);
 				var _this = this.virtualBlocks[i];
 				var p = this.centre;
-				var t = _this.t0;
-				_this.dirtyX = true;
-				_this.dirtyY = true;
-				t.moveDelta(-p.x,-p.y);
-				t.moveDelta(-p.x,-p.y);
-				var x;
-				var y;
-				x = t.ax;
-				y = t.ay;
-				t.ax = x * cos1 - y * sin1;
-				t.ay = x * sin1 + y * cos1;
-				x = t.bx;
-				y = t.by;
-				t.bx = x * cos1 - y * sin1;
-				t.by = x * sin1 + y * cos1;
-				x = t.cx;
-				y = t.cy;
-				t.cx = x * cos1 - y * sin1;
-				t.cy = x * sin1 + y * cos1;
-				t.moveDelta(p.x,p.y);
-				t.moveDelta(p.x,p.y);
-				_this.dirtyX = true;
-				_this.dirtyY = true;
-				var t1 = _this.t1;
-				_this.dirtyX = true;
-				_this.dirtyY = true;
-				t1.moveDelta(-p.x,-p.y);
-				t1.moveDelta(-p.x,-p.y);
-				var x1;
-				var y1;
-				x1 = t1.ax;
-				y1 = t1.ay;
-				t1.ax = x1 * cos1 - y1 * sin1;
-				t1.ay = x1 * sin1 + y1 * cos1;
-				x1 = t1.bx;
-				y1 = t1.by;
-				t1.bx = x1 * cos1 - y1 * sin1;
-				t1.by = x1 * sin1 + y1 * cos1;
-				x1 = t1.cx;
-				y1 = t1.cy;
-				t1.cx = x1 * cos1 - y1 * sin1;
-				t1.cy = x1 * sin1 + y1 * cos1;
-				t1.moveDelta(p.x,p.y);
-				t1.moveDelta(p.x,p.y);
-				_this.dirtyX = true;
-				_this.dirtyY = true;
-				var dx = _this.t0.bx;
-				var dy = _this.t0.by;
-				var ex = _this.t0.cx;
-				var ey = _this.t0.cy;
-				_this.cX = dx < ex ? dx + (ex - dx) / 2 : ex + (dx - ex) / 2;
-				_this.cY = dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2;
+				var _this1 = _this.t0;
+				var px = p.x;
+				var py = p.y;
+				var dx = -px;
+				var dy = -py;
+				_this1.ax += dx;
+				_this1.ay += dy;
+				_this1.bx += dx;
+				_this1.by += dy;
+				_this1.cx += dx;
+				_this1.cy += dy;
+				var dx1 = -px;
+				var dy1 = -py;
+				_this1.ax += dx1;
+				_this1.ay += dy1;
+				_this1.bx += dx1;
+				_this1.by += dy1;
+				_this1.cx += dx1;
+				_this1.cy += dy1;
+				var dx2;
+				var dy2;
+				dx2 = _this1.ax;
+				dy2 = _this1.ay;
+				_this1.ax = dx2 * cos1 - dy2 * sin1;
+				_this1.ay = dx2 * sin1 + dy2 * cos1;
+				dx2 = _this1.bx;
+				dy2 = _this1.by;
+				_this1.bx = dx2 * cos1 - dy2 * sin1;
+				_this1.by = dx2 * sin1 + dy2 * cos1;
+				dx2 = _this1.cx;
+				dy2 = _this1.cy;
+				_this1.cx = dx2 * cos1 - dy2 * sin1;
+				_this1.cy = dx2 * sin1 + dy2 * cos1;
+				_this1.ax += px;
+				_this1.ay += py;
+				_this1.bx += px;
+				_this1.by += py;
+				_this1.cx += px;
+				_this1.cy += py;
+				_this1.ax += px;
+				_this1.ay += py;
+				_this1.bx += px;
+				_this1.by += py;
+				_this1.cx += px;
+				_this1.cy += py;
+				var _this2 = _this.t1;
+				var px1 = p.x;
+				var py1 = p.y;
+				var dx3 = -px1;
+				var dy3 = -py1;
+				_this2.ax += dx3;
+				_this2.ay += dy3;
+				_this2.bx += dx3;
+				_this2.by += dy3;
+				_this2.cx += dx3;
+				_this2.cy += dy3;
+				var dx4 = -px1;
+				var dy4 = -py1;
+				_this2.ax += dx4;
+				_this2.ay += dy4;
+				_this2.bx += dx4;
+				_this2.by += dy4;
+				_this2.cx += dx4;
+				_this2.cy += dy4;
+				var dx5;
+				var dy5;
+				dx5 = _this2.ax;
+				dy5 = _this2.ay;
+				_this2.ax = dx5 * cos1 - dy5 * sin1;
+				_this2.ay = dx5 * sin1 + dy5 * cos1;
+				dx5 = _this2.bx;
+				dy5 = _this2.by;
+				_this2.bx = dx5 * cos1 - dy5 * sin1;
+				_this2.by = dx5 * sin1 + dy5 * cos1;
+				dx5 = _this2.cx;
+				dy5 = _this2.cy;
+				_this2.cx = dx5 * cos1 - dy5 * sin1;
+				_this2.cy = dx5 * sin1 + dy5 * cos1;
+				_this2.ax += px1;
+				_this2.ay += py1;
+				_this2.bx += px1;
+				_this2.by += py1;
+				_this2.cx += px1;
+				_this2.cy += py1;
+				_this2.ax += px1;
+				_this2.ay += py1;
+				_this2.bx += px1;
+				_this2.by += py1;
+				_this2.cx += px1;
+				_this2.cy += py1;
 				this.virtualBlocks[i].moveDelta(-this.centre.x,-this.centre.y);
 			}
 		}
@@ -29073,60 +28974,98 @@ tetrisTriangles_game_Shape.prototype = {
 		while(_g11 < _g3) {
 			var i1 = _g11++;
 			this.blocks[i1].moveDelta(this.centre.x,this.centre.y);
-			var _this1 = this.blocks[i1];
+			var _this3 = this.blocks[i1];
 			var p1 = this.centre;
-			var t2 = _this1.t0;
-			_this1.dirtyX = true;
-			_this1.dirtyY = true;
-			t2.moveDelta(-p1.x,-p1.y);
-			t2.moveDelta(-p1.x,-p1.y);
-			var x2;
-			var y2;
-			x2 = t2.ax;
-			y2 = t2.ay;
-			t2.ax = x2 * cos - y2 * sin;
-			t2.ay = x2 * sin + y2 * cos;
-			x2 = t2.bx;
-			y2 = t2.by;
-			t2.bx = x2 * cos - y2 * sin;
-			t2.by = x2 * sin + y2 * cos;
-			x2 = t2.cx;
-			y2 = t2.cy;
-			t2.cx = x2 * cos - y2 * sin;
-			t2.cy = x2 * sin + y2 * cos;
-			t2.moveDelta(p1.x,p1.y);
-			t2.moveDelta(p1.x,p1.y);
-			_this1.dirtyX = true;
-			_this1.dirtyY = true;
-			var t3 = _this1.t1;
-			_this1.dirtyX = true;
-			_this1.dirtyY = true;
-			t3.moveDelta(-p1.x,-p1.y);
-			t3.moveDelta(-p1.x,-p1.y);
-			var x3;
-			var y3;
-			x3 = t3.ax;
-			y3 = t3.ay;
-			t3.ax = x3 * cos - y3 * sin;
-			t3.ay = x3 * sin + y3 * cos;
-			x3 = t3.bx;
-			y3 = t3.by;
-			t3.bx = x3 * cos - y3 * sin;
-			t3.by = x3 * sin + y3 * cos;
-			x3 = t3.cx;
-			y3 = t3.cy;
-			t3.cx = x3 * cos - y3 * sin;
-			t3.cy = x3 * sin + y3 * cos;
-			t3.moveDelta(p1.x,p1.y);
-			t3.moveDelta(p1.x,p1.y);
-			_this1.dirtyX = true;
-			_this1.dirtyY = true;
-			var dx1 = _this1.t0.bx;
-			var dy1 = _this1.t0.by;
-			var ex1 = _this1.t0.cx;
-			var ey1 = _this1.t0.cy;
-			_this1.cX = dx1 < ex1 ? dx1 + (ex1 - dx1) / 2 : ex1 + (dx1 - ex1) / 2;
-			_this1.cY = dy1 < ey1 ? dy1 + (ey1 - dy1) / 2 : dy1 + (dy1 - ey1) / 2;
+			var _this4 = _this3.t0;
+			var px2 = p1.x;
+			var py2 = p1.y;
+			var dx6 = -px2;
+			var dy6 = -py2;
+			_this4.ax += dx6;
+			_this4.ay += dy6;
+			_this4.bx += dx6;
+			_this4.by += dy6;
+			_this4.cx += dx6;
+			_this4.cy += dy6;
+			var dx7 = -px2;
+			var dy7 = -py2;
+			_this4.ax += dx7;
+			_this4.ay += dy7;
+			_this4.bx += dx7;
+			_this4.by += dy7;
+			_this4.cx += dx7;
+			_this4.cy += dy7;
+			var dx8;
+			var dy8;
+			dx8 = _this4.ax;
+			dy8 = _this4.ay;
+			_this4.ax = dx8 * cos - dy8 * sin;
+			_this4.ay = dx8 * sin + dy8 * cos;
+			dx8 = _this4.bx;
+			dy8 = _this4.by;
+			_this4.bx = dx8 * cos - dy8 * sin;
+			_this4.by = dx8 * sin + dy8 * cos;
+			dx8 = _this4.cx;
+			dy8 = _this4.cy;
+			_this4.cx = dx8 * cos - dy8 * sin;
+			_this4.cy = dx8 * sin + dy8 * cos;
+			_this4.ax += px2;
+			_this4.ay += py2;
+			_this4.bx += px2;
+			_this4.by += py2;
+			_this4.cx += px2;
+			_this4.cy += py2;
+			_this4.ax += px2;
+			_this4.ay += py2;
+			_this4.bx += px2;
+			_this4.by += py2;
+			_this4.cx += px2;
+			_this4.cy += py2;
+			var _this5 = _this3.t1;
+			var px3 = p1.x;
+			var py3 = p1.y;
+			var dx9 = -px3;
+			var dy9 = -py3;
+			_this5.ax += dx9;
+			_this5.ay += dy9;
+			_this5.bx += dx9;
+			_this5.by += dy9;
+			_this5.cx += dx9;
+			_this5.cy += dy9;
+			var dx10 = -px3;
+			var dy10 = -py3;
+			_this5.ax += dx10;
+			_this5.ay += dy10;
+			_this5.bx += dx10;
+			_this5.by += dy10;
+			_this5.cx += dx10;
+			_this5.cy += dy10;
+			var dx11;
+			var dy11;
+			dx11 = _this5.ax;
+			dy11 = _this5.ay;
+			_this5.ax = dx11 * cos - dy11 * sin;
+			_this5.ay = dx11 * sin + dy11 * cos;
+			dx11 = _this5.bx;
+			dy11 = _this5.by;
+			_this5.bx = dx11 * cos - dy11 * sin;
+			_this5.by = dx11 * sin + dy11 * cos;
+			dx11 = _this5.cx;
+			dy11 = _this5.cy;
+			_this5.cx = dx11 * cos - dy11 * sin;
+			_this5.cy = dx11 * sin + dy11 * cos;
+			_this5.ax += px3;
+			_this5.ay += py3;
+			_this5.bx += px3;
+			_this5.by += py3;
+			_this5.cx += px3;
+			_this5.cy += py3;
+			_this5.ax += px3;
+			_this5.ay += py3;
+			_this5.bx += px3;
+			_this5.by += py3;
+			_this5.cx += px3;
+			_this5.cy += py3;
 			this.blocks[i1].moveDelta(-this.centre.x,-this.centre.y);
 		}
 		this.lastRook = this.rook;
@@ -29143,58 +29082,96 @@ tetrisTriangles_game_Shape.prototype = {
 				this.virtualBlocks[i].moveDelta(this.centre.x,this.centre.y);
 				var _this = this.virtualBlocks[i];
 				var p = this.centre;
-				var t = _this.t0;
-				_this.dirtyX = true;
-				_this.dirtyY = true;
-				t.moveDelta(-p.x,-p.y);
-				t.moveDelta(-p.x,-p.y);
-				var x;
-				var y;
-				x = t.ax;
-				y = t.ay;
-				t.ax = x * cos - y * sin;
-				t.ay = x * sin + y * cos;
-				x = t.bx;
-				y = t.by;
-				t.bx = x * cos - y * sin;
-				t.by = x * sin + y * cos;
-				x = t.cx;
-				y = t.cy;
-				t.cx = x * cos - y * sin;
-				t.cy = x * sin + y * cos;
-				t.moveDelta(p.x,p.y);
-				t.moveDelta(p.x,p.y);
-				_this.dirtyX = true;
-				_this.dirtyY = true;
-				var t1 = _this.t1;
-				_this.dirtyX = true;
-				_this.dirtyY = true;
-				t1.moveDelta(-p.x,-p.y);
-				t1.moveDelta(-p.x,-p.y);
-				var x1;
-				var y1;
-				x1 = t1.ax;
-				y1 = t1.ay;
-				t1.ax = x1 * cos - y1 * sin;
-				t1.ay = x1 * sin + y1 * cos;
-				x1 = t1.bx;
-				y1 = t1.by;
-				t1.bx = x1 * cos - y1 * sin;
-				t1.by = x1 * sin + y1 * cos;
-				x1 = t1.cx;
-				y1 = t1.cy;
-				t1.cx = x1 * cos - y1 * sin;
-				t1.cy = x1 * sin + y1 * cos;
-				t1.moveDelta(p.x,p.y);
-				t1.moveDelta(p.x,p.y);
-				_this.dirtyX = true;
-				_this.dirtyY = true;
-				var dx = _this.t0.bx;
-				var dy = _this.t0.by;
-				var ex = _this.t0.cx;
-				var ey = _this.t0.cy;
-				_this.cX = dx < ex ? dx + (ex - dx) / 2 : ex + (dx - ex) / 2;
-				_this.cY = dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2;
+				var _this1 = _this.t0;
+				var px = p.x;
+				var py = p.y;
+				var dx = -px;
+				var dy = -py;
+				_this1.ax += dx;
+				_this1.ay += dy;
+				_this1.bx += dx;
+				_this1.by += dy;
+				_this1.cx += dx;
+				_this1.cy += dy;
+				var dx1 = -px;
+				var dy1 = -py;
+				_this1.ax += dx1;
+				_this1.ay += dy1;
+				_this1.bx += dx1;
+				_this1.by += dy1;
+				_this1.cx += dx1;
+				_this1.cy += dy1;
+				var dx2;
+				var dy2;
+				dx2 = _this1.ax;
+				dy2 = _this1.ay;
+				_this1.ax = dx2 * cos - dy2 * sin;
+				_this1.ay = dx2 * sin + dy2 * cos;
+				dx2 = _this1.bx;
+				dy2 = _this1.by;
+				_this1.bx = dx2 * cos - dy2 * sin;
+				_this1.by = dx2 * sin + dy2 * cos;
+				dx2 = _this1.cx;
+				dy2 = _this1.cy;
+				_this1.cx = dx2 * cos - dy2 * sin;
+				_this1.cy = dx2 * sin + dy2 * cos;
+				_this1.ax += px;
+				_this1.ay += py;
+				_this1.bx += px;
+				_this1.by += py;
+				_this1.cx += px;
+				_this1.cy += py;
+				_this1.ax += px;
+				_this1.ay += py;
+				_this1.bx += px;
+				_this1.by += py;
+				_this1.cx += px;
+				_this1.cy += py;
+				var _this2 = _this.t1;
+				var px1 = p.x;
+				var py1 = p.y;
+				var dx3 = -px1;
+				var dy3 = -py1;
+				_this2.ax += dx3;
+				_this2.ay += dy3;
+				_this2.bx += dx3;
+				_this2.by += dy3;
+				_this2.cx += dx3;
+				_this2.cy += dy3;
+				var dx4 = -px1;
+				var dy4 = -py1;
+				_this2.ax += dx4;
+				_this2.ay += dy4;
+				_this2.bx += dx4;
+				_this2.by += dy4;
+				_this2.cx += dx4;
+				_this2.cy += dy4;
+				var dx5;
+				var dy5;
+				dx5 = _this2.ax;
+				dy5 = _this2.ay;
+				_this2.ax = dx5 * cos - dy5 * sin;
+				_this2.ay = dx5 * sin + dy5 * cos;
+				dx5 = _this2.bx;
+				dy5 = _this2.by;
+				_this2.bx = dx5 * cos - dy5 * sin;
+				_this2.by = dx5 * sin + dy5 * cos;
+				dx5 = _this2.cx;
+				dy5 = _this2.cy;
+				_this2.cx = dx5 * cos - dy5 * sin;
+				_this2.cy = dx5 * sin + dy5 * cos;
+				_this2.ax += px1;
+				_this2.ay += py1;
+				_this2.bx += px1;
+				_this2.by += py1;
+				_this2.cx += px1;
+				_this2.cy += py1;
+				_this2.ax += px1;
+				_this2.ay += py1;
+				_this2.bx += px1;
+				_this2.by += py1;
+				_this2.cx += px1;
+				_this2.cy += py1;
 				this.virtualBlocks[i].moveDelta(-this.centre.x,-this.centre.y);
 			}
 		}
@@ -29548,8 +29525,6 @@ tetrisTriangles_game_ShapeGenerator.prototype = {
 	,__class__: tetrisTriangles_game_ShapeGenerator
 };
 var tetrisTriangles_game_Square = function(id,triangles,x_,y_,dia_,gap_,col0_,col1_) {
-	this.dirtyY = false;
-	this.dirtyX = false;
 	gap_ = 0.;
 	this._x = x_ + gap_;
 	this._y = y_ + gap_;
@@ -29560,8 +29535,6 @@ var tetrisTriangles_game_Square = function(id,triangles,x_,y_,dia_,gap_,col0_,co
 	this._x2 = x_ + dia_ - 2 * gap_;
 	this._y2 = y_ + dia_ - 2 * gap_;
 	var rad = dia_ / 2;
-	this.cX = x_ + rad;
-	this.cY = y_ + rad;
 	var x2 = this._x2;
 	var y2 = this._y2;
 	var l = triangles.length;
@@ -29580,14 +29553,10 @@ tetrisTriangles_game_Square.prototype = {
 	,col1: null
 	,dia: null
 	,gap: null
-	,dirtyX: null
-	,dirtyY: null
 	,_x: null
 	,_y: null
 	,_x2: null
 	,_y2: null
-	,cX: null
-	,cY: null
 	,changeColor: function(col0_,col1_) {
 		this.col0 = col0_;
 		this.col1 = col1_;
@@ -29611,159 +29580,232 @@ tetrisTriangles_game_Square.prototype = {
 		return arr;
 	}
 	,moveDelta: function(dx,dy) {
-		this.t0.moveDelta(dx,dy);
-		this.t1.moveDelta(dx,dy);
-		var dx1 = this.t0.bx;
-		var dy1 = this.t0.by;
-		var ex = this.t0.cx;
-		var ey = this.t0.cy;
-		this.cX = dx1 < ex ? dx1 + (ex - dx1) / 2 : ex + (dx1 - ex) / 2;
-		this.cY = dy1 < ey ? dy1 + (ey - dy1) / 2 : dy1 + (dy1 - ey) / 2;
+		var _this = this.t0;
+		_this.ax += dx;
+		_this.ay += dy;
+		_this.bx += dx;
+		_this.by += dy;
+		_this.cx += dx;
+		_this.cy += dy;
+		var _this1 = this.t1;
+		_this1.ax += dx;
+		_this1.ay += dy;
+		_this1.bx += dx;
+		_this1.by += dy;
+		_this1.cx += dx;
+		_this1.cy += dy;
 	}
 	,rotateAroundTheta: function(p,theta) {
 		var cos = Math.cos(theta);
 		var sin = Math.sin(theta);
-		var t = this.t0;
-		this.dirtyX = true;
-		this.dirtyY = true;
-		t.moveDelta(-p.x,-p.y);
-		t.moveDelta(-p.x,-p.y);
-		var x;
-		var y;
-		x = t.ax;
-		y = t.ay;
-		t.ax = x * cos - y * sin;
-		t.ay = x * sin + y * cos;
-		x = t.bx;
-		y = t.by;
-		t.bx = x * cos - y * sin;
-		t.by = x * sin + y * cos;
-		x = t.cx;
-		y = t.cy;
-		t.cx = x * cos - y * sin;
-		t.cy = x * sin + y * cos;
-		t.moveDelta(p.x,p.y);
-		t.moveDelta(p.x,p.y);
-		this.dirtyX = true;
-		this.dirtyY = true;
-		var t1 = this.t1;
-		this.dirtyX = true;
-		this.dirtyY = true;
-		t1.moveDelta(-p.x,-p.y);
-		t1.moveDelta(-p.x,-p.y);
-		var x1;
-		var y1;
-		x1 = t1.ax;
-		y1 = t1.ay;
-		t1.ax = x1 * cos - y1 * sin;
-		t1.ay = x1 * sin + y1 * cos;
-		x1 = t1.bx;
-		y1 = t1.by;
-		t1.bx = x1 * cos - y1 * sin;
-		t1.by = x1 * sin + y1 * cos;
-		x1 = t1.cx;
-		y1 = t1.cy;
-		t1.cx = x1 * cos - y1 * sin;
-		t1.cy = x1 * sin + y1 * cos;
-		t1.moveDelta(p.x,p.y);
-		t1.moveDelta(p.x,p.y);
-		this.dirtyX = true;
-		this.dirtyY = true;
-		var dx = this.t0.bx;
-		var dy = this.t0.by;
-		var ex = this.t0.cx;
-		var ey = this.t0.cy;
-		this.cX = dx < ex ? dx + (ex - dx) / 2 : ex + (dx - ex) / 2;
-		this.cY = dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2;
+		var _this = this.t0;
+		var px = p.x;
+		var py = p.y;
+		var dx = -px;
+		var dy = -py;
+		_this.ax += dx;
+		_this.ay += dy;
+		_this.bx += dx;
+		_this.by += dy;
+		_this.cx += dx;
+		_this.cy += dy;
+		var dx1 = -px;
+		var dy1 = -py;
+		_this.ax += dx1;
+		_this.ay += dy1;
+		_this.bx += dx1;
+		_this.by += dy1;
+		_this.cx += dx1;
+		_this.cy += dy1;
+		var dx2;
+		var dy2;
+		dx2 = _this.ax;
+		dy2 = _this.ay;
+		_this.ax = dx2 * cos - dy2 * sin;
+		_this.ay = dx2 * sin + dy2 * cos;
+		dx2 = _this.bx;
+		dy2 = _this.by;
+		_this.bx = dx2 * cos - dy2 * sin;
+		_this.by = dx2 * sin + dy2 * cos;
+		dx2 = _this.cx;
+		dy2 = _this.cy;
+		_this.cx = dx2 * cos - dy2 * sin;
+		_this.cy = dx2 * sin + dy2 * cos;
+		_this.ax += px;
+		_this.ay += py;
+		_this.bx += px;
+		_this.by += py;
+		_this.cx += px;
+		_this.cy += py;
+		_this.ax += px;
+		_this.ay += py;
+		_this.bx += px;
+		_this.by += py;
+		_this.cx += px;
+		_this.cy += py;
+		var _this1 = this.t1;
+		var px1 = p.x;
+		var py1 = p.y;
+		var dx3 = -px1;
+		var dy3 = -py1;
+		_this1.ax += dx3;
+		_this1.ay += dy3;
+		_this1.bx += dx3;
+		_this1.by += dy3;
+		_this1.cx += dx3;
+		_this1.cy += dy3;
+		var dx4 = -px1;
+		var dy4 = -py1;
+		_this1.ax += dx4;
+		_this1.ay += dy4;
+		_this1.bx += dx4;
+		_this1.by += dy4;
+		_this1.cx += dx4;
+		_this1.cy += dy4;
+		var dx5;
+		var dy5;
+		dx5 = _this1.ax;
+		dy5 = _this1.ay;
+		_this1.ax = dx5 * cos - dy5 * sin;
+		_this1.ay = dx5 * sin + dy5 * cos;
+		dx5 = _this1.bx;
+		dy5 = _this1.by;
+		_this1.bx = dx5 * cos - dy5 * sin;
+		_this1.by = dx5 * sin + dy5 * cos;
+		dx5 = _this1.cx;
+		dy5 = _this1.cy;
+		_this1.cx = dx5 * cos - dy5 * sin;
+		_this1.cy = dx5 * sin + dy5 * cos;
+		_this1.ax += px1;
+		_this1.ay += py1;
+		_this1.bx += px1;
+		_this1.by += py1;
+		_this1.cx += px1;
+		_this1.cy += py1;
+		_this1.ax += px1;
+		_this1.ay += py1;
+		_this1.bx += px1;
+		_this1.by += py1;
+		_this1.cx += px1;
+		_this1.cy += py1;
 	}
 	,rotateAround: function(p,cos,sin) {
-		var t = this.t0;
-		this.dirtyX = true;
-		this.dirtyY = true;
-		t.moveDelta(-p.x,-p.y);
-		t.moveDelta(-p.x,-p.y);
-		var x;
-		var y;
-		x = t.ax;
-		y = t.ay;
-		t.ax = x * cos - y * sin;
-		t.ay = x * sin + y * cos;
-		x = t.bx;
-		y = t.by;
-		t.bx = x * cos - y * sin;
-		t.by = x * sin + y * cos;
-		x = t.cx;
-		y = t.cy;
-		t.cx = x * cos - y * sin;
-		t.cy = x * sin + y * cos;
-		t.moveDelta(p.x,p.y);
-		t.moveDelta(p.x,p.y);
-		this.dirtyX = true;
-		this.dirtyY = true;
-		var t1 = this.t1;
-		this.dirtyX = true;
-		this.dirtyY = true;
-		t1.moveDelta(-p.x,-p.y);
-		t1.moveDelta(-p.x,-p.y);
-		var x1;
-		var y1;
-		x1 = t1.ax;
-		y1 = t1.ay;
-		t1.ax = x1 * cos - y1 * sin;
-		t1.ay = x1 * sin + y1 * cos;
-		x1 = t1.bx;
-		y1 = t1.by;
-		t1.bx = x1 * cos - y1 * sin;
-		t1.by = x1 * sin + y1 * cos;
-		x1 = t1.cx;
-		y1 = t1.cy;
-		t1.cx = x1 * cos - y1 * sin;
-		t1.cy = x1 * sin + y1 * cos;
-		t1.moveDelta(p.x,p.y);
-		t1.moveDelta(p.x,p.y);
-		this.dirtyX = true;
-		this.dirtyY = true;
+		var _this = this.t0;
+		var px = p.x;
+		var py = p.y;
+		var dx = -px;
+		var dy = -py;
+		_this.ax += dx;
+		_this.ay += dy;
+		_this.bx += dx;
+		_this.by += dy;
+		_this.cx += dx;
+		_this.cy += dy;
+		var dx1 = -px;
+		var dy1 = -py;
+		_this.ax += dx1;
+		_this.ay += dy1;
+		_this.bx += dx1;
+		_this.by += dy1;
+		_this.cx += dx1;
+		_this.cy += dy1;
+		var dx2;
+		var dy2;
+		dx2 = _this.ax;
+		dy2 = _this.ay;
+		_this.ax = dx2 * cos - dy2 * sin;
+		_this.ay = dx2 * sin + dy2 * cos;
+		dx2 = _this.bx;
+		dy2 = _this.by;
+		_this.bx = dx2 * cos - dy2 * sin;
+		_this.by = dx2 * sin + dy2 * cos;
+		dx2 = _this.cx;
+		dy2 = _this.cy;
+		_this.cx = dx2 * cos - dy2 * sin;
+		_this.cy = dx2 * sin + dy2 * cos;
+		_this.ax += px;
+		_this.ay += py;
+		_this.bx += px;
+		_this.by += py;
+		_this.cx += px;
+		_this.cy += py;
+		_this.ax += px;
+		_this.ay += py;
+		_this.bx += px;
+		_this.by += py;
+		_this.cx += px;
+		_this.cy += py;
+		var _this1 = this.t1;
+		var px1 = p.x;
+		var py1 = p.y;
+		var dx3 = -px1;
+		var dy3 = -py1;
+		_this1.ax += dx3;
+		_this1.ay += dy3;
+		_this1.bx += dx3;
+		_this1.by += dy3;
+		_this1.cx += dx3;
+		_this1.cy += dy3;
+		var dx4 = -px1;
+		var dy4 = -py1;
+		_this1.ax += dx4;
+		_this1.ay += dy4;
+		_this1.bx += dx4;
+		_this1.by += dy4;
+		_this1.cx += dx4;
+		_this1.cy += dy4;
+		var dx5;
+		var dy5;
+		dx5 = _this1.ax;
+		dy5 = _this1.ay;
+		_this1.ax = dx5 * cos - dy5 * sin;
+		_this1.ay = dx5 * sin + dy5 * cos;
+		dx5 = _this1.bx;
+		dy5 = _this1.by;
+		_this1.bx = dx5 * cos - dy5 * sin;
+		_this1.by = dx5 * sin + dy5 * cos;
+		dx5 = _this1.cx;
+		dy5 = _this1.cy;
+		_this1.cx = dx5 * cos - dy5 * sin;
+		_this1.cy = dx5 * sin + dy5 * cos;
+		_this1.ax += px1;
+		_this1.ay += py1;
+		_this1.bx += px1;
+		_this1.by += py1;
+		_this1.cx += px1;
+		_this1.cy += py1;
+		_this1.ax += px1;
+		_this1.ay += py1;
+		_this1.bx += px1;
+		_this1.by += py1;
+		_this1.cx += px1;
+		_this1.cy += py1;
+	}
+	,getCentre: function() {
 		var dx = this.t0.bx;
 		var dy = this.t0.by;
 		var ex = this.t0.cx;
 		var ey = this.t0.cy;
-		this.cX = dx < ex ? dx + (ex - dx) / 2 : ex + (dx - ex) / 2;
-		this.cY = dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2;
-	}
-	,calculateCentre: function() {
-		var dx = this.t0.bx;
-		var dy = this.t0.by;
-		var ex = this.t0.cx;
-		var ey = this.t0.cy;
-		this.cX = dx < ex ? dx + (ex - dx) / 2 : ex + (dx - ex) / 2;
-		this.cY = dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2;
-	}
-	,rotateTriangle: function(t,p,cos,sin) {
-		this.dirtyX = true;
-		this.dirtyY = true;
-		t.moveDelta(-p.x,-p.y);
-		t.moveDelta(-p.x,-p.y);
-		var x;
-		var y;
-		x = t.ax;
-		y = t.ay;
-		t.ax = x * cos - y * sin;
-		t.ay = x * sin + y * cos;
-		x = t.bx;
-		y = t.by;
-		t.bx = x * cos - y * sin;
-		t.by = x * sin + y * cos;
-		x = t.cx;
-		y = t.cy;
-		t.cx = x * cos - y * sin;
-		t.cy = x * sin + y * cos;
-		t.moveDelta(p.x,p.y);
-		t.moveDelta(p.x,p.y);
-		this.dirtyX = true;
-		this.dirtyY = true;
+		return { x : dx < ex ? dx + (ex - dx) / 2 : ex + (dx - ex) / 2, y : dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2};
 	}
 	,getCentreInt: function() {
-		return { x : this.cX / this.dia | 0, y : this.cY / this.dia | 0};
+		var c_y;
+		var c_x;
+		var dx = this.t0.bx;
+		var dy = this.t0.by;
+		var ex = this.t0.cx;
+		var ey = this.t0.cy;
+		if(dx < ex) {
+			c_x = dx + (ex - dx) / 2;
+		} else {
+			c_x = ex + (dx - ex) / 2;
+		}
+		if(dy < ey) {
+			c_y = dy + (ey - dy) / 2;
+		} else {
+			c_y = dy + (dy - ey) / 2;
+		}
+		return { x : c_x / this.dia | 0, y : c_y / this.dia | 0};
 	}
 	,get_right: function() {
 		return Math.max(this.t0.get_right(),this.t1.get_right());
@@ -29788,22 +29830,11 @@ tetrisTriangles_game_Square.prototype = {
 			var _g1 = this.t0;
 			_g1.set_x(_g1.get_x() + dx1);
 		}
-		var dx2 = this.t0.bx;
-		var dy = this.t0.by;
-		var ex = this.t0.cx;
-		var ey = this.t0.cy;
-		this.cX = dx2 < ex ? dx2 + (ex - dx2) / 2 : ex + (dx2 - ex) / 2;
-		this.cY = dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2;
 		this._x = x_;
-		this.dirtyX = false;
 		return x_;
 	}
 	,get_y: function() {
-		if(this.dirtyY) {
-			return Math.min(this.t0.get_y(),this.t1.get_y());
-		} else {
-			return this._y;
-		}
+		return Math.min(this.t0.get_y(),this.t1.get_y());
 	}
 	,set_y: function(y_) {
 		var y0 = this.t0.get_y();
@@ -29819,13 +29850,6 @@ tetrisTriangles_game_Square.prototype = {
 			var _g1 = this.t0;
 			_g1.set_y(_g1.get_y() + dy1);
 		}
-		var dx = this.t0.bx;
-		var dy2 = this.t0.by;
-		var ex = this.t0.cx;
-		var ey = this.t0.cy;
-		this.cX = dx < ex ? dx + (ex - dx) / 2 : ex + (dx - ex) / 2;
-		this.cY = dy2 < ey ? dy2 + (ey - dy2) / 2 : dy2 + (dy2 - ey) / 2;
-		this.dirtyY = false;
 		this._y = y_;
 		return y_;
 	}
@@ -29971,103 +29995,26 @@ tetrisTriangles_game_Tetris.prototype = {
 		}
 		var _this = this.controller;
 		var l = _this.shapes.length;
-		var arr = [];
+		var shape;
+		var hit = false;
 		var _g1 = 0;
 		var _g = l;
 		while(_g1 < _g) {
 			var i = _g1++;
-			_this.shapes[i].getCentreInt(arr);
-		}
-		var shapeLocations = arr;
-		var _this1 = _this.background;
-		var col0_ = _this1.bgCol0;
-		var col1_ = _this1.bgCol1;
-		var col2_ = _this1.bgCol2;
-		var col3_ = _this1.bgCol3;
-		var c0;
-		var c1;
-		var toggle = false;
-		var indx = 0;
-		var _g11 = 0;
-		var _g2 = _this1.wide;
-		while(_g11 < _g2) {
-			var w = _g11++;
-			if(toggle) {
-				c0 = col0_;
-				c1 = col1_;
-			} else {
-				c0 = col2_;
-				c1 = col3_;
-			}
-			toggle = !toggle;
-			var _g3 = 0;
-			var _g21 = _this1.hi;
-			while(_g3 < _g21) {
-				var h = _g3++;
-				var h1 = _this1.hi;
-				indx = 2 + _this1.wide * h + w | 0;
-				var _this2 = _this1.bgSquares[indx];
-				_this2.col0 = c0;
-				_this2.col1 = c1;
-				_this2.t0.colorID = c0;
-				_this2.t1.colorID = c1;
-				_this2.t0.colorA = c0;
-				_this2.t0.colorB = c0;
-				_this2.t0.colorC = c0;
-				_this2.t1.colorA = c1;
-				_this2.t1.colorB = c1;
-				_this2.t1.colorC = c1;
-			}
-		}
-		var ls = shapeLocations.length;
-		var pos;
-		var indx1 = 0;
-		var dx = 0;
-		var dy = 0;
-		var _g12 = 0;
-		var _g4 = ls;
-		while(_g12 < _g4) {
-			var i1 = _g12++;
-			pos = shapeLocations[i1];
-			dx = pos.x;
-			dy = pos.y;
-			if(dx > 0 && dx < _this1.wide && dy > 0 && dy < _this1.hi) {
-				var h2 = _this1.hi;
-				indx1 = 2 + _this1.wide * dy + dx | 0;
-				var _this3 = _this1.bgSquares[indx1];
-				_this3.col0 = 14;
-				_this3.col1 = 14;
-				_this3.t0.colorID = 14;
-				_this3.t1.colorID = 14;
-				_this3.t0.colorA = 14;
-				_this3.t0.colorB = 14;
-				_this3.t0.colorC = 14;
-				_this3.t1.colorA = 14;
-				_this3.t1.colorB = 14;
-				_this3.t1.colorC = 14;
-			}
-		}
-		var l1 = _this.shapes.length;
-		var shape;
-		var hit = false;
-		var _g13 = 0;
-		var _g5 = l1;
-		while(_g13 < _g5) {
-			var i2 = _g13++;
-			shape = _this.shapes[i2];
+			shape = _this.shapes[i];
 			var this1 = _this.inertArr;
 			var arrP = shape.getLocation();
 			var lp = arrP.length;
 			var p;
 			var clash = false;
-			var _g14 = 0;
-			var _g6 = lp;
-			while(_g14 < _g6) {
-				var i3 = _g14++;
-				p = arrP[i3];
-				var w1 = this1[0];
-				var h3 = this1[1];
-				if(this1[2 + w1 * p.y + p.x | 0] == 1) {
+			var _g11 = 0;
+			var _g2 = lp;
+			while(_g11 < _g2) {
+				var i1 = _g11++;
+				p = arrP[i1];
+				var w = this1[0];
+				var h = this1[1];
+				if(this1[2 + w * p.y + p.x | 0] == 1) {
 					clash = true;
 					break;
 				}
@@ -30084,23 +30031,23 @@ tetrisTriangles_game_Tetris.prototype = {
 				shape.rotate(offAngle);
 				var newLoc;
 				var lastLoc;
-				var _g15 = 0;
-				var _g7 = shape.lastLocation.length;
-				while(_g15 < _g7) {
-					var i4 = _g15++;
-					newLoc = shape.newLocation[i4];
-					lastLoc = shape.lastLocation[i4];
-					shape.blocks[i4].set_x(lastLoc.x * shape.dia);
-					shape.blocks[i4].set_y(lastLoc.y * shape.dia);
-					shape.virtualBlocks[i4].set_x(lastLoc.x * shape.dia);
-					shape.virtualBlocks[i4].set_y(lastLoc.y * shape.dia);
+				var _g12 = 0;
+				var _g3 = shape.lastLocation.length;
+				while(_g12 < _g3) {
+					var i2 = _g12++;
+					newLoc = shape.newLocation[i2];
+					lastLoc = shape.lastLocation[i2];
+					shape.blocks[i2].set_x(lastLoc.x * shape.dia);
+					shape.blocks[i2].set_y(lastLoc.y * shape.dia);
+					shape.virtualBlocks[i2].set_x(lastLoc.x * shape.dia);
+					shape.virtualBlocks[i2].set_y(lastLoc.y * shape.dia);
 				}
 				var newBlocks = shape.clearBlocks();
-				var _g8 = 0;
-				var _g16 = shape.blocks;
-				while(_g8 < _g16.length) {
-					var b = _g16[_g8];
-					++_g8;
+				var _g4 = 0;
+				var _g13 = shape.blocks;
+				while(_g4 < _g13.length) {
+					var b = _g13[_g4];
+					++_g4;
 					shape.col0 = 8;
 					shape.col1 = 8;
 					b.col0 = 8;
@@ -30114,40 +30061,40 @@ tetrisTriangles_game_Tetris.prototype = {
 					b.t1.colorB = 8;
 					b.t1.colorC = 8;
 				}
-				var l2 = newBlocks.length;
-				var _g17 = 0;
-				var _g9 = l2;
-				while(_g17 < _g9) {
-					var i5 = _g17++;
-					_this.bottom.pushBlock(newBlocks[i5]);
+				var l1 = newBlocks.length;
+				var _g14 = 0;
+				var _g5 = l1;
+				while(_g14 < _g5) {
+					var i3 = _g14++;
+					_this.bottom.pushBlock(newBlocks[i3]);
 				}
 				var arrP1 = shape.lastLocation;
 				var arr2d = _this.inertArr;
 				var lp1 = arrP1.length;
 				var p1;
-				var _g18 = 0;
-				var _g10 = lp1;
-				while(_g18 < _g10) {
-					var i6 = _g18++;
-					p1 = arrP1[i6];
-					var w2 = arr2d[0];
-					var h4 = arr2d[1];
-					arr2d[2 + w2 * p1.y + p1.x | 0] = 1;
+				var _g15 = 0;
+				var _g6 = lp1;
+				while(_g15 < _g6) {
+					var i4 = _g15++;
+					p1 = arrP1[i4];
+					var w1 = arr2d[0];
+					var h1 = arr2d[1];
+					arr2d[2 + w1 * p1.y + p1.x | 0] = 1;
 				}
 				hit = true;
 			}
 		}
 		var this2 = _this.inertArr;
-		var w3 = this2[0];
-		var h5 = this2[1];
-		var s = 2 + w3 * 0 | 0;
-		var e = s + w3;
+		var w2 = this2[0];
+		var h2 = this2[1];
+		var s = 2 + w2 * 0 | 0;
+		var e = s + w2;
 		var emp = true;
-		var _g19 = s;
-		var _g20 = e;
-		while(_g19 < _g20) {
-			var i7 = _g19++;
-			if(this2[i7] == 1) {
+		var _g16 = s;
+		var _g7 = e;
+		while(_g16 < _g7) {
+			var i5 = _g16++;
+			if(this2[i5] == 1) {
 				emp = false;
 				break;
 			}
@@ -30160,75 +30107,75 @@ tetrisTriangles_game_Tetris.prototype = {
 			_this.onTetrisShapeLanded();
 		}
 		if(!hit) {
-			var _this4 = this.rotation;
-			if(_this4.toggle) {
-				var _this5 = _this4.controller;
-				var theta = Math.PI / _this4.rotationSpeed;
-				var l3 = _this5.shapes.length;
-				var _g110 = 0;
-				var _g22 = l3;
-				while(_g110 < _g22) {
-					var i8 = _g110++;
-					_this5.shapes[i8].rotate(theta);
+			var _this1 = this.rotation;
+			if(_this1.toggle) {
+				var _this2 = _this1.controller;
+				var theta = Math.PI / _this1.rotationSpeed;
+				var l2 = _this2.shapes.length;
+				var _g17 = 0;
+				var _g8 = l2;
+				while(_g17 < _g8) {
+					var i6 = _g17++;
+					_this2.shapes[i6].rotate(theta);
 				}
 			}
-			if(_this4.count % (_this4.rotationSpeed / 2) == 0.) {
-				_this4.count = 0.;
-				_this4.toggle = false;
+			if(_this1.count % (_this1.rotationSpeed / 2) == 0.) {
+				_this1.count = 0.;
+				_this1.toggle = false;
 			}
-			_this4.count += 1.;
-			var _this6 = this.movement;
+			_this1.count += 1.;
+			var _this3 = this.movement;
 			var djx = 0.;
 			var djy = 0.;
-			if(_this6.toggleX) {
-				if(_this6.jumpX > 0) {
-					djx = _this6.jumpX / _this6.jumpSpeed;
-					_this6.jx += djx;
-					if(_this6.jx > _this6.jumpX + djx / 2) {
-						_this6.toggleX = false;
-						_this6.jx = 0.;
+			if(_this3.toggleX) {
+				if(_this3.jumpX > 0) {
+					djx = _this3.jumpX / _this3.jumpSpeed;
+					_this3.jx += djx;
+					if(_this3.jx > _this3.jumpX + djx / 2) {
+						_this3.toggleX = false;
+						_this3.jx = 0.;
 						djx = 0.;
 					}
 				} else {
-					djx = _this6.jumpX / _this6.jumpSpeed;
-					_this6.jx += djx;
-					if(_this6.jx < _this6.jumpX + djx / 2) {
-						_this6.toggleX = false;
-						_this6.jx = 0.;
+					djx = _this3.jumpX / _this3.jumpSpeed;
+					_this3.jx += djx;
+					if(_this3.jx < _this3.jumpX + djx / 2) {
+						_this3.toggleX = false;
+						_this3.jx = 0.;
 						djx = 0.;
 					}
 				}
 			}
-			if(_this6.toggleY) {
-				if(_this6.jumpY > 0) {
-					djy = _this6.jumpY / _this6.jumpSpeed;
-					_this6.jy += djy;
-					if(_this6.jy > _this6.jumpY + djy / 2) {
-						_this6.toggleY = false;
-						_this6.jy = 0.;
+			if(_this3.toggleY) {
+				if(_this3.jumpY > 0) {
+					djy = _this3.jumpY / _this3.jumpSpeed;
+					_this3.jy += djy;
+					if(_this3.jy > _this3.jumpY + djy / 2) {
+						_this3.toggleY = false;
+						_this3.jy = 0.;
 						djy = 0.;
 					}
 				} else {
-					djy = _this6.jumpY / _this6.jumpSpeed;
-					_this6.jy += djx;
-					if(_this6.jy < _this6.jumpY + djy / 2) {
-						_this6.toggleY = false;
-						_this6.jy = 0.;
+					djy = _this3.jumpY / _this3.jumpSpeed;
+					_this3.jy += djx;
+					if(_this3.jy < _this3.jumpY + djy / 2) {
+						_this3.toggleY = false;
+						_this3.jy = 0.;
 						djy = 0.;
 					}
 				}
 			}
-			if(_this6.toggleX) {
-				var _this7 = _this6.controller;
-				var leftStop = _this6.leftStop;
-				var rightStop = _this6.rightStop;
-				var l4 = _this7.shapes.length;
+			if(_this3.toggleX) {
+				var _this4 = _this3.controller;
+				var leftStop = _this3.leftStop;
+				var rightStop = _this3.rightStop;
+				var l3 = _this4.shapes.length;
 				var shape1;
-				var _g111 = 0;
-				var _g23 = l4;
-				while(_g111 < _g23) {
-					var i9 = _g111++;
-					shape1 = _this7.shapes[i9];
+				var _g18 = 0;
+				var _g9 = l3;
+				while(_g18 < _g9) {
+					var i7 = _g18++;
+					shape1 = _this4.shapes[i7];
 					if(shape1.blocks != null && shape1.blocks.length != 0) {
 						var sqr = shape1.blocks;
 						var sides0;
@@ -30237,15 +30184,15 @@ tetrisTriangles_game_Tetris.prototype = {
 						} else if(sqr.length == 0) {
 							sides0 = null;
 						} else {
-							var l5 = sqr.length;
+							var l4 = sqr.length;
 							var square = sqr[0];
 							var bx = square.get_x();
 							var br = square.get_right();
-							var _g112 = 1;
-							var _g24 = l5;
-							while(_g112 < _g24) {
-								var i10 = _g112++;
-								square = sqr[i10];
+							var _g19 = 1;
+							var _g10 = l4;
+							while(_g19 < _g10) {
+								var i8 = _g19++;
+								square = sqr[i8];
 								bx = Math.min(bx,square.get_x());
 								br = Math.max(br,square.get_right());
 							}
@@ -30258,15 +30205,15 @@ tetrisTriangles_game_Tetris.prototype = {
 						} else if(sqr1.length == 0) {
 							sides1 = null;
 						} else {
-							var l6 = sqr1.length;
+							var l5 = sqr1.length;
 							var square1 = sqr1[0];
 							var bx1 = square1.get_x();
 							var br1 = square1.get_right();
-							var _g113 = 1;
-							var _g25 = l6;
-							while(_g113 < _g25) {
-								var i11 = _g113++;
-								square1 = sqr1[i11];
+							var _g110 = 1;
+							var _g20 = l5;
+							while(_g110 < _g20) {
+								var i9 = _g110++;
+								square1 = sqr1[i9];
 								bx1 = Math.min(bx1,square1.get_x());
 								br1 = Math.max(br1,square1.get_right());
 							}
@@ -30291,114 +30238,37 @@ tetrisTriangles_game_Tetris.prototype = {
 					}
 				}
 			}
-			var _this8 = _this6.controller;
-			var y = _this6.fallSpeed + djy;
-			var l7 = _this8.shapes.length;
-			var _g114 = 0;
-			var _g26 = l7;
-			while(_g114 < _g26) {
-				var i12 = _g114++;
-				_this8.shapes[i12].moveDelta(0.0,y);
+			var _this5 = _this3.controller;
+			var y = _this3.fallSpeed + djy;
+			var l6 = _this5.shapes.length;
+			var _g111 = 0;
+			var _g21 = l6;
+			while(_g111 < _g21) {
+				var i10 = _g111++;
+				_this5.shapes[i10].moveDelta(0.0,y);
 			}
-			var _this9 = this.controller;
-			var l8 = _this9.shapes.length;
-			var arr1 = [];
-			var _g115 = 0;
-			var _g27 = l8;
-			while(_g115 < _g27) {
-				var i13 = _g115++;
-				_this9.shapes[i13].getCentreInt(arr1);
-			}
-			var shapeLocations1 = arr1;
-			var _this10 = _this9.background;
-			var col0_1 = _this10.bgCol0;
-			var col1_1 = _this10.bgCol1;
-			var col2_1 = _this10.bgCol2;
-			var col3_1 = _this10.bgCol3;
-			var c01;
-			var c11;
-			var toggle1 = false;
-			var indx2 = 0;
-			var _g116 = 0;
-			var _g28 = _this10.wide;
-			while(_g116 < _g28) {
-				var w4 = _g116++;
-				if(toggle1) {
-					c01 = col0_1;
-					c11 = col1_1;
-				} else {
-					c01 = col2_1;
-					c11 = col3_1;
-				}
-				toggle1 = !toggle1;
-				var _g31 = 0;
-				var _g29 = _this10.hi;
-				while(_g31 < _g29) {
-					var h6 = _g31++;
-					var h7 = _this10.hi;
-					indx2 = 2 + _this10.wide * h6 + w4 | 0;
-					var _this11 = _this10.bgSquares[indx2];
-					_this11.col0 = c01;
-					_this11.col1 = c11;
-					_this11.t0.colorID = c01;
-					_this11.t1.colorID = c11;
-					_this11.t0.colorA = c01;
-					_this11.t0.colorB = c01;
-					_this11.t0.colorC = c01;
-					_this11.t1.colorA = c11;
-					_this11.t1.colorB = c11;
-					_this11.t1.colorC = c11;
-				}
-			}
-			var ls1 = shapeLocations1.length;
-			var pos1;
-			var indx3 = 0;
-			var dx1 = 0;
-			var dy1 = 0;
-			var _g117 = 0;
-			var _g30 = ls1;
-			while(_g117 < _g30) {
-				var i14 = _g117++;
-				pos1 = shapeLocations1[i14];
-				dx1 = pos1.x;
-				dy1 = pos1.y;
-				if(dx1 > 0 && dx1 < _this10.wide && dy1 > 0 && dy1 < _this10.hi) {
-					var h8 = _this10.hi;
-					indx3 = 2 + _this10.wide * dy1 + dx1 | 0;
-					var _this12 = _this10.bgSquares[indx3];
-					_this12.col0 = 14;
-					_this12.col1 = 14;
-					_this12.t0.colorID = 14;
-					_this12.t1.colorID = 14;
-					_this12.t0.colorA = 14;
-					_this12.t0.colorB = 14;
-					_this12.t0.colorC = 14;
-					_this12.t1.colorA = 14;
-					_this12.t1.colorB = 14;
-					_this12.t1.colorC = 14;
-				}
-			}
-			var l9 = _this9.shapes.length;
+			var _this6 = this.controller;
+			var l7 = _this6.shapes.length;
 			var shape2;
 			var hit1 = false;
-			var _g118 = 0;
-			var _g32 = l9;
-			while(_g118 < _g32) {
-				var i15 = _g118++;
-				shape2 = _this9.shapes[i15];
-				var this3 = _this9.inertArr;
+			var _g112 = 0;
+			var _g22 = l7;
+			while(_g112 < _g22) {
+				var i11 = _g112++;
+				shape2 = _this6.shapes[i11];
+				var this3 = _this6.inertArr;
 				var arrP2 = shape2.getLocation();
 				var lp2 = arrP2.length;
 				var p2;
 				var clash2 = false;
-				var _g119 = 0;
-				var _g33 = lp2;
-				while(_g119 < _g33) {
-					var i16 = _g119++;
-					p2 = arrP2[i16];
-					var w5 = this3[0];
-					var h9 = this3[1];
-					if(this3[2 + w5 * p2.y + p2.x | 0] == 1) {
+				var _g113 = 0;
+				var _g23 = lp2;
+				while(_g113 < _g23) {
+					var i12 = _g113++;
+					p2 = arrP2[i12];
+					var w3 = this3[0];
+					var h3 = this3[1];
+					if(this3[2 + w3 * p2.y + p2.x | 0] == 1) {
 						clash2 = true;
 						break;
 					}
@@ -30415,23 +30285,23 @@ tetrisTriangles_game_Tetris.prototype = {
 					shape2.rotate(offAngle1);
 					var newLoc1;
 					var lastLoc1;
-					var _g120 = 0;
-					var _g34 = shape2.lastLocation.length;
-					while(_g120 < _g34) {
-						var i17 = _g120++;
-						newLoc1 = shape2.newLocation[i17];
-						lastLoc1 = shape2.lastLocation[i17];
-						shape2.blocks[i17].set_x(lastLoc1.x * shape2.dia);
-						shape2.blocks[i17].set_y(lastLoc1.y * shape2.dia);
-						shape2.virtualBlocks[i17].set_x(lastLoc1.x * shape2.dia);
-						shape2.virtualBlocks[i17].set_y(lastLoc1.y * shape2.dia);
+					var _g114 = 0;
+					var _g24 = shape2.lastLocation.length;
+					while(_g114 < _g24) {
+						var i13 = _g114++;
+						newLoc1 = shape2.newLocation[i13];
+						lastLoc1 = shape2.lastLocation[i13];
+						shape2.blocks[i13].set_x(lastLoc1.x * shape2.dia);
+						shape2.blocks[i13].set_y(lastLoc1.y * shape2.dia);
+						shape2.virtualBlocks[i13].set_x(lastLoc1.x * shape2.dia);
+						shape2.virtualBlocks[i13].set_y(lastLoc1.y * shape2.dia);
 					}
 					var newBlocks1 = shape2.clearBlocks();
-					var _g35 = 0;
-					var _g121 = shape2.blocks;
-					while(_g35 < _g121.length) {
-						var b1 = _g121[_g35];
-						++_g35;
+					var _g25 = 0;
+					var _g115 = shape2.blocks;
+					while(_g25 < _g115.length) {
+						var b1 = _g115[_g25];
+						++_g25;
 						shape2.col0 = 8;
 						shape2.col1 = 8;
 						b1.col0 = 8;
@@ -30445,50 +30315,50 @@ tetrisTriangles_game_Tetris.prototype = {
 						b1.t1.colorB = 8;
 						b1.t1.colorC = 8;
 					}
-					var l10 = newBlocks1.length;
-					var _g122 = 0;
-					var _g36 = l10;
-					while(_g122 < _g36) {
-						var i18 = _g122++;
-						_this9.bottom.pushBlock(newBlocks1[i18]);
+					var l8 = newBlocks1.length;
+					var _g116 = 0;
+					var _g26 = l8;
+					while(_g116 < _g26) {
+						var i14 = _g116++;
+						_this6.bottom.pushBlock(newBlocks1[i14]);
 					}
 					var arrP3 = shape2.lastLocation;
-					var arr2d1 = _this9.inertArr;
+					var arr2d1 = _this6.inertArr;
 					var lp3 = arrP3.length;
 					var p3;
-					var _g123 = 0;
-					var _g37 = lp3;
-					while(_g123 < _g37) {
-						var i19 = _g123++;
-						p3 = arrP3[i19];
-						var w6 = arr2d1[0];
-						var h10 = arr2d1[1];
-						arr2d1[2 + w6 * p3.y + p3.x | 0] = 1;
+					var _g117 = 0;
+					var _g27 = lp3;
+					while(_g117 < _g27) {
+						var i15 = _g117++;
+						p3 = arrP3[i15];
+						var w4 = arr2d1[0];
+						var h4 = arr2d1[1];
+						arr2d1[2 + w4 * p3.y + p3.x | 0] = 1;
 					}
 					hit1 = true;
 				}
 			}
-			var this4 = _this9.inertArr;
-			var w7 = this4[0];
-			var h11 = this4[1];
-			var s1 = 2 + w7 * 0 | 0;
-			var e1 = s1 + w7;
+			var this4 = _this6.inertArr;
+			var w5 = this4[0];
+			var h5 = this4[1];
+			var s1 = 2 + w5 * 0 | 0;
+			var e1 = s1 + w5;
 			var emp1 = true;
-			var _g124 = s1;
-			var _g38 = e1;
-			while(_g124 < _g38) {
-				var i20 = _g124++;
-				if(this4[i20] == 1) {
+			var _g118 = s1;
+			var _g28 = e1;
+			while(_g118 < _g28) {
+				var i16 = _g118++;
+				if(this4[i16] == 1) {
 					emp1 = false;
 					break;
 				}
 			}
 			var end1 = !emp1;
 			if(end1) {
-				_this9.onGameEnd();
+				_this6.onGameEnd();
 			}
-			if(_this9.onTetrisShapeLanded != null && hit1 && !end1) {
-				_this9.onTetrisShapeLanded();
+			if(_this6.onTetrisShapeLanded != null && hit1 && !end1) {
+				_this6.onTetrisShapeLanded();
 			}
 		}
 	}
