@@ -5,7 +5,7 @@ class Rotation{
 	var controller: 	Controller;
 	var toggle          = false;
 	var count           = 0.; // for rotation smoothing
-	var rotationSpeed   = 20;
+	var rotationSpeed   = 20;//20;
 	public function new( controller_: Controller ){
 		controller = controller_;
 	}

@@ -95,6 +95,39 @@ class Shape {
         locked = true;
         return newBlocks;
     }
+    public function removeRow( r: Int ){
+        var sq: Square;
+        var posInt: {x: Int, y: Int };
+        var removed = new Array<Square>();
+        var lr = 0;
+        for( i in 0...blocks.length ) {
+            sq = blocks[ i ];
+            if( sq != null ){
+                if( sq.hasTriangles() ){
+                    posInt = sq.getCentreInt();
+                    trace( 'checking ' + posInt.y + '  ' + r );
+                    if( posInt.y == r ) {
+                        sq.removeTriangles();
+                        removed[lr++] = sq;
+                    }
+                }
+            }
+        }
+        for( sq in removed ){
+            blocks.remove( sq );
+            sq = null;
+        }
+    }
+    public function moveRowsDown( end: Int, amount: Int ){
+        var sq: Square;
+        var posInt: {x: Int, y: Int };
+        for( i in 0...blocks.length ) {
+            sq = blocks[ i ];
+            posInt = sq.getCentreInt();
+            if( posInt.y < end ) sq.moveDelta( 0, amount*dia );
+        }
+        // TODO: update the Arr2D
+    }
     public function rotate( theta: Float ){
         angle += theta;
         rook = angle;
@@ -138,6 +171,27 @@ class Shape {
         centre.x = start.x + ox;
     }
     public inline 
+    function snap2(){
+        var beta: Float;
+        if( angle < 0 ){
+            beta = -angle + 180;
+        }
+        beta = angle % ( 2 * Math.PI );
+        var rookFloat: Float = rook;
+        var offAngle:  Float = rookFloat - beta;
+        rotate( offAngle );
+
+        var newLoc: { x: Int, y: Int };
+        for( i in 0...lastLocation.length ){
+            newLoc = newLocation[i];
+            blocks[i].x = newLoc.x*dia;
+            blocks[i].y = (newLoc.y)*dia ;
+            virtualBlocks[i].x = newLoc.x*dia;
+            virtualBlocks[i].y = (newLoc.y)*dia ;
+        }
+    }
+    /*
+    public inline 
     function snap(){
         var beta: Float;
         if( angle < 0 ){
@@ -159,6 +213,7 @@ class Shape {
             virtualBlocks[i].y = lastLoc.y*dia ;
         }
     }
+    */
     public function getPoints( points: Array<Point> ){
         var l = blocks.length;
         for( i in 0...l ){
@@ -203,6 +258,13 @@ class Shape {
         if( locked ) return arr;
         return getVirtualCentreInt( newLocation );
     }
+    public function getLocationNew(){
+        lastLocation = newLocation;
+        var arr = new Array< { x: Int, y: Int} >();
+        newLocation = arr;
+        if( locked ) return arr;
+        return getCentreInt( newLocation );
+    }
     public function getCentreInt(  centresInt: Array< { x: Int, y: Int} > ):Array< { x: Int, y: Int } >{
         var l = blocks.length;
         var lc = centresInt.length;
@@ -218,6 +280,7 @@ class Shape {
         for( i in 0...l ){
             virtualInt[ i ] = virtualBlocks[ i ].getCentreInt();
         }
+        
         return virtualInt;
     }
     public static inline
@@ -262,6 +325,27 @@ class Shape {
             }
             { x: bx, right: br };
         }
+    }
+    public static inline function shapeClose( sh0: Shape, sh1: Shape, diaSq ){
+        var vb0 = sh0.virtualBlocks;
+        var vb1 = sh1.blocks;
+        var l0 = vb0.length;
+        var l1 = vb1.length;
+        var sq0: Square;
+        var sq1: Square;
+        var out = false;
+        for( i in 0...l0 ){
+            sq0 = vb0[i];
+            for( j in 0...l1 ){
+                sq1 = vb1[j];
+                if( Square.squareClose( sq0, sq1, diaSq ) ){
+                    out = true;
+                    break;
+                    break;
+                }
+            }
+        }
+        return out;
     }
     // OLD hitTest code not currently required?
     /*

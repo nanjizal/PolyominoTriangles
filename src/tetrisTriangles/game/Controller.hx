@@ -28,7 +28,7 @@ class Controller {
                         ,   dia_:   Float,  gap_:       Float
                         ,   offX_:  Int,    offY_:      Int     ){
         id           = id_;
-        inertArr     = new Arr2D( wide_ - 1, hi_ );
+        inertArr     = new Arr2D( wide_, hi_ );
         wide         = wide_;
         hi           = hi_;
         triangles    = triangles_;
@@ -48,7 +48,7 @@ class Controller {
     public inline function shapeLocations(): Array< { x: Int, y: Int } > {
         var l = shapes.length;
         var arr = new Array< { x: Int, y: Int} >();
-        for( i in 0...l ) shapes[ i ].getCentreInt( arr );
+        for( i in 0...l ) shapes[ i ].getVirtualCentreInt( arr );
         return arr;
     }
     public inline 
@@ -59,30 +59,83 @@ class Controller {
         var l = shapes.length;
         var shape: Shape;
         var hit = false;
+        var diaSq = dia*dia;
         for( i in 0...l ){
             shape = shapes[ i ];
-            var clash = inertArr.clash( shape.getLocation(), 0, 0 );    
+            shape.getLocation();
+            //var clash = inertArr.clash( shape.getLocation(), 0, -1 );
+            /*var clash = inertArr.clash( shape.getLocation(), 0, 0 );  
             if( clash ){
                 shapeKill( shape, i );
                 hit = true;
+            }*/
+            
+            if( Shape.shapeClose( shape, bottom, diaSq ) ){
+                shapeKill2( shape, i );
+                checkForFullRows();
+                hit = true;
             }
+            
         }
+        
+
         var end = !inertArr.rowEmpty(0);
         if( end ) onGameEnd();
         if( onTetrisShapeLanded != null && hit && !end ) onTetrisShapeLanded();
         return hit;
     }
+    // TODO: Needs some more thought.
+    public function checkForFullRows(){
+        var w = inertArr.getW();
+        var h = inertArr.getH();
+        var start = -1;
+        var end = -1;
+        for( i in 1...h-2 ){
+            if( inertArr.rowFull( i ) ){
+                if( start == -1 ) {
+                    start = i;
+                    end = i;
+                } else {
+                    end = i;
+                }
+            }
+        }
+        if( start != -1 ){
+            for( i in start...(end+1) ){
+                bottom.removeRow( i );
+            }
+            bottom.moveRowsDown( end+1, end+1 - start );
+            start = Arr2D.id( 0, start, w, h );
+            end   = Arr2D.id( w-1, end, w, h  );
+            for( i in start...(end+1) ){
+                inertArr[i] = 0;
+            }
+        }
+    }
     public inline
-    function shapeKill( shape: Shape, count: Int ){
-        shape.snap();
+    function shapeKill2( shape: Shape, count: Int ){
+        shape.snap2();
+        //shape.changeColor( 8, 9 );
         var newBlocks = shape.clearBlocks();
-        shape.changeColor( 8, 8 );
         var l = newBlocks.length;
         for( i in 0...l ) {
             bottom.pushBlock( newBlocks[ i ] );
         }
         addHitPointsInt( shape.lastLocation );
     }
+/*
+    public inline
+    function shapeKill( shape: Shape, count: Int ){
+        shape.snap();
+        //shape.changeColor( 8, 8 );
+        var newBlocks = shape.clearBlocks();
+        var l = newBlocks.length;
+        for( i in 0...l ) {
+            bottom.pushBlock( newBlocks[ i ] );
+        }
+        addHitPointsInt( shape.lastLocation );
+    }
+    */
     public inline 
     function shapesOnBg(){
         var shapeLocations = shapeLocations();
@@ -155,7 +208,7 @@ class Controller {
         var arr = new Array< { x: Int, y: Int} >();
         var bottomPositions = bottom.getCentreInt( arr );
         //addHitPointsInt( bottomPositions );
-        inertArr.addPoints( bottomPositions, 0, -1 );
+        inertArr.addPoints( bottomPositions, 0, -2 );
     }
 
 

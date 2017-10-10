@@ -127,6 +127,8 @@ class TetrisTrianglesKha2 {
             g.fillTriangle( ox + tri.ax * s, oy + tri.ay * s
                         ,   ox + tri.bx * s, oy + tri.by * s
                         ,   ox + tri.cx * s, oy + tri.cy * s );
+            // g.color = cast( gameColors[ 12 ], kha.Color );
+            // if( i%2 == 0 ) g.drawLine( ox + tri.bx * s, oy + tri.by * s,ox + tri.cx * s, oy + tri.cy * s,2. );
         }
     }
 }

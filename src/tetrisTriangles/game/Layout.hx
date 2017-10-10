@@ -19,7 +19,7 @@ class Layout{
 		hi = hi_;
 		dia = dia_;
 		originP = originP_;
-        var bottomP = { x: originP.x, y: originP.y + dia * hi };
+        var bottomP = { x: originP.x, y: originP.y + dia * hi};
         background();
         fallingBlocks( noBlocks, above * dia );
         bottom( bottomP );

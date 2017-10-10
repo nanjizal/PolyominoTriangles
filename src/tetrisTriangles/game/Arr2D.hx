@@ -65,7 +65,14 @@ abstract Arr2D(Array<Int>) from Array<Int> to Array<Int> {
 	//   1 0 0     11 12 13
 	//
 	//
-
+	public inline
+	function getW(){
+		return this[0];
+	}
+	public inline
+	function getH(){
+		return this[1];
+	}
 	public inline
 	function isZero( x: Int, y: Int ){
 		var w = this[ 0 ];

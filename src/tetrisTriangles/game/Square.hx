@@ -14,8 +14,9 @@ class Square {
     var _y:     Float;
     var _x2:    Float;
     var _y2:    Float;
+    var triangles: Array<Triangle>;
     public function new(    id:         Int
-                        ,   triangles:  Array<Triangle>
+                        ,   triangles_:  Array<Triangle>
                         ,   x_:         Float,      y_:     Float
                         ,   dia_:       Float,      gap_:   Float 
                         ,   col0_:      Int,        col1_:  Int ){
@@ -31,7 +32,8 @@ class Square {
         var rad = dia_/2;
         var x2  = _x2;
         var y2  = _y2;
-        var l   = triangles.length;
+        triangles = triangles_;
+        var l   = triangles_.length;
         t0 = new Triangle( id                // top left
                         , true
                         , { x: x_, y: y_ }
@@ -49,6 +51,12 @@ class Square {
                         , col1 );
         triangles[ l++ ] = t0;
         triangles[ l++ ] = t1;
+    }
+    public function removeTriangles(){
+        triangles.remove( t0 );
+        triangles.remove( t1 );
+        //t0 = null;
+        //t1 = null;
     }
     public inline
     function changeColor( col0_: Int, col1_: Int ){
@@ -87,20 +95,23 @@ class Square {
         t0.rotateTrig( p, cos, sin );
         t1.rotateTrig( p, cos, sin );
     }
-    public inline function getCentre(){
+    public function hasTriangles():Bool{
+        return ( t0 != null && t1 != null );
+    }
+    public inline function getCentre():{x: Float, y:Float}{
         var dx = t0.bx;
         var dy = t0.by;
         var ex = t0.cx;
         var ey = t0.cy;
         return { x: if( dx < ex ){ // dx is left
                         dx + ( ex - dx )/2;
-                    } else { // ex is left
+                    } else {
                         ex + ( dx - ex )/2;
                     },
                 y:  if( dy < ey ){ // dy is top
                         dy + ( ey - dy )/2;
                     } else {
-                        dy + ( dy - ey )/2;
+                        dy + ( dy - ey )/2 - dia;
                     } };
     }
     // faster and more acurate?
@@ -159,6 +170,15 @@ class Square {
     public function hitTest( p: Point ){
         return t0.hitTest( p ) || t1.hitTest( p );
     }
+    public inline static function squareClose( s0: Square, s1: Square, diaSq: Float ){ 
+        var c0 = s0.getCentre();
+        var c1 = s1.getCentre();
+        var dx = c0.x - c1.x;
+        var dy = c0.y - c1.y;
+        var d0 = dx * dx + dy * dy;
+        return d0 < diaSq;
+    }
+
     /*
     // using centre is perhaps not ideal could be optimized.
     public function getCentre():{x:Float,y:Float}{

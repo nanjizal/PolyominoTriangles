@@ -14,7 +14,7 @@ class Tetris {
     var controller:         Controller;
     var dia                = 0.15/1.6;// /2
     var edge               = 0.01; // disabled in code as gets in way of hitTest for momment, this is the spacing between squares.
-    var wide               = 32;//21; // dimensions of the grid
+    var wide               = 32;//     32;    //21; // dimensions of the grid
     var hi                 = 22;//15;
     var offX               = 0; // visual offsets problematic now not need maybe remove..
     var offY               = 0;
@@ -65,9 +65,9 @@ class Tetris {
         if( end ) return;
         if( !controller.hitBottom() ){ 
             rotation.update();
-            if(!controller.hitBottom()){
+            //if(!controller.hitBottom()){
                 movement.update();
-            }
+            //}
             //controller.hitBottom();
         }
     }
