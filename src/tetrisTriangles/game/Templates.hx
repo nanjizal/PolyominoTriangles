@@ -8,7 +8,7 @@ class Templates { // predefined tetris shapes relative to centre
 		createTetris = createTetris_;
 	}
     public inline 
-    function S( p: Point ): Shape {
+    function Z( p: Point ): Shape {
         var ts = createTetris( p, Snapped.Fix );
         #if hideBlocks
         ts.addBlock( -0.5, -1, true, false );
@@ -23,6 +23,24 @@ class Templates { // predefined tetris shapes relative to centre
         #end
         return ts;
     }
+    #if fullTetris
+    public inline 
+    function S( p: Point ): Shape {
+        var ts = createTetris( p, Snapped.Fix );
+        #if hideBlocks
+        ts.addBlock( 0.5, -1, true, false );
+        ts.addBlock( -0.5, 0, true, false );
+        ts.addBlock( -0.5, -1, true, false );
+        ts.addBlock( -1.5, 0, true, false );
+        #else
+        ts.addBlock( 0.5, -1 );
+        ts.addBlock( -0.5, 0 );
+        ts.addBlock( -0.5, -1 );
+        ts.addBlock( -1.5, 0 );
+        #end
+        return ts;
+    }
+    #end
     public inline 
     function l( p: Point ): Shape {
         var ts = createTetris( p, Snapped.Zero );
@@ -71,6 +89,24 @@ class Templates { // predefined tetris shapes relative to centre
         #end
         return ts;
     }
+    #if fullTetris
+    public inline 
+    function rL( p: Point ): Shape {
+        var ts = createTetris( p, Snapped.Fix );
+        #if hideBlocks
+        ts.addBlock( 1, -1.5, true, false );
+        ts.addBlock( 1, -0.5, true, false );
+        ts.addBlock( 1, 0.5, true, false );
+        ts.addBlock( 0, 0.5, true, false );
+        #else
+        ts.addBlock( 1, -1.5 );
+        ts.addBlock( 1, -0.5 );
+        ts.addBlock( 1, 0.5 );
+        ts.addBlock( 0, 0.5 );
+        #end
+        return ts;
+    }
+    #end
     public inline 
     function t( p: Point ): Shape {
         var ts = createTetris( p, Snapped.Ninety );

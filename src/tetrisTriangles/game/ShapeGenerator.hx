@@ -6,11 +6,15 @@ import justTriangles.Point;
 // just to reduce the complexity of controller so this is really part of controller
 @:enum
     abstract TetrisShape( String ) to String from String {
-    var tetris_S     = 'tetris_S';
+    var tetris_Z     = 'tetris_Z';
     var tetris_L      = 'tetris_L';
     var tetris_box    = 'tetris_box';
     var tetris_t      = 'tetris_t';
     var tetris_l      = 'tetris_l';
+    #if fullTetris
+    var tetris_S      = 'tetris_S';
+    var tetris_rL     = 'tetris_rL';
+    #end
     var tetris_random = 'tetris_random';
 }
 class ShapeGenerator{
@@ -25,11 +29,16 @@ class ShapeGenerator{
 		var ts: Shape;
         switch( shape ){ // normally works as random tetris shape
             case tetris_random:
-                var random  = Std.int( 4*Math.random() );
+                #if fullTetris
+                    var no = 6;
+                #else
+                    var no = 4;
+                #end
+                var random  = Std.int( no*Math.random() );
                 if( random == last ) return randomShape( p, col0_, col1_ );
                 ts = switch( random ){
                         case 0:
-                            ts = templates.S( p );
+                            ts = templates.Z( p );
                         case 1:
                             ts = templates.L( p );
                         case 2:
@@ -38,13 +47,19 @@ class ShapeGenerator{
                             ts = templates.t( p );
                         case 4: 
                             ts = templates.l( p );
-                        default:
+                        #if fullTetris
+                        case 5:
                             ts = templates.S( p );
+                        case 6:
+                            ts = templates.rL( p );
+                        #end     
+                        default:
+                            ts = templates.Z( p );
                     }
             default: 
                 ts = switch( shape ){ // used to allow testing of only one shape ( add TetrisShape in the method call );
-                    case tetris_S:
-                        templates.S( p );
+                    case tetris_Z:
+                        templates.Z( p );
                     case tetris_L:
                         templates.L( p );
                     case tetris_box:
@@ -53,6 +68,12 @@ class ShapeGenerator{
                         templates.t( p );
 					case tetris_l:
 						templates.l( p );
+                    #if fullTetris
+                    case tetris_S:
+                        ts = templates.S( p );
+                    case tetris_rL:
+                        ts = templates.rL( p );
+                    #end
                     default:
                         templates.box( p );
                 }

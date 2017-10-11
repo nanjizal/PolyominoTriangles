@@ -36,7 +36,7 @@ class Layout{
             randX = dia + dia * Math.round( Math.random() * ( wide - 0.5 ));
 
 			#if use_tetris_S
-				var shape = controller.createShape( { x: x + randX, y: y - i * aboveY }, m , m + 1, TetrisShape.tetris_S );
+				var shape = controller.createShape( { x: x + randX, y: y - i * aboveY }, m , m + 1, TetrisShape.tetris_Z );
 			#elseif use_tetris_L
 				var shape = controller.createShape( { x: x + randX, y: y - i * aboveY }, m , m + 1, TetrisShape.tetris_L );
 			#elseif use_tetris_box
@@ -45,6 +45,14 @@ class Layout{
 				var shape = controller.createShape( { x: x + randX, y: y - i * aboveY }, m , m + 1, TetrisShape.tetris_t );
 			#elseif use_tetris_l
 				var shape = controller.createShape( { x: x + randX, y: y - i * aboveY }, m , m + 1, TetrisShape.tetris_l );
+			#elseif use_tetris_S
+				#if fullTetris
+					var shape = controller.createShape( { x: x + randX, y: y - i * aboveY }, m , m + 1, TetrisShape.tetris_S );
+				#end
+			#elseif use_tetris_rL
+				#if fullTetris
+					var shape = controller.createShape( { x: x + randX, y: y - i * aboveY }, m , m + 1, TetrisShape.tetris_rL );
+				#end
 			#else 
             	var shape = controller.createShape( { x: x + randX, y: y - i * aboveY }, m , m + 1 );//, TetrisShape.tetris_l );//  <- can choose on shape.
 			#end
@@ -65,6 +73,14 @@ class Layout{
 			var shape = controller.createShape( { x: x + randX, y: y }, m , m + 1, TetrisShape.tetris_t );
 		#elseif use_tetris_l
 			var shape = controller.createShape( { x: x + randX, y: y }, m , m + 1, TetrisShape.tetris_l );
+		#elseif use_tetris_S
+			#if fullTetris
+				var shape = controller.createShape( { x: x + randX, y: y }, m , m + 1, TetrisShape.tetris_S );
+			#end
+		#elseif use_tetris_rL
+			#if fullTetris
+				var shape = controller.createShape( { x: x + randX, y: y }, m , m + 1, TetrisShape.tetris_rL );
+			#end
 		#else 
     		var shape = controller.createShape( { x: x + randX, y: y }, m , m + 1 );//, TetrisShape.tetris_l );//  <- can choose on shape.
 		#end

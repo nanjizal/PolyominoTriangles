@@ -29308,7 +29308,7 @@ tetrisTriangles_game_ShapeGenerator.prototype = {
 					ts2.addBlock(0,0.5);
 					ts = ts2;
 					break;
-				case "tetris_S":
+				case "tetris_Z":
 					var ts3 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
 					ts3.addBlock(-0.5,-1);
 					ts3.addBlock(0.5,0);
@@ -29350,7 +29350,8 @@ tetrisTriangles_game_ShapeGenerator.prototype = {
 				}
 			}
 		} else if(shape == "tetris_random") {
-			var random = 4 * Math.random() | 0;
+			var no = 4;
+			var random = no * Math.random() | 0;
 			if(random == this.last) {
 				return this.randomShape(p,col0_,col1_);
 			}
@@ -29426,7 +29427,7 @@ tetrisTriangles_game_ShapeGenerator.prototype = {
 				ts15.addBlock(0,0.5);
 				ts = ts15;
 				break;
-			case "tetris_S":
+			case "tetris_Z":
 				var ts16 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
 				ts16.addBlock(-0.5,-1);
 				ts16.addBlock(0.5,0);
@@ -29804,7 +29805,7 @@ $hxClasses["tetrisTriangles.game.Templates"] = tetrisTriangles_game_Templates;
 tetrisTriangles_game_Templates.__name__ = ["tetrisTriangles","game","Templates"];
 tetrisTriangles_game_Templates.prototype = {
 	createTetris: null
-	,S: function(p) {
+	,Z: function(p) {
 		var ts = this.createTetris(p,tetrisTriangles_game_Snapped.Fix);
 		ts.addBlock(-0.5,-1);
 		ts.addBlock(0.5,0);

@@ -13,11 +13,16 @@ project.windowOptions.height = 768;
 //project.addDefine('showVirtualBlocksBelow'); //use with hide blocks
 //project.addDefine('hideBlocks');
 
-//project.addDefine('use_tetris_S');
+//project.addDefine('use_tetris_Z');
 //project.addDefine('use_tetris_L');
 //project.addDefine('use_tetris_box');
 //project.addDefine('use_tetris_t');
 //project.addDefine('use_tetris_l');
+
+//extra tetris shapes
+//project.addDefine('fullTetris');
+//project.addDefine('use_tetris_S');
+//project.addDefine('use_tetris_rL');
 
 //project.addShaders('src/Shaders/**');
 //project.addLibrary('poly2trihx');
