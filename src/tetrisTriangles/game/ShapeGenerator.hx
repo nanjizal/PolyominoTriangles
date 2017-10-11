@@ -2,6 +2,7 @@ package tetrisTriangles.game;
 import tetrisTriangles.game.Templates;
 import tetrisTriangles.game.Shape;
 import justTriangles.Point;
+import tetrisTriangles.game.ABC;
 // not much of a class just moved the random shape generation out of controller
 // just to reduce the complexity of controller so this is really part of controller
 @:enum
@@ -19,14 +20,22 @@ import justTriangles.Point;
 }
 class ShapeGenerator{
 	var templates: 	Templates;
+    var abc: ABC;
     var last        = -1;
     var random      = 0;
 	public function new( createShape ){
-		templates = new Templates( createShape );  // uses Templates a shape factory.
+        #if use_abc
+            abc = new ABC( createShape );
+        #else
+		    templates = new Templates( createShape );  // uses Templates a shape factory.
+        #end
 	}
 	public
 	function randomShape( p: Point, col0_: Int, col1_: Int, ?shape: TetrisShape = tetris_random ){
 		var ts: Shape;
+        #if use_abc 
+            ts = abc.rnd( p );
+        #else // normal function
         switch( shape ){ // normally works as random tetris shape
             case tetris_random:
                 #if fullTetris
@@ -79,6 +88,7 @@ class ShapeGenerator{
                 }
         } 
         last = random;
+        #end
 		return ts;
     }
 }

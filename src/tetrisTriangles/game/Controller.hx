@@ -72,7 +72,7 @@ class Controller {
             
             if( Shape.shapeClose( shape, bottom, diaSq ) ){
                 shapeKill2( shape, i );
-                checkForFullRows();
+                // checkForFullRows();
                 hit = true;
             }
             

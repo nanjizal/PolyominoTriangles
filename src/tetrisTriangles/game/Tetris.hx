@@ -12,10 +12,19 @@ import tetrisTriangles.game.Arr2D;
 // it redirects keyboard control to movement x and y class and to rotation helper class
 class Tetris {
     var controller:         Controller;
+    #if use_abc
+    var dia                = 0.15/3;
+    #else 
     var dia                = 0.15/1.6;// /2
+    #end
     var edge               = 0.01; // disabled in code as gets in way of hitTest for momment, this is the spacing between squares.
+    #if use_abc
+    var wide               = 32*2;//     32;    //21; // dimensions of the grid
+    var hi                 = 22*2;//15;
+    #else
     var wide               = 32;//     32;    //21; // dimensions of the grid
     var hi                 = 22;//15;
+    #end
     var offX               = 0; // visual offsets problematic now not need maybe remove..
     var offY               = 0;
     var layout:           Layout;

@@ -23,7 +23,8 @@ project.windowOptions.height = 768;
 //project.addDefine('fullTetris');
 //project.addDefine('use_tetris_S');
 //project.addDefine('use_tetris_rL');
-
+project.addDefine('use_abc');
+project.addDefine('use_kha');
 //project.addShaders('src/Shaders/**');
 //project.addLibrary('poly2trihx');
 //project.addLibrary('justTriangles');

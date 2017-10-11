@@ -6815,20 +6815,20 @@ kha_Shaders.init = function() {
 	var _g1 = 0;
 	while(_g1 < 3) {
 		var i1 = _g1++;
-		var data1 = Reflect.field(kha_Shaders,"painter_colored_vertData" + i1);
+		var data1 = Reflect.field(kha_Shaders,"painter_image_fragData" + i1);
 		var bytes1 = haxe_Unserializer.run(data1);
 		blobs1.push(kha_internal_BytesBlob.fromBytes(bytes1));
 	}
-	kha_Shaders.painter_colored_vert = new kha_graphics4_VertexShader(blobs1,["painter-colored.vert.essl","painter-colored-relaxed.vert.essl","painter-colored-webgl2.vert.essl"]);
+	kha_Shaders.painter_image_frag = new kha_graphics4_FragmentShader(blobs1,["painter-image.frag.essl","painter-image-relaxed.frag.essl","painter-image-webgl2.frag.essl"]);
 	var blobs2 = [];
 	var _g2 = 0;
 	while(_g2 < 3) {
 		var i2 = _g2++;
-		var data2 = Reflect.field(kha_Shaders,"painter_image_fragData" + i2);
+		var data2 = Reflect.field(kha_Shaders,"painter_colored_vertData" + i2);
 		var bytes2 = haxe_Unserializer.run(data2);
 		blobs2.push(kha_internal_BytesBlob.fromBytes(bytes2));
 	}
-	kha_Shaders.painter_image_frag = new kha_graphics4_FragmentShader(blobs2,["painter-image.frag.essl","painter-image-relaxed.frag.essl","painter-image-webgl2.frag.essl"]);
+	kha_Shaders.painter_colored_vert = new kha_graphics4_VertexShader(blobs2,["painter-colored.vert.essl","painter-colored-relaxed.vert.essl","painter-colored-webgl2.vert.essl"]);
 	var blobs3 = [];
 	var _g3 = 0;
 	while(_g3 < 3) {
@@ -26214,7 +26214,6 @@ tetrisTriangles_TetrisTrianglesKha2.prototype = {
 						var h = arr2d[1];
 						arr2d[2 + w * p.y + p.x | 0] = 1;
 					}
-					_this1.checkForFullRows();
 					hit = true;
 				}
 			}
@@ -26416,6 +26415,3629 @@ tetrisTriangles_TetrisTrianglesKha2.prototype = {
 		}
 	}
 	,__class__: tetrisTriangles_TetrisTrianglesKha2
+};
+var tetrisTriangles_game_ABC = function(createTetris_) {
+	this.createTetris = createTetris_;
+};
+$hxClasses["tetrisTriangles.game.ABC"] = tetrisTriangles_game_ABC;
+tetrisTriangles_game_ABC.__name__ = ["tetrisTriangles","game","ABC"];
+tetrisTriangles_game_ABC.prototype = {
+	createTetris: null
+	,rnd: function(p) {
+		var rangeABC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		var indx = Math.round(Math.random() * (rangeABC.length - 1));
+		return this.createABC("KHA",p);
+	}
+	,createABC: function(letter,p) {
+		var arr;
+		switch(letter) {
+		case "!":
+			var w = 100;
+			var h = 100;
+			var v = [3,5,0,0,1,0,0,1,0,0,1,0,0,0,0,0,1];
+			var this1;
+			if(v == null) {
+				if(w == null) {
+					w = 100;
+				}
+				if(h == null) {
+					h = 100;
+				}
+				var l = w * h + 2;
+				var _g = [];
+				var _g2 = 0;
+				var _g1 = l;
+				while(_g2 < _g1) {
+					var e = _g2++;
+					_g.push(0);
+				}
+				var arr1 = _g;
+				arr1[0] = w;
+				arr1[1] = h;
+				v = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,arr1);
+			}
+			this1 = v;
+			arr = this1;
+			var snapped = null;
+			if(snapped == null) {
+				snapped = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts = this.createTetris(p,snapped);
+			var sx = -2;
+			var sy = -2.5;
+			var w1 = arr[0];
+			var h1 = arr[1];
+			var dx = sx;
+			var dy = sy;
+			var count = 0;
+			var _g11 = 0;
+			var _g3 = w1;
+			while(_g11 < _g3) {
+				var x = _g11++;
+				var _g31 = 0;
+				var _g21 = h1;
+				while(_g31 < _g21) {
+					var y = _g31++;
+					var w2 = arr[0];
+					var h2 = arr[1];
+					if(arr[2 + w2 * y + x | 0] == 1) {
+						ts.addBlock(sx + x,sy + y);
+					}
+				}
+			}
+			return ts;
+		case "\"":
+			var w3 = 100;
+			var h3 = 100;
+			var v1 = [4,5,1,0,1,1,0,1,0,0,0,0,0,0,0,0,0];
+			var this2;
+			if(v1 == null) {
+				if(w3 == null) {
+					w3 = 100;
+				}
+				if(h3 == null) {
+					h3 = 100;
+				}
+				var l1 = w3 * h3 + 2;
+				var _g4 = [];
+				var _g22 = 0;
+				var _g12 = l1;
+				while(_g22 < _g12) {
+					var e1 = _g22++;
+					_g4.push(0);
+				}
+				var arr2 = _g4;
+				arr2[0] = w3;
+				arr2[1] = h3;
+				v1 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w3,h3,arr2);
+			}
+			this2 = v1;
+			arr = this2;
+			var snapped1 = null;
+			if(snapped1 == null) {
+				snapped1 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts1 = this.createTetris(p,snapped1);
+			var sx1 = -2;
+			var sy1 = -2.5;
+			var w4 = arr[0];
+			var h4 = arr[1];
+			var dx1 = sx1;
+			var dy1 = sy1;
+			var count1 = 0;
+			var _g13 = 0;
+			var _g5 = w4;
+			while(_g13 < _g5) {
+				var x1 = _g13++;
+				var _g32 = 0;
+				var _g23 = h4;
+				while(_g32 < _g23) {
+					var y1 = _g32++;
+					var w5 = arr[0];
+					var h5 = arr[1];
+					if(arr[2 + w5 * y1 + x1 | 0] == 1) {
+						ts1.addBlock(sx1 + x1,sy1 + y1);
+					}
+				}
+			}
+			return ts1;
+		case "#":
+			var w6 = 100;
+			var h6 = 100;
+			var v2 = [5,5,0,1,0,1,0,1,1,1,1,1,0,1,0,1,0,1,1,1,1,1,0,1,0,1,0];
+			var this3;
+			if(v2 == null) {
+				if(w6 == null) {
+					w6 = 100;
+				}
+				if(h6 == null) {
+					h6 = 100;
+				}
+				var l2 = w6 * h6 + 2;
+				var _g6 = [];
+				var _g24 = 0;
+				var _g14 = l2;
+				while(_g24 < _g14) {
+					var e2 = _g24++;
+					_g6.push(0);
+				}
+				var arr3 = _g6;
+				arr3[0] = w6;
+				arr3[1] = h6;
+				v2 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w6,h6,arr3);
+			}
+			this3 = v2;
+			arr = this3;
+			var snapped2 = null;
+			if(snapped2 == null) {
+				snapped2 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts2 = this.createTetris(p,snapped2);
+			var sx2 = -2;
+			var sy2 = -2.5;
+			var w7 = arr[0];
+			var h7 = arr[1];
+			var dx2 = sx2;
+			var dy2 = sy2;
+			var count2 = 0;
+			var _g15 = 0;
+			var _g7 = w7;
+			while(_g15 < _g7) {
+				var x2 = _g15++;
+				var _g33 = 0;
+				var _g25 = h7;
+				while(_g33 < _g25) {
+					var y2 = _g33++;
+					var w8 = arr[0];
+					var h8 = arr[1];
+					if(arr[2 + w8 * y2 + x2 | 0] == 1) {
+						ts2.addBlock(sx2 + x2,sy2 + y2);
+					}
+				}
+			}
+			return ts2;
+		case "%":
+			var w9 = 100;
+			var h9 = 100;
+			var v3 = [5,5,1,1,0,0,1,1,0,0,1,0,0,0,1,0,0,0,1,0,0,1,1,0,0,1,1];
+			var this4;
+			if(v3 == null) {
+				if(w9 == null) {
+					w9 = 100;
+				}
+				if(h9 == null) {
+					h9 = 100;
+				}
+				var l3 = w9 * h9 + 2;
+				var _g8 = [];
+				var _g26 = 0;
+				var _g16 = l3;
+				while(_g26 < _g16) {
+					var e3 = _g26++;
+					_g8.push(0);
+				}
+				var arr4 = _g8;
+				arr4[0] = w9;
+				arr4[1] = h9;
+				v3 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w9,h9,arr4);
+			}
+			this4 = v3;
+			arr = this4;
+			var snapped3 = null;
+			if(snapped3 == null) {
+				snapped3 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts3 = this.createTetris(p,snapped3);
+			var sx3 = -2;
+			var sy3 = -2.5;
+			var w10 = arr[0];
+			var h10 = arr[1];
+			var dx3 = sx3;
+			var dy3 = sy3;
+			var count3 = 0;
+			var _g17 = 0;
+			var _g9 = w10;
+			while(_g17 < _g9) {
+				var x3 = _g17++;
+				var _g34 = 0;
+				var _g27 = h10;
+				while(_g34 < _g27) {
+					var y3 = _g34++;
+					var w11 = arr[0];
+					var h11 = arr[1];
+					if(arr[2 + w11 * y3 + x3 | 0] == 1) {
+						ts3.addBlock(sx3 + x3,sy3 + y3);
+					}
+				}
+			}
+			return ts3;
+		case "&":
+			var w12 = 100;
+			var h12 = 100;
+			var v4 = [4,5,0,1,1,0,1,0,1,0,0,1,0,1,1,0,1,0,0,1,0,1];
+			var this5;
+			if(v4 == null) {
+				if(w12 == null) {
+					w12 = 100;
+				}
+				if(h12 == null) {
+					h12 = 100;
+				}
+				var l4 = w12 * h12 + 2;
+				var _g10 = [];
+				var _g28 = 0;
+				var _g18 = l4;
+				while(_g28 < _g18) {
+					var e4 = _g28++;
+					_g10.push(0);
+				}
+				var arr5 = _g10;
+				arr5[0] = w12;
+				arr5[1] = h12;
+				v4 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w12,h12,arr5);
+			}
+			this5 = v4;
+			arr = this5;
+			var snapped4 = null;
+			if(snapped4 == null) {
+				snapped4 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts4 = this.createTetris(p,snapped4);
+			var sx4 = -2;
+			var sy4 = -2.5;
+			var w13 = arr[0];
+			var h13 = arr[1];
+			var dx4 = sx4;
+			var dy4 = sy4;
+			var count4 = 0;
+			var _g19 = 0;
+			var _g20 = w13;
+			while(_g19 < _g20) {
+				var x4 = _g19++;
+				var _g35 = 0;
+				var _g29 = h13;
+				while(_g35 < _g29) {
+					var y4 = _g35++;
+					var w14 = arr[0];
+					var h14 = arr[1];
+					if(arr[2 + w14 * y4 + x4 | 0] == 1) {
+						ts4.addBlock(sx4 + x4,sy4 + y4);
+					}
+				}
+			}
+			return ts4;
+		case "(":
+			var w15 = 100;
+			var h15 = 100;
+			var v5 = [4,5,0,1,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0];
+			var this6;
+			if(v5 == null) {
+				if(w15 == null) {
+					w15 = 100;
+				}
+				if(h15 == null) {
+					h15 = 100;
+				}
+				var l5 = w15 * h15 + 2;
+				var _g30 = [];
+				var _g210 = 0;
+				var _g110 = l5;
+				while(_g210 < _g110) {
+					var e5 = _g210++;
+					_g30.push(0);
+				}
+				var arr6 = _g30;
+				arr6[0] = w15;
+				arr6[1] = h15;
+				v5 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w15,h15,arr6);
+			}
+			this6 = v5;
+			arr = this6;
+			var snapped5 = null;
+			if(snapped5 == null) {
+				snapped5 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts5 = this.createTetris(p,snapped5);
+			var sx5 = -2;
+			var sy5 = -2.5;
+			var w16 = arr[0];
+			var h16 = arr[1];
+			var dx5 = sx5;
+			var dy5 = sy5;
+			var count5 = 0;
+			var _g111 = 0;
+			var _g36 = w16;
+			while(_g111 < _g36) {
+				var x5 = _g111++;
+				var _g37 = 0;
+				var _g211 = h16;
+				while(_g37 < _g211) {
+					var y5 = _g37++;
+					var w17 = arr[0];
+					var h17 = arr[1];
+					if(arr[2 + w17 * y5 + x5 | 0] == 1) {
+						ts5.addBlock(sx5 + x5,sy5 + y5);
+					}
+				}
+			}
+			return ts5;
+		case ")":
+			var w18 = 100;
+			var h18 = 100;
+			var v6 = [4,5,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,1,0];
+			var this7;
+			if(v6 == null) {
+				if(w18 == null) {
+					w18 = 100;
+				}
+				if(h18 == null) {
+					h18 = 100;
+				}
+				var l6 = w18 * h18 + 2;
+				var _g38 = [];
+				var _g212 = 0;
+				var _g112 = l6;
+				while(_g212 < _g112) {
+					var e6 = _g212++;
+					_g38.push(0);
+				}
+				var arr7 = _g38;
+				arr7[0] = w18;
+				arr7[1] = h18;
+				v6 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w18,h18,arr7);
+			}
+			this7 = v6;
+			arr = this7;
+			var snapped6 = null;
+			if(snapped6 == null) {
+				snapped6 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts6 = this.createTetris(p,snapped6);
+			var sx6 = -2;
+			var sy6 = -2.5;
+			var w19 = arr[0];
+			var h19 = arr[1];
+			var dx6 = sx6;
+			var dy6 = sy6;
+			var count6 = 0;
+			var _g113 = 0;
+			var _g39 = w19;
+			while(_g113 < _g39) {
+				var x6 = _g113++;
+				var _g310 = 0;
+				var _g213 = h19;
+				while(_g310 < _g213) {
+					var y6 = _g310++;
+					var w20 = arr[0];
+					var h20 = arr[1];
+					if(arr[2 + w20 * y6 + x6 | 0] == 1) {
+						ts6.addBlock(sx6 + x6,sy6 + y6);
+					}
+				}
+			}
+			return ts6;
+		case "*":
+			var w21 = 100;
+			var h21 = 100;
+			var v7 = [5,5,1,0,1,0,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,0,1,0,1,0,1];
+			var this8;
+			if(v7 == null) {
+				if(w21 == null) {
+					w21 = 100;
+				}
+				if(h21 == null) {
+					h21 = 100;
+				}
+				var l7 = w21 * h21 + 2;
+				var _g40 = [];
+				var _g214 = 0;
+				var _g114 = l7;
+				while(_g214 < _g114) {
+					var e7 = _g214++;
+					_g40.push(0);
+				}
+				var arr8 = _g40;
+				arr8[0] = w21;
+				arr8[1] = h21;
+				v7 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w21,h21,arr8);
+			}
+			this8 = v7;
+			arr = this8;
+			var snapped7 = null;
+			if(snapped7 == null) {
+				snapped7 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts7 = this.createTetris(p,snapped7);
+			var sx7 = -2;
+			var sy7 = -2.5;
+			var w22 = arr[0];
+			var h22 = arr[1];
+			var dx7 = sx7;
+			var dy7 = sy7;
+			var count7 = 0;
+			var _g115 = 0;
+			var _g41 = w22;
+			while(_g115 < _g41) {
+				var x7 = _g115++;
+				var _g311 = 0;
+				var _g215 = h22;
+				while(_g311 < _g215) {
+					var y7 = _g311++;
+					var w23 = arr[0];
+					var h23 = arr[1];
+					if(arr[2 + w23 * y7 + x7 | 0] == 1) {
+						ts7.addBlock(sx7 + x7,sy7 + y7);
+					}
+				}
+			}
+			return ts7;
+		case "+":
+			var w24 = 100;
+			var h24 = 100;
+			var v8 = [4,5,0,0,0,0,1,0,1,1,1,0,1,0,0,0,0];
+			var this9;
+			if(v8 == null) {
+				if(w24 == null) {
+					w24 = 100;
+				}
+				if(h24 == null) {
+					h24 = 100;
+				}
+				var l8 = w24 * h24 + 2;
+				var _g42 = [];
+				var _g216 = 0;
+				var _g116 = l8;
+				while(_g216 < _g116) {
+					var e8 = _g216++;
+					_g42.push(0);
+				}
+				var arr9 = _g42;
+				arr9[0] = w24;
+				arr9[1] = h24;
+				v8 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w24,h24,arr9);
+			}
+			this9 = v8;
+			arr = this9;
+			var snapped8 = null;
+			if(snapped8 == null) {
+				snapped8 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts8 = this.createTetris(p,snapped8);
+			var sx8 = -2;
+			var sy8 = -2.5;
+			var w25 = arr[0];
+			var h25 = arr[1];
+			var dx8 = sx8;
+			var dy8 = sy8;
+			var count8 = 0;
+			var _g117 = 0;
+			var _g43 = w25;
+			while(_g117 < _g43) {
+				var x8 = _g117++;
+				var _g312 = 0;
+				var _g217 = h25;
+				while(_g312 < _g217) {
+					var y8 = _g312++;
+					var w26 = arr[0];
+					var h26 = arr[1];
+					if(arr[2 + w26 * y8 + x8 | 0] == 1) {
+						ts8.addBlock(sx8 + x8,sy8 + y8);
+					}
+				}
+			}
+			return ts8;
+		case ",":
+			var w27 = 100;
+			var h27 = 100;
+			var v9 = [3,5,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0];
+			var this10;
+			if(v9 == null) {
+				if(w27 == null) {
+					w27 = 100;
+				}
+				if(h27 == null) {
+					h27 = 100;
+				}
+				var l9 = w27 * h27 + 2;
+				var _g44 = [];
+				var _g218 = 0;
+				var _g118 = l9;
+				while(_g218 < _g118) {
+					var e9 = _g218++;
+					_g44.push(0);
+				}
+				var arr10 = _g44;
+				arr10[0] = w27;
+				arr10[1] = h27;
+				v9 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w27,h27,arr10);
+			}
+			this10 = v9;
+			arr = this10;
+			var snapped9 = null;
+			if(snapped9 == null) {
+				snapped9 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts9 = this.createTetris(p,snapped9);
+			var sx9 = -2;
+			var sy9 = -2.5;
+			var w28 = arr[0];
+			var h28 = arr[1];
+			var dx9 = sx9;
+			var dy9 = sy9;
+			var count9 = 0;
+			var _g119 = 0;
+			var _g45 = w28;
+			while(_g119 < _g45) {
+				var x9 = _g119++;
+				var _g313 = 0;
+				var _g219 = h28;
+				while(_g313 < _g219) {
+					var y9 = _g313++;
+					var w29 = arr[0];
+					var h29 = arr[1];
+					if(arr[2 + w29 * y9 + x9 | 0] == 1) {
+						ts9.addBlock(sx9 + x9,sy9 + y9);
+					}
+				}
+			}
+			return ts9;
+		case "-":
+			var w30 = 100;
+			var h30 = 100;
+			var v10 = [4,5,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0];
+			var this11;
+			if(v10 == null) {
+				if(w30 == null) {
+					w30 = 100;
+				}
+				if(h30 == null) {
+					h30 = 100;
+				}
+				var l10 = w30 * h30 + 2;
+				var _g46 = [];
+				var _g220 = 0;
+				var _g120 = l10;
+				while(_g220 < _g120) {
+					var e10 = _g220++;
+					_g46.push(0);
+				}
+				var arr11 = _g46;
+				arr11[0] = w30;
+				arr11[1] = h30;
+				v10 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w30,h30,arr11);
+			}
+			this11 = v10;
+			arr = this11;
+			var snapped10 = null;
+			if(snapped10 == null) {
+				snapped10 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts10 = this.createTetris(p,snapped10);
+			var sx10 = -2;
+			var sy10 = -2.5;
+			var w31 = arr[0];
+			var h31 = arr[1];
+			var dx10 = sx10;
+			var dy10 = sy10;
+			var count10 = 0;
+			var _g121 = 0;
+			var _g47 = w31;
+			while(_g121 < _g47) {
+				var x10 = _g121++;
+				var _g314 = 0;
+				var _g221 = h31;
+				while(_g314 < _g221) {
+					var y10 = _g314++;
+					var w32 = arr[0];
+					var h32 = arr[1];
+					if(arr[2 + w32 * y10 + x10 | 0] == 1) {
+						ts10.addBlock(sx10 + x10,sy10 + y10);
+					}
+				}
+			}
+			return ts10;
+		case ".":
+			var w33 = 100;
+			var h33 = 100;
+			var v11 = [3,5,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1];
+			var this12;
+			if(v11 == null) {
+				if(w33 == null) {
+					w33 = 100;
+				}
+				if(h33 == null) {
+					h33 = 100;
+				}
+				var l11 = w33 * h33 + 2;
+				var _g48 = [];
+				var _g222 = 0;
+				var _g122 = l11;
+				while(_g222 < _g122) {
+					var e11 = _g222++;
+					_g48.push(0);
+				}
+				var arr12 = _g48;
+				arr12[0] = w33;
+				arr12[1] = h33;
+				v11 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w33,h33,arr12);
+			}
+			this12 = v11;
+			arr = this12;
+			var snapped11 = null;
+			if(snapped11 == null) {
+				snapped11 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts11 = this.createTetris(p,snapped11);
+			var sx11 = -2;
+			var sy11 = -2.5;
+			var w34 = arr[0];
+			var h34 = arr[1];
+			var dx11 = sx11;
+			var dy11 = sy11;
+			var count11 = 0;
+			var _g123 = 0;
+			var _g49 = w34;
+			while(_g123 < _g49) {
+				var x11 = _g123++;
+				var _g315 = 0;
+				var _g223 = h34;
+				while(_g315 < _g223) {
+					var y11 = _g315++;
+					var w35 = arr[0];
+					var h35 = arr[1];
+					if(arr[2 + w35 * y11 + x11 | 0] == 1) {
+						ts11.addBlock(sx11 + x11,sy11 + y11);
+					}
+				}
+			}
+			return ts11;
+		case "/":
+			var w36 = 100;
+			var h36 = 100;
+			var v12 = [4,5,0,0,0,1,0,0,1,0,0,1,0,0,0,1,0,0,1,0,0,0];
+			var this13;
+			if(v12 == null) {
+				if(w36 == null) {
+					w36 = 100;
+				}
+				if(h36 == null) {
+					h36 = 100;
+				}
+				var l12 = w36 * h36 + 2;
+				var _g50 = [];
+				var _g224 = 0;
+				var _g124 = l12;
+				while(_g224 < _g124) {
+					var e12 = _g224++;
+					_g50.push(0);
+				}
+				var arr13 = _g50;
+				arr13[0] = w36;
+				arr13[1] = h36;
+				v12 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w36,h36,arr13);
+			}
+			this13 = v12;
+			arr = this13;
+			var snapped12 = null;
+			if(snapped12 == null) {
+				snapped12 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts12 = this.createTetris(p,snapped12);
+			var sx12 = -2;
+			var sy12 = -2.5;
+			var w37 = arr[0];
+			var h37 = arr[1];
+			var dx12 = sx12;
+			var dy12 = sy12;
+			var count12 = 0;
+			var _g125 = 0;
+			var _g51 = w37;
+			while(_g125 < _g51) {
+				var x12 = _g125++;
+				var _g316 = 0;
+				var _g225 = h37;
+				while(_g316 < _g225) {
+					var y12 = _g316++;
+					var w38 = arr[0];
+					var h38 = arr[1];
+					if(arr[2 + w38 * y12 + x12 | 0] == 1) {
+						ts12.addBlock(sx12 + x12,sy12 + y12);
+					}
+				}
+			}
+			return ts12;
+		case "0":
+			var w39 = 100;
+			var h39 = 100;
+			var v13 = [4,5,0,1,1,0,1,0,1,1,1,1,0,1,1,0,0,1,0,1,1,0];
+			var this14;
+			if(v13 == null) {
+				if(w39 == null) {
+					w39 = 100;
+				}
+				if(h39 == null) {
+					h39 = 100;
+				}
+				var l13 = w39 * h39 + 2;
+				var _g52 = [];
+				var _g226 = 0;
+				var _g126 = l13;
+				while(_g226 < _g126) {
+					var e13 = _g226++;
+					_g52.push(0);
+				}
+				var arr14 = _g52;
+				arr14[0] = w39;
+				arr14[1] = h39;
+				v13 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w39,h39,arr14);
+			}
+			this14 = v13;
+			arr = this14;
+			var snapped13 = null;
+			if(snapped13 == null) {
+				snapped13 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts13 = this.createTetris(p,snapped13);
+			var sx13 = -2;
+			var sy13 = -2.5;
+			var w40 = arr[0];
+			var h40 = arr[1];
+			var dx13 = sx13;
+			var dy13 = sy13;
+			var count13 = 0;
+			var _g127 = 0;
+			var _g53 = w40;
+			while(_g127 < _g53) {
+				var x13 = _g127++;
+				var _g317 = 0;
+				var _g227 = h40;
+				while(_g317 < _g227) {
+					var y13 = _g317++;
+					var w41 = arr[0];
+					var h41 = arr[1];
+					if(arr[2 + w41 * y13 + x13 | 0] == 1) {
+						ts13.addBlock(sx13 + x13,sy13 + y13);
+					}
+				}
+			}
+			return ts13;
+		case "1":
+			var w42 = 100;
+			var h42 = 100;
+			var v14 = [3,5,0,1,0,1,1,0,0,1,0,0,1,0,1,1,1];
+			var this15;
+			if(v14 == null) {
+				if(w42 == null) {
+					w42 = 100;
+				}
+				if(h42 == null) {
+					h42 = 100;
+				}
+				var l14 = w42 * h42 + 2;
+				var _g54 = [];
+				var _g228 = 0;
+				var _g128 = l14;
+				while(_g228 < _g128) {
+					var e14 = _g228++;
+					_g54.push(0);
+				}
+				var arr15 = _g54;
+				arr15[0] = w42;
+				arr15[1] = h42;
+				v14 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w42,h42,arr15);
+			}
+			this15 = v14;
+			arr = this15;
+			var snapped14 = null;
+			if(snapped14 == null) {
+				snapped14 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts14 = this.createTetris(p,snapped14);
+			var sx14 = -2;
+			var sy14 = -2.5;
+			var w43 = arr[0];
+			var h43 = arr[1];
+			var dx14 = sx14;
+			var dy14 = sy14;
+			var count14 = 0;
+			var _g129 = 0;
+			var _g55 = w43;
+			while(_g129 < _g55) {
+				var x14 = _g129++;
+				var _g318 = 0;
+				var _g229 = h43;
+				while(_g318 < _g229) {
+					var y14 = _g318++;
+					var w44 = arr[0];
+					var h44 = arr[1];
+					if(arr[2 + w44 * y14 + x14 | 0] == 1) {
+						ts14.addBlock(sx14 + x14,sy14 + y14);
+					}
+				}
+			}
+			return ts14;
+		case "2":
+			var w45 = 100;
+			var h45 = 100;
+			var v15 = [4,5,0,1,1,0,1,0,0,1,0,0,1,0,0,1,0,0,1,1,1,1];
+			var this16;
+			if(v15 == null) {
+				if(w45 == null) {
+					w45 = 100;
+				}
+				if(h45 == null) {
+					h45 = 100;
+				}
+				var l15 = w45 * h45 + 2;
+				var _g56 = [];
+				var _g230 = 0;
+				var _g130 = l15;
+				while(_g230 < _g130) {
+					var e15 = _g230++;
+					_g56.push(0);
+				}
+				var arr16 = _g56;
+				arr16[0] = w45;
+				arr16[1] = h45;
+				v15 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w45,h45,arr16);
+			}
+			this16 = v15;
+			arr = this16;
+			var snapped15 = null;
+			if(snapped15 == null) {
+				snapped15 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts15 = this.createTetris(p,snapped15);
+			var sx15 = -2;
+			var sy15 = -2.5;
+			var w46 = arr[0];
+			var h46 = arr[1];
+			var dx15 = sx15;
+			var dy15 = sy15;
+			var count15 = 0;
+			var _g131 = 0;
+			var _g57 = w46;
+			while(_g131 < _g57) {
+				var x15 = _g131++;
+				var _g319 = 0;
+				var _g231 = h46;
+				while(_g319 < _g231) {
+					var y15 = _g319++;
+					var w47 = arr[0];
+					var h47 = arr[1];
+					if(arr[2 + w47 * y15 + x15 | 0] == 1) {
+						ts15.addBlock(sx15 + x15,sy15 + y15);
+					}
+				}
+			}
+			return ts15;
+		case "3":
+			var w48 = 100;
+			var h48 = 100;
+			var v16 = [4,5,1,1,1,0,0,0,0,1,0,1,1,0,0,0,0,1,1,1,1,0];
+			var this17;
+			if(v16 == null) {
+				if(w48 == null) {
+					w48 = 100;
+				}
+				if(h48 == null) {
+					h48 = 100;
+				}
+				var l16 = w48 * h48 + 2;
+				var _g58 = [];
+				var _g232 = 0;
+				var _g132 = l16;
+				while(_g232 < _g132) {
+					var e16 = _g232++;
+					_g58.push(0);
+				}
+				var arr17 = _g58;
+				arr17[0] = w48;
+				arr17[1] = h48;
+				v16 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w48,h48,arr17);
+			}
+			this17 = v16;
+			arr = this17;
+			var snapped16 = null;
+			if(snapped16 == null) {
+				snapped16 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts16 = this.createTetris(p,snapped16);
+			var sx16 = -2;
+			var sy16 = -2.5;
+			var w49 = arr[0];
+			var h49 = arr[1];
+			var dx16 = sx16;
+			var dy16 = sy16;
+			var count16 = 0;
+			var _g133 = 0;
+			var _g59 = w49;
+			while(_g133 < _g59) {
+				var x16 = _g133++;
+				var _g320 = 0;
+				var _g233 = h49;
+				while(_g320 < _g233) {
+					var y16 = _g320++;
+					var w50 = arr[0];
+					var h50 = arr[1];
+					if(arr[2 + w50 * y16 + x16 | 0] == 1) {
+						ts16.addBlock(sx16 + x16,sy16 + y16);
+					}
+				}
+			}
+			return ts16;
+		case "4":
+			var w51 = 100;
+			var h51 = 100;
+			var v17 = [4,5,1,0,0,0,1,0,0,0,1,0,1,0,1,1,1,1,0,0,1,0];
+			var this18;
+			if(v17 == null) {
+				if(w51 == null) {
+					w51 = 100;
+				}
+				if(h51 == null) {
+					h51 = 100;
+				}
+				var l17 = w51 * h51 + 2;
+				var _g60 = [];
+				var _g234 = 0;
+				var _g134 = l17;
+				while(_g234 < _g134) {
+					var e17 = _g234++;
+					_g60.push(0);
+				}
+				var arr18 = _g60;
+				arr18[0] = w51;
+				arr18[1] = h51;
+				v17 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w51,h51,arr18);
+			}
+			this18 = v17;
+			arr = this18;
+			var snapped17 = null;
+			if(snapped17 == null) {
+				snapped17 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts17 = this.createTetris(p,snapped17);
+			var sx17 = -2;
+			var sy17 = -2.5;
+			var w52 = arr[0];
+			var h52 = arr[1];
+			var dx17 = sx17;
+			var dy17 = sy17;
+			var count17 = 0;
+			var _g135 = 0;
+			var _g61 = w52;
+			while(_g135 < _g61) {
+				var x17 = _g135++;
+				var _g321 = 0;
+				var _g235 = h52;
+				while(_g321 < _g235) {
+					var y17 = _g321++;
+					var w53 = arr[0];
+					var h53 = arr[1];
+					if(arr[2 + w53 * y17 + x17 | 0] == 1) {
+						ts17.addBlock(sx17 + x17,sy17 + y17);
+					}
+				}
+			}
+			return ts17;
+		case "5":
+			var w54 = 100;
+			var h54 = 100;
+			var v18 = [4,5,1,1,1,1,1,0,0,0,1,1,1,0,0,0,0,1,1,1,1,0];
+			var this19;
+			if(v18 == null) {
+				if(w54 == null) {
+					w54 = 100;
+				}
+				if(h54 == null) {
+					h54 = 100;
+				}
+				var l18 = w54 * h54 + 2;
+				var _g62 = [];
+				var _g236 = 0;
+				var _g136 = l18;
+				while(_g236 < _g136) {
+					var e18 = _g236++;
+					_g62.push(0);
+				}
+				var arr19 = _g62;
+				arr19[0] = w54;
+				arr19[1] = h54;
+				v18 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w54,h54,arr19);
+			}
+			this19 = v18;
+			arr = this19;
+			var snapped18 = null;
+			if(snapped18 == null) {
+				snapped18 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts18 = this.createTetris(p,snapped18);
+			var sx18 = -2;
+			var sy18 = -2.5;
+			var w55 = arr[0];
+			var h55 = arr[1];
+			var dx18 = sx18;
+			var dy18 = sy18;
+			var count18 = 0;
+			var _g137 = 0;
+			var _g63 = w55;
+			while(_g137 < _g63) {
+				var x18 = _g137++;
+				var _g322 = 0;
+				var _g237 = h55;
+				while(_g322 < _g237) {
+					var y18 = _g322++;
+					var w56 = arr[0];
+					var h56 = arr[1];
+					if(arr[2 + w56 * y18 + x18 | 0] == 1) {
+						ts18.addBlock(sx18 + x18,sy18 + y18);
+					}
+				}
+			}
+			return ts18;
+		case "6":
+			var w57 = 100;
+			var h57 = 100;
+			var v19 = [4,5,0,1,1,1,1,0,0,0,1,1,1,0,1,0,0,1,0,1,1,0];
+			var this20;
+			if(v19 == null) {
+				if(w57 == null) {
+					w57 = 100;
+				}
+				if(h57 == null) {
+					h57 = 100;
+				}
+				var l19 = w57 * h57 + 2;
+				var _g64 = [];
+				var _g238 = 0;
+				var _g138 = l19;
+				while(_g238 < _g138) {
+					var e19 = _g238++;
+					_g64.push(0);
+				}
+				var arr20 = _g64;
+				arr20[0] = w57;
+				arr20[1] = h57;
+				v19 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w57,h57,arr20);
+			}
+			this20 = v19;
+			arr = this20;
+			var snapped19 = null;
+			if(snapped19 == null) {
+				snapped19 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts19 = this.createTetris(p,snapped19);
+			var sx19 = -2;
+			var sy19 = -2.5;
+			var w58 = arr[0];
+			var h58 = arr[1];
+			var dx19 = sx19;
+			var dy19 = sy19;
+			var count19 = 0;
+			var _g139 = 0;
+			var _g65 = w58;
+			while(_g139 < _g65) {
+				var x19 = _g139++;
+				var _g323 = 0;
+				var _g239 = h58;
+				while(_g323 < _g239) {
+					var y19 = _g323++;
+					var w59 = arr[0];
+					var h59 = arr[1];
+					if(arr[2 + w59 * y19 + x19 | 0] == 1) {
+						ts19.addBlock(sx19 + x19,sy19 + y19);
+					}
+				}
+			}
+			return ts19;
+		case "7":
+			var w60 = 100;
+			var h60 = 100;
+			var v20 = [4,5,1,1,1,1,0,0,1,0,0,0,1,0,0,1,0,0,0,1,0,0];
+			var this21;
+			if(v20 == null) {
+				if(w60 == null) {
+					w60 = 100;
+				}
+				if(h60 == null) {
+					h60 = 100;
+				}
+				var l20 = w60 * h60 + 2;
+				var _g66 = [];
+				var _g240 = 0;
+				var _g140 = l20;
+				while(_g240 < _g140) {
+					var e20 = _g240++;
+					_g66.push(0);
+				}
+				var arr21 = _g66;
+				arr21[0] = w60;
+				arr21[1] = h60;
+				v20 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w60,h60,arr21);
+			}
+			this21 = v20;
+			arr = this21;
+			var snapped20 = null;
+			if(snapped20 == null) {
+				snapped20 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts20 = this.createTetris(p,snapped20);
+			var sx20 = -2;
+			var sy20 = -2.5;
+			var w61 = arr[0];
+			var h61 = arr[1];
+			var dx20 = sx20;
+			var dy20 = sy20;
+			var count20 = 0;
+			var _g141 = 0;
+			var _g67 = w61;
+			while(_g141 < _g67) {
+				var x20 = _g141++;
+				var _g324 = 0;
+				var _g241 = h61;
+				while(_g324 < _g241) {
+					var y20 = _g324++;
+					var w62 = arr[0];
+					var h62 = arr[1];
+					if(arr[2 + w62 * y20 + x20 | 0] == 1) {
+						ts20.addBlock(sx20 + x20,sy20 + y20);
+					}
+				}
+			}
+			return ts20;
+		case "8":
+			var w63 = 100;
+			var h63 = 100;
+			var v21 = [4,5,0,1,1,0,1,0,0,1,0,1,1,0,1,0,0,1,0,1,1,0];
+			var this22;
+			if(v21 == null) {
+				if(w63 == null) {
+					w63 = 100;
+				}
+				if(h63 == null) {
+					h63 = 100;
+				}
+				var l21 = w63 * h63 + 2;
+				var _g68 = [];
+				var _g242 = 0;
+				var _g142 = l21;
+				while(_g242 < _g142) {
+					var e21 = _g242++;
+					_g68.push(0);
+				}
+				var arr22 = _g68;
+				arr22[0] = w63;
+				arr22[1] = h63;
+				v21 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w63,h63,arr22);
+			}
+			this22 = v21;
+			arr = this22;
+			var snapped21 = null;
+			if(snapped21 == null) {
+				snapped21 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts21 = this.createTetris(p,snapped21);
+			var sx21 = -2;
+			var sy21 = -2.5;
+			var w64 = arr[0];
+			var h64 = arr[1];
+			var dx21 = sx21;
+			var dy21 = sy21;
+			var count21 = 0;
+			var _g143 = 0;
+			var _g69 = w64;
+			while(_g143 < _g69) {
+				var x21 = _g143++;
+				var _g325 = 0;
+				var _g243 = h64;
+				while(_g325 < _g243) {
+					var y21 = _g325++;
+					var w65 = arr[0];
+					var h65 = arr[1];
+					if(arr[2 + w65 * y21 + x21 | 0] == 1) {
+						ts21.addBlock(sx21 + x21,sy21 + y21);
+					}
+				}
+			}
+			return ts21;
+		case "9":
+			var w66 = 100;
+			var h66 = 100;
+			var v22 = [4,5,0,1,1,0,1,0,0,1,0,1,1,1,0,0,0,1,1,1,1,0];
+			var this23;
+			if(v22 == null) {
+				if(w66 == null) {
+					w66 = 100;
+				}
+				if(h66 == null) {
+					h66 = 100;
+				}
+				var l22 = w66 * h66 + 2;
+				var _g70 = [];
+				var _g244 = 0;
+				var _g144 = l22;
+				while(_g244 < _g144) {
+					var e22 = _g244++;
+					_g70.push(0);
+				}
+				var arr23 = _g70;
+				arr23[0] = w66;
+				arr23[1] = h66;
+				v22 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w66,h66,arr23);
+			}
+			this23 = v22;
+			arr = this23;
+			var snapped22 = null;
+			if(snapped22 == null) {
+				snapped22 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts22 = this.createTetris(p,snapped22);
+			var sx22 = -2;
+			var sy22 = -2.5;
+			var w67 = arr[0];
+			var h67 = arr[1];
+			var dx22 = sx22;
+			var dy22 = sy22;
+			var count22 = 0;
+			var _g145 = 0;
+			var _g71 = w67;
+			while(_g145 < _g71) {
+				var x22 = _g145++;
+				var _g326 = 0;
+				var _g245 = h67;
+				while(_g326 < _g245) {
+					var y22 = _g326++;
+					var w68 = arr[0];
+					var h68 = arr[1];
+					if(arr[2 + w68 * y22 + x22 | 0] == 1) {
+						ts22.addBlock(sx22 + x22,sy22 + y22);
+					}
+				}
+			}
+			return ts22;
+		case ":":
+			var w69 = 100;
+			var h69 = 100;
+			var v23 = [3,5,0,0,1,0,0,1,0,0,0,0,0,1,0,0,1];
+			var this24;
+			if(v23 == null) {
+				if(w69 == null) {
+					w69 = 100;
+				}
+				if(h69 == null) {
+					h69 = 100;
+				}
+				var l23 = w69 * h69 + 2;
+				var _g72 = [];
+				var _g246 = 0;
+				var _g146 = l23;
+				while(_g246 < _g146) {
+					var e23 = _g246++;
+					_g72.push(0);
+				}
+				var arr24 = _g72;
+				arr24[0] = w69;
+				arr24[1] = h69;
+				v23 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w69,h69,arr24);
+			}
+			this24 = v23;
+			arr = this24;
+			var snapped23 = null;
+			if(snapped23 == null) {
+				snapped23 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts23 = this.createTetris(p,snapped23);
+			var sx23 = -2;
+			var sy23 = -2.5;
+			var w70 = arr[0];
+			var h70 = arr[1];
+			var dx23 = sx23;
+			var dy23 = sy23;
+			var count23 = 0;
+			var _g147 = 0;
+			var _g73 = w70;
+			while(_g147 < _g73) {
+				var x23 = _g147++;
+				var _g327 = 0;
+				var _g247 = h70;
+				while(_g327 < _g247) {
+					var y23 = _g327++;
+					var w71 = arr[0];
+					var h71 = arr[1];
+					if(arr[2 + w71 * y23 + x23 | 0] == 1) {
+						ts23.addBlock(sx23 + x23,sy23 + y23);
+					}
+				}
+			}
+			return ts23;
+		case ";":
+			var w72 = 100;
+			var h72 = 100;
+			var v24 = [3,5,0,0,1,0,0,1,0,0,0,0,0,1,0,1,0];
+			var this25;
+			if(v24 == null) {
+				if(w72 == null) {
+					w72 = 100;
+				}
+				if(h72 == null) {
+					h72 = 100;
+				}
+				var l24 = w72 * h72 + 2;
+				var _g74 = [];
+				var _g248 = 0;
+				var _g148 = l24;
+				while(_g248 < _g148) {
+					var e24 = _g248++;
+					_g74.push(0);
+				}
+				var arr25 = _g74;
+				arr25[0] = w72;
+				arr25[1] = h72;
+				v24 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w72,h72,arr25);
+			}
+			this25 = v24;
+			arr = this25;
+			var snapped24 = null;
+			if(snapped24 == null) {
+				snapped24 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts24 = this.createTetris(p,snapped24);
+			var sx24 = -2;
+			var sy24 = -2.5;
+			var w73 = arr[0];
+			var h73 = arr[1];
+			var dx24 = sx24;
+			var dy24 = sy24;
+			var count24 = 0;
+			var _g149 = 0;
+			var _g75 = w73;
+			while(_g149 < _g75) {
+				var x24 = _g149++;
+				var _g328 = 0;
+				var _g249 = h73;
+				while(_g328 < _g249) {
+					var y24 = _g328++;
+					var w74 = arr[0];
+					var h74 = arr[1];
+					if(arr[2 + w74 * y24 + x24 | 0] == 1) {
+						ts24.addBlock(sx24 + x24,sy24 + y24);
+					}
+				}
+			}
+			return ts24;
+		case "<":
+			var w75 = 100;
+			var h75 = 100;
+			var v25 = [4,5,0,0,1,0,0,1,0,0,1,0,0,0,0,1,0,0,0,0,1,0];
+			var this26;
+			if(v25 == null) {
+				if(w75 == null) {
+					w75 = 100;
+				}
+				if(h75 == null) {
+					h75 = 100;
+				}
+				var l25 = w75 * h75 + 2;
+				var _g76 = [];
+				var _g250 = 0;
+				var _g150 = l25;
+				while(_g250 < _g150) {
+					var e25 = _g250++;
+					_g76.push(0);
+				}
+				var arr26 = _g76;
+				arr26[0] = w75;
+				arr26[1] = h75;
+				v25 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w75,h75,arr26);
+			}
+			this26 = v25;
+			arr = this26;
+			var snapped25 = null;
+			if(snapped25 == null) {
+				snapped25 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts25 = this.createTetris(p,snapped25);
+			var sx25 = -2;
+			var sy25 = -2.5;
+			var w76 = arr[0];
+			var h76 = arr[1];
+			var dx25 = sx25;
+			var dy25 = sy25;
+			var count25 = 0;
+			var _g151 = 0;
+			var _g77 = w76;
+			while(_g151 < _g77) {
+				var x25 = _g151++;
+				var _g329 = 0;
+				var _g251 = h76;
+				while(_g329 < _g251) {
+					var y25 = _g329++;
+					var w77 = arr[0];
+					var h77 = arr[1];
+					if(arr[2 + w77 * y25 + x25 | 0] == 1) {
+						ts25.addBlock(sx25 + x25,sy25 + y25);
+					}
+				}
+			}
+			return ts25;
+		case "=":
+			var w78 = 100;
+			var h78 = 100;
+			var v26 = [4,5,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0];
+			var this27;
+			if(v26 == null) {
+				if(w78 == null) {
+					w78 = 100;
+				}
+				if(h78 == null) {
+					h78 = 100;
+				}
+				var l26 = w78 * h78 + 2;
+				var _g78 = [];
+				var _g252 = 0;
+				var _g152 = l26;
+				while(_g252 < _g152) {
+					var e26 = _g252++;
+					_g78.push(0);
+				}
+				var arr27 = _g78;
+				arr27[0] = w78;
+				arr27[1] = h78;
+				v26 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w78,h78,arr27);
+			}
+			this27 = v26;
+			arr = this27;
+			var snapped26 = null;
+			if(snapped26 == null) {
+				snapped26 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts26 = this.createTetris(p,snapped26);
+			var sx26 = -2;
+			var sy26 = -2.5;
+			var w79 = arr[0];
+			var h79 = arr[1];
+			var dx26 = sx26;
+			var dy26 = sy26;
+			var count26 = 0;
+			var _g153 = 0;
+			var _g79 = w79;
+			while(_g153 < _g79) {
+				var x26 = _g153++;
+				var _g330 = 0;
+				var _g253 = h79;
+				while(_g330 < _g253) {
+					var y26 = _g330++;
+					var w80 = arr[0];
+					var h80 = arr[1];
+					if(arr[2 + w80 * y26 + x26 | 0] == 1) {
+						ts26.addBlock(sx26 + x26,sy26 + y26);
+					}
+				}
+			}
+			return ts26;
+		case ">":
+			var w81 = 100;
+			var h81 = 100;
+			var v27 = [4,5,0,1,0,0,0,0,1,0,0,0,0,1,0,0,1,0,0,1,0,0];
+			var this28;
+			if(v27 == null) {
+				if(w81 == null) {
+					w81 = 100;
+				}
+				if(h81 == null) {
+					h81 = 100;
+				}
+				var l27 = w81 * h81 + 2;
+				var _g80 = [];
+				var _g254 = 0;
+				var _g154 = l27;
+				while(_g254 < _g154) {
+					var e27 = _g254++;
+					_g80.push(0);
+				}
+				var arr28 = _g80;
+				arr28[0] = w81;
+				arr28[1] = h81;
+				v27 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w81,h81,arr28);
+			}
+			this28 = v27;
+			arr = this28;
+			var snapped27 = null;
+			if(snapped27 == null) {
+				snapped27 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts27 = this.createTetris(p,snapped27);
+			var sx27 = -2;
+			var sy27 = -2.5;
+			var w82 = arr[0];
+			var h82 = arr[1];
+			var dx27 = sx27;
+			var dy27 = sy27;
+			var count27 = 0;
+			var _g155 = 0;
+			var _g81 = w82;
+			while(_g155 < _g81) {
+				var x27 = _g155++;
+				var _g331 = 0;
+				var _g255 = h82;
+				while(_g331 < _g255) {
+					var y27 = _g331++;
+					var w83 = arr[0];
+					var h83 = arr[1];
+					if(arr[2 + w83 * y27 + x27 | 0] == 1) {
+						ts27.addBlock(sx27 + x27,sy27 + y27);
+					}
+				}
+			}
+			return ts27;
+		case "?":
+			var w84 = 100;
+			var h84 = 100;
+			var v28 = [4,5,0,1,1,1,1,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0];
+			var this29;
+			if(v28 == null) {
+				if(w84 == null) {
+					w84 = 100;
+				}
+				if(h84 == null) {
+					h84 = 100;
+				}
+				var l28 = w84 * h84 + 2;
+				var _g82 = [];
+				var _g256 = 0;
+				var _g156 = l28;
+				while(_g256 < _g156) {
+					var e28 = _g256++;
+					_g82.push(0);
+				}
+				var arr29 = _g82;
+				arr29[0] = w84;
+				arr29[1] = h84;
+				v28 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w84,h84,arr29);
+			}
+			this29 = v28;
+			arr = this29;
+			var snapped28 = null;
+			if(snapped28 == null) {
+				snapped28 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts28 = this.createTetris(p,snapped28);
+			var sx28 = -2;
+			var sy28 = -2.5;
+			var w85 = arr[0];
+			var h85 = arr[1];
+			var dx28 = sx28;
+			var dy28 = sy28;
+			var count28 = 0;
+			var _g157 = 0;
+			var _g83 = w85;
+			while(_g157 < _g83) {
+				var x28 = _g157++;
+				var _g332 = 0;
+				var _g257 = h85;
+				while(_g332 < _g257) {
+					var y28 = _g332++;
+					var w86 = arr[0];
+					var h86 = arr[1];
+					if(arr[2 + w86 * y28 + x28 | 0] == 1) {
+						ts28.addBlock(sx28 + x28,sy28 + y28);
+					}
+				}
+			}
+			return ts28;
+		case "@":
+			var w87 = 100;
+			var h87 = 100;
+			var v29 = [4,5,1,1,1,1,1,0,0,1,0,1,1,1,0,1,0,1,0,1,1,0];
+			var this30;
+			if(v29 == null) {
+				if(w87 == null) {
+					w87 = 100;
+				}
+				if(h87 == null) {
+					h87 = 100;
+				}
+				var l29 = w87 * h87 + 2;
+				var _g84 = [];
+				var _g258 = 0;
+				var _g158 = l29;
+				while(_g258 < _g158) {
+					var e29 = _g258++;
+					_g84.push(0);
+				}
+				var arr30 = _g84;
+				arr30[0] = w87;
+				arr30[1] = h87;
+				v29 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w87,h87,arr30);
+			}
+			this30 = v29;
+			arr = this30;
+			var snapped29 = null;
+			if(snapped29 == null) {
+				snapped29 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts29 = this.createTetris(p,snapped29);
+			var sx29 = -2;
+			var sy29 = -2.5;
+			var w88 = arr[0];
+			var h88 = arr[1];
+			var dx29 = sx29;
+			var dy29 = sy29;
+			var count29 = 0;
+			var _g159 = 0;
+			var _g85 = w88;
+			while(_g159 < _g85) {
+				var x29 = _g159++;
+				var _g333 = 0;
+				var _g259 = h88;
+				while(_g333 < _g259) {
+					var y29 = _g333++;
+					var w89 = arr[0];
+					var h89 = arr[1];
+					if(arr[2 + w89 * y29 + x29 | 0] == 1) {
+						ts29.addBlock(sx29 + x29,sy29 + y29);
+					}
+				}
+			}
+			return ts29;
+		case "A":
+			var w90 = 100;
+			var h90 = 100;
+			var v30 = [4,5,0,1,1,0,1,0,0,1,1,0,0,1,1,1,1,1,1,0,0,1];
+			var this31;
+			if(v30 == null) {
+				if(w90 == null) {
+					w90 = 100;
+				}
+				if(h90 == null) {
+					h90 = 100;
+				}
+				var l30 = w90 * h90 + 2;
+				var _g86 = [];
+				var _g260 = 0;
+				var _g160 = l30;
+				while(_g260 < _g160) {
+					var e30 = _g260++;
+					_g86.push(0);
+				}
+				var arr31 = _g86;
+				arr31[0] = w90;
+				arr31[1] = h90;
+				v30 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w90,h90,arr31);
+			}
+			this31 = v30;
+			arr = this31;
+			var snapped30 = null;
+			if(snapped30 == null) {
+				snapped30 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts30 = this.createTetris(p,snapped30);
+			var sx30 = -2;
+			var sy30 = -2.5;
+			var w91 = arr[0];
+			var h91 = arr[1];
+			var dx30 = sx30;
+			var dy30 = sy30;
+			var count30 = 0;
+			var _g161 = 0;
+			var _g87 = w91;
+			while(_g161 < _g87) {
+				var x30 = _g161++;
+				var _g334 = 0;
+				var _g261 = h91;
+				while(_g334 < _g261) {
+					var y30 = _g334++;
+					var w92 = arr[0];
+					var h92 = arr[1];
+					if(arr[2 + w92 * y30 + x30 | 0] == 1) {
+						ts30.addBlock(sx30 + x30,sy30 + y30);
+					}
+				}
+			}
+			return ts30;
+		case "B":
+			var w93 = 100;
+			var h93 = 100;
+			var v31 = [4,5,1,1,1,0,1,0,0,1,1,1,1,0,1,0,0,1,1,1,1,0];
+			var this32;
+			if(v31 == null) {
+				if(w93 == null) {
+					w93 = 100;
+				}
+				if(h93 == null) {
+					h93 = 100;
+				}
+				var l31 = w93 * h93 + 2;
+				var _g88 = [];
+				var _g262 = 0;
+				var _g162 = l31;
+				while(_g262 < _g162) {
+					var e31 = _g262++;
+					_g88.push(0);
+				}
+				var arr32 = _g88;
+				arr32[0] = w93;
+				arr32[1] = h93;
+				v31 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w93,h93,arr32);
+			}
+			this32 = v31;
+			arr = this32;
+			var snapped31 = null;
+			if(snapped31 == null) {
+				snapped31 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts31 = this.createTetris(p,snapped31);
+			var sx31 = -2;
+			var sy31 = -2.5;
+			var w94 = arr[0];
+			var h94 = arr[1];
+			var dx31 = sx31;
+			var dy31 = sy31;
+			var count31 = 0;
+			var _g163 = 0;
+			var _g89 = w94;
+			while(_g163 < _g89) {
+				var x31 = _g163++;
+				var _g335 = 0;
+				var _g263 = h94;
+				while(_g335 < _g263) {
+					var y31 = _g335++;
+					var w95 = arr[0];
+					var h95 = arr[1];
+					if(arr[2 + w95 * y31 + x31 | 0] == 1) {
+						ts31.addBlock(sx31 + x31,sy31 + y31);
+					}
+				}
+			}
+			return ts31;
+		case "C":
+			var w96 = 100;
+			var h96 = 100;
+			var v32 = [4,5,0,1,1,1,1,0,0,0,1,0,0,0,1,0,0,0,0,1,1,1];
+			var this33;
+			if(v32 == null) {
+				if(w96 == null) {
+					w96 = 100;
+				}
+				if(h96 == null) {
+					h96 = 100;
+				}
+				var l32 = w96 * h96 + 2;
+				var _g90 = [];
+				var _g264 = 0;
+				var _g164 = l32;
+				while(_g264 < _g164) {
+					var e32 = _g264++;
+					_g90.push(0);
+				}
+				var arr33 = _g90;
+				arr33[0] = w96;
+				arr33[1] = h96;
+				v32 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w96,h96,arr33);
+			}
+			this33 = v32;
+			arr = this33;
+			var snapped32 = null;
+			if(snapped32 == null) {
+				snapped32 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts32 = this.createTetris(p,snapped32);
+			var sx32 = -2;
+			var sy32 = -2.5;
+			var w97 = arr[0];
+			var h97 = arr[1];
+			var dx32 = sx32;
+			var dy32 = sy32;
+			var count32 = 0;
+			var _g165 = 0;
+			var _g91 = w97;
+			while(_g165 < _g91) {
+				var x32 = _g165++;
+				var _g336 = 0;
+				var _g265 = h97;
+				while(_g336 < _g265) {
+					var y32 = _g336++;
+					var w98 = arr[0];
+					var h98 = arr[1];
+					if(arr[2 + w98 * y32 + x32 | 0] == 1) {
+						ts32.addBlock(sx32 + x32,sy32 + y32);
+					}
+				}
+			}
+			return ts32;
+		case "D":
+			var w99 = 100;
+			var h99 = 100;
+			var v33 = [4,5,1,1,1,0,1,0,0,1,1,0,0,1,1,0,0,1,1,1,1,0];
+			var this34;
+			if(v33 == null) {
+				if(w99 == null) {
+					w99 = 100;
+				}
+				if(h99 == null) {
+					h99 = 100;
+				}
+				var l33 = w99 * h99 + 2;
+				var _g92 = [];
+				var _g266 = 0;
+				var _g166 = l33;
+				while(_g266 < _g166) {
+					var e33 = _g266++;
+					_g92.push(0);
+				}
+				var arr34 = _g92;
+				arr34[0] = w99;
+				arr34[1] = h99;
+				v33 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w99,h99,arr34);
+			}
+			this34 = v33;
+			arr = this34;
+			var snapped33 = null;
+			if(snapped33 == null) {
+				snapped33 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts33 = this.createTetris(p,snapped33);
+			var sx33 = -2;
+			var sy33 = -2.5;
+			var w100 = arr[0];
+			var h100 = arr[1];
+			var dx33 = sx33;
+			var dy33 = sy33;
+			var count33 = 0;
+			var _g167 = 0;
+			var _g93 = w100;
+			while(_g167 < _g93) {
+				var x33 = _g167++;
+				var _g337 = 0;
+				var _g267 = h100;
+				while(_g337 < _g267) {
+					var y33 = _g337++;
+					var w101 = arr[0];
+					var h101 = arr[1];
+					if(arr[2 + w101 * y33 + x33 | 0] == 1) {
+						ts33.addBlock(sx33 + x33,sy33 + y33);
+					}
+				}
+			}
+			return ts33;
+		case "E":
+			var w102 = 100;
+			var h102 = 100;
+			var v34 = [4,5,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1];
+			var this35;
+			if(v34 == null) {
+				if(w102 == null) {
+					w102 = 100;
+				}
+				if(h102 == null) {
+					h102 = 100;
+				}
+				var l34 = w102 * h102 + 2;
+				var _g94 = [];
+				var _g268 = 0;
+				var _g168 = l34;
+				while(_g268 < _g168) {
+					var e34 = _g268++;
+					_g94.push(0);
+				}
+				var arr35 = _g94;
+				arr35[0] = w102;
+				arr35[1] = h102;
+				v34 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w102,h102,arr35);
+			}
+			this35 = v34;
+			arr = this35;
+			var snapped34 = null;
+			if(snapped34 == null) {
+				snapped34 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts34 = this.createTetris(p,snapped34);
+			var sx34 = -2;
+			var sy34 = -2.5;
+			var w103 = arr[0];
+			var h103 = arr[1];
+			var dx34 = sx34;
+			var dy34 = sy34;
+			var count34 = 0;
+			var _g169 = 0;
+			var _g95 = w103;
+			while(_g169 < _g95) {
+				var x34 = _g169++;
+				var _g338 = 0;
+				var _g269 = h103;
+				while(_g338 < _g269) {
+					var y34 = _g338++;
+					var w104 = arr[0];
+					var h104 = arr[1];
+					if(arr[2 + w104 * y34 + x34 | 0] == 1) {
+						ts34.addBlock(sx34 + x34,sy34 + y34);
+					}
+				}
+			}
+			return ts34;
+		case "F":
+			var w105 = 100;
+			var h105 = 100;
+			var v35 = [4,5,1,1,1,1,1,0,0,0,1,1,1,0,1,0,0,0,1,0,0,0];
+			var this36;
+			if(v35 == null) {
+				if(w105 == null) {
+					w105 = 100;
+				}
+				if(h105 == null) {
+					h105 = 100;
+				}
+				var l35 = w105 * h105 + 2;
+				var _g96 = [];
+				var _g270 = 0;
+				var _g170 = l35;
+				while(_g270 < _g170) {
+					var e35 = _g270++;
+					_g96.push(0);
+				}
+				var arr36 = _g96;
+				arr36[0] = w105;
+				arr36[1] = h105;
+				v35 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w105,h105,arr36);
+			}
+			this36 = v35;
+			arr = this36;
+			var snapped35 = null;
+			if(snapped35 == null) {
+				snapped35 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts35 = this.createTetris(p,snapped35);
+			var sx35 = -2;
+			var sy35 = -2.5;
+			var w106 = arr[0];
+			var h106 = arr[1];
+			var dx35 = sx35;
+			var dy35 = sy35;
+			var count35 = 0;
+			var _g171 = 0;
+			var _g97 = w106;
+			while(_g171 < _g97) {
+				var x35 = _g171++;
+				var _g339 = 0;
+				var _g271 = h106;
+				while(_g339 < _g271) {
+					var y35 = _g339++;
+					var w107 = arr[0];
+					var h107 = arr[1];
+					if(arr[2 + w107 * y35 + x35 | 0] == 1) {
+						ts35.addBlock(sx35 + x35,sy35 + y35);
+					}
+				}
+			}
+			return ts35;
+		case "G":
+			var w108 = 100;
+			var h108 = 100;
+			var v36 = [4,5,1,1,1,1,1,0,0,0,1,0,1,1,1,0,0,1,1,1,1,1];
+			var this37;
+			if(v36 == null) {
+				if(w108 == null) {
+					w108 = 100;
+				}
+				if(h108 == null) {
+					h108 = 100;
+				}
+				var l36 = w108 * h108 + 2;
+				var _g98 = [];
+				var _g272 = 0;
+				var _g172 = l36;
+				while(_g272 < _g172) {
+					var e36 = _g272++;
+					_g98.push(0);
+				}
+				var arr37 = _g98;
+				arr37[0] = w108;
+				arr37[1] = h108;
+				v36 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w108,h108,arr37);
+			}
+			this37 = v36;
+			arr = this37;
+			var snapped36 = null;
+			if(snapped36 == null) {
+				snapped36 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts36 = this.createTetris(p,snapped36);
+			var sx36 = -2;
+			var sy36 = -2.5;
+			var w109 = arr[0];
+			var h109 = arr[1];
+			var dx36 = sx36;
+			var dy36 = sy36;
+			var count36 = 0;
+			var _g173 = 0;
+			var _g99 = w109;
+			while(_g173 < _g99) {
+				var x36 = _g173++;
+				var _g340 = 0;
+				var _g273 = h109;
+				while(_g340 < _g273) {
+					var y36 = _g340++;
+					var w110 = arr[0];
+					var h110 = arr[1];
+					if(arr[2 + w110 * y36 + x36 | 0] == 1) {
+						ts36.addBlock(sx36 + x36,sy36 + y36);
+					}
+				}
+			}
+			return ts36;
+		case "H":
+			var w111 = 100;
+			var h111 = 100;
+			var v37 = [4,5,1,0,0,1,1,0,0,1,1,1,1,1,1,0,0,1,1,0,0,1];
+			var this38;
+			if(v37 == null) {
+				if(w111 == null) {
+					w111 = 100;
+				}
+				if(h111 == null) {
+					h111 = 100;
+				}
+				var l37 = w111 * h111 + 2;
+				var _g100 = [];
+				var _g274 = 0;
+				var _g174 = l37;
+				while(_g274 < _g174) {
+					var e37 = _g274++;
+					_g100.push(0);
+				}
+				var arr38 = _g100;
+				arr38[0] = w111;
+				arr38[1] = h111;
+				v37 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w111,h111,arr38);
+			}
+			this38 = v37;
+			arr = this38;
+			var snapped37 = null;
+			if(snapped37 == null) {
+				snapped37 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts37 = this.createTetris(p,snapped37);
+			var sx37 = -2;
+			var sy37 = -2.5;
+			var w112 = arr[0];
+			var h112 = arr[1];
+			var dx37 = sx37;
+			var dy37 = sy37;
+			var count37 = 0;
+			var _g175 = 0;
+			var _g101 = w112;
+			while(_g175 < _g101) {
+				var x37 = _g175++;
+				var _g341 = 0;
+				var _g275 = h112;
+				while(_g341 < _g275) {
+					var y37 = _g341++;
+					var w113 = arr[0];
+					var h113 = arr[1];
+					if(arr[2 + w113 * y37 + x37 | 0] == 1) {
+						ts37.addBlock(sx37 + x37,sy37 + y37);
+					}
+				}
+			}
+			return ts37;
+		case "I":
+			var w114 = 100;
+			var h114 = 100;
+			var v38 = [3,5,1,1,1,0,1,0,0,1,0,0,1,0,1,1,1];
+			var this39;
+			if(v38 == null) {
+				if(w114 == null) {
+					w114 = 100;
+				}
+				if(h114 == null) {
+					h114 = 100;
+				}
+				var l38 = w114 * h114 + 2;
+				var _g102 = [];
+				var _g276 = 0;
+				var _g176 = l38;
+				while(_g276 < _g176) {
+					var e38 = _g276++;
+					_g102.push(0);
+				}
+				var arr39 = _g102;
+				arr39[0] = w114;
+				arr39[1] = h114;
+				v38 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w114,h114,arr39);
+			}
+			this39 = v38;
+			arr = this39;
+			var snapped38 = null;
+			if(snapped38 == null) {
+				snapped38 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts38 = this.createTetris(p,snapped38);
+			var sx38 = -2;
+			var sy38 = -2.5;
+			var w115 = arr[0];
+			var h115 = arr[1];
+			var dx38 = sx38;
+			var dy38 = sy38;
+			var count38 = 0;
+			var _g177 = 0;
+			var _g103 = w115;
+			while(_g177 < _g103) {
+				var x38 = _g177++;
+				var _g342 = 0;
+				var _g277 = h115;
+				while(_g342 < _g277) {
+					var y38 = _g342++;
+					var w116 = arr[0];
+					var h116 = arr[1];
+					if(arr[2 + w116 * y38 + x38 | 0] == 1) {
+						ts38.addBlock(sx38 + x38,sy38 + y38);
+					}
+				}
+			}
+			return ts38;
+		case "J":
+			var w117 = 100;
+			var h117 = 100;
+			var v39 = [4,5,1,1,1,1,0,0,1,0,0,0,1,0,1,0,1,0,0,1,0,0];
+			var this40;
+			if(v39 == null) {
+				if(w117 == null) {
+					w117 = 100;
+				}
+				if(h117 == null) {
+					h117 = 100;
+				}
+				var l39 = w117 * h117 + 2;
+				var _g104 = [];
+				var _g278 = 0;
+				var _g178 = l39;
+				while(_g278 < _g178) {
+					var e39 = _g278++;
+					_g104.push(0);
+				}
+				var arr40 = _g104;
+				arr40[0] = w117;
+				arr40[1] = h117;
+				v39 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w117,h117,arr40);
+			}
+			this40 = v39;
+			arr = this40;
+			var snapped39 = null;
+			if(snapped39 == null) {
+				snapped39 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts39 = this.createTetris(p,snapped39);
+			var sx39 = -2;
+			var sy39 = -2.5;
+			var w118 = arr[0];
+			var h118 = arr[1];
+			var dx39 = sx39;
+			var dy39 = sy39;
+			var count39 = 0;
+			var _g179 = 0;
+			var _g105 = w118;
+			while(_g179 < _g105) {
+				var x39 = _g179++;
+				var _g343 = 0;
+				var _g279 = h118;
+				while(_g343 < _g279) {
+					var y39 = _g343++;
+					var w119 = arr[0];
+					var h119 = arr[1];
+					if(arr[2 + w119 * y39 + x39 | 0] == 1) {
+						ts39.addBlock(sx39 + x39,sy39 + y39);
+					}
+				}
+			}
+			return ts39;
+		case "K":
+			var w120 = 100;
+			var h120 = 100;
+			var v40 = [4,5,1,0,0,1,1,0,1,0,1,1,0,0,1,0,1,0,1,0,0,1];
+			var this41;
+			if(v40 == null) {
+				if(w120 == null) {
+					w120 = 100;
+				}
+				if(h120 == null) {
+					h120 = 100;
+				}
+				var l40 = w120 * h120 + 2;
+				var _g106 = [];
+				var _g280 = 0;
+				var _g180 = l40;
+				while(_g280 < _g180) {
+					var e40 = _g280++;
+					_g106.push(0);
+				}
+				var arr41 = _g106;
+				arr41[0] = w120;
+				arr41[1] = h120;
+				v40 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w120,h120,arr41);
+			}
+			this41 = v40;
+			arr = this41;
+			var snapped40 = null;
+			if(snapped40 == null) {
+				snapped40 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts40 = this.createTetris(p,snapped40);
+			var sx40 = -2;
+			var sy40 = -2.5;
+			var w121 = arr[0];
+			var h121 = arr[1];
+			var dx40 = sx40;
+			var dy40 = sy40;
+			var count40 = 0;
+			var _g181 = 0;
+			var _g107 = w121;
+			while(_g181 < _g107) {
+				var x40 = _g181++;
+				var _g344 = 0;
+				var _g281 = h121;
+				while(_g344 < _g281) {
+					var y40 = _g344++;
+					var w122 = arr[0];
+					var h122 = arr[1];
+					if(arr[2 + w122 * y40 + x40 | 0] == 1) {
+						ts40.addBlock(sx40 + x40,sy40 + y40);
+					}
+				}
+			}
+			return ts40;
+		case "KHA":
+			var w123 = 100;
+			var h123 = 100;
+			var v41 = [14,5,1,0,0,1,0,1,0,0,1,0,0,1,1,0,1,0,1,0,0,1,0,0,1,0,1,0,0,1,1,1,0,0,0,1,1,1,1,0,1,0,0,1,1,0,1,0,0,1,0,0,1,0,1,1,1,1,1,0,0,1,0,1,0,0,1,0,1,0,0,1];
+			var this42;
+			if(v41 == null) {
+				if(w123 == null) {
+					w123 = 100;
+				}
+				if(h123 == null) {
+					h123 = 100;
+				}
+				var l41 = w123 * h123 + 2;
+				var _g108 = [];
+				var _g282 = 0;
+				var _g182 = l41;
+				while(_g282 < _g182) {
+					var e41 = _g282++;
+					_g108.push(0);
+				}
+				var arr42 = _g108;
+				arr42[0] = w123;
+				arr42[1] = h123;
+				v41 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w123,h123,arr42);
+			}
+			this42 = v41;
+			arr = this42;
+			var snapped41 = null;
+			if(snapped41 == null) {
+				snapped41 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts41 = this.createTetris(p,snapped41);
+			var sx41 = -2;
+			var sy41 = -2.5;
+			var w124 = arr[0];
+			var h124 = arr[1];
+			var dx41 = sx41;
+			var dy41 = sy41;
+			var count41 = 0;
+			var _g183 = 0;
+			var _g109 = w124;
+			while(_g183 < _g109) {
+				var x41 = _g183++;
+				var _g345 = 0;
+				var _g283 = h124;
+				while(_g345 < _g283) {
+					var y41 = _g345++;
+					var w125 = arr[0];
+					var h125 = arr[1];
+					if(arr[2 + w125 * y41 + x41 | 0] == 1) {
+						ts41.addBlock(sx41 + x41,sy41 + y41);
+					}
+				}
+			}
+			return ts41;
+		case "L":
+			var w126 = 100;
+			var h126 = 100;
+			var v42 = [4,5,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,1,1,1];
+			var this43;
+			if(v42 == null) {
+				if(w126 == null) {
+					w126 = 100;
+				}
+				if(h126 == null) {
+					h126 = 100;
+				}
+				var l42 = w126 * h126 + 2;
+				var _g184 = [];
+				var _g284 = 0;
+				var _g185 = l42;
+				while(_g284 < _g185) {
+					var e42 = _g284++;
+					_g184.push(0);
+				}
+				var arr43 = _g184;
+				arr43[0] = w126;
+				arr43[1] = h126;
+				v42 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w126,h126,arr43);
+			}
+			this43 = v42;
+			arr = this43;
+			var snapped42 = null;
+			if(snapped42 == null) {
+				snapped42 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts42 = this.createTetris(p,snapped42);
+			var sx42 = -2;
+			var sy42 = -2.5;
+			var w127 = arr[0];
+			var h127 = arr[1];
+			var dx42 = sx42;
+			var dy42 = sy42;
+			var count42 = 0;
+			var _g186 = 0;
+			var _g187 = w127;
+			while(_g186 < _g187) {
+				var x42 = _g186++;
+				var _g346 = 0;
+				var _g285 = h127;
+				while(_g346 < _g285) {
+					var y42 = _g346++;
+					var w128 = arr[0];
+					var h128 = arr[1];
+					if(arr[2 + w128 * y42 + x42 | 0] == 1) {
+						ts42.addBlock(sx42 + x42,sy42 + y42);
+					}
+				}
+			}
+			return ts42;
+		case "M":
+			var w129 = 100;
+			var h129 = 100;
+			var v43 = [5,5,1,0,0,0,1,1,1,0,1,1,1,0,1,0,1,1,0,0,0,1,1,0,0,0,1];
+			var this44;
+			if(v43 == null) {
+				if(w129 == null) {
+					w129 = 100;
+				}
+				if(h129 == null) {
+					h129 = 100;
+				}
+				var l43 = w129 * h129 + 2;
+				var _g188 = [];
+				var _g286 = 0;
+				var _g189 = l43;
+				while(_g286 < _g189) {
+					var e43 = _g286++;
+					_g188.push(0);
+				}
+				var arr44 = _g188;
+				arr44[0] = w129;
+				arr44[1] = h129;
+				v43 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w129,h129,arr44);
+			}
+			this44 = v43;
+			arr = this44;
+			var snapped43 = null;
+			if(snapped43 == null) {
+				snapped43 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts43 = this.createTetris(p,snapped43);
+			var sx43 = -2;
+			var sy43 = -2.5;
+			var w130 = arr[0];
+			var h130 = arr[1];
+			var dx43 = sx43;
+			var dy43 = sy43;
+			var count43 = 0;
+			var _g190 = 0;
+			var _g191 = w130;
+			while(_g190 < _g191) {
+				var x43 = _g190++;
+				var _g347 = 0;
+				var _g287 = h130;
+				while(_g347 < _g287) {
+					var y43 = _g347++;
+					var w131 = arr[0];
+					var h131 = arr[1];
+					if(arr[2 + w131 * y43 + x43 | 0] == 1) {
+						ts43.addBlock(sx43 + x43,sy43 + y43);
+					}
+				}
+			}
+			return ts43;
+		case "N":
+			var w132 = 100;
+			var h132 = 100;
+			var v44 = [4,5,1,0,0,1,1,1,0,1,1,0,1,1,1,0,0,1,1,0,0,1];
+			var this45;
+			if(v44 == null) {
+				if(w132 == null) {
+					w132 = 100;
+				}
+				if(h132 == null) {
+					h132 = 100;
+				}
+				var l44 = w132 * h132 + 2;
+				var _g192 = [];
+				var _g288 = 0;
+				var _g193 = l44;
+				while(_g288 < _g193) {
+					var e44 = _g288++;
+					_g192.push(0);
+				}
+				var arr45 = _g192;
+				arr45[0] = w132;
+				arr45[1] = h132;
+				v44 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w132,h132,arr45);
+			}
+			this45 = v44;
+			arr = this45;
+			var snapped44 = null;
+			if(snapped44 == null) {
+				snapped44 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts44 = this.createTetris(p,snapped44);
+			var sx44 = -2;
+			var sy44 = -2.5;
+			var w133 = arr[0];
+			var h133 = arr[1];
+			var dx44 = sx44;
+			var dy44 = sy44;
+			var count44 = 0;
+			var _g194 = 0;
+			var _g195 = w133;
+			while(_g194 < _g195) {
+				var x44 = _g194++;
+				var _g348 = 0;
+				var _g289 = h133;
+				while(_g348 < _g289) {
+					var y44 = _g348++;
+					var w134 = arr[0];
+					var h134 = arr[1];
+					if(arr[2 + w134 * y44 + x44 | 0] == 1) {
+						ts44.addBlock(sx44 + x44,sy44 + y44);
+					}
+				}
+			}
+			return ts44;
+		case "O":
+			var w135 = 100;
+			var h135 = 100;
+			var v45 = [4,5,0,1,1,0,1,0,0,1,1,0,0,1,1,0,0,1,0,1,1,0];
+			var this46;
+			if(v45 == null) {
+				if(w135 == null) {
+					w135 = 100;
+				}
+				if(h135 == null) {
+					h135 = 100;
+				}
+				var l45 = w135 * h135 + 2;
+				var _g196 = [];
+				var _g290 = 0;
+				var _g197 = l45;
+				while(_g290 < _g197) {
+					var e45 = _g290++;
+					_g196.push(0);
+				}
+				var arr46 = _g196;
+				arr46[0] = w135;
+				arr46[1] = h135;
+				v45 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w135,h135,arr46);
+			}
+			this46 = v45;
+			arr = this46;
+			var snapped45 = null;
+			if(snapped45 == null) {
+				snapped45 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts45 = this.createTetris(p,snapped45);
+			var sx45 = -2;
+			var sy45 = -2.5;
+			var w136 = arr[0];
+			var h136 = arr[1];
+			var dx45 = sx45;
+			var dy45 = sy45;
+			var count45 = 0;
+			var _g198 = 0;
+			var _g199 = w136;
+			while(_g198 < _g199) {
+				var x45 = _g198++;
+				var _g349 = 0;
+				var _g291 = h136;
+				while(_g349 < _g291) {
+					var y45 = _g349++;
+					var w137 = arr[0];
+					var h137 = arr[1];
+					if(arr[2 + w137 * y45 + x45 | 0] == 1) {
+						ts45.addBlock(sx45 + x45,sy45 + y45);
+					}
+				}
+			}
+			return ts45;
+		case "P":
+			var w138 = 100;
+			var h138 = 100;
+			var v46 = [4,5,1,1,1,0,1,0,0,1,1,1,1,0,1,0,0,0,1,0,0,0];
+			var this47;
+			if(v46 == null) {
+				if(w138 == null) {
+					w138 = 100;
+				}
+				if(h138 == null) {
+					h138 = 100;
+				}
+				var l46 = w138 * h138 + 2;
+				var _g200 = [];
+				var _g292 = 0;
+				var _g1100 = l46;
+				while(_g292 < _g1100) {
+					var e46 = _g292++;
+					_g200.push(0);
+				}
+				var arr47 = _g200;
+				arr47[0] = w138;
+				arr47[1] = h138;
+				v46 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w138,h138,arr47);
+			}
+			this47 = v46;
+			arr = this47;
+			var snapped46 = null;
+			if(snapped46 == null) {
+				snapped46 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts46 = this.createTetris(p,snapped46);
+			var sx46 = -2;
+			var sy46 = -2.5;
+			var w139 = arr[0];
+			var h139 = arr[1];
+			var dx46 = sx46;
+			var dy46 = sy46;
+			var count46 = 0;
+			var _g1101 = 0;
+			var _g201 = w139;
+			while(_g1101 < _g201) {
+				var x46 = _g1101++;
+				var _g350 = 0;
+				var _g293 = h139;
+				while(_g350 < _g293) {
+					var y46 = _g350++;
+					var w140 = arr[0];
+					var h140 = arr[1];
+					if(arr[2 + w140 * y46 + x46 | 0] == 1) {
+						ts46.addBlock(sx46 + x46,sy46 + y46);
+					}
+				}
+			}
+			return ts46;
+		case "Q":
+			var w141 = 100;
+			var h141 = 100;
+			var v47 = [4,5,0,1,1,0,1,0,0,1,1,0,0,1,1,0,1,0,0,1,0,1];
+			var this48;
+			if(v47 == null) {
+				if(w141 == null) {
+					w141 = 100;
+				}
+				if(h141 == null) {
+					h141 = 100;
+				}
+				var l47 = w141 * h141 + 2;
+				var _g202 = [];
+				var _g294 = 0;
+				var _g1102 = l47;
+				while(_g294 < _g1102) {
+					var e47 = _g294++;
+					_g202.push(0);
+				}
+				var arr48 = _g202;
+				arr48[0] = w141;
+				arr48[1] = h141;
+				v47 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w141,h141,arr48);
+			}
+			this48 = v47;
+			arr = this48;
+			var snapped47 = null;
+			if(snapped47 == null) {
+				snapped47 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts47 = this.createTetris(p,snapped47);
+			var sx47 = -2;
+			var sy47 = -2.5;
+			var w142 = arr[0];
+			var h142 = arr[1];
+			var dx47 = sx47;
+			var dy47 = sy47;
+			var count47 = 0;
+			var _g1103 = 0;
+			var _g203 = w142;
+			while(_g1103 < _g203) {
+				var x47 = _g1103++;
+				var _g351 = 0;
+				var _g295 = h142;
+				while(_g351 < _g295) {
+					var y47 = _g351++;
+					var w143 = arr[0];
+					var h143 = arr[1];
+					if(arr[2 + w143 * y47 + x47 | 0] == 1) {
+						ts47.addBlock(sx47 + x47,sy47 + y47);
+					}
+				}
+			}
+			return ts47;
+		case "R":
+			var w144 = 100;
+			var h144 = 100;
+			var v48 = [4,5,1,1,1,0,1,0,0,1,1,1,1,0,1,0,1,0,1,0,0,1];
+			var this49;
+			if(v48 == null) {
+				if(w144 == null) {
+					w144 = 100;
+				}
+				if(h144 == null) {
+					h144 = 100;
+				}
+				var l48 = w144 * h144 + 2;
+				var _g204 = [];
+				var _g296 = 0;
+				var _g1104 = l48;
+				while(_g296 < _g1104) {
+					var e48 = _g296++;
+					_g204.push(0);
+				}
+				var arr49 = _g204;
+				arr49[0] = w144;
+				arr49[1] = h144;
+				v48 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w144,h144,arr49);
+			}
+			this49 = v48;
+			arr = this49;
+			var snapped48 = null;
+			if(snapped48 == null) {
+				snapped48 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts48 = this.createTetris(p,snapped48);
+			var sx48 = -2;
+			var sy48 = -2.5;
+			var w145 = arr[0];
+			var h145 = arr[1];
+			var dx48 = sx48;
+			var dy48 = sy48;
+			var count48 = 0;
+			var _g1105 = 0;
+			var _g205 = w145;
+			while(_g1105 < _g205) {
+				var x48 = _g1105++;
+				var _g352 = 0;
+				var _g297 = h145;
+				while(_g352 < _g297) {
+					var y48 = _g352++;
+					var w146 = arr[0];
+					var h146 = arr[1];
+					if(arr[2 + w146 * y48 + x48 | 0] == 1) {
+						ts48.addBlock(sx48 + x48,sy48 + y48);
+					}
+				}
+			}
+			return ts48;
+		case "S":
+			var w147 = 100;
+			var h147 = 100;
+			var v49 = [4,5,0,1,1,1,1,0,0,0,0,1,1,0,0,0,0,1,1,1,1,0];
+			var this50;
+			if(v49 == null) {
+				if(w147 == null) {
+					w147 = 100;
+				}
+				if(h147 == null) {
+					h147 = 100;
+				}
+				var l49 = w147 * h147 + 2;
+				var _g206 = [];
+				var _g298 = 0;
+				var _g1106 = l49;
+				while(_g298 < _g1106) {
+					var e49 = _g298++;
+					_g206.push(0);
+				}
+				var arr50 = _g206;
+				arr50[0] = w147;
+				arr50[1] = h147;
+				v49 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w147,h147,arr50);
+			}
+			this50 = v49;
+			arr = this50;
+			var snapped49 = null;
+			if(snapped49 == null) {
+				snapped49 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts49 = this.createTetris(p,snapped49);
+			var sx49 = -2;
+			var sy49 = -2.5;
+			var w148 = arr[0];
+			var h148 = arr[1];
+			var dx49 = sx49;
+			var dy49 = sy49;
+			var count49 = 0;
+			var _g1107 = 0;
+			var _g207 = w148;
+			while(_g1107 < _g207) {
+				var x49 = _g1107++;
+				var _g353 = 0;
+				var _g299 = h148;
+				while(_g353 < _g299) {
+					var y49 = _g353++;
+					var w149 = arr[0];
+					var h149 = arr[1];
+					if(arr[2 + w149 * y49 + x49 | 0] == 1) {
+						ts49.addBlock(sx49 + x49,sy49 + y49);
+					}
+				}
+			}
+			return ts49;
+		case "T":
+			var w150 = 100;
+			var h150 = 100;
+			var v50 = [5,5,1,1,1,1,1,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0];
+			var this51;
+			if(v50 == null) {
+				if(w150 == null) {
+					w150 = 100;
+				}
+				if(h150 == null) {
+					h150 = 100;
+				}
+				var l50 = w150 * h150 + 2;
+				var _g208 = [];
+				var _g2100 = 0;
+				var _g1108 = l50;
+				while(_g2100 < _g1108) {
+					var e50 = _g2100++;
+					_g208.push(0);
+				}
+				var arr51 = _g208;
+				arr51[0] = w150;
+				arr51[1] = h150;
+				v50 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w150,h150,arr51);
+			}
+			this51 = v50;
+			arr = this51;
+			var snapped50 = null;
+			if(snapped50 == null) {
+				snapped50 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts50 = this.createTetris(p,snapped50);
+			var sx50 = -2;
+			var sy50 = -2.5;
+			var w151 = arr[0];
+			var h151 = arr[1];
+			var dx50 = sx50;
+			var dy50 = sy50;
+			var count50 = 0;
+			var _g1109 = 0;
+			var _g209 = w151;
+			while(_g1109 < _g209) {
+				var x50 = _g1109++;
+				var _g354 = 0;
+				var _g2101 = h151;
+				while(_g354 < _g2101) {
+					var y50 = _g354++;
+					var w152 = arr[0];
+					var h152 = arr[1];
+					if(arr[2 + w152 * y50 + x50 | 0] == 1) {
+						ts50.addBlock(sx50 + x50,sy50 + y50);
+					}
+				}
+			}
+			return ts50;
+		case "U":
+			var w153 = 100;
+			var h153 = 100;
+			var v51 = [4,5,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,0,1,1,1];
+			var this52;
+			if(v51 == null) {
+				if(w153 == null) {
+					w153 = 100;
+				}
+				if(h153 == null) {
+					h153 = 100;
+				}
+				var l51 = w153 * h153 + 2;
+				var _g300 = [];
+				var _g2102 = 0;
+				var _g1110 = l51;
+				while(_g2102 < _g1110) {
+					var e51 = _g2102++;
+					_g300.push(0);
+				}
+				var arr52 = _g300;
+				arr52[0] = w153;
+				arr52[1] = h153;
+				v51 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w153,h153,arr52);
+			}
+			this52 = v51;
+			arr = this52;
+			var snapped51 = null;
+			if(snapped51 == null) {
+				snapped51 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts51 = this.createTetris(p,snapped51);
+			var sx51 = -2;
+			var sy51 = -2.5;
+			var w154 = arr[0];
+			var h154 = arr[1];
+			var dx51 = sx51;
+			var dy51 = sy51;
+			var count51 = 0;
+			var _g1111 = 0;
+			var _g301 = w154;
+			while(_g1111 < _g301) {
+				var x51 = _g1111++;
+				var _g355 = 0;
+				var _g2103 = h154;
+				while(_g355 < _g2103) {
+					var y51 = _g355++;
+					var w155 = arr[0];
+					var h155 = arr[1];
+					if(arr[2 + w155 * y51 + x51 | 0] == 1) {
+						ts51.addBlock(sx51 + x51,sy51 + y51);
+					}
+				}
+			}
+			return ts51;
+		case "V":
+			var w156 = 100;
+			var h156 = 100;
+			var v52 = [5,5,1,0,0,0,1,1,0,0,0,1,0,1,0,1,0,0,1,0,1,0,0,0,1,0,0];
+			var this53;
+			if(v52 == null) {
+				if(w156 == null) {
+					w156 = 100;
+				}
+				if(h156 == null) {
+					h156 = 100;
+				}
+				var l52 = w156 * h156 + 2;
+				var _g302 = [];
+				var _g2104 = 0;
+				var _g1112 = l52;
+				while(_g2104 < _g1112) {
+					var e52 = _g2104++;
+					_g302.push(0);
+				}
+				var arr53 = _g302;
+				arr53[0] = w156;
+				arr53[1] = h156;
+				v52 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w156,h156,arr53);
+			}
+			this53 = v52;
+			arr = this53;
+			var snapped52 = null;
+			if(snapped52 == null) {
+				snapped52 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts52 = this.createTetris(p,snapped52);
+			var sx52 = -2;
+			var sy52 = -2.5;
+			var w157 = arr[0];
+			var h157 = arr[1];
+			var dx52 = sx52;
+			var dy52 = sy52;
+			var count52 = 0;
+			var _g1113 = 0;
+			var _g303 = w157;
+			while(_g1113 < _g303) {
+				var x52 = _g1113++;
+				var _g356 = 0;
+				var _g2105 = h157;
+				while(_g356 < _g2105) {
+					var y52 = _g356++;
+					var w158 = arr[0];
+					var h158 = arr[1];
+					if(arr[2 + w158 * y52 + x52 | 0] == 1) {
+						ts52.addBlock(sx52 + x52,sy52 + y52);
+					}
+				}
+			}
+			return ts52;
+		case "W":
+			var w159 = 100;
+			var h159 = 100;
+			var v53 = [5,5,1,0,0,0,1,1,0,0,0,1,1,0,1,0,1,0,1,0,1,0,0,1,0,1,0];
+			var this54;
+			if(v53 == null) {
+				if(w159 == null) {
+					w159 = 100;
+				}
+				if(h159 == null) {
+					h159 = 100;
+				}
+				var l53 = w159 * h159 + 2;
+				var _g304 = [];
+				var _g2106 = 0;
+				var _g1114 = l53;
+				while(_g2106 < _g1114) {
+					var e53 = _g2106++;
+					_g304.push(0);
+				}
+				var arr54 = _g304;
+				arr54[0] = w159;
+				arr54[1] = h159;
+				v53 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w159,h159,arr54);
+			}
+			this54 = v53;
+			arr = this54;
+			var snapped53 = null;
+			if(snapped53 == null) {
+				snapped53 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts53 = this.createTetris(p,snapped53);
+			var sx53 = -2;
+			var sy53 = -2.5;
+			var w160 = arr[0];
+			var h160 = arr[1];
+			var dx53 = sx53;
+			var dy53 = sy53;
+			var count53 = 0;
+			var _g1115 = 0;
+			var _g305 = w160;
+			while(_g1115 < _g305) {
+				var x53 = _g1115++;
+				var _g357 = 0;
+				var _g2107 = h160;
+				while(_g357 < _g2107) {
+					var y53 = _g357++;
+					var w161 = arr[0];
+					var h161 = arr[1];
+					if(arr[2 + w161 * y53 + x53 | 0] == 1) {
+						ts53.addBlock(sx53 + x53,sy53 + y53);
+					}
+				}
+			}
+			return ts53;
+		case "X":
+			var w162 = 100;
+			var h162 = 100;
+			var v54 = [4,5,1,0,0,1,1,0,0,1,0,1,1,0,1,0,0,1,1,0,0,1];
+			var this55;
+			if(v54 == null) {
+				if(w162 == null) {
+					w162 = 100;
+				}
+				if(h162 == null) {
+					h162 = 100;
+				}
+				var l54 = w162 * h162 + 2;
+				var _g306 = [];
+				var _g2108 = 0;
+				var _g1116 = l54;
+				while(_g2108 < _g1116) {
+					var e54 = _g2108++;
+					_g306.push(0);
+				}
+				var arr55 = _g306;
+				arr55[0] = w162;
+				arr55[1] = h162;
+				v54 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w162,h162,arr55);
+			}
+			this55 = v54;
+			arr = this55;
+			var snapped54 = null;
+			if(snapped54 == null) {
+				snapped54 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts54 = this.createTetris(p,snapped54);
+			var sx54 = -2;
+			var sy54 = -2.5;
+			var w163 = arr[0];
+			var h163 = arr[1];
+			var dx54 = sx54;
+			var dy54 = sy54;
+			var count54 = 0;
+			var _g1117 = 0;
+			var _g307 = w163;
+			while(_g1117 < _g307) {
+				var x54 = _g1117++;
+				var _g358 = 0;
+				var _g2109 = h163;
+				while(_g358 < _g2109) {
+					var y54 = _g358++;
+					var w164 = arr[0];
+					var h164 = arr[1];
+					if(arr[2 + w164 * y54 + x54 | 0] == 1) {
+						ts54.addBlock(sx54 + x54,sy54 + y54);
+					}
+				}
+			}
+			return ts54;
+		case "Y":
+			var w165 = 100;
+			var h165 = 100;
+			var v55 = [4,5,1,0,0,1,1,0,0,1,0,1,1,1,0,0,0,1,0,1,1,0];
+			var this56;
+			if(v55 == null) {
+				if(w165 == null) {
+					w165 = 100;
+				}
+				if(h165 == null) {
+					h165 = 100;
+				}
+				var l55 = w165 * h165 + 2;
+				var _g308 = [];
+				var _g2110 = 0;
+				var _g1118 = l55;
+				while(_g2110 < _g1118) {
+					var e55 = _g2110++;
+					_g308.push(0);
+				}
+				var arr56 = _g308;
+				arr56[0] = w165;
+				arr56[1] = h165;
+				v55 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w165,h165,arr56);
+			}
+			this56 = v55;
+			arr = this56;
+			var snapped55 = null;
+			if(snapped55 == null) {
+				snapped55 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts55 = this.createTetris(p,snapped55);
+			var sx55 = -2;
+			var sy55 = -2.5;
+			var w166 = arr[0];
+			var h166 = arr[1];
+			var dx55 = sx55;
+			var dy55 = sy55;
+			var count55 = 0;
+			var _g1119 = 0;
+			var _g309 = w166;
+			while(_g1119 < _g309) {
+				var x55 = _g1119++;
+				var _g359 = 0;
+				var _g2111 = h166;
+				while(_g359 < _g2111) {
+					var y55 = _g359++;
+					var w167 = arr[0];
+					var h167 = arr[1];
+					if(arr[2 + w167 * y55 + x55 | 0] == 1) {
+						ts55.addBlock(sx55 + x55,sy55 + y55);
+					}
+				}
+			}
+			return ts55;
+		case "Z":
+			var w168 = 100;
+			var h168 = 100;
+			var v56 = [4,5,1,1,1,1,0,0,0,1,0,1,1,0,1,0,0,0,1,1,1,1];
+			var this57;
+			if(v56 == null) {
+				if(w168 == null) {
+					w168 = 100;
+				}
+				if(h168 == null) {
+					h168 = 100;
+				}
+				var l56 = w168 * h168 + 2;
+				var _g360 = [];
+				var _g2112 = 0;
+				var _g1120 = l56;
+				while(_g2112 < _g1120) {
+					var e56 = _g2112++;
+					_g360.push(0);
+				}
+				var arr57 = _g360;
+				arr57[0] = w168;
+				arr57[1] = h168;
+				v56 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w168,h168,arr57);
+			}
+			this57 = v56;
+			arr = this57;
+			var snapped56 = null;
+			if(snapped56 == null) {
+				snapped56 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts56 = this.createTetris(p,snapped56);
+			var sx56 = -2;
+			var sy56 = -2.5;
+			var w169 = arr[0];
+			var h169 = arr[1];
+			var dx56 = sx56;
+			var dy56 = sy56;
+			var count56 = 0;
+			var _g1121 = 0;
+			var _g361 = w169;
+			while(_g1121 < _g361) {
+				var x56 = _g1121++;
+				var _g362 = 0;
+				var _g2113 = h169;
+				while(_g362 < _g2113) {
+					var y56 = _g362++;
+					var w170 = arr[0];
+					var h170 = arr[1];
+					if(arr[2 + w170 * y56 + x56 | 0] == 1) {
+						ts56.addBlock(sx56 + x56,sy56 + y56);
+					}
+				}
+			}
+			return ts56;
+		case "[":
+			var w171 = 100;
+			var h171 = 100;
+			var v57 = [2,5,1,1,1,0,1,0,1,0,1,1];
+			var this58;
+			if(v57 == null) {
+				if(w171 == null) {
+					w171 = 100;
+				}
+				if(h171 == null) {
+					h171 = 100;
+				}
+				var l57 = w171 * h171 + 2;
+				var _g363 = [];
+				var _g2114 = 0;
+				var _g1122 = l57;
+				while(_g2114 < _g1122) {
+					var e57 = _g2114++;
+					_g363.push(0);
+				}
+				var arr58 = _g363;
+				arr58[0] = w171;
+				arr58[1] = h171;
+				v57 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w171,h171,arr58);
+			}
+			this58 = v57;
+			arr = this58;
+			var snapped57 = null;
+			if(snapped57 == null) {
+				snapped57 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts57 = this.createTetris(p,snapped57);
+			var sx57 = -2;
+			var sy57 = -2.5;
+			var w172 = arr[0];
+			var h172 = arr[1];
+			var dx57 = sx57;
+			var dy57 = sy57;
+			var count57 = 0;
+			var _g1123 = 0;
+			var _g364 = w172;
+			while(_g1123 < _g364) {
+				var x57 = _g1123++;
+				var _g365 = 0;
+				var _g2115 = h172;
+				while(_g365 < _g2115) {
+					var y57 = _g365++;
+					var w173 = arr[0];
+					var h173 = arr[1];
+					if(arr[2 + w173 * y57 + x57 | 0] == 1) {
+						ts57.addBlock(sx57 + x57,sy57 + y57);
+					}
+				}
+			}
+			return ts57;
+		case "\\":
+			var w174 = 100;
+			var h174 = 100;
+			var v58 = [4,5,1,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,1];
+			var this59;
+			if(v58 == null) {
+				if(w174 == null) {
+					w174 = 100;
+				}
+				if(h174 == null) {
+					h174 = 100;
+				}
+				var l58 = w174 * h174 + 2;
+				var _g366 = [];
+				var _g2116 = 0;
+				var _g1124 = l58;
+				while(_g2116 < _g1124) {
+					var e58 = _g2116++;
+					_g366.push(0);
+				}
+				var arr59 = _g366;
+				arr59[0] = w174;
+				arr59[1] = h174;
+				v58 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w174,h174,arr59);
+			}
+			this59 = v58;
+			arr = this59;
+			var snapped58 = null;
+			if(snapped58 == null) {
+				snapped58 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts58 = this.createTetris(p,snapped58);
+			var sx58 = -2;
+			var sy58 = -2.5;
+			var w175 = arr[0];
+			var h175 = arr[1];
+			var dx58 = sx58;
+			var dy58 = sy58;
+			var count58 = 0;
+			var _g1125 = 0;
+			var _g367 = w175;
+			while(_g1125 < _g367) {
+				var x58 = _g1125++;
+				var _g368 = 0;
+				var _g2117 = h175;
+				while(_g368 < _g2117) {
+					var y58 = _g368++;
+					var w176 = arr[0];
+					var h176 = arr[1];
+					if(arr[2 + w176 * y58 + x58 | 0] == 1) {
+						ts58.addBlock(sx58 + x58,sy58 + y58);
+					}
+				}
+			}
+			return ts58;
+		case "]":
+			var w177 = 100;
+			var h177 = 100;
+			var v59 = [4,5,0,0,1,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,1,1];
+			var this60;
+			if(v59 == null) {
+				if(w177 == null) {
+					w177 = 100;
+				}
+				if(h177 == null) {
+					h177 = 100;
+				}
+				var l59 = w177 * h177 + 2;
+				var _g369 = [];
+				var _g2118 = 0;
+				var _g1126 = l59;
+				while(_g2118 < _g1126) {
+					var e59 = _g2118++;
+					_g369.push(0);
+				}
+				var arr60 = _g369;
+				arr60[0] = w177;
+				arr60[1] = h177;
+				v59 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w177,h177,arr60);
+			}
+			this60 = v59;
+			arr = this60;
+			var snapped59 = null;
+			if(snapped59 == null) {
+				snapped59 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts59 = this.createTetris(p,snapped59);
+			var sx59 = -2;
+			var sy59 = -2.5;
+			var w178 = arr[0];
+			var h178 = arr[1];
+			var dx59 = sx59;
+			var dy59 = sy59;
+			var count59 = 0;
+			var _g1127 = 0;
+			var _g370 = w178;
+			while(_g1127 < _g370) {
+				var x59 = _g1127++;
+				var _g371 = 0;
+				var _g2119 = h178;
+				while(_g371 < _g2119) {
+					var y59 = _g371++;
+					var w179 = arr[0];
+					var h179 = arr[1];
+					if(arr[2 + w179 * y59 + x59 | 0] == 1) {
+						ts59.addBlock(sx59 + x59,sy59 + y59);
+					}
+				}
+			}
+			return ts59;
+		case "^":
+			var w180 = 100;
+			var h180 = 100;
+			var v60 = [3,5,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0];
+			var this61;
+			if(v60 == null) {
+				if(w180 == null) {
+					w180 = 100;
+				}
+				if(h180 == null) {
+					h180 = 100;
+				}
+				var l60 = w180 * h180 + 2;
+				var _g372 = [];
+				var _g2120 = 0;
+				var _g1128 = l60;
+				while(_g2120 < _g1128) {
+					var e60 = _g2120++;
+					_g372.push(0);
+				}
+				var arr61 = _g372;
+				arr61[0] = w180;
+				arr61[1] = h180;
+				v60 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w180,h180,arr61);
+			}
+			this61 = v60;
+			arr = this61;
+			var snapped60 = null;
+			if(snapped60 == null) {
+				snapped60 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts60 = this.createTetris(p,snapped60);
+			var sx60 = -2;
+			var sy60 = -2.5;
+			var w181 = arr[0];
+			var h181 = arr[1];
+			var dx60 = sx60;
+			var dy60 = sy60;
+			var count60 = 0;
+			var _g1129 = 0;
+			var _g373 = w181;
+			while(_g1129 < _g373) {
+				var x60 = _g1129++;
+				var _g374 = 0;
+				var _g2121 = h181;
+				while(_g374 < _g2121) {
+					var y60 = _g374++;
+					var w182 = arr[0];
+					var h182 = arr[1];
+					if(arr[2 + w182 * y60 + x60 | 0] == 1) {
+						ts60.addBlock(sx60 + x60,sy60 + y60);
+					}
+				}
+			}
+			return ts60;
+		case "_":
+			var w183 = 100;
+			var h183 = 100;
+			var v61 = [4,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1];
+			var this62;
+			if(v61 == null) {
+				if(w183 == null) {
+					w183 = 100;
+				}
+				if(h183 == null) {
+					h183 = 100;
+				}
+				var l61 = w183 * h183 + 2;
+				var _g375 = [];
+				var _g2122 = 0;
+				var _g1130 = l61;
+				while(_g2122 < _g1130) {
+					var e61 = _g2122++;
+					_g375.push(0);
+				}
+				var arr62 = _g375;
+				arr62[0] = w183;
+				arr62[1] = h183;
+				v61 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w183,h183,arr62);
+			}
+			this62 = v61;
+			arr = this62;
+			var snapped61 = null;
+			if(snapped61 == null) {
+				snapped61 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts61 = this.createTetris(p,snapped61);
+			var sx61 = -2;
+			var sy61 = -2.5;
+			var w184 = arr[0];
+			var h184 = arr[1];
+			var dx61 = sx61;
+			var dy61 = sy61;
+			var count61 = 0;
+			var _g1131 = 0;
+			var _g376 = w184;
+			while(_g1131 < _g376) {
+				var x61 = _g1131++;
+				var _g377 = 0;
+				var _g2123 = h184;
+				while(_g377 < _g2123) {
+					var y61 = _g377++;
+					var w185 = arr[0];
+					var h185 = arr[1];
+					if(arr[2 + w185 * y61 + x61 | 0] == 1) {
+						ts61.addBlock(sx61 + x61,sy61 + y61);
+					}
+				}
+			}
+			return ts61;
+		case "|":
+			var w186 = 100;
+			var h186 = 100;
+			var v62 = [2,5,0,1,0,1,0,1,0,1,0,1];
+			var this63;
+			if(v62 == null) {
+				if(w186 == null) {
+					w186 = 100;
+				}
+				if(h186 == null) {
+					h186 = 100;
+				}
+				var l62 = w186 * h186 + 2;
+				var _g378 = [];
+				var _g2124 = 0;
+				var _g1132 = l62;
+				while(_g2124 < _g1132) {
+					var e62 = _g2124++;
+					_g378.push(0);
+				}
+				var arr63 = _g378;
+				arr63[0] = w186;
+				arr63[1] = h186;
+				v62 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w186,h186,arr63);
+			}
+			this63 = v62;
+			arr = this63;
+			var snapped62 = null;
+			if(snapped62 == null) {
+				snapped62 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts62 = this.createTetris(p,snapped62);
+			var sx62 = -2;
+			var sy62 = -2.5;
+			var w187 = arr[0];
+			var h187 = arr[1];
+			var dx62 = sx62;
+			var dy62 = sy62;
+			var count62 = 0;
+			var _g1133 = 0;
+			var _g379 = w187;
+			while(_g1133 < _g379) {
+				var x62 = _g1133++;
+				var _g380 = 0;
+				var _g2125 = h187;
+				while(_g380 < _g2125) {
+					var y62 = _g380++;
+					var w188 = arr[0];
+					var h188 = arr[1];
+					if(arr[2 + w188 * y62 + x62 | 0] == 1) {
+						ts62.addBlock(sx62 + x62,sy62 + y62);
+					}
+				}
+			}
+			return ts62;
+		case "~":
+			var w189 = 100;
+			var h189 = 100;
+			var v63 = [4,5,0,0,0,0,0,1,0,1,1,0,1,0,0,0,0,0,0,0,0,0];
+			var this64;
+			if(v63 == null) {
+				if(w189 == null) {
+					w189 = 100;
+				}
+				if(h189 == null) {
+					h189 = 100;
+				}
+				var l63 = w189 * h189 + 2;
+				var _g381 = [];
+				var _g2126 = 0;
+				var _g1134 = l63;
+				while(_g2126 < _g1134) {
+					var e63 = _g2126++;
+					_g381.push(0);
+				}
+				var arr64 = _g381;
+				arr64[0] = w189;
+				arr64[1] = h189;
+				v63 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w189,h189,arr64);
+			}
+			this64 = v63;
+			arr = this64;
+			var snapped63 = null;
+			if(snapped63 == null) {
+				snapped63 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts63 = this.createTetris(p,snapped63);
+			var sx63 = -2;
+			var sy63 = -2.5;
+			var w190 = arr[0];
+			var h190 = arr[1];
+			var dx63 = sx63;
+			var dy63 = sy63;
+			var count63 = 0;
+			var _g1135 = 0;
+			var _g382 = w190;
+			while(_g1135 < _g382) {
+				var x63 = _g1135++;
+				var _g383 = 0;
+				var _g2127 = h190;
+				while(_g383 < _g2127) {
+					var y63 = _g383++;
+					var w191 = arr[0];
+					var h191 = arr[1];
+					if(arr[2 + w191 * y63 + x63 | 0] == 1) {
+						ts63.addBlock(sx63 + x63,sy63 + y63);
+					}
+				}
+			}
+			return ts63;
+		default:
+			var w192 = 100;
+			var h192 = 100;
+			var v64 = [4,5,1,0,0,1,1,0,0,1,0,0,0,0,1,0,0,1,0,1,1,0];
+			var this65;
+			if(v64 == null) {
+				if(w192 == null) {
+					w192 = 100;
+				}
+				if(h192 == null) {
+					h192 = 100;
+				}
+				var l64 = w192 * h192 + 2;
+				var _g384 = [];
+				var _g2128 = 0;
+				var _g1136 = l64;
+				while(_g2128 < _g1136) {
+					var e64 = _g2128++;
+					_g384.push(0);
+				}
+				var arr65 = _g384;
+				arr65[0] = w192;
+				arr65[1] = h192;
+				v64 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w192,h192,arr65);
+			}
+			this65 = v64;
+			arr = this65;
+			var snapped64 = null;
+			if(snapped64 == null) {
+				snapped64 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts64 = this.createTetris(p,snapped64);
+			var sx64 = -2;
+			var sy64 = -2.5;
+			var w193 = arr[0];
+			var h193 = arr[1];
+			var dx64 = sx64;
+			var dy64 = sy64;
+			var count64 = 0;
+			var _g1137 = 0;
+			var _g385 = w193;
+			while(_g1137 < _g385) {
+				var x64 = _g1137++;
+				var _g386 = 0;
+				var _g2129 = h193;
+				while(_g386 < _g2129) {
+					var y64 = _g386++;
+					var w194 = arr[0];
+					var h194 = arr[1];
+					if(arr[2 + w194 * y64 + x64 | 0] == 1) {
+						ts64.addBlock(sx64 + x64,sy64 + y64);
+					}
+				}
+			}
+			return ts64;
+		}
+	}
+	,abc: function(p,pos,snapped) {
+		if(snapped == null) {
+			snapped = tetrisTriangles_game_Snapped.Always;
+		}
+		var ts = this.createTetris(p,snapped);
+		var sx = -2;
+		var sy = -2.5;
+		var w = pos[0];
+		var h = pos[1];
+		var dx = sx;
+		var dy = sy;
+		var count = 0;
+		var _g1 = 0;
+		var _g = w;
+		while(_g1 < _g) {
+			var x = _g1++;
+			var _g3 = 0;
+			var _g2 = h;
+			while(_g3 < _g2) {
+				var y = _g3++;
+				var w1 = pos[0];
+				var h1 = pos[1];
+				if(pos[2 + w1 * y + x | 0] == 1) {
+					ts.addBlock(sx + x,sy + y);
+				}
+			}
+		}
+		return ts;
+	}
+	,__class__: tetrisTriangles_game_ABC
 };
 var tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$ = {};
 $hxClasses["tetrisTriangles.game._Arr2D.Arr2D_Impl_"] = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$;
@@ -27053,7 +30675,6 @@ tetrisTriangles_game_Controller.prototype = {
 					var h = arr2d[1];
 					arr2d[2 + w * p.y + p.x | 0] = 1;
 				}
-				this.checkForFullRows();
 				hit = true;
 			}
 		}
@@ -27529,7 +31150,7 @@ var tetrisTriangles_game_Movement = function(controller_,dia_) {
 	this.jumpY = .0;
 	this.jumpX = .0;
 	this.jumpSpeed = 7;
-	this.fallSpeed = 0.01;
+	this.fallSpeed = 0.017;
 	this.controller = controller_;
 	this.dia = dia_;
 };
@@ -29101,198 +32722,20 @@ tetrisTriangles_game_Shape.prototype = {
 var tetrisTriangles_game_ShapeGenerator = function(createShape) {
 	this.random = 0;
 	this.last = -1;
-	this.templates = new tetrisTriangles_game_Templates(createShape);
+	this.abc = new tetrisTriangles_game_ABC(createShape);
 };
 $hxClasses["tetrisTriangles.game.ShapeGenerator"] = tetrisTriangles_game_ShapeGenerator;
 tetrisTriangles_game_ShapeGenerator.__name__ = ["tetrisTriangles","game","ShapeGenerator"];
 tetrisTriangles_game_ShapeGenerator.prototype = {
 	templates: null
+	,abc: null
 	,last: null
 	,random: null
 	,randomShape: function(p,col0_,col1_,shape) {
 		if(shape == null) {
 			shape = "tetris_random";
 		}
-		var ts;
-		if(shape == null) {
-			if(shape == null) {
-				var ts1 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
-				ts1.addBlock(-1,-1);
-				ts1.addBlock(0,-1);
-				ts1.addBlock(-1,0);
-				ts1.addBlock(0,0);
-				ts = ts1;
-			} else {
-				switch(shape) {
-				case "tetris_L":
-					var ts2 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
-					ts2.addBlock(-1,-1.5);
-					ts2.addBlock(-1,-0.5);
-					ts2.addBlock(-1,0.5);
-					ts2.addBlock(0,0.5);
-					ts = ts2;
-					break;
-				case "tetris_Z":
-					var ts3 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
-					ts3.addBlock(-0.5,-1);
-					ts3.addBlock(0.5,0);
-					ts3.addBlock(0.5,-1);
-					ts3.addBlock(1.5,0);
-					ts = ts3;
-					break;
-				case "tetris_box":
-					var ts4 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
-					ts4.addBlock(-1,-1);
-					ts4.addBlock(0,-1);
-					ts4.addBlock(-1,0);
-					ts4.addBlock(0,0);
-					ts = ts4;
-					break;
-				case "tetris_l":
-					var ts5 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Zero);
-					ts5.addBlock(-0.5,-2);
-					ts5.addBlock(-0.5,-1);
-					ts5.addBlock(-0.5,0);
-					ts5.addBlock(-0.5,1);
-					ts = ts5;
-					break;
-				case "tetris_t":
-					var ts6 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
-					ts6.addBlock(-1,-1.5);
-					ts6.addBlock(-1,-0.5);
-					ts6.addBlock(-1,0.5);
-					ts6.addBlock(0,-0.5);
-					ts = ts6;
-					break;
-				default:
-					var ts7 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
-					ts7.addBlock(-1,-1);
-					ts7.addBlock(0,-1);
-					ts7.addBlock(-1,0);
-					ts7.addBlock(0,0);
-					ts = ts7;
-				}
-			}
-		} else if(shape == "tetris_random") {
-			var no = 4;
-			var random = no * Math.random() | 0;
-			if(random == this.last) {
-				return this.randomShape(p,col0_,col1_);
-			}
-			switch(random) {
-			case 0:
-				var ts8 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
-				ts8.addBlock(-0.5,-1);
-				ts8.addBlock(0.5,0);
-				ts8.addBlock(0.5,-1);
-				ts8.addBlock(1.5,0);
-				ts = ts8;
-				ts = ts;
-				break;
-			case 1:
-				var ts9 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
-				ts9.addBlock(-1,-1.5);
-				ts9.addBlock(-1,-0.5);
-				ts9.addBlock(-1,0.5);
-				ts9.addBlock(0,0.5);
-				ts = ts9;
-				ts = ts;
-				break;
-			case 2:
-				var ts10 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
-				ts10.addBlock(-1,-1);
-				ts10.addBlock(0,-1);
-				ts10.addBlock(-1,0);
-				ts10.addBlock(0,0);
-				ts = ts10;
-				ts = ts;
-				break;
-			case 3:
-				var ts11 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
-				ts11.addBlock(-1,-1.5);
-				ts11.addBlock(-1,-0.5);
-				ts11.addBlock(-1,0.5);
-				ts11.addBlock(0,-0.5);
-				ts = ts11;
-				ts = ts;
-				break;
-			case 4:
-				var ts12 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Zero);
-				ts12.addBlock(-0.5,-2);
-				ts12.addBlock(-0.5,-1);
-				ts12.addBlock(-0.5,0);
-				ts12.addBlock(-0.5,1);
-				ts = ts12;
-				ts = ts;
-				break;
-			default:
-				var ts13 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
-				ts13.addBlock(-0.5,-1);
-				ts13.addBlock(0.5,0);
-				ts13.addBlock(0.5,-1);
-				ts13.addBlock(1.5,0);
-				ts = ts13;
-				ts = ts;
-			}
-		} else if(shape == null) {
-			var ts14 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
-			ts14.addBlock(-1,-1);
-			ts14.addBlock(0,-1);
-			ts14.addBlock(-1,0);
-			ts14.addBlock(0,0);
-			ts = ts14;
-		} else {
-			switch(shape) {
-			case "tetris_L":
-				var ts15 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
-				ts15.addBlock(-1,-1.5);
-				ts15.addBlock(-1,-0.5);
-				ts15.addBlock(-1,0.5);
-				ts15.addBlock(0,0.5);
-				ts = ts15;
-				break;
-			case "tetris_Z":
-				var ts16 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
-				ts16.addBlock(-0.5,-1);
-				ts16.addBlock(0.5,0);
-				ts16.addBlock(0.5,-1);
-				ts16.addBlock(1.5,0);
-				ts = ts16;
-				break;
-			case "tetris_box":
-				var ts17 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
-				ts17.addBlock(-1,-1);
-				ts17.addBlock(0,-1);
-				ts17.addBlock(-1,0);
-				ts17.addBlock(0,0);
-				ts = ts17;
-				break;
-			case "tetris_l":
-				var ts18 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Zero);
-				ts18.addBlock(-0.5,-2);
-				ts18.addBlock(-0.5,-1);
-				ts18.addBlock(-0.5,0);
-				ts18.addBlock(-0.5,1);
-				ts = ts18;
-				break;
-			case "tetris_t":
-				var ts19 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
-				ts19.addBlock(-1,-1.5);
-				ts19.addBlock(-1,-0.5);
-				ts19.addBlock(-1,0.5);
-				ts19.addBlock(0,-0.5);
-				ts = ts19;
-				break;
-			default:
-				var ts20 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
-				ts20.addBlock(-1,-1);
-				ts20.addBlock(0,-1);
-				ts20.addBlock(-1,0);
-				ts20.addBlock(0,0);
-				ts = ts20;
-			}
-		}
-		this.last = this.random;
+		var ts = this.abc.rnd(p);
 		return ts;
 	}
 	,__class__: tetrisTriangles_game_ShapeGenerator
@@ -29688,10 +33131,10 @@ var tetrisTriangles_game_Tetris = function(scale) {
 	this.end = false;
 	this.offY = 0;
 	this.offX = 0;
-	this.hi = 22;
-	this.wide = 32;
+	this.hi = 44;
+	this.wide = 64;
 	this.edge = 0.01;
-	this.dia = 0.0937499999999999861;
+	this.dia = 0.0499999999999999958;
 	this.scaleDimensions(scale);
 	this.createTetris();
 	this.interaction();
@@ -29863,7 +33306,6 @@ tetrisTriangles_game_Tetris.prototype = {
 					var h = arr2d[1];
 					arr2d[2 + w * p.y + p.x | 0] = 1;
 				}
-				_this.checkForFullRows();
 				hit = true;
 			}
 		}
@@ -30833,19 +34275,24 @@ kha__$Color_Color_$Impl_$.invMaxChannelValue = 0.00392156862745098;
 kha_CompilerDefines.js = "1";
 kha_CompilerDefines.kha_a1 = "1";
 kha_CompilerDefines.kha_g3 = "1";
-kha_CompilerDefines.kha_g4 = "1";
 kha_CompilerDefines.kha_html5_js = "1";
 kha_CompilerDefines["source-header"] = "Generated by Haxe 3.4.2";
+kha_CompilerDefines.jquery_ver = "11204";
+kha_CompilerDefines.kha_js = "1";
+kha_CompilerDefines.sys_html5 = "1";
+kha_CompilerDefines.sys_g4 = "1";
+kha_CompilerDefines.sys_g2 = "1";
+kha_CompilerDefines.kha_webgl = "1";
+kha_CompilerDefines.kha = "1";
+kha_CompilerDefines.kha_g2 = "1";
+kha_CompilerDefines.use_abc = "1";
+kha_CompilerDefines.kha_g4 = "1";
 kha_CompilerDefines.sys_g3 = "1";
 kha_CompilerDefines.kha_g1 = "1";
 kha_CompilerDefines.sys_a1 = "1";
 kha_CompilerDefines.haxe_ver = "3.402";
-kha_CompilerDefines.jquery_ver = "11204";
-kha_CompilerDefines.kha_js = "1";
-kha_CompilerDefines.sys_html5 = "1";
 kha_CompilerDefines.canvas_id = "khanvas";
 kha_CompilerDefines.kha_version = "1611";
-kha_CompilerDefines.sys_g4 = "1";
 kha_CompilerDefines.js_es = "5";
 kha_CompilerDefines.kha_html5 = "1";
 kha_CompilerDefines["js-es5"] = "1";
@@ -30854,10 +34301,7 @@ kha_CompilerDefines.sys_a2 = "1";
 kha_CompilerDefines.dce = "std";
 kha_CompilerDefines.sys_g1 = "1";
 kha_CompilerDefines["true"] = "1";
-kha_CompilerDefines.sys_g2 = "1";
-kha_CompilerDefines.kha_webgl = "1";
-kha_CompilerDefines.kha = "1";
-kha_CompilerDefines.kha_g2 = "1";
+kha_CompilerDefines.use_kha = "1";
 kha_CompilerDefines.haxe3 = "1";
 kha_CompilerDefines.kha_a2 = "1";
 kha_CompilerDefines.script_name = "kha";
@@ -30869,12 +34313,12 @@ kha_Scheduler.startTime = 0;
 kha_Shaders.painter_colored_fragData0 = "s198:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gaGlnaHAgaW50OwoKdmFyeWluZyBoaWdocCB2ZWM0IGZyYWdtZW50Q29sb3I7Cgp2b2lkIG1haW4oKQp7CiAgICBnbF9GcmFnRGF0YVswXSA9IGZyYWdtZW50Q29sb3I7Cn0KCg";
 kha_Shaders.painter_colored_fragData1 = "s192:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp2YXJ5aW5nIHZlYzQgZnJhZ21lbnRDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIGdsX0ZyYWdEYXRhWzBdID0gZnJhZ21lbnRDb2xvcjsKfQoK";
 kha_Shaders.painter_colored_fragData2 = "s210:I3ZlcnNpb24gMzAwIGVzCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7CgpvdXQgdmVjNCBGcmFnQ29sb3I7CmluIHZlYzQgZnJhZ21lbnRDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIEZyYWdDb2xvciA9IGZyYWdtZW50Q29sb3I7Cn0KCg";
-kha_Shaders.painter_colored_vertData0 = "s331:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1hdDQgcHJvamVjdGlvbk1hdHJpeDsKCmF0dHJpYnV0ZSB2ZWMzIHZlcnRleFBvc2l0aW9uOwp2YXJ5aW5nIHZlYzQgZnJhZ21lbnRDb2xvcjsKYXR0cmlidXRlIHZlYzQgdmVydGV4Q29sb3I7Cgp2b2lkIG1haW4oKQp7CiAgICBnbF9Qb3NpdGlvbiA9IHByb2plY3Rpb25NYXRyaXggKiB2ZWM0KHZlcnRleFBvc2l0aW9uLCAxLjApOwogICAgZnJhZ21lbnRDb2xvciA9IHZlcnRleENvbG9yOwp9Cgo";
-kha_Shaders.painter_colored_vertData1 = "s374:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKYXR0cmlidXRlIG1lZGl1bXAgdmVjMyB2ZXJ0ZXhQb3NpdGlvbjsKdmFyeWluZyBtZWRpdW1wIHZlYzQgZnJhZ21lbnRDb2xvcjsKYXR0cmlidXRlIG1lZGl1bXAgdmVjNCB2ZXJ0ZXhDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIGdsX1Bvc2l0aW9uID0gcHJvamVjdGlvbk1hdHJpeCAqIHZlYzQodmVydGV4UG9zaXRpb24sIDEuMCk7CiAgICBmcmFnbWVudENvbG9yID0gdmVydGV4Q29sb3I7Cn0KCg";
-kha_Shaders.painter_colored_vertData2 = "s354:I3ZlcnNpb24gMzAwIGVzCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKaW4gbWVkaXVtcCB2ZWMzIHZlcnRleFBvc2l0aW9uOwpvdXQgbWVkaXVtcCB2ZWM0IGZyYWdtZW50Q29sb3I7CmluIG1lZGl1bXAgdmVjNCB2ZXJ0ZXhDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIGdsX1Bvc2l0aW9uID0gcHJvamVjdGlvbk1hdHJpeCAqIHZlYzQodmVydGV4UG9zaXRpb24sIDEuMCk7CiAgICBmcmFnbWVudENvbG9yID0gdmVydGV4Q29sb3I7Cn0KCg";
 kha_Shaders.painter_image_fragData0 = "s471:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gaGlnaHAgaW50OwoKdW5pZm9ybSBoaWdocCBzYW1wbGVyMkQgdGV4OwoKdmFyeWluZyBoaWdocCB2ZWMyIHRleENvb3JkOwp2YXJ5aW5nIGhpZ2hwIHZlYzQgY29sb3I7Cgp2b2lkIG1haW4oKQp7CiAgICBoaWdocCB2ZWM0IHRleGNvbG9yID0gdGV4dHVyZTJEKHRleCwgdGV4Q29vcmQpICogY29sb3I7CiAgICBoaWdocCB2ZWMzIF8zMiA9IHRleGNvbG9yLnh5eiAqIGNvbG9yLnc7CiAgICB0ZXhjb2xvciA9IHZlYzQoXzMyLngsIF8zMi55LCBfMzIueiwgdGV4Y29sb3Iudyk7CiAgICBnbF9GcmFnRGF0YVswXSA9IHRleGNvbG9yOwp9Cgo";
 kha_Shaders.painter_image_fragData1 = "s444:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp1bmlmb3JtIG1lZGl1bXAgc2FtcGxlcjJEIHRleDsKCnZhcnlpbmcgdmVjMiB0ZXhDb29yZDsKdmFyeWluZyB2ZWM0IGNvbG9yOwoKdm9pZCBtYWluKCkKewogICAgdmVjNCB0ZXhjb2xvciA9IHRleHR1cmUyRCh0ZXgsIHRleENvb3JkKSAqIGNvbG9yOwogICAgdmVjMyBfMzIgPSB0ZXhjb2xvci54eXogKiBjb2xvci53OwogICAgdGV4Y29sb3IgPSB2ZWM0KF8zMi54LCBfMzIueSwgXzMyLnosIHRleGNvbG9yLncpOwogICAgZ2xfRnJhZ0RhdGFbMF0gPSB0ZXhjb2xvcjsKfQoK";
 kha_Shaders.painter_image_fragData2 = "s452:I3ZlcnNpb24gMzAwIGVzCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp1bmlmb3JtIG1lZGl1bXAgc2FtcGxlcjJEIHRleDsKCmluIHZlYzIgdGV4Q29vcmQ7CmluIHZlYzQgY29sb3I7Cm91dCB2ZWM0IEZyYWdDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIHZlYzQgdGV4Y29sb3IgPSB0ZXh0dXJlKHRleCwgdGV4Q29vcmQpICogY29sb3I7CiAgICB2ZWMzIF8zMiA9IHRleGNvbG9yLnh5eiAqIGNvbG9yLnc7CiAgICB0ZXhjb2xvciA9IHZlYzQoXzMyLngsIF8zMi55LCBfMzIueiwgdGV4Y29sb3Iudyk7CiAgICBGcmFnQ29sb3IgPSB0ZXhjb2xvcjsKfQoK";
+kha_Shaders.painter_colored_vertData0 = "s331:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1hdDQgcHJvamVjdGlvbk1hdHJpeDsKCmF0dHJpYnV0ZSB2ZWMzIHZlcnRleFBvc2l0aW9uOwp2YXJ5aW5nIHZlYzQgZnJhZ21lbnRDb2xvcjsKYXR0cmlidXRlIHZlYzQgdmVydGV4Q29sb3I7Cgp2b2lkIG1haW4oKQp7CiAgICBnbF9Qb3NpdGlvbiA9IHByb2plY3Rpb25NYXRyaXggKiB2ZWM0KHZlcnRleFBvc2l0aW9uLCAxLjApOwogICAgZnJhZ21lbnRDb2xvciA9IHZlcnRleENvbG9yOwp9Cgo";
+kha_Shaders.painter_colored_vertData1 = "s374:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKYXR0cmlidXRlIG1lZGl1bXAgdmVjMyB2ZXJ0ZXhQb3NpdGlvbjsKdmFyeWluZyBtZWRpdW1wIHZlYzQgZnJhZ21lbnRDb2xvcjsKYXR0cmlidXRlIG1lZGl1bXAgdmVjNCB2ZXJ0ZXhDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIGdsX1Bvc2l0aW9uID0gcHJvamVjdGlvbk1hdHJpeCAqIHZlYzQodmVydGV4UG9zaXRpb24sIDEuMCk7CiAgICBmcmFnbWVudENvbG9yID0gdmVydGV4Q29sb3I7Cn0KCg";
+kha_Shaders.painter_colored_vertData2 = "s354:I3ZlcnNpb24gMzAwIGVzCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKaW4gbWVkaXVtcCB2ZWMzIHZlcnRleFBvc2l0aW9uOwpvdXQgbWVkaXVtcCB2ZWM0IGZyYWdtZW50Q29sb3I7CmluIG1lZGl1bXAgdmVjNCB2ZXJ0ZXhDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIGdsX1Bvc2l0aW9uID0gcHJvamVjdGlvbk1hdHJpeCAqIHZlYzQodmVydGV4UG9zaXRpb24sIDEuMCk7CiAgICBmcmFnbWVudENvbG9yID0gdmVydGV4Q29sb3I7Cn0KCg";
 kha_Shaders.painter_image_vertData0 = "s415:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1hdDQgcHJvamVjdGlvbk1hdHJpeDsKCmF0dHJpYnV0ZSB2ZWMzIHZlcnRleFBvc2l0aW9uOwp2YXJ5aW5nIHZlYzIgdGV4Q29vcmQ7CmF0dHJpYnV0ZSB2ZWMyIHRleFBvc2l0aW9uOwp2YXJ5aW5nIHZlYzQgY29sb3I7CmF0dHJpYnV0ZSB2ZWM0IHZlcnRleENvbG9yOwoKdm9pZCBtYWluKCkKewogICAgZ2xfUG9zaXRpb24gPSBwcm9qZWN0aW9uTWF0cml4ICogdmVjNCh2ZXJ0ZXhQb3NpdGlvbiwgMS4wKTsKICAgIHRleENvb3JkID0gdGV4UG9zaXRpb247CiAgICBjb2xvciA9IHZlcnRleENvbG9yOwp9Cgo";
 kha_Shaders.painter_image_vertData1 = "s479:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKYXR0cmlidXRlIG1lZGl1bXAgdmVjMyB2ZXJ0ZXhQb3NpdGlvbjsKdmFyeWluZyBtZWRpdW1wIHZlYzIgdGV4Q29vcmQ7CmF0dHJpYnV0ZSBtZWRpdW1wIHZlYzIgdGV4UG9zaXRpb247CnZhcnlpbmcgbWVkaXVtcCB2ZWM0IGNvbG9yOwphdHRyaWJ1dGUgbWVkaXVtcCB2ZWM0IHZlcnRleENvbG9yOwoKdm9pZCBtYWluKCkKewogICAgZ2xfUG9zaXRpb24gPSBwcm9qZWN0aW9uTWF0cml4ICogdmVjNCh2ZXJ0ZXhQb3NpdGlvbiwgMS4wKTsKICAgIHRleENvb3JkID0gdGV4UG9zaXRpb247CiAgICBjb2xvciA9IHZlcnRleENvbG9yOwp9Cgo";
 kha_Shaders.painter_image_vertData2 = "s444:I3ZlcnNpb24gMzAwIGVzCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKaW4gbWVkaXVtcCB2ZWMzIHZlcnRleFBvc2l0aW9uOwpvdXQgbWVkaXVtcCB2ZWMyIHRleENvb3JkOwppbiBtZWRpdW1wIHZlYzIgdGV4UG9zaXRpb247Cm91dCBtZWRpdW1wIHZlYzQgY29sb3I7CmluIG1lZGl1bXAgdmVjNCB2ZXJ0ZXhDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIGdsX1Bvc2l0aW9uID0gcHJvamVjdGlvbk1hdHJpeCAqIHZlYzQodmVydGV4UG9zaXRpb24sIDEuMCk7CiAgICB0ZXhDb29yZCA9IHRleFBvc2l0aW9uOwogICAgY29sb3IgPSB2ZXJ0ZXhDb2xvcjsKfQoK";
