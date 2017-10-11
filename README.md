@@ -7,4 +7,4 @@ Simple experimental Haxe tetris, WIP
 - [Kha ->](https://rawgit.com/nanjizal/tetrisTriangles/master/build/html5/index.html?10) 
 
 Please note this is not suitable for comercial use since Tetris own rights over the original game.
-This is for educational learning and exploration purposes.  But some of the game mechanics maybe adaptable to total different games.
+This is for educational learning and exploration purposes.  But some of the game mechanics maybe adaptable to totally different games.
