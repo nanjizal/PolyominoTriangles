@@ -117,6 +117,61 @@ abstract Arr2D(Array<Int>) from Array<Int> to Array<Int> {
 		}
 		return emp;
 	}
+	public inline 
+	function moveRow( startY: Int, endY: Int ){
+		var w = this[ 0 ];
+		var h = this[ 1 ];
+		var s0 = id( 0, startY, w, h );
+		var e0 = id( 0, endY, w, h );
+		for( i in 0...w ){
+			this[ e0 + i ] = this[ s0 + i ];
+			this[ s0 + i ] = 0; 
+		}
+	}
+	public inline 
+	function copyRow( startY: Int, endY: Int ){
+		var w = this[ 0 ];
+		var h = this[ 1 ];
+		var s0 = id( 0, startY, w, h );
+		var e0 = id( 0, endY, w, h );
+		for( i in 0...w ){
+			this[ e0 + i ] = this[ s0 + i ];
+		}
+	}
+	public inline
+	function oneRow( y: Int ){
+		var w = this[ 0 ];
+		var h = this[ 1 ];
+		var s = id( 0, y, w, h );
+		for( i in 0...w ){
+			this[ s + i ] = 1;
+		}
+	}
+	public inline
+	function zeroRow( y: Int ){
+		var w = this[ 0 ];
+		var h = this[ 1 ];
+		var s = id( 0, y, w, h );
+		for( i in 0...w ){
+			this[ s + i ] = 0;
+		}
+	}
+	public inline 
+	function removeRowsUnshift0( rowStart: Int, rowEnd: Int ){
+		var w = this[ 0 ];
+		var h = this[ 1 ];
+		var l = rowEnd - rowStart + 1;
+		var rowUpto = rowStart - 1;
+		for( i in 0...rowStart ){
+			var j = rowUpto - i;
+			moveRow( j, j + l );
+		}
+		if( l > rowUpto ){
+			for( i in 0...( l - rowUpto ) ){
+				zeroRow( i );
+			}
+		}
+	}
 	public inline
 	function rowToString( y: Int ): String{
 		var w = this[ 0 ];

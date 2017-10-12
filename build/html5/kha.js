@@ -6815,20 +6815,20 @@ kha_Shaders.init = function() {
 	var _g1 = 0;
 	while(_g1 < 3) {
 		var i1 = _g1++;
-		var data1 = Reflect.field(kha_Shaders,"painter_image_fragData" + i1);
+		var data1 = Reflect.field(kha_Shaders,"painter_colored_vertData" + i1);
 		var bytes1 = haxe_Unserializer.run(data1);
 		blobs1.push(kha_internal_BytesBlob.fromBytes(bytes1));
 	}
-	kha_Shaders.painter_image_frag = new kha_graphics4_FragmentShader(blobs1,["painter-image.frag.essl","painter-image-relaxed.frag.essl","painter-image-webgl2.frag.essl"]);
+	kha_Shaders.painter_colored_vert = new kha_graphics4_VertexShader(blobs1,["painter-colored.vert.essl","painter-colored-relaxed.vert.essl","painter-colored-webgl2.vert.essl"]);
 	var blobs2 = [];
 	var _g2 = 0;
 	while(_g2 < 3) {
 		var i2 = _g2++;
-		var data2 = Reflect.field(kha_Shaders,"painter_colored_vertData" + i2);
+		var data2 = Reflect.field(kha_Shaders,"painter_image_fragData" + i2);
 		var bytes2 = haxe_Unserializer.run(data2);
 		blobs2.push(kha_internal_BytesBlob.fromBytes(bytes2));
 	}
-	kha_Shaders.painter_colored_vert = new kha_graphics4_VertexShader(blobs2,["painter-colored.vert.essl","painter-colored-relaxed.vert.essl","painter-colored-webgl2.vert.essl"]);
+	kha_Shaders.painter_image_frag = new kha_graphics4_FragmentShader(blobs2,["painter-image.frag.essl","painter-image-relaxed.frag.essl","painter-image-webgl2.frag.essl"]);
 	var blobs3 = [];
 	var _g3 = 0;
 	while(_g3 < 3) {
@@ -26426,7 +26426,7 @@ tetrisTriangles_game_ABC.prototype = {
 	,rnd: function(p) {
 		var rangeABC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		var indx = Math.round(Math.random() * (rangeABC.length - 1));
-		return this.createABC("KHA",p);
+		return this.createABC(HxOverrides.substr(rangeABC,indx,1),p);
 	}
 	,createABC: function(letter,p) {
 		var arr;
@@ -30188,6 +30188,92 @@ tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.rowEmpty = function(this1,y) {
 	}
 	return emp;
 };
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.moveRow = function(this1,startY,endY) {
+	var w = this1[0];
+	var h = this1[1];
+	var s0 = 2 + w * startY | 0;
+	var e0 = 2 + w * endY | 0;
+	var _g1 = 0;
+	var _g = w;
+	while(_g1 < _g) {
+		var i = _g1++;
+		this1[e0 + i] = this1[s0 + i];
+		this1[s0 + i] = 0;
+	}
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.copyRow = function(this1,startY,endY) {
+	var w = this1[0];
+	var h = this1[1];
+	var s0 = 2 + w * startY | 0;
+	var e0 = 2 + w * endY | 0;
+	var _g1 = 0;
+	var _g = w;
+	while(_g1 < _g) {
+		var i = _g1++;
+		this1[e0 + i] = this1[s0 + i];
+	}
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.oneRow = function(this1,y) {
+	var w = this1[0];
+	var h = this1[1];
+	var s = 2 + w * y | 0;
+	var _g1 = 0;
+	var _g = w;
+	while(_g1 < _g) {
+		var i = _g1++;
+		this1[s + i] = 1;
+	}
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.zeroRow = function(this1,y) {
+	var w = this1[0];
+	var h = this1[1];
+	var s = 2 + w * y | 0;
+	var _g1 = 0;
+	var _g = w;
+	while(_g1 < _g) {
+		var i = _g1++;
+		this1[s + i] = 0;
+	}
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.removeRowsUnshift0 = function(this1,rowStart,rowEnd) {
+	var w = this1[0];
+	var h = this1[1];
+	var l = rowEnd - rowStart + 1;
+	var rowUpto = rowStart - 1;
+	var _g1 = 0;
+	var _g = rowStart;
+	while(_g1 < _g) {
+		var i = _g1++;
+		var j = rowUpto - i;
+		var w1 = this1[0];
+		var h1 = this1[1];
+		var s0 = 2 + w1 * j | 0;
+		var e0 = 2 + w1 * (j + l) | 0;
+		var _g11 = 0;
+		var _g2 = w1;
+		while(_g11 < _g2) {
+			var i1 = _g11++;
+			this1[e0 + i1] = this1[s0 + i1];
+			this1[s0 + i1] = 0;
+		}
+	}
+	if(l > rowUpto) {
+		var _g12 = 0;
+		var _g3 = l - rowUpto;
+		while(_g12 < _g3) {
+			var i2 = _g12++;
+			var w2 = this1[0];
+			var h2 = this1[1];
+			var s = 2 + w2 * i2 | 0;
+			var _g13 = 0;
+			var _g4 = w2;
+			while(_g13 < _g4) {
+				var i3 = _g13++;
+				this1[s + i3] = 0;
+			}
+		}
+	}
+};
 tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.rowToString = function(this1,y) {
 	var w = this1[0];
 	var h = this1[1];
@@ -31150,7 +31236,7 @@ var tetrisTriangles_game_Movement = function(controller_,dia_) {
 	this.jumpY = .0;
 	this.jumpX = .0;
 	this.jumpSpeed = 7;
-	this.fallSpeed = 0.017;
+	this.fallSpeed = 0.01;
 	this.controller = controller_;
 	this.dia = dia_;
 };
@@ -32722,7 +32808,7 @@ tetrisTriangles_game_Shape.prototype = {
 var tetrisTriangles_game_ShapeGenerator = function(createShape) {
 	this.random = 0;
 	this.last = -1;
-	this.abc = new tetrisTriangles_game_ABC(createShape);
+	this.templates = new tetrisTriangles_game_Templates(createShape);
 };
 $hxClasses["tetrisTriangles.game.ShapeGenerator"] = tetrisTriangles_game_ShapeGenerator;
 tetrisTriangles_game_ShapeGenerator.__name__ = ["tetrisTriangles","game","ShapeGenerator"];
@@ -32735,7 +32821,186 @@ tetrisTriangles_game_ShapeGenerator.prototype = {
 		if(shape == null) {
 			shape = "tetris_random";
 		}
-		var ts = this.abc.rnd(p);
+		var ts;
+		if(shape == null) {
+			if(shape == null) {
+				var ts1 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+				ts1.addBlock(-1,-1);
+				ts1.addBlock(0,-1);
+				ts1.addBlock(-1,0);
+				ts1.addBlock(0,0);
+				ts = ts1;
+			} else {
+				switch(shape) {
+				case "tetris_L":
+					var ts2 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+					ts2.addBlock(-1,-1.5);
+					ts2.addBlock(-1,-0.5);
+					ts2.addBlock(-1,0.5);
+					ts2.addBlock(0,0.5);
+					ts = ts2;
+					break;
+				case "tetris_Z":
+					var ts3 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
+					ts3.addBlock(-0.5,-1);
+					ts3.addBlock(0.5,0);
+					ts3.addBlock(0.5,-1);
+					ts3.addBlock(1.5,0);
+					ts = ts3;
+					break;
+				case "tetris_box":
+					var ts4 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+					ts4.addBlock(-1,-1);
+					ts4.addBlock(0,-1);
+					ts4.addBlock(-1,0);
+					ts4.addBlock(0,0);
+					ts = ts4;
+					break;
+				case "tetris_l":
+					var ts5 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Zero);
+					ts5.addBlock(-0.5,-2);
+					ts5.addBlock(-0.5,-1);
+					ts5.addBlock(-0.5,0);
+					ts5.addBlock(-0.5,1);
+					ts = ts5;
+					break;
+				case "tetris_t":
+					var ts6 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+					ts6.addBlock(-1,-1.5);
+					ts6.addBlock(-1,-0.5);
+					ts6.addBlock(-1,0.5);
+					ts6.addBlock(0,-0.5);
+					ts = ts6;
+					break;
+				default:
+					var ts7 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+					ts7.addBlock(-1,-1);
+					ts7.addBlock(0,-1);
+					ts7.addBlock(-1,0);
+					ts7.addBlock(0,0);
+					ts = ts7;
+				}
+			}
+		} else if(shape == "tetris_random") {
+			var no = 4;
+			var random = no * Math.random() | 0;
+			if(random == this.last) {
+				return this.randomShape(p,col0_,col1_);
+			}
+			switch(random) {
+			case 0:
+				var ts8 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
+				ts8.addBlock(-0.5,-1);
+				ts8.addBlock(0.5,0);
+				ts8.addBlock(0.5,-1);
+				ts8.addBlock(1.5,0);
+				ts = ts8;
+				ts = ts;
+				break;
+			case 1:
+				var ts9 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+				ts9.addBlock(-1,-1.5);
+				ts9.addBlock(-1,-0.5);
+				ts9.addBlock(-1,0.5);
+				ts9.addBlock(0,0.5);
+				ts = ts9;
+				ts = ts;
+				break;
+			case 2:
+				var ts10 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+				ts10.addBlock(-1,-1);
+				ts10.addBlock(0,-1);
+				ts10.addBlock(-1,0);
+				ts10.addBlock(0,0);
+				ts = ts10;
+				ts = ts;
+				break;
+			case 3:
+				var ts11 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+				ts11.addBlock(-1,-1.5);
+				ts11.addBlock(-1,-0.5);
+				ts11.addBlock(-1,0.5);
+				ts11.addBlock(0,-0.5);
+				ts = ts11;
+				ts = ts;
+				break;
+			case 4:
+				var ts12 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Zero);
+				ts12.addBlock(-0.5,-2);
+				ts12.addBlock(-0.5,-1);
+				ts12.addBlock(-0.5,0);
+				ts12.addBlock(-0.5,1);
+				ts = ts12;
+				ts = ts;
+				break;
+			default:
+				var ts13 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
+				ts13.addBlock(-0.5,-1);
+				ts13.addBlock(0.5,0);
+				ts13.addBlock(0.5,-1);
+				ts13.addBlock(1.5,0);
+				ts = ts13;
+				ts = ts;
+			}
+		} else if(shape == null) {
+			var ts14 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+			ts14.addBlock(-1,-1);
+			ts14.addBlock(0,-1);
+			ts14.addBlock(-1,0);
+			ts14.addBlock(0,0);
+			ts = ts14;
+		} else {
+			switch(shape) {
+			case "tetris_L":
+				var ts15 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+				ts15.addBlock(-1,-1.5);
+				ts15.addBlock(-1,-0.5);
+				ts15.addBlock(-1,0.5);
+				ts15.addBlock(0,0.5);
+				ts = ts15;
+				break;
+			case "tetris_Z":
+				var ts16 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
+				ts16.addBlock(-0.5,-1);
+				ts16.addBlock(0.5,0);
+				ts16.addBlock(0.5,-1);
+				ts16.addBlock(1.5,0);
+				ts = ts16;
+				break;
+			case "tetris_box":
+				var ts17 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+				ts17.addBlock(-1,-1);
+				ts17.addBlock(0,-1);
+				ts17.addBlock(-1,0);
+				ts17.addBlock(0,0);
+				ts = ts17;
+				break;
+			case "tetris_l":
+				var ts18 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Zero);
+				ts18.addBlock(-0.5,-2);
+				ts18.addBlock(-0.5,-1);
+				ts18.addBlock(-0.5,0);
+				ts18.addBlock(-0.5,1);
+				ts = ts18;
+				break;
+			case "tetris_t":
+				var ts19 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+				ts19.addBlock(-1,-1.5);
+				ts19.addBlock(-1,-0.5);
+				ts19.addBlock(-1,0.5);
+				ts19.addBlock(0,-0.5);
+				ts = ts19;
+				break;
+			default:
+				var ts20 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+				ts20.addBlock(-1,-1);
+				ts20.addBlock(0,-1);
+				ts20.addBlock(-1,0);
+				ts20.addBlock(0,0);
+				ts = ts20;
+			}
+		}
+		this.last = this.random;
 		return ts;
 	}
 	,__class__: tetrisTriangles_game_ShapeGenerator
@@ -33131,10 +33396,146 @@ var tetrisTriangles_game_Tetris = function(scale) {
 	this.end = false;
 	this.offY = 0;
 	this.offX = 0;
-	this.hi = 44;
-	this.wide = 64;
+	this.hi = 22;
+	this.wide = 32;
 	this.edge = 0.01;
-	this.dia = 0.0499999999999999958;
+	this.dia = 0.0937499999999999861;
+	tetrisTriangles_test_Arr2DTest.UnitTest();
+	var w = 4;
+	var h = 4;
+	var v = null;
+	var this1;
+	if(v == null) {
+		if(w == null) {
+			w = 100;
+		}
+		if(h == null) {
+			h = 100;
+		}
+		var l = w * h + 2;
+		var _g = [];
+		var _g2 = 0;
+		var _g1 = l;
+		while(_g2 < _g1) {
+			var e = _g2++;
+			_g.push(0);
+		}
+		var arr = _g;
+		arr[0] = w;
+		arr[1] = h;
+		v = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,arr);
+	}
+	this1 = v;
+	var filledArr2D = this1;
+	var i = 2;
+	var l1 = filledArr2D.length;
+	while(i < l1) {
+		filledArr2D[i] = 1;
+		++i;
+	}
+	var h1 = filledArr2D[1];
+	var str = "";
+	var _g11 = 0;
+	var _g3 = h1;
+	while(_g11 < _g3) {
+		var y = _g11++;
+		var w1 = filledArr2D[0];
+		var h2 = filledArr2D[1];
+		var s = 2 + w1 * y | 0;
+		var e1 = s + w1;
+		var str1 = "\n";
+		var _g12 = s;
+		var _g4 = e1;
+		while(_g12 < _g4) {
+			var i1 = _g12++;
+			str1 = str1 + filledArr2D[i1] + "  ";
+		}
+		str += str1;
+	}
+	haxe_Log.trace(str,{ fileName : "Tetris.hx", lineNumber : 37, className : "tetrisTriangles.game.Tetris", methodName : "new"});
+	var w2 = filledArr2D[0];
+	var h3 = filledArr2D[1];
+	filledArr2D[2 + w2 * 2 + 1 | 0] = 0;
+	var w3 = filledArr2D[0];
+	var h4 = filledArr2D[1];
+	filledArr2D[2 + w3 + 1 | 0] = 0;
+	var h5 = filledArr2D[1];
+	var str2 = "";
+	var _g13 = 0;
+	var _g5 = h5;
+	while(_g13 < _g5) {
+		var y1 = _g13++;
+		var w4 = filledArr2D[0];
+		var h6 = filledArr2D[1];
+		var s1 = 2 + w4 * y1 | 0;
+		var e2 = s1 + w4;
+		var str3 = "\n";
+		var _g14 = s1;
+		var _g6 = e2;
+		while(_g14 < _g6) {
+			var i2 = _g14++;
+			str3 = str3 + filledArr2D[i2] + "  ";
+		}
+		str2 += str3;
+	}
+	haxe_Log.trace(str2,{ fileName : "Tetris.hx", lineNumber : 40, className : "tetrisTriangles.game.Tetris", methodName : "new"});
+	var w5 = filledArr2D[0];
+	var h7 = filledArr2D[1];
+	var l2 = 3;
+	var rowUpto = 0;
+	var _g15 = 0;
+	var _g7 = 1;
+	while(_g15 < _g7) {
+		var i3 = _g15++;
+		var j = rowUpto - i3;
+		var w6 = filledArr2D[0];
+		var h8 = filledArr2D[1];
+		var s0 = 2 + w6 * j | 0;
+		var e0 = 2 + w6 * (j + l2) | 0;
+		var _g16 = 0;
+		var _g8 = w6;
+		while(_g16 < _g8) {
+			var i4 = _g16++;
+			filledArr2D[e0 + i4] = filledArr2D[s0 + i4];
+			filledArr2D[s0 + i4] = 0;
+		}
+	}
+	if(l2 > rowUpto) {
+		var _g17 = 0;
+		var _g9 = l2 - rowUpto;
+		while(_g17 < _g9) {
+			var i5 = _g17++;
+			var w7 = filledArr2D[0];
+			var h9 = filledArr2D[1];
+			var s2 = 2 + w7 * i5 | 0;
+			var _g18 = 0;
+			var _g10 = w7;
+			while(_g18 < _g10) {
+				var i6 = _g18++;
+				filledArr2D[s2 + i6] = 0;
+			}
+		}
+	}
+	var h10 = filledArr2D[1];
+	var str4 = "";
+	var _g19 = 0;
+	var _g20 = h10;
+	while(_g19 < _g20) {
+		var y2 = _g19++;
+		var w8 = filledArr2D[0];
+		var h11 = filledArr2D[1];
+		var s3 = 2 + w8 * y2 | 0;
+		var e3 = s3 + w8;
+		var str5 = "\n";
+		var _g110 = s3;
+		var _g21 = e3;
+		while(_g110 < _g21) {
+			var i7 = _g110++;
+			str5 = str5 + filledArr2D[i7] + "  ";
+		}
+		str4 += str5;
+	}
+	haxe_Log.trace(str4,{ fileName : "Tetris.hx", lineNumber : 42, className : "tetrisTriangles.game.Tetris", methodName : "new"});
 	this.scaleDimensions(scale);
 	this.createTetris();
 	this.interaction();
@@ -33690,6 +34091,293 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			this.setup();
 		}
 	}
+	,testMoveRow: function() {
+		var this1 = this.filledArr2D;
+		var w = this1[0];
+		var h = this1[1];
+		var s0 = 2 + w | 0;
+		var e0 = 2 + w * 2 | 0;
+		var _g1 = 0;
+		var _g = w;
+		while(_g1 < _g) {
+			var i = _g1++;
+			this1[e0 + i] = this1[s0 + i];
+			this1[s0 + i] = 0;
+		}
+		var this2 = this.filledArr2D;
+		var w1 = this2[0];
+		var h1 = this2[1];
+		var s = 2 + w1 * 0 | 0;
+		var e = s + w1;
+		var ful = true;
+		var _g11 = s;
+		var _g2 = e;
+		while(_g11 < _g2) {
+			var i1 = _g11++;
+			if(this2[i1] == 0) {
+				ful = false;
+				break;
+			}
+		}
+		this.assertTrue(ful,{ fileName : "Arr2DTest.hx", lineNumber : 68, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMoveRow"});
+		var this3 = this.filledArr2D;
+		var w2 = this3[0];
+		var h2 = this3[1];
+		var s1 = 2 + w2 | 0;
+		var e1 = s1 + w2;
+		var ful1 = true;
+		var _g12 = s1;
+		var _g3 = e1;
+		while(_g12 < _g3) {
+			var i2 = _g12++;
+			if(this3[i2] == 0) {
+				ful1 = false;
+				break;
+			}
+		}
+		this.assertFalse(ful1,{ fileName : "Arr2DTest.hx", lineNumber : 69, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMoveRow"});
+		var this4 = this.filledArr2D;
+		var w3 = this4[0];
+		var h3 = this4[1];
+		var s2 = 2 + w3 * 2 | 0;
+		var e2 = s2 + w3;
+		var ful2 = true;
+		var _g13 = s2;
+		var _g4 = e2;
+		while(_g13 < _g4) {
+			var i3 = _g13++;
+			if(this4[i3] == 0) {
+				ful2 = false;
+				break;
+			}
+		}
+		this.assertTrue(ful2,{ fileName : "Arr2DTest.hx", lineNumber : 70, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMoveRow"});
+	}
+	,testCopyRow: function() {
+		var this1 = this.emptyArr2D;
+		var w = this1[0];
+		var h = this1[1];
+		this1[2 + w | 0] = 1;
+		var this2 = this.emptyArr2D;
+		var w1 = this2[0];
+		var h1 = this2[1];
+		this2[2 + w1 + 1 | 0] = 1;
+		var this3 = this.emptyArr2D;
+		var w2 = this3[0];
+		var h2 = this3[1];
+		this3[2 + w2 + 2 | 0] = 1;
+		var this4 = this.emptyArr2D;
+		var w3 = this4[0];
+		var h3 = this4[1];
+		var s0 = 2 + w3 | 0;
+		var e0 = 2 + w3 * 2 | 0;
+		var _g1 = 0;
+		var _g = w3;
+		while(_g1 < _g) {
+			var i = _g1++;
+			this4[e0 + i] = this4[s0 + i];
+		}
+		var this5 = this.emptyArr2D;
+		var w4 = this5[0];
+		var h4 = this5[1];
+		var s = 2 + w4 * 0 | 0;
+		var e = s + w4;
+		var ful = true;
+		var _g11 = s;
+		var _g2 = e;
+		while(_g11 < _g2) {
+			var i1 = _g11++;
+			if(this5[i1] == 0) {
+				ful = false;
+				break;
+			}
+		}
+		this.assertFalse(ful,{ fileName : "Arr2DTest.hx", lineNumber : 77, className : "tetrisTriangles.test.Arr2DTest", methodName : "testCopyRow"});
+		var this6 = this.emptyArr2D;
+		var w5 = this6[0];
+		var h5 = this6[1];
+		var s1 = 2 + w5 | 0;
+		var e1 = s1 + w5;
+		var ful1 = true;
+		var _g12 = s1;
+		var _g3 = e1;
+		while(_g12 < _g3) {
+			var i2 = _g12++;
+			if(this6[i2] == 0) {
+				ful1 = false;
+				break;
+			}
+		}
+		this.assertTrue(ful1,{ fileName : "Arr2DTest.hx", lineNumber : 78, className : "tetrisTriangles.test.Arr2DTest", methodName : "testCopyRow"});
+		var this7 = this.emptyArr2D;
+		var w6 = this7[0];
+		var h6 = this7[1];
+		var s2 = 2 + w6 * 2 | 0;
+		var e2 = s2 + w6;
+		var ful2 = true;
+		var _g13 = s2;
+		var _g4 = e2;
+		while(_g13 < _g4) {
+			var i3 = _g13++;
+			if(this7[i3] == 0) {
+				ful2 = false;
+				break;
+			}
+		}
+		this.assertTrue(ful2,{ fileName : "Arr2DTest.hx", lineNumber : 79, className : "tetrisTriangles.test.Arr2DTest", methodName : "testCopyRow"});
+	}
+	,testOneRow: function() {
+		var this1 = this.emptyArr2D;
+		var w = this1[0];
+		var h = this1[1];
+		var s = 2 + w | 0;
+		var _g1 = 0;
+		var _g = w;
+		while(_g1 < _g) {
+			var i = _g1++;
+			this1[s + i] = 1;
+		}
+		var this2 = this.emptyArr2D;
+		var w1 = this2[0];
+		var h1 = this2[1];
+		var s1 = 2 + w1 | 0;
+		var e = s1 + w1;
+		var ful = true;
+		var _g11 = s1;
+		var _g2 = e;
+		while(_g11 < _g2) {
+			var i1 = _g11++;
+			if(this2[i1] == 0) {
+				ful = false;
+				break;
+			}
+		}
+		this.assertTrue(ful,{ fileName : "Arr2DTest.hx", lineNumber : 83, className : "tetrisTriangles.test.Arr2DTest", methodName : "testOneRow"});
+	}
+	,testZeroRow: function() {
+		var this1 = this.filledArr2D;
+		var w = this1[0];
+		var h = this1[1];
+		var s = 2 + w | 0;
+		var _g1 = 0;
+		var _g = w;
+		while(_g1 < _g) {
+			var i = _g1++;
+			this1[s + i] = 0;
+		}
+		var this2 = this.filledArr2D;
+		var w1 = this2[0];
+		var h1 = this2[1];
+		var s1 = 2 + w1 | 0;
+		var e = s1 + w1;
+		var emp = true;
+		var _g11 = s1;
+		var _g2 = e;
+		while(_g11 < _g2) {
+			var i1 = _g11++;
+			if(this2[i1] == 1) {
+				emp = false;
+				break;
+			}
+		}
+		this.assertTrue(emp,{ fileName : "Arr2DTest.hx", lineNumber : 87, className : "tetrisTriangles.test.Arr2DTest", methodName : "testZeroRow"});
+	}
+	,testRemoveRowsUnshift0: function() {
+		var this1 = this.filledArr2D;
+		var w = this1[0];
+		var h = this1[1];
+		this1[2 + w + 1 | 0] = 0;
+		var this2 = this.filledArr2D;
+		var w1 = this2[0];
+		var h1 = this2[1];
+		this2[2 + w1 * 2 + 1 | 0] = 0;
+		var this3 = this.filledArr2D;
+		var w2 = this3[0];
+		var h2 = this3[1];
+		var l = 2;
+		var rowUpto = 0;
+		var _g1 = 0;
+		var _g = 1;
+		while(_g1 < _g) {
+			var i = _g1++;
+			var j = rowUpto - i;
+			var w3 = this3[0];
+			var h3 = this3[1];
+			var s0 = 2 + w3 * j | 0;
+			var e0 = 2 + w3 * (j + l) | 0;
+			var _g11 = 0;
+			var _g2 = w3;
+			while(_g11 < _g2) {
+				var i1 = _g11++;
+				this3[e0 + i1] = this3[s0 + i1];
+				this3[s0 + i1] = 0;
+			}
+		}
+		if(l > rowUpto) {
+			var _g12 = 0;
+			var _g3 = l - rowUpto;
+			while(_g12 < _g3) {
+				var i2 = _g12++;
+				var w4 = this3[0];
+				var h4 = this3[1];
+				var s = 2 + w4 * i2 | 0;
+				var _g13 = 0;
+				var _g4 = w4;
+				while(_g13 < _g4) {
+					var i3 = _g13++;
+					this3[s + i3] = 0;
+				}
+			}
+		}
+		var this4 = this.filledArr2D;
+		var w5 = this4[0];
+		var h5 = this4[1];
+		var s1 = 2 + w5 * 0 | 0;
+		var e = s1 + w5;
+		var emp = true;
+		var _g14 = s1;
+		var _g5 = e;
+		while(_g14 < _g5) {
+			var i4 = _g14++;
+			if(this4[i4] == 1) {
+				emp = false;
+				break;
+			}
+		}
+		this.assertFalse(emp,{ fileName : "Arr2DTest.hx", lineNumber : 93, className : "tetrisTriangles.test.Arr2DTest", methodName : "testRemoveRowsUnshift0"});
+		var this5 = this.filledArr2D;
+		var w6 = this5[0];
+		var h6 = this5[1];
+		var s2 = 2 + w6 | 0;
+		var e1 = s2 + w6;
+		var emp1 = true;
+		var _g15 = s2;
+		var _g6 = e1;
+		while(_g15 < _g6) {
+			var i5 = _g15++;
+			if(this5[i5] == 1) {
+				emp1 = false;
+				break;
+			}
+		}
+		this.assertFalse(emp1,{ fileName : "Arr2DTest.hx", lineNumber : 94, className : "tetrisTriangles.test.Arr2DTest", methodName : "testRemoveRowsUnshift0"});
+		var this6 = this.filledArr2D;
+		var w7 = this6[0];
+		var h7 = this6[1];
+		var s3 = 2 + w7 * 2 | 0;
+		var e2 = s3 + w7;
+		var ful = true;
+		var _g16 = s3;
+		var _g7 = e2;
+		while(_g16 < _g7) {
+			var i6 = _g16++;
+			if(this6[i6] == 0) {
+				ful = false;
+				break;
+			}
+		}
+		this.assertTrue(ful,{ fileName : "Arr2DTest.hx", lineNumber : 95, className : "tetrisTriangles.test.Arr2DTest", methodName : "testRemoveRowsUnshift0"});
+	}
 	,testClash: function() {
 		var this1 = this.emptyArr2D;
 		var w = this1[0];
@@ -33720,7 +34408,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 				break;
 			}
 		}
-		this.assertFalse(clash,{ fileName : "Arr2DTest.hx", lineNumber : 71, className : "tetrisTriangles.test.Arr2DTest", methodName : "testClash"});
+		this.assertFalse(clash,{ fileName : "Arr2DTest.hx", lineNumber : 102, className : "tetrisTriangles.test.Arr2DTest", methodName : "testClash"});
 		var this5 = this.emptyArr2D;
 		var w4 = this5[0];
 		var h4 = this5[1];
@@ -33750,7 +34438,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 				break;
 			}
 		}
-		this.assertTrue(clash1,{ fileName : "Arr2DTest.hx", lineNumber : 76, className : "tetrisTriangles.test.Arr2DTest", methodName : "testClash"});
+		this.assertTrue(clash1,{ fileName : "Arr2DTest.hx", lineNumber : 107, className : "tetrisTriangles.test.Arr2DTest", methodName : "testClash"});
 	}
 	,testAddPoints: function() {
 		var a2 = [{ x : 0, y : 1},{ x : 1, y : 1},{ x : 2, y : 1}];
@@ -33781,7 +34469,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 				break;
 			}
 		}
-		this.assertFalse(ful,{ fileName : "Arr2DTest.hx", lineNumber : 81, className : "tetrisTriangles.test.Arr2DTest", methodName : "testAddPoints"});
+		this.assertFalse(ful,{ fileName : "Arr2DTest.hx", lineNumber : 112, className : "tetrisTriangles.test.Arr2DTest", methodName : "testAddPoints"});
 		var this3 = this.emptyArr2D;
 		var w2 = this3[0];
 		var h2 = this3[1];
@@ -33797,7 +34485,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 				break;
 			}
 		}
-		this.assertTrue(ful1,{ fileName : "Arr2DTest.hx", lineNumber : 82, className : "tetrisTriangles.test.Arr2DTest", methodName : "testAddPoints"});
+		this.assertTrue(ful1,{ fileName : "Arr2DTest.hx", lineNumber : 113, className : "tetrisTriangles.test.Arr2DTest", methodName : "testAddPoints"});
 		var this4 = this.emptyArr2D;
 		var w3 = this4[0];
 		var h3 = this4[1];
@@ -33813,7 +34501,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 				break;
 			}
 		}
-		this.assertFalse(ful2,{ fileName : "Arr2DTest.hx", lineNumber : 83, className : "tetrisTriangles.test.Arr2DTest", methodName : "testAddPoints"});
+		this.assertFalse(ful2,{ fileName : "Arr2DTest.hx", lineNumber : 114, className : "tetrisTriangles.test.Arr2DTest", methodName : "testAddPoints"});
 	}
 	,testOverlap: function() {
 		var a = this.filledArr2D;
@@ -33837,7 +34525,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 				break;
 			}
 		}
-		this.assertFalse(overlapped,{ fileName : "Arr2DTest.hx", lineNumber : 86, className : "tetrisTriangles.test.Arr2DTest", methodName : "testOverlap"});
+		this.assertFalse(overlapped,{ fileName : "Arr2DTest.hx", lineNumber : 117, className : "tetrisTriangles.test.Arr2DTest", methodName : "testOverlap"});
 	}
 	,testID: function() {
 		var str = "4,3,0,0,0,0,1,0,0,0,1,0,0,0";
@@ -33873,7 +34561,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 		var w2 = a0[0];
 		var h2 = a0[1];
 		a0[2 + w2 | 0] = 1;
-		this.assertTrue(a0.toString() == str,{ fileName : "Arr2DTest.hx", lineNumber : 93, className : "tetrisTriangles.test.Arr2DTest", methodName : "testID"});
+		this.assertTrue(a0.toString() == str,{ fileName : "Arr2DTest.hx", lineNumber : 124, className : "tetrisTriangles.test.Arr2DTest", methodName : "testID"});
 		var count = 2;
 		var w3 = 3;
 		var h3 = 4;
@@ -33885,7 +34573,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			var _g21 = w3;
 			while(_g31 < _g21) {
 				var x = _g31++;
-				this.assertTrue((2 + w3 * y + x | 0) == count,{ fileName : "Arr2DTest.hx", lineNumber : 99, className : "tetrisTriangles.test.Arr2DTest", methodName : "testID"});
+				this.assertTrue((2 + w3 * y + x | 0) == count,{ fileName : "Arr2DTest.hx", lineNumber : 130, className : "tetrisTriangles.test.Arr2DTest", methodName : "testID"});
 				++count;
 			}
 		}
@@ -33918,7 +34606,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 				break;
 			}
 		}
-		this.assertTrue(ful,{ fileName : "Arr2DTest.hx", lineNumber : 108, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
+		this.assertTrue(ful,{ fileName : "Arr2DTest.hx", lineNumber : 139, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
 		var w4 = 3;
 		var h4 = 3;
 		var v = null;
@@ -33968,7 +34656,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 				break;
 			}
 		}
-		this.assertTrue(ful1,{ fileName : "Arr2DTest.hx", lineNumber : 113, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
+		this.assertTrue(ful1,{ fileName : "Arr2DTest.hx", lineNumber : 144, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
 		var a = this.emptyArr2D;
 		var la = a.length;
 		var lb = a0.length;
@@ -33989,7 +34677,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 				break;
 			}
 		}
-		this.assertFalse(overlapped,{ fileName : "Arr2DTest.hx", lineNumber : 114, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
+		this.assertFalse(overlapped,{ fileName : "Arr2DTest.hx", lineNumber : 145, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
 		var this6 = this.emptyArr2D;
 		var a1 = this6;
 		var tmp;
@@ -34028,7 +34716,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			}
 			tmp = true;
 		}
-		this.assertTrue(tmp,{ fileName : "Arr2DTest.hx", lineNumber : 115, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
+		this.assertTrue(tmp,{ fileName : "Arr2DTest.hx", lineNumber : 146, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
 		var this7 = this.emptyArr2D;
 		var w9 = this7[0];
 		var h9 = this7[1];
@@ -34044,7 +34732,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 				break;
 			}
 		}
-		this.assertFalse(ful2,{ fileName : "Arr2DTest.hx", lineNumber : 116, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
+		this.assertFalse(ful2,{ fileName : "Arr2DTest.hx", lineNumber : 147, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
 		var this8 = this.emptyArr2D;
 		var w10 = this8[0];
 		var h10 = this8[1];
@@ -34060,7 +34748,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 				break;
 			}
 		}
-		this.assertTrue(ful3,{ fileName : "Arr2DTest.hx", lineNumber : 117, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
+		this.assertTrue(ful3,{ fileName : "Arr2DTest.hx", lineNumber : 148, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
 		var this9 = this.emptyArr2D;
 		var w11 = this9[0];
 		var h11 = this9[1];
@@ -34076,7 +34764,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 				break;
 			}
 		}
-		this.assertTrue(ful4,{ fileName : "Arr2DTest.hx", lineNumber : 118, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
+		this.assertTrue(ful4,{ fileName : "Arr2DTest.hx", lineNumber : 149, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
 	}
 	,testRowToString: function() {
 		var str = "\n1  0  0  ";
@@ -34096,7 +34784,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			var i = _g1++;
 			str1 = str1 + this2[i] + "  ";
 		}
-		this.assertTrue(str1 == str,{ fileName : "Arr2DTest.hx", lineNumber : 123, className : "tetrisTriangles.test.Arr2DTest", methodName : "testRowToString"});
+		this.assertTrue(str1 == str,{ fileName : "Arr2DTest.hx", lineNumber : 154, className : "tetrisTriangles.test.Arr2DTest", methodName : "testRowToString"});
 	}
 	,testPrettyString: function() {
 		var str = "\n1  0  0  " + "\n0  0  0  " + "\n0  0  0  ";
@@ -34124,7 +34812,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			}
 			str1 += str2;
 		}
-		this.assertTrue(str1 == str,{ fileName : "Arr2DTest.hx", lineNumber : 130, className : "tetrisTriangles.test.Arr2DTest", methodName : "testPrettyString"});
+		this.assertTrue(str1 == str,{ fileName : "Arr2DTest.hx", lineNumber : 161, className : "tetrisTriangles.test.Arr2DTest", methodName : "testPrettyString"});
 	}
 	,setup: function() {
 		this.createfilledArr2D();
@@ -34275,24 +34963,19 @@ kha__$Color_Color_$Impl_$.invMaxChannelValue = 0.00392156862745098;
 kha_CompilerDefines.js = "1";
 kha_CompilerDefines.kha_a1 = "1";
 kha_CompilerDefines.kha_g3 = "1";
+kha_CompilerDefines.kha_g4 = "1";
 kha_CompilerDefines.kha_html5_js = "1";
 kha_CompilerDefines["source-header"] = "Generated by Haxe 3.4.2";
-kha_CompilerDefines.jquery_ver = "11204";
-kha_CompilerDefines.kha_js = "1";
-kha_CompilerDefines.sys_html5 = "1";
-kha_CompilerDefines.sys_g4 = "1";
-kha_CompilerDefines.sys_g2 = "1";
-kha_CompilerDefines.kha_webgl = "1";
-kha_CompilerDefines.kha = "1";
-kha_CompilerDefines.kha_g2 = "1";
-kha_CompilerDefines.use_abc = "1";
-kha_CompilerDefines.kha_g4 = "1";
 kha_CompilerDefines.sys_g3 = "1";
 kha_CompilerDefines.kha_g1 = "1";
 kha_CompilerDefines.sys_a1 = "1";
 kha_CompilerDefines.haxe_ver = "3.402";
+kha_CompilerDefines.jquery_ver = "11204";
+kha_CompilerDefines.kha_js = "1";
+kha_CompilerDefines.sys_html5 = "1";
 kha_CompilerDefines.canvas_id = "khanvas";
 kha_CompilerDefines.kha_version = "1611";
+kha_CompilerDefines.sys_g4 = "1";
 kha_CompilerDefines.js_es = "5";
 kha_CompilerDefines.kha_html5 = "1";
 kha_CompilerDefines["js-es5"] = "1";
@@ -34301,7 +34984,10 @@ kha_CompilerDefines.sys_a2 = "1";
 kha_CompilerDefines.dce = "std";
 kha_CompilerDefines.sys_g1 = "1";
 kha_CompilerDefines["true"] = "1";
-kha_CompilerDefines.use_kha = "1";
+kha_CompilerDefines.sys_g2 = "1";
+kha_CompilerDefines.kha_webgl = "1";
+kha_CompilerDefines.kha = "1";
+kha_CompilerDefines.kha_g2 = "1";
 kha_CompilerDefines.haxe3 = "1";
 kha_CompilerDefines.kha_a2 = "1";
 kha_CompilerDefines.script_name = "kha";
@@ -34313,12 +34999,12 @@ kha_Scheduler.startTime = 0;
 kha_Shaders.painter_colored_fragData0 = "s198:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gaGlnaHAgaW50OwoKdmFyeWluZyBoaWdocCB2ZWM0IGZyYWdtZW50Q29sb3I7Cgp2b2lkIG1haW4oKQp7CiAgICBnbF9GcmFnRGF0YVswXSA9IGZyYWdtZW50Q29sb3I7Cn0KCg";
 kha_Shaders.painter_colored_fragData1 = "s192:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp2YXJ5aW5nIHZlYzQgZnJhZ21lbnRDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIGdsX0ZyYWdEYXRhWzBdID0gZnJhZ21lbnRDb2xvcjsKfQoK";
 kha_Shaders.painter_colored_fragData2 = "s210:I3ZlcnNpb24gMzAwIGVzCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7CgpvdXQgdmVjNCBGcmFnQ29sb3I7CmluIHZlYzQgZnJhZ21lbnRDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIEZyYWdDb2xvciA9IGZyYWdtZW50Q29sb3I7Cn0KCg";
-kha_Shaders.painter_image_fragData0 = "s471:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gaGlnaHAgaW50OwoKdW5pZm9ybSBoaWdocCBzYW1wbGVyMkQgdGV4OwoKdmFyeWluZyBoaWdocCB2ZWMyIHRleENvb3JkOwp2YXJ5aW5nIGhpZ2hwIHZlYzQgY29sb3I7Cgp2b2lkIG1haW4oKQp7CiAgICBoaWdocCB2ZWM0IHRleGNvbG9yID0gdGV4dHVyZTJEKHRleCwgdGV4Q29vcmQpICogY29sb3I7CiAgICBoaWdocCB2ZWMzIF8zMiA9IHRleGNvbG9yLnh5eiAqIGNvbG9yLnc7CiAgICB0ZXhjb2xvciA9IHZlYzQoXzMyLngsIF8zMi55LCBfMzIueiwgdGV4Y29sb3Iudyk7CiAgICBnbF9GcmFnRGF0YVswXSA9IHRleGNvbG9yOwp9Cgo";
-kha_Shaders.painter_image_fragData1 = "s444:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp1bmlmb3JtIG1lZGl1bXAgc2FtcGxlcjJEIHRleDsKCnZhcnlpbmcgdmVjMiB0ZXhDb29yZDsKdmFyeWluZyB2ZWM0IGNvbG9yOwoKdm9pZCBtYWluKCkKewogICAgdmVjNCB0ZXhjb2xvciA9IHRleHR1cmUyRCh0ZXgsIHRleENvb3JkKSAqIGNvbG9yOwogICAgdmVjMyBfMzIgPSB0ZXhjb2xvci54eXogKiBjb2xvci53OwogICAgdGV4Y29sb3IgPSB2ZWM0KF8zMi54LCBfMzIueSwgXzMyLnosIHRleGNvbG9yLncpOwogICAgZ2xfRnJhZ0RhdGFbMF0gPSB0ZXhjb2xvcjsKfQoK";
-kha_Shaders.painter_image_fragData2 = "s452:I3ZlcnNpb24gMzAwIGVzCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp1bmlmb3JtIG1lZGl1bXAgc2FtcGxlcjJEIHRleDsKCmluIHZlYzIgdGV4Q29vcmQ7CmluIHZlYzQgY29sb3I7Cm91dCB2ZWM0IEZyYWdDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIHZlYzQgdGV4Y29sb3IgPSB0ZXh0dXJlKHRleCwgdGV4Q29vcmQpICogY29sb3I7CiAgICB2ZWMzIF8zMiA9IHRleGNvbG9yLnh5eiAqIGNvbG9yLnc7CiAgICB0ZXhjb2xvciA9IHZlYzQoXzMyLngsIF8zMi55LCBfMzIueiwgdGV4Y29sb3Iudyk7CiAgICBGcmFnQ29sb3IgPSB0ZXhjb2xvcjsKfQoK";
 kha_Shaders.painter_colored_vertData0 = "s331:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1hdDQgcHJvamVjdGlvbk1hdHJpeDsKCmF0dHJpYnV0ZSB2ZWMzIHZlcnRleFBvc2l0aW9uOwp2YXJ5aW5nIHZlYzQgZnJhZ21lbnRDb2xvcjsKYXR0cmlidXRlIHZlYzQgdmVydGV4Q29sb3I7Cgp2b2lkIG1haW4oKQp7CiAgICBnbF9Qb3NpdGlvbiA9IHByb2plY3Rpb25NYXRyaXggKiB2ZWM0KHZlcnRleFBvc2l0aW9uLCAxLjApOwogICAgZnJhZ21lbnRDb2xvciA9IHZlcnRleENvbG9yOwp9Cgo";
 kha_Shaders.painter_colored_vertData1 = "s374:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKYXR0cmlidXRlIG1lZGl1bXAgdmVjMyB2ZXJ0ZXhQb3NpdGlvbjsKdmFyeWluZyBtZWRpdW1wIHZlYzQgZnJhZ21lbnRDb2xvcjsKYXR0cmlidXRlIG1lZGl1bXAgdmVjNCB2ZXJ0ZXhDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIGdsX1Bvc2l0aW9uID0gcHJvamVjdGlvbk1hdHJpeCAqIHZlYzQodmVydGV4UG9zaXRpb24sIDEuMCk7CiAgICBmcmFnbWVudENvbG9yID0gdmVydGV4Q29sb3I7Cn0KCg";
 kha_Shaders.painter_colored_vertData2 = "s354:I3ZlcnNpb24gMzAwIGVzCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKaW4gbWVkaXVtcCB2ZWMzIHZlcnRleFBvc2l0aW9uOwpvdXQgbWVkaXVtcCB2ZWM0IGZyYWdtZW50Q29sb3I7CmluIG1lZGl1bXAgdmVjNCB2ZXJ0ZXhDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIGdsX1Bvc2l0aW9uID0gcHJvamVjdGlvbk1hdHJpeCAqIHZlYzQodmVydGV4UG9zaXRpb24sIDEuMCk7CiAgICBmcmFnbWVudENvbG9yID0gdmVydGV4Q29sb3I7Cn0KCg";
+kha_Shaders.painter_image_fragData0 = "s471:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gaGlnaHAgaW50OwoKdW5pZm9ybSBoaWdocCBzYW1wbGVyMkQgdGV4OwoKdmFyeWluZyBoaWdocCB2ZWMyIHRleENvb3JkOwp2YXJ5aW5nIGhpZ2hwIHZlYzQgY29sb3I7Cgp2b2lkIG1haW4oKQp7CiAgICBoaWdocCB2ZWM0IHRleGNvbG9yID0gdGV4dHVyZTJEKHRleCwgdGV4Q29vcmQpICogY29sb3I7CiAgICBoaWdocCB2ZWMzIF8zMiA9IHRleGNvbG9yLnh5eiAqIGNvbG9yLnc7CiAgICB0ZXhjb2xvciA9IHZlYzQoXzMyLngsIF8zMi55LCBfMzIueiwgdGV4Y29sb3Iudyk7CiAgICBnbF9GcmFnRGF0YVswXSA9IHRleGNvbG9yOwp9Cgo";
+kha_Shaders.painter_image_fragData1 = "s444:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp1bmlmb3JtIG1lZGl1bXAgc2FtcGxlcjJEIHRleDsKCnZhcnlpbmcgdmVjMiB0ZXhDb29yZDsKdmFyeWluZyB2ZWM0IGNvbG9yOwoKdm9pZCBtYWluKCkKewogICAgdmVjNCB0ZXhjb2xvciA9IHRleHR1cmUyRCh0ZXgsIHRleENvb3JkKSAqIGNvbG9yOwogICAgdmVjMyBfMzIgPSB0ZXhjb2xvci54eXogKiBjb2xvci53OwogICAgdGV4Y29sb3IgPSB2ZWM0KF8zMi54LCBfMzIueSwgXzMyLnosIHRleGNvbG9yLncpOwogICAgZ2xfRnJhZ0RhdGFbMF0gPSB0ZXhjb2xvcjsKfQoK";
+kha_Shaders.painter_image_fragData2 = "s452:I3ZlcnNpb24gMzAwIGVzCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp1bmlmb3JtIG1lZGl1bXAgc2FtcGxlcjJEIHRleDsKCmluIHZlYzIgdGV4Q29vcmQ7CmluIHZlYzQgY29sb3I7Cm91dCB2ZWM0IEZyYWdDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIHZlYzQgdGV4Y29sb3IgPSB0ZXh0dXJlKHRleCwgdGV4Q29vcmQpICogY29sb3I7CiAgICB2ZWMzIF8zMiA9IHRleGNvbG9yLnh5eiAqIGNvbG9yLnc7CiAgICB0ZXhjb2xvciA9IHZlYzQoXzMyLngsIF8zMi55LCBfMzIueiwgdGV4Y29sb3Iudyk7CiAgICBGcmFnQ29sb3IgPSB0ZXhjb2xvcjsKfQoK";
 kha_Shaders.painter_image_vertData0 = "s415:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1hdDQgcHJvamVjdGlvbk1hdHJpeDsKCmF0dHJpYnV0ZSB2ZWMzIHZlcnRleFBvc2l0aW9uOwp2YXJ5aW5nIHZlYzIgdGV4Q29vcmQ7CmF0dHJpYnV0ZSB2ZWMyIHRleFBvc2l0aW9uOwp2YXJ5aW5nIHZlYzQgY29sb3I7CmF0dHJpYnV0ZSB2ZWM0IHZlcnRleENvbG9yOwoKdm9pZCBtYWluKCkKewogICAgZ2xfUG9zaXRpb24gPSBwcm9qZWN0aW9uTWF0cml4ICogdmVjNCh2ZXJ0ZXhQb3NpdGlvbiwgMS4wKTsKICAgIHRleENvb3JkID0gdGV4UG9zaXRpb247CiAgICBjb2xvciA9IHZlcnRleENvbG9yOwp9Cgo";
 kha_Shaders.painter_image_vertData1 = "s479:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKYXR0cmlidXRlIG1lZGl1bXAgdmVjMyB2ZXJ0ZXhQb3NpdGlvbjsKdmFyeWluZyBtZWRpdW1wIHZlYzIgdGV4Q29vcmQ7CmF0dHJpYnV0ZSBtZWRpdW1wIHZlYzIgdGV4UG9zaXRpb247CnZhcnlpbmcgbWVkaXVtcCB2ZWM0IGNvbG9yOwphdHRyaWJ1dGUgbWVkaXVtcCB2ZWM0IHZlcnRleENvbG9yOwoKdm9pZCBtYWluKCkKewogICAgZ2xfUG9zaXRpb24gPSBwcm9qZWN0aW9uTWF0cml4ICogdmVjNCh2ZXJ0ZXhQb3NpdGlvbiwgMS4wKTsKICAgIHRleENvb3JkID0gdGV4UG9zaXRpb247CiAgICBjb2xvciA9IHZlcnRleENvbG9yOwp9Cgo";
 kha_Shaders.painter_image_vertData2 = "s444:I3ZlcnNpb24gMzAwIGVzCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKaW4gbWVkaXVtcCB2ZWMzIHZlcnRleFBvc2l0aW9uOwpvdXQgbWVkaXVtcCB2ZWMyIHRleENvb3JkOwppbiBtZWRpdW1wIHZlYzIgdGV4UG9zaXRpb247Cm91dCBtZWRpdW1wIHZlYzQgY29sb3I7CmluIG1lZGl1bXAgdmVjNCB2ZXJ0ZXhDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIGdsX1Bvc2l0aW9uID0gcHJvamVjdGlvbk1hdHJpeCAqIHZlYzQodmVydGV4UG9zaXRpb24sIDEuMCk7CiAgICB0ZXhDb29yZCA9IHRleFBvc2l0aW9uOwogICAgY29sb3IgPSB2ZXJ0ZXhDb2xvcjsKfQoK";

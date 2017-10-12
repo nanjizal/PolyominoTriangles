@@ -31,7 +31,16 @@ class Tetris {
     var rotation:          Rotation;
     var movement:          Movement;
     public function new( scale: Float = 1 ){ // scale is used to help with rendering differences between toolkits.
-        // Arr2DTest.UnitTest();  unit test commented out
+        Arr2DTest.UnitTest(); // unit test commented out
+        var filledArr2D = new Arr2D( 4, 4 );
+        filledArr2D.fill();
+        trace( filledArr2D.prettyString() );
+        filledArr2D.addZero( 1, 2 );
+        filledArr2D.addZero( 1, 1 );
+        trace( filledArr2D.prettyString() );
+		filledArr2D.removeRowsUnshift0( 1, 3 );
+        trace( filledArr2D.prettyString());
+
         scaleDimensions( scale );
         createTetris();  // create main controller class that is the core of creation and animation low level control.
         interaction();  // setup movement and rotation animation control

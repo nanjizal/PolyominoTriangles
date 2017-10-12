@@ -63,6 +63,37 @@ class Arr2DTest extends haxe.unit.TestCase {
 			setup();
 		}
 	}
+	function testMoveRow(){
+		filledArr2D.moveRow( 1, 2 );
+		assertTrue( filledArr2D.rowFull( 0 ) );
+		assertFalse(  filledArr2D.rowFull( 1 ) );
+		assertTrue( filledArr2D.rowFull( 2 ) );
+	}
+	function testCopyRow(){
+		emptyArr2D.addOne( 0, 1 );
+		emptyArr2D.addOne( 1, 1 );
+		emptyArr2D.addOne( 2, 1 );
+		emptyArr2D.copyRow( 1, 2 );
+		assertFalse( emptyArr2D.rowFull( 0 ) );
+		assertTrue( emptyArr2D.rowFull( 1 ) );
+		assertTrue( emptyArr2D.rowFull( 2 ) );
+	}
+	function testOneRow(){
+		emptyArr2D.oneRow(1);
+		assertTrue( emptyArr2D.rowFull(1) );
+	}
+	function testZeroRow(){
+		filledArr2D.zeroRow(1);
+		assertTrue( filledArr2D.rowEmpty(1) );
+	}
+	function testRemoveRowsUnshift0(){
+		filledArr2D.addZero( 1, 1 );
+		filledArr2D.addZero( 1, 2 );
+		filledArr2D.removeRowsUnshift0( 1, 2 );
+		assertFalse( filledArr2D.rowEmpty( 0 ) );
+		assertFalse( filledArr2D.rowEmpty( 1 ) );
+		assertTrue(  filledArr2D.rowFull( 2 ) );
+	}
 	public function testClash(){
 		emptyArr2D.addOne( 0, 0 );
 		emptyArr2D.addOne( 0, 1 );
