@@ -7,7 +7,7 @@ class Movement{
     #if use_abc
     var fallSpeed           = 0.017;
     #else
-	var fallSpeed           = 0.01; // controls downwards falling speed
+	var fallSpeed           = 0.01;//1;//0.01 // controls downwards falling speed
     #end
     var jumpSpeed           = 7;
     var jumpX               = .0;   // for movement smoothing

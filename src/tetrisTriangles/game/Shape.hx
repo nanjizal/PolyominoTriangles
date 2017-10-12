@@ -97,36 +97,41 @@ class Shape {
     }
     public function removeRow( r: Int ){
         var sq: Square;
-        var posInt: {x: Int, y: Int };
-        var removed = new Array<Square>();
+        var found = findRow( r );
+        while( found.length != 0 ){
+            sq = found.pop();
+            blocks.remove( sq );
+            sq.destroy();
+            sq = null;
+        }
+        found = null;
+        moveRowsDown( r );
+    }
+    public inline
+    function findRow( r: Int ): Array<Square> {
+        var sq: Square;
+        var posInt: { x: Int, y: Int };
+        var found = new Array<Square>();
         var lr = 0;
         for( i in 0...blocks.length ) {
             sq = blocks[ i ];
             if( sq != null ){
                 if( sq.hasTriangles() ){
                     posInt = sq.getCentreInt();
-                    trace( 'checking ' + posInt.y + '  ' + r );
-                    if( posInt.y == r ) {
-                        sq.removeTriangles();
-                        removed[lr++] = sq;
-                    }
+                    if( posInt.y == r ) found[ lr++ ] = sq;
                 }
             }
         }
-        for( sq in removed ){
-            blocks.remove( sq );
-            sq = null;
-        }
+        return found;
     }
-    public function moveRowsDown( end: Int, amount: Int ){
+    public function moveRowsDown( end: Int ){
         var sq: Square;
-        var posInt: {x: Int, y: Int };
+        var posInt: { x: Int, y: Int };
         for( i in 0...blocks.length ) {
             sq = blocks[ i ];
             posInt = sq.getCentreInt();
-            if( posInt.y < end ) sq.moveDelta( 0, amount*dia );
+            if( posInt.y < end ) sq.moveDelta( 0, dia );
         }
-        // TODO: update the Arr2D
     }
     public function rotate( theta: Float ){
         angle += theta;
@@ -171,27 +176,6 @@ class Shape {
         centre.x = start.x + ox;
     }
     public inline 
-    function snap2(){
-        var beta: Float;
-        if( angle < 0 ){
-            beta = -angle + 180;
-        }
-        beta = angle % ( 2 * Math.PI );
-        var rookFloat: Float = rook;
-        var offAngle:  Float = rookFloat - beta;
-        rotate( offAngle );
-
-        var newLoc: { x: Int, y: Int };
-        for( i in 0...lastLocation.length ){
-            newLoc = newLocation[i];
-            blocks[i].x = newLoc.x*dia;
-            blocks[i].y = (newLoc.y)*dia ;
-            virtualBlocks[i].x = newLoc.x*dia;
-            virtualBlocks[i].y = (newLoc.y)*dia ;
-        }
-    }
-    /*
-    public inline 
     function snap(){
         var beta: Float;
         if( angle < 0 ){
@@ -201,19 +185,15 @@ class Shape {
         var rookFloat: Float = rook;
         var offAngle:  Float = rookFloat - beta;
         rotate( offAngle );
-
         var newLoc: { x: Int, y: Int };
-        var lastLoc: { x: Int, y: Int };
         for( i in 0...lastLocation.length ){
             newLoc = newLocation[i];
-            lastLoc = lastLocation[i];
-            blocks[i].x = lastLoc.x*dia;
-            blocks[i].y = lastLoc.y*dia;
-            virtualBlocks[i].x = lastLoc.x*dia;
-            virtualBlocks[i].y = lastLoc.y*dia ;
+            blocks[i].x = newLoc.x*dia;
+            blocks[i].y = (newLoc.y)*dia ;
+            virtualBlocks[i].x = newLoc.x*dia;
+            virtualBlocks[i].y = (newLoc.y)*dia ;
         }
     }
-    */
     public function getPoints( points: Array<Point> ){
         var l = blocks.length;
         for( i in 0...l ){

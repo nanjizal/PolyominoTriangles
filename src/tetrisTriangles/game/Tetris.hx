@@ -15,29 +15,29 @@ class Tetris {
     #if use_abc
     var dia                = 0.15/3;
     #else 
-    var dia                = 0.15/1.6;// /2
+    var dia                = 0.15/2;//(0.15/1.6);// /2
     #end
     var edge               = 0.01; // disabled in code as gets in way of hitTest for momment, this is the spacing between squares.
     #if use_abc
     var wide               = 32*2;//     32;    //21; // dimensions of the grid
     var hi                 = 22*2;//15;
     #else
-    var wide               = 32;//     32;    //21; // dimensions of the grid
-    var hi                 = 22;//15;
+    var wide               = 8;//32;//     32;    //21; // dimensions of the grid
+    var hi                 = 30;//22;//15;
     #end
     var offX               = 0; // visual offsets problematic now not need maybe remove..
     var offY               = 0;
-    var layout:           Layout;
+    var layout:            Layout;
     var rotation:          Rotation;
     var movement:          Movement;
+    var end:               Bool = false;
     public function new( scale: Float = 1 ){ // scale is used to help with rendering differences between toolkits.
-        //Arr2DTest.UnitTest(); // unit test commented out
+        // Arr2DTest.UnitTest(); // unit test commented out
         scaleDimensions( scale );
         createTetris();  // create main controller class that is the core of creation and animation low level control.
-        interaction();  // setup movement and rotation animation control
-        startGame();  // layout visuals using controller and layout class.
-        move( 0, 1 ); // kind of hacky not sure if useful, it was perhaps to help with getting y position on square.
-    }    
+        interaction();   // setup movement and rotation animation control
+        startGame();     // layout visuals using controller and layout class.
+    }
     function scaleDimensions( scale: Float ){
         dia = scale * dia;
         edge = scale * edge;
@@ -60,7 +60,6 @@ class Tetris {
         movement.reset();
         layout.createTile();
     }
-    var end: Bool = false;
     function gameEnd(){
         end = true;
     }
@@ -74,10 +73,7 @@ class Tetris {
         if( end ) return;
         if( !controller.hitBottom() ){ 
             rotation.update();
-            //if(!controller.hitBottom()){
-                movement.update();
-            //}
-            //controller.hitBottom();
+            movement.update();
         }
     }
     public inline

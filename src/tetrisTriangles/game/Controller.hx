@@ -28,7 +28,7 @@ class Controller {
                         ,   dia_:   Float,  gap_:       Float
                         ,   offX_:  Int,    offY_:      Int     ){
         id           = id_;
-        inertArr     = new Arr2D( wide_, hi_ );
+        inertArr     = new Arr2D( wide_, hi_-1 );
         wide         = wide_;
         hi           = hi_;
         triangles    = triangles_;
@@ -63,58 +63,38 @@ class Controller {
         for( i in 0...l ){
             shape = shapes[ i ];
             shape.getLocation();
-            //var clash = inertArr.clash( shape.getLocation(), 0, -1 );
-            /*var clash = inertArr.clash( shape.getLocation(), 0, 0 );  
-            if( clash ){
-                shapeKill( shape, i );
-                hit = true;
-            }*/
-            
             if( Shape.shapeClose( shape, bottom, diaSq ) ){
-                shapeKill2( shape, i );
-                // checkForFullRows();
+                shapeKill( shape, i );
+                removeFullRows();
                 hit = true;
             }
-            
         }
-        
-
         var end = !inertArr.rowEmpty(0);
         if( end ) onGameEnd();
         if( onTetrisShapeLanded != null && hit && !end ) onTetrisShapeLanded();
         return hit;
     }
-    // TODO: Needs some more thought.
-    public function checkForFullRows(){
-        var w = inertArr.getW();
-        var h = inertArr.getH();
-        var start = -1;
-        var end = -1;
-        for( i in 1...h-2 ){
-            if( inertArr.rowFull( i ) ){
-                if( start == -1 ) {
-                    start = i;
-                    end = i;
-                } else {
-                    end = i;
-                }
-            }
+    public function removeFullRows( ?rowsFull: Array<Bool>, ?countTrue: Int ){ // recursive remove full rows.
+        if( rowsFull == null ) {
+            rowsFull = cast inertArr.getFullRows();
+            rowsFull.pop(); // ignore bottom row
+            countTrue = 0;
+            for( row in rowsFull ) if( row ) countTrue++;
         }
-        if( start != -1 ){
-            for( i in start...(end+1) ){
-                bottom.removeRow( i );
-            }
-            bottom.moveRowsDown( end+1, end+1 - start );
-            start = Arr2D.id( 0, start, w, h );
-            end   = Arr2D.id( w-1, end, w, h  );
-            for( i in start...(end+1) ){
-                inertArr[i] = 0;
-            }
+        if( countTrue > 0 ) {
+            var indx = rowsFull.lastIndexOf( true );
+            bottom.removeRow( indx + 2 );
+            inertArr.removeRowsUnshift0( indx, indx );
+            rowsFull = inertArr.getFullRows();
+            rowsFull.pop(); // ignore bottom row
+            countTrue = 0;
+            for( row in rowsFull ) if( row ) countTrue++;
+            if( countTrue > 0 ) removeFullRows( rowsFull, countTrue ); // recurse remove last full row adjust postions.
         }
     }
     public inline
-    function shapeKill2( shape: Shape, count: Int ){
-        shape.snap2();
+    function shapeKill( shape: Shape, count: Int ){
+        shape.snap();
         //shape.changeColor( 8, 9 );
         var newBlocks = shape.clearBlocks();
         var l = newBlocks.length;
@@ -123,19 +103,6 @@ class Controller {
         }
         addHitPointsInt( shape.lastLocation );
     }
-/*
-    public inline
-    function shapeKill( shape: Shape, count: Int ){
-        shape.snap();
-        //shape.changeColor( 8, 8 );
-        var newBlocks = shape.clearBlocks();
-        var l = newBlocks.length;
-        for( i in 0...l ) {
-            bottom.pushBlock( newBlocks[ i ] );
-        }
-        addHitPointsInt( shape.lastLocation );
-    }
-    */
     public inline 
     function shapesOnBg(){
         var shapeLocations = shapeLocations();
@@ -194,11 +161,10 @@ class Controller {
     public inline
     function addHitPointsInt( arrP: Array<{ x: Int, y: Int }> ) { // adds points to the hitTest
         offSetAddPoints( inertArr, arrP );
-        //trace( inertArr.prettyString() );
     }
     public inline
     function offSetAddPoints( arr2d: Arr2D, arrP: Array<{ x: Int, y: Int }> ){
-        arr2d.addPoints( arrP, 0, 0 );
+        arr2d.addPoints( arrP, 0, -2 );
     }
     public function createBottom( p: Point, wide: Int , col0_: Int, col1_: Int ){
         var templates = new Templates( createTetris );
@@ -207,8 +173,7 @@ class Controller {
         bottom = templates.bottom( p, wide );
         var arr = new Array< { x: Int, y: Int} >();
         var bottomPositions = bottom.getCentreInt( arr );
-        //addHitPointsInt( bottomPositions );
-        inertArr.addPoints( bottomPositions, 0, -2 );
+        addHitPointsInt( bottomPositions );
     }
 
 

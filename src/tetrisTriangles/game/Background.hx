@@ -33,8 +33,8 @@ class Background {
                 shape_.col1     = col3_;
             }
             toggle = !toggle;
-            for( h in 0...hi ) {
-                bgSquares[ Arr2D.id( w, h, wide, hi ) ] = shape_.addBlock( w, h, false );
+            for( h in 2...hi ) {
+                bgSquares[ Arr2D.id( w, h, wide ) ] = shape_.addBlock( w, h, false );
             }
         }
     }
@@ -51,7 +51,7 @@ class Background {
             dx = pos.x + offX ;
             dy = pos.y + offY;
             if( dx > 0 && dx < wide && dy > 0 && dy < hi ){
-                indx = Arr2D.id( dx, dy, wide, hi  );
+                indx = Arr2D.id( dx, dy, wide );
                 bgSquares[ indx ].changeColor( 14, 14 );
             }
         }
@@ -77,7 +77,7 @@ class Background {
             }
             toggle = !toggle;
             for( h in 0...hi ) {
-                indx = Arr2D.id( w, h, wide, hi  );
+                indx = Arr2D.id( w, h, wide );
                 bgSquares[ indx ].changeColor( c0, c1 );
             }
         }

@@ -119,7 +119,7 @@ class TetrisTrianglesKha2 {
         var tri: Triangle;
         var triangles = Triangle.triangles;
         var s = 300;
-        var ox = 35;//200;
+        var ox = 400;//35;//200;
         var oy = 20;
         for( i in 0...triangles.length ){
             tri = triangles[ i ];

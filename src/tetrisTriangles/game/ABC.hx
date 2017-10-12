@@ -630,8 +630,8 @@ class ABC {
         var ts = createTetris( p, snapped );
         var sx = -2;
         var sy = -2.5;
-        var w = pos.getW();
-        var h = pos.getH();
+        var w = pos.width;
+        var h = pos.height;
         var dx = sx;
         var dy = sy;
         var count: Int = 0;

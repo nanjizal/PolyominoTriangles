@@ -20,7 +20,7 @@ project.windowOptions.height = 768;
 //project.addDefine('use_tetris_l');
 
 //extra tetris shapes
-//project.addDefine('fullTetris');
+    project.addDefine('fullTetris');
 //project.addDefine('use_tetris_S');
 //project.addDefine('use_tetris_rL');
 //project.addDefine('use_abc');

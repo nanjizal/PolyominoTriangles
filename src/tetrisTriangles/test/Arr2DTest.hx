@@ -90,8 +90,8 @@ class Arr2DTest extends haxe.unit.TestCase {
 		filledArr2D.addZero( 1, 1 );
 		filledArr2D.addZero( 1, 2 );
 		filledArr2D.removeRowsUnshift0( 1, 2 );
-		assertFalse( filledArr2D.rowEmpty( 0 ) );
-		assertFalse( filledArr2D.rowEmpty( 1 ) );
+		assertTrue( filledArr2D.rowEmpty( 0 ) );
+		assertTrue( filledArr2D.rowEmpty( 1 ) );
 		assertTrue(  filledArr2D.rowFull( 2 ) );
 	}
 	public function testClash(){
@@ -127,7 +127,7 @@ class Arr2DTest extends haxe.unit.TestCase {
 		var h = 4;
         for( y in 0...h ){
             for( x in 0...w ){// x
-                assertTrue( Arr2D.id( x, y, w, h ) == count );
+                assertTrue( Arr2D.id( x, y, w ) == count );
                 count++;
             }
         }

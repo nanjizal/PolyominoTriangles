@@ -52,6 +52,11 @@ class Square {
         triangles[ l++ ] = t0;
         triangles[ l++ ] = t1;
     }
+    public function destroy(){
+        removeTriangles();
+        t0 = null;
+        t1 = null;
+    }
     public function removeTriangles(){
         triangles.remove( t0 );
         triangles.remove( t1 );

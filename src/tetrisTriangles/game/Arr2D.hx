@@ -1,8 +1,6 @@
 package tetrisTriangles.game;
-// second attempt at Array 2D but last one was bit slow, so switching to emulation of 2D array.
 // will use first two positions to store w, h, and the other positions to store 0, 1 in other places.
 // use the abstracts methods to set values don't set directly.
-// might be a good class to unit test!
 @:forward
 abstract Arr2D(Array<Int>) from Array<Int> to Array<Int> {
     inline public 
@@ -25,9 +23,7 @@ abstract Arr2D(Array<Int>) from Array<Int> to Array<Int> {
     }
     public inline
     function clear(){
-		var w = this[ 0 ];
-		var h = this[ 1 ];
-        this = new Arr2D( w, h );
+        this = new Arr2D( width, height );
     }
 	public inline
 	function fill(){
@@ -39,21 +35,15 @@ abstract Arr2D(Array<Int>) from Array<Int> to Array<Int> {
 		}
 	}
 	public inline
-    function addOne( x: Int, y: Int ){ // use this to add entries.
-		var w = this[ 0 ];
-		var h = this[ 1 ];
-        this[ id( x, y, w, h) ] = 1; 
+    function addOne( x: Int, y: Int ){ 
+        setValue( x, y, 1 );
     }
 	public inline
-    function addZero( x: Int, y: Int ){ // use this to add entries.
-		var w = this[ 0 ];
-		var h = this[ 1 ];
-        this[ id( x, y, w, h) ] = 0; 
+    function addZero( x: Int, y: Int ){ 
+        setValue( x, y, 0 ); 
     }
-	//public inline
-	//function get_width(
 	public inline static 
-	function id( x: Int, y: Int, w: Int, h: Int ){
+	function id( x: Int, y: Int, w: Int ){
 		return Std.int( 2 + ( w * y ) + x );
 	}
 	//   Thinking Test example
@@ -65,31 +55,37 @@ abstract Arr2D(Array<Int>) from Array<Int> to Array<Int> {
 	//   1 0 0     11 12 13
 	//
 	//
+	public var width( get, never ): Int;
 	public inline
-	function getW(){
-		return this[0];
+	function get_width():Int{
+		return this[ 0 ];
+	}
+	public var height( get, never ): Int;
+	public inline
+	function get_height():Int{
+		return this[ 1 ];
 	}
 	public inline
-	function getH(){
-		return this[1];
-	}
-	public inline
-	function isZero( x: Int, y: Int ){
-		var w = this[ 0 ];
-		var h = this[ 1 ];
-		return this[ id( x, y, w, h ) ] == 0; 
+	function isZero( x: Int, y: Int ): Bool {
+		return getValue( x, y ) == 0; 
 	}
 	public inline
 	function isOne( x: Int, y: Int ): Bool {
-		var w = this[ 0 ];
-		var h = this[ 1 ];
-		return this[ id( x, y, w, h ) ] == 1; 
+		return getValue( x, y ) == 1; 
+	}
+	public inline 
+	function getValue( x: Int, y: Int ):Int{
+		return this[ id( x, y, width ) ]; 
+	}
+	public inline
+	function setValue( x: Int, y: Int, value: Int ):Int{
+		this[ id( x, y, width ) ] = value;
+		return value;
 	}
 	public inline
 	function rowFull( y: Int ): Bool {
-		var w = this[ 0 ];
-		var h = this[ 1 ];
-		var s = id( 0, y, w, h );
+		var w = width;
+		var s = id( 0, y, w );
 		var e = s + w;
 		//if( e < this.length ) return true;
 		var ful = true;
@@ -102,10 +98,15 @@ abstract Arr2D(Array<Int>) from Array<Int> to Array<Int> {
 		return ful;
 	}
 	public inline
+	function getFullRows():Array<Bool>{
+		var arr = [];
+		for( y in 0...height ) arr[y] = rowFull( y );
+		return arr;
+	}
+	public inline
 	function rowEmpty( y: Int ): Bool {
-		var w = this[ 0 ];
-		var h = this[ 1 ];
-		var s = id( 0, y, w, h );
+		var w = width;
+		var s = id( 0, y, w );
 		var e = s + w;
 		//if( e < this.length ) return true;
 		var emp = true;
@@ -119,10 +120,9 @@ abstract Arr2D(Array<Int>) from Array<Int> to Array<Int> {
 	}
 	public inline 
 	function moveRow( startY: Int, endY: Int ){
-		var w = this[ 0 ];
-		var h = this[ 1 ];
-		var s0 = id( 0, startY, w, h );
-		var e0 = id( 0, endY, w, h );
+		var w = width;
+		var s0 = id( 0, startY, w );
+		var e0 = id( 0, endY, w );
 		for( i in 0...w ){
 			this[ e0 + i ] = this[ s0 + i ];
 			this[ s0 + i ] = 0; 
@@ -130,59 +130,41 @@ abstract Arr2D(Array<Int>) from Array<Int> to Array<Int> {
 	}
 	public inline 
 	function copyRow( startY: Int, endY: Int ){
-		var w = this[ 0 ];
-		var h = this[ 1 ];
-		var s0 = id( 0, startY, w, h );
-		var e0 = id( 0, endY, w, h );
-		for( i in 0...w ){
-			this[ e0 + i ] = this[ s0 + i ];
-		}
+		var w = width;
+		var s0 = id( 0, startY, w );
+		var e0 = id( 0, endY, w );
+		for( i in 0...w ) this[ e0 + i ] = this[ s0 + i ];
 	}
 	public inline
 	function oneRow( y: Int ){
-		var w = this[ 0 ];
-		var h = this[ 1 ];
-		var s = id( 0, y, w, h );
-		for( i in 0...w ){
-			this[ s + i ] = 1;
-		}
+		var w = width;
+		var s = id( 0, y, w );
+		for( i in 0...w ) this[ s + i ] = 1;
 	}
 	public inline
 	function zeroRow( y: Int ){
-		var w = this[ 0 ];
-		var h = this[ 1 ];
-		var s = id( 0, y, w, h );
-		for( i in 0...w ){
-			this[ s + i ] = 0;
-		}
+		var w = width;
+		var s = id( 0, y, w );
+		for( i in 0...w ) this[ s + i ] = 0;
 	}
 	public inline 
 	function removeRowsUnshift0( rowStart: Int, rowEnd: Int ){
-		var w = this[ 0 ];
-		var h = this[ 1 ];
 		var l = rowEnd - rowStart + 1;
 		var rowUpto = rowStart - 1;
 		for( i in 0...rowStart ){
 			var j = rowUpto - i;
 			moveRow( j, j + l );
 		}
-		if( l > rowUpto ){
-			for( i in 0...( l - rowUpto ) ){
-				zeroRow( i );
-			}
-		}
+		if( l > rowUpto ) for( i in 0...( l - rowUpto ) ) zeroRow( i );
 	}
 	public inline
 	function rowToString( y: Int ): String{
-		var w = this[ 0 ];
-		var h = this[ 1 ];
-		var s = id( 0, y, w, h );
+		var w = width;
+		var s = id( 0, y, w );
 		var e = s + w;
 		//if( e < this.length ) return true;
 		var str = '\n';
-		for( i in s...e ){
-			str = str + this[ i ] + '  ';
-		}
+		for( i in s...e ) str = str + this[ i ] + '  ';
 		return str;
 	}
 	public inline 
@@ -205,7 +187,6 @@ abstract Arr2D(Array<Int>) from Array<Int> to Array<Int> {
 		var p: { x: Int, y: Int };
 		for( i in 0...lp ){
 			p = arrP[ i ];
-			//trace( 'adding ' + ( p.x + offX ) + '  ' + ( p.y + offY ) );
 			addOne( p.x + offX, p.y + offY );
 		}
 	}
@@ -239,20 +220,15 @@ abstract Arr2D(Array<Int>) from Array<Int> to Array<Int> {
 			var ai: Int;
 			for( i in 2...la ){
 				ai = a[ i ];
-				if( ai == 0 ){
-					this[ i ] = b[ i ];
-				} 
+				if( ai == 0 ) this[ i ] = b[ i ];
 			}
 			true;
 		}
 	}
 	public inline
 	function prettyString(){
-		var h = this[ 1 ];
 		var str = '';
-		for( y in 0...h ){
-			str = str + rowToString( y );
-		}
+		for( y in 0...height ) str = str + rowToString( y );
 		return str;
 	}
 }
