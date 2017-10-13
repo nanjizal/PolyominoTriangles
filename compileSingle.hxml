@@ -1,4 +1,10 @@
-# copy from 
-# canvas
--cmd cd compile
--cmd haxe tetrisTrianglesLuxeWeb.hxml
+#-cmd open -a Terminal .
+#-cmd cd compile
+#-cmd haxe tetrisTrianglesLime.hxml
+#-cmd haxe tetrisTrianglesNME.hxml
+#-cmd haxe tetrisTrianglesHeapsWeb.hxml
+#-cmd haxe tetrisTrianglesCanvas.hxml
+#-cmd haxe tetrisTrianglesWebGL.hxml
+#-cmd haxe tetrisTrianglesLuxeWeb.hxml
+#-cmd haxe tetrisTrianglesSVG.hxml
+-cmd node Kha/make -t html5

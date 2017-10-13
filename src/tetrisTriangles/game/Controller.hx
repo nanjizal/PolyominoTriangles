@@ -21,6 +21,7 @@ class Controller {
     var offY:       Int;
     var wide:       Int;
     var hi:         Int;
+    var diaSq:      Float;
     public var onTetrisShapeLanded: Void->Void;
     public var onGameEnd: Void -> Void;
     public function new(    id_:    Int,    triangles_: Array<Triangle>
@@ -36,6 +37,7 @@ class Controller {
         gap          = gap_;
         offX         = offX_;
         offY         = offY_;
+        diaSq        = ( dia - dia/10000 ) * ( dia - dia/10000 );
         shapeGenerator = new ShapeGenerator( createTetris );
     }
     public function createShape( p: Point, col0_: Int, col1_: Int, ?shapePreference: TetrisShape = tetris_random ){
@@ -59,7 +61,6 @@ class Controller {
         var l = shapes.length;
         var shape: Shape;
         var hit = false;
-        var diaSq = dia*dia;
         for( i in 0...l ){
             shape = shapes[ i ];
             shape.getLocation();

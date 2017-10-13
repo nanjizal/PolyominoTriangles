@@ -18,23 +18,23 @@ class Movement{
     var jy                  = 0.;
     public var leftStop:    Float;  // defines the left and right bounds.
     public var rightStop:   Float;
-	public function new( controller_: Controller, dia_: Float ){
-		controller  = controller_;
-		dia			= dia_;
-	}
+    public function new( controller_: Controller, dia_: Float ){
+        controller  = controller_;
+        dia         = dia_;
+    }
     public inline
-	function move( x: Int, y: Int ): Bool{
+    function move( x: Int, y: Int ): Bool{
         return if( toggleX ) {
-			false;
-		} else if( toggleY ) {
-			false;
-		} else {
-        	if( x != 0 ) toggleX = true;
-        	if( y != 0 ) toggleY = true;
-        	jumpX = x * dia;
-        	jumpY = y * dia;
-			true;
-		}
+            false;
+        } else if( toggleY ) {
+            false;
+        } else {
+            if( x != 0 ) toggleX = true;
+            if( y != 0 ) toggleY = true;
+            jumpX = x * dia;
+            jumpY = y * dia;
+            true;
+        }
     }
     public inline 
     function update(){ // variable names could be improved
@@ -80,12 +80,12 @@ class Movement{
         }
         if( toggleX ) controller.moveX( djx, leftStop, rightStop );
         controller.moveDelta( 0.0, fallSpeed + djy );
-	}
-	public inline  // Non smooth mouse movement alternative to above complexity, currently not needed
-	function updateSimple(){ // ( would require slight adjustment to move )
-		controller.moveX( jumpX, leftStop, rightStop );
-		controller.moveDelta( 0.0, fallSpeed + jumpY );
-		jumpX = 0.;
+    }
+    public inline  // Non smooth mouse movement alternative to above complexity, currently not needed
+    function updateSimple(){ // ( would require slight adjustment to move )
+        controller.moveX( jumpX, leftStop, rightStop );
+        controller.moveDelta( 0.0, fallSpeed + jumpY );
+        jumpX = 0.;
     	jumpY = 0.;
     }
     public function reset(){

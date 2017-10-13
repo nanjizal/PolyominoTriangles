@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<link rel="icon" type="image/vnd.microsoft.icon" href="/icon.ico" />
+	<link rel="icon" type="image/vnd.microsoft.icon" href="icon.ico" />
 	
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -14,8 +14,8 @@
 	
 	
 	<script>
-		window.preloadBg = "#FFFFFF";
-		window.preloadFg = "#000000";
+		window.preloadBg = "#181818";
+		window.preloadFg = "#FFFFFF";
 		window.addEventListener ("touchmove", function (event) { event.preventDefault (); }, false);
 		if (typeof window.devicePixelRatio != 'undefined' && window.devicePixelRatio > 2) {
 			var meta = document.getElementById ("viewport");
@@ -825,6 +825,7 @@ ParseNme.main();
           var loaded = this.downloadedNmeJs + this.downloadedNmeApp + this.downloadedNmeClasses;
           if (this.binaryIsReady) loaded++;
 
+
           var preloadUpdate = window.preloadUpdate;
           var fraction = loaded/this.totalDownloads;
           if ( typeof(preloadUpdate)=="function" ) preloadUpdate(fraction);
@@ -898,7 +899,7 @@ ParseNme.main();
     <script>
           
            (function() {
-            var memoryInitializer = '/nme/6.0.58/Nme.js.mem';
+            var memoryInitializer = 'Nme.js.mem';
             if (typeof Module['locateFile'] === 'function') {
               memoryInitializer = Module['locateFile'](memoryInitializer);
             } else if (Module['memoryInitializerPrefixURL']) {
@@ -914,10 +915,11 @@ ParseNme.main();
           (function() {
              Module.totalDownloads++;
              var xhr = new XMLHttpRequest;
-             xhr.open("GET", "/nme/6.0.58/Nme.js", true);
+             xhr.open("GET", "Nme.js", true);
              xhr.onload = function (e) {
                if (xhr.readyState === 4) {
                  if (xhr.status === 200) {
+                   Module.downloadedNmeJs = 1;
                    Module.nmeJs =xhr.response; 
                    Module.progress();
                  } else {
@@ -940,6 +942,7 @@ ParseNme.main();
              xhr.onload = function (e) {
                if (xhr.readyState === 4) {
                  if (xhr.status === 200) {
+                   Module.downloadedNmeApp = 1;
                    Module.nmeApp =xhr.response; 
                    Module.progress();
                  } else {
@@ -957,12 +960,13 @@ ParseNme.main();
 
           (function() {
              Module.totalDownloads++;
-             window.nmeOnClasses = Module.progress;
+             window.nmeOnClasses = function() { Module.progress() };
              var xhr = new XMLHttpRequest;
-             xhr.open("GET", "/nme/6.0.58/NmeClasses.js", true);
+             xhr.open("GET", "NmeClasses.js", true);
              xhr.onload = function (e) {
                if (xhr.readyState === 4) {
                  if (xhr.status === 200) {
+                   Module.downloadedNmeClasses = 1;
                    Module.nmeClasses =xhr.response; 
                    Module.progress();
                  } else {

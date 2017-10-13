@@ -10,7 +10,7 @@
 
 	<!-- window properties -->
 	<window background="#FFFFFF" fps="60" />
-	<window width="1024" height="768" unless="mobile" />
+	<window width="1024" height="768"  background="0x181818" unless="mobile" />
 	<window orientation="landscape" vsync="false" antialiasing="0" if="cpp" />
 	
 	<set name="SWF_VERSION" value="11.2" />

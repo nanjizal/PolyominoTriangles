@@ -1,48 +1,67 @@
 package tetrisTriangles;
 import justTriangles.Triangle;
-import tetrisTriangles.game.TetrisTriangles;
+import tetrisTriangles.game.Tetris;
 import h2d.Graphics;
-@:enum
-abstract GameColors( Int ) to Int from Int {
-    var Violet = 0x9400D3;
-    var Indigo = 0x4b0082;
-    var Blue   = 0x0000FF;
-    var Green  = 0x00ff00;
-    var Yellow = 0xFFFF00;
-    var Orange = 0xFF7F00;
-    var Red    = 0xFF0000;
-    var Black  = 0x000000;
-    var LightGrey = 0x444444;
-    var MidGrey = 0x333333;
-    var DarkGrey = 0x0c0c0c;
-    var NearlyBlack = 0x111111;
-}
+import hxd.Key in K;
+@:enum  // really not totally ideal needs more thought these are the triangle colors used as simple Ints see gameColors array.
+    abstract GameColors( Int ) from Int to Int {
+        var Violet      = 0xFF9400D3;
+        var Indigo      = 0xFF4b0082;
+        var Blue        = 0xFF0000FF;
+        var Green       = 0xFF00ff00;
+        var Yellow      = 0xFFFFFF00;
+        var Orange      = 0xFFFF7F00;
+        var Red         = 0xFFFF0000;
+        var Black       = 0xFF000000;
+        var LightGrey   = 0xFF444444;
+        var MidGrey     = 0xFF333333;
+        var DarkGrey    = 0xFF0c0c0c;
+        var NearlyBlack = 0xFF111111;
+        var White       = 0xFFFFFFFF;
+        var BlueAlpha   = 0x660000FF;
+        var GreenAlpha  = 0x3300FF00;
+        var RedAlpha    = 0x66FF0000;
+    }
 class TetrisTrianglesHeaps extends hxd.App {
-        var gameColors: Array<GameColors> = [ Black, Red, Orange, Yellow, Green, Blue, Indigo, Violet, LightGrey, MidGrey, DarkGrey, NearlyBlack ]; 
+        var gameColors:         Array<GameColors> = [ Black, Red, Orange, Yellow, Green, Blue, Indigo, Violet
+                                                , LightGrey, MidGrey, DarkGrey, NearlyBlack, White
+                                                , BlueAlpha, GreenAlpha, RedAlpha ]; 
         var bmp : h2d.Bitmap;
-        var tetrisTriangles: TetrisTriangles;
+        var tetris: Tetris;
         var g: h2d.Graphics; 
         override function init() {
             g = new h2d.Graphics(s2d);
-            tetrisTriangles = new TetrisTriangles();
+            tetris = new Tetris();
         }
         inline function renderTriangles(){
             var tri: Triangle;
             var triangles = Triangle.triangles;
-            var s = 300*2;
-            var o = 200*2;
+            var s = 600;
+            var ox = 500;
+            var oy = 100;
             g.clear();
             for( i in 0...triangles.length ){
                 tri = triangles[ i ];
                 g.beginFill( gameColors[ tri.colorID ] );
-                g.lineTo( o + tri.ax * s, o + tri.ay * s );
-                g.lineTo( o + tri.bx * s, o + tri.by * s );
-                g.lineTo( o + tri.cx * s, o + tri.cy * s );
+                g.lineTo( ox + tri.ax * s, oy + tri.ay * s );
+                g.lineTo( ox + tri.bx * s, oy + tri.by * s );
+                g.lineTo( ox + tri.cx * s, oy + tri.cy * s );
                 g.endFill();
             }
         }
         override function update(dt:Float) {
-            tetrisTriangles.update();
+            if( K.isDown( K.UP ) ){
+                tetris.rotate( 1 );
+            }
+            if( K.isDown( K.DOWN ) ){
+                tetris.move(  0, 1 );
+            }
+            if( K.isDown( K.LEFT ) ) {
+                tetris.move( -1, 0 );
+            } else if( K.isDown( K.RIGHT ) ) {
+                tetris.move(  1, 0 );
+            }
+            tetris.update();
             renderTriangles();
         }
         static function main() {

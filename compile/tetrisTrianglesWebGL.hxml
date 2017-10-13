@@ -1,8 +1,7 @@
--js binWebGL/test.js
+-js ../binWebGL/test.js
 -cp ../src
 
 -lib htmlHelper
--lib justTriangles
 -lib justTrianglesWebGL
 -lib khaMath
  
@@ -10,5 +9,5 @@
 -D js-flatten 
 -dce full
 --next
--cmd echo '<!DOCTYPE html><meta charset="UTF-8"><html><body><script src="test.js"></script></body></html>' >binWebGL/index.html
--cmd open binWebGL/index.html
+-cmd echo '<!DOCTYPE html><meta charset="UTF-8"><html><body><script src="test.js"></script></body></html>' >../binWebGL/index.html
+-cmd open ../binWebGL/index.html

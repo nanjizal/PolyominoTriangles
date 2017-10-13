@@ -3,10 +3,10 @@ import tetrisTriangles.game.Shape;
 import justTriangles.Point;
 // Tetris Shape factories ( if that's the right word ).
 class Templates { // predefined tetris shapes relative to centre
-	public var createTetris: Point -> Snapped -> Shape;
-	public function new( createTetris_: Point -> Snapped -> Shape ){
-		createTetris = createTetris_;
-	}
+    public var createTetris: Point -> Snapped -> Shape;
+    public function new( createTetris_: Point -> Snapped -> Shape ){
+        createTetris = createTetris_;
+    }
     public inline 
     function Z( p: Point ): Shape {
         var ts = createTetris( p, Snapped.Fix );

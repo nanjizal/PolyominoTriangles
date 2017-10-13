@@ -1,7 +1,6 @@
 -js ../binCanvas/_.js
 -cp ../src
 -lib htmlHelper
--lib justTriangles
 -lib justDrawing
 -main tetrisTriangles.TetrisTrianglesCanvas
 #-D js-flatten 

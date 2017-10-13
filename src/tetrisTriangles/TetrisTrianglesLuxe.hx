@@ -12,33 +12,41 @@ import luxe.Color;
 import justTriangles.Triangle;
 import justTriangles.Point;
 
-import tetrisTriangles.game.TetrisTriangles;
+import tetrisTriangles.game.Tetris;
 
 //import khaMath.Vector2;
 //import tetrisTriangles.target.BasicColors;
 @:enum
-    abstract GameColors( Int ) from Int to Int {
-        var Violet = 0x9400D3;
-        var Indigo = 0x4b0082;
-        var Blue   = 0x0000FF;
-        var Green  = 0x00ff00;
-        var Yellow = 0xFFFF00;
-        var Orange = 0xFF7F00;
-        var Red    = 0xFF0000;
-        var Black  = 0x000000;
-        var White  = 0xFFFFFF;
-        var LightGrey = 0x444444;
-        var MidGrey = 0x333333;
-        var DarkGrey = 0x0c0c0c;
-        var NearlyBlack = 0x111111;
+abstract GameColors( Int ) to Int from Int {
+    var Violet      = 0x9400D3;
+    var Indigo      = 0x4b0082;
+    var Blue        = 0x0000FF;
+    var Green       = 0x00ff00;
+    var Yellow      = 0xFFFF00;
+    var Orange      = 0xFF7F00;
+    var Red         = 0xFF0000;
+    var Black       = 0x000000;
+    var LightGrey   = 0x444444;
+    var MidGrey     = 0x333333;
+    var DarkGrey    = 0x0c0c0c;
+    var NearlyBlack = 0x111111;
+    var White       = 0xFFFFFF;
+    var BlueAlpha   = 0x0000FF;
+    var GreenAlpha  = 0x00FF00;
+    var RedAlpha    = 0xFF0000;
 }
 class TetrisTrianglesLuxe extends luxe.Game {
-    var tetrisTriangles: TetrisTriangles;
-    var gameColors: Array<GameColors> = [ Black, Red, Orange, Yellow, Green, Blue, Indigo, Violet, LightGrey, MidGrey, DarkGrey, NearlyBlack ];
+    var tetris: Tetris;
+    var gameColors:         Array<GameColors> = [ Black, Red, Orange, Yellow, Green, Blue, Indigo, Violet
+                                                , LightGrey, MidGrey, DarkGrey, NearlyBlack, White
+                                                , BlueAlpha, GreenAlpha, RedAlpha ]; 
     var shape: Geometry;
-    
+    var leftDown:           Bool = false;
+    var rightDown:          Bool = false;
+    var downDown:           Bool = false;
+    var upDown:             Bool = false;
     override function ready() {
-        tetrisTriangles = new TetrisTriangles();
+        tetris = new Tetris();
     }
     inline function renderToTriangles(){
         if( shape != null ) shape.drop();
@@ -50,14 +58,15 @@ class TetrisTrianglesLuxe extends luxe.Game {
         var tri: Triangle;
         var color: Color;
         var triangles = Triangle.triangles;
-        var s = 300;
-        var o = 200;
+        var s = 320;
+        var ox = 400;
+        var oy = -10;
         for( i in 0...triangles.length ){
             tri = triangles[ i ];
             color =  new Color().rgb( cast gameColors[ tri.colorID ] );
-            shape.add( new Vertex( new Vector( o + tri.ax * s, o + tri.ay * s ), color ) );
-            shape.add( new Vertex( new Vector( o + tri.bx * s, o + tri.by * s ), color ) );
-            shape.add( new Vertex( new Vector( o + tri.cx * s, o + tri.cy * s ), color ) );
+            shape.add( new Vertex( new Vector( ox + tri.ax * s, oy + tri.ay * s ), color ) );
+            shape.add( new Vertex( new Vector( ox + tri.bx * s, oy + tri.by * s ), color ) );
+            shape.add( new Vertex( new Vector( ox + tri.cx * s, oy + tri.cy * s ), color ) );
         }
     }
     override function onmousemove( event:MouseEvent ) {
@@ -67,9 +76,56 @@ class TetrisTrianglesLuxe extends luxe.Game {
         if(e.keycode == Key.escape) {
             Luxe.shutdown();
         }
+        var keyCode = e.keycode;
+        switch(keyCode){
+            case Key.left:  
+                leftDown    = false;
+            case Key.right: 
+                rightDown   = false;
+            case Key.up:    
+                upDown      = false;
+            case Key.down:  
+                downDown    = false;
+            default: 
+                
+        }
     }
+    override function onkeydown( e:KeyEvent ) {
+        var keyCode = e.keycode;
+        switch(keyCode){
+            case Key.left:  
+                leftDown    = true;
+            case Key.right: 
+                rightDown   = true;
+            case Key.up:    
+                upDown      = true;
+            case Key.down:  
+                downDown    = true;
+            default: 
+                
+        }
+    }
+    inline
+    function updateMovement(): Void {
+        if( upDown ){
+            tetris.rotate( 1 );
+        } else if( downDown ){
+            tetris.move(  0, 1 );
+        }
+        if( leftDown ) {
+            tetris.move( -1, 0 );
+        } else if( rightDown ) {
+            tetris.move(  1, 0 );
+        }
+        leftDown    = false;
+        rightDown   = false;
+        downDown    = false;
+        upDown      = false;
+    }
+    
     override function update( delta:Float ) {
-        tetrisTriangles.update();
+        updateMovement();
+        tetris.update();
         renderToTriangles();
     }
     override function config( config:luxe.GameConfig ) {

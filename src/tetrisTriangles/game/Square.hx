@@ -183,21 +183,4 @@ class Square {
         var d0 = dx * dx + dy * dy;
         return d0 < diaSq;
     }
-
-    /*
-    // using centre is perhaps not ideal could be optimized.
-    public function getCentre():{x:Float,y:Float}{
-        return { x: centreX, y: centreY };
-    }
-    public var centreX( get, never ): Float;
-    public function get_centreX(): Float{
-        var x_ = x;
-        return x_ + (right - x_)/2;
-    }
-    public var centreY( get, never ):Float;
-    public function get_centreY():Float{
-        var y_ = y;
-        return y_ + (bottom - y_)/2;
-    }
-    */
 }

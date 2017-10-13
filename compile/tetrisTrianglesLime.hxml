@@ -1,1 +1,4 @@
--cmd lime test project.xml html5 --port=3011
+-cmd lsof -ti:3000 | xargs kill
+#--next
+-cmd lime test project.xml html5 
+#--port=3011

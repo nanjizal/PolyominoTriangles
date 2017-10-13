@@ -7,6 +7,30 @@ function $extend(from, fields) {
 	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
 	return proto;
 }
+var EReg = function(r,opt) {
+	this.r = new RegExp(r,opt.split("u").join(""));
+};
+$hxClasses["EReg"] = EReg;
+EReg.__name__ = ["EReg"];
+EReg.prototype = {
+	r: null
+	,match: function(s) {
+		if(this.r.global) {
+			this.r.lastIndex = 0;
+		}
+		this.r.m = this.r.exec(s);
+		this.r.s = s;
+		return this.r.m != null;
+	}
+	,matched: function(n) {
+		if(this.r.m != null && n >= 0 && n < this.r.m.length) {
+			return this.r.m[n];
+		} else {
+			throw new js__$Boot_HaxeError("EReg::matched");
+		}
+	}
+	,__class__: EReg
+};
 var HxOverrides = function() { };
 $hxClasses["HxOverrides"] = HxOverrides;
 HxOverrides.__name__ = ["HxOverrides"];
@@ -93,7 +117,10 @@ var List = function() {
 $hxClasses["List"] = List;
 List.__name__ = ["List"];
 List.prototype = {
-	add: function(item) {
+	h: null
+	,q: null
+	,length: null
+	,add: function(item) {
 		var x = new _$List_ListNode(item,null);
 		if(this.h == null) {
 			this.h = x;
@@ -144,7 +171,9 @@ var _$List_ListNode = function(item,next) {
 $hxClasses["_List.ListNode"] = _$List_ListNode;
 _$List_ListNode.__name__ = ["_List","ListNode"];
 _$List_ListNode.prototype = {
-	__class__: _$List_ListNode
+	item: null
+	,next: null
+	,__class__: _$List_ListNode
 };
 var _$List_ListIterator = function(head) {
 	this.head = head;
@@ -152,7 +181,8 @@ var _$List_ListIterator = function(head) {
 $hxClasses["_List.ListIterator"] = _$List_ListIterator;
 _$List_ListIterator.__name__ = ["_List","ListIterator"];
 _$List_ListIterator.prototype = {
-	hasNext: function() {
+	head: null
+	,hasNext: function() {
 		return this.head != null;
 	}
 	,next: function() {
@@ -170,6 +200,7 @@ Reflect.field = function(o,field) {
 	try {
 		return o[field];
 	} catch( e ) {
+		haxe_CallStack.lastException = e;
 		return null;
 	}
 };
@@ -257,11 +288,20 @@ var StringBuf = function() {
 $hxClasses["StringBuf"] = StringBuf;
 StringBuf.__name__ = ["StringBuf"];
 StringBuf.prototype = {
-	__class__: StringBuf
+	b: null
+	,__class__: StringBuf
 };
 var StringTools = function() { };
 $hxClasses["StringTools"] = StringTools;
 StringTools.__name__ = ["StringTools"];
+StringTools.htmlEscape = function(s,quotes) {
+	s = s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
+	if(quotes) {
+		return s.split("\"").join("&quot;").split("'").join("&#039;");
+	} else {
+		return s;
+	}
+};
 StringTools.startsWith = function(s,start) {
 	if(s.length >= start.length) {
 		return HxOverrides.substr(s,0,start.length) == start;
@@ -368,6 +408,13 @@ Type.createEnumIndex = function(e,index,params) {
 	}
 	return Type.createEnum(e,c,params);
 };
+Type.getInstanceFields = function(c) {
+	var a = [];
+	for(var i in c.prototype) a.push(i);
+	HxOverrides.remove(a,"__class__");
+	HxOverrides.remove(a,"__properties__");
+	return a;
+};
 Type.enumEq = function(a,b) {
 	if(a == b) {
 		return true;
@@ -389,6 +436,7 @@ Type.enumEq = function(a,b) {
 			return false;
 		}
 	} catch( e1 ) {
+		haxe_CallStack.lastException = e1;
 		return false;
 	}
 	return true;
@@ -455,7 +503,13 @@ Xml.createDocument = function() {
 	return new Xml(Xml.Document);
 };
 Xml.prototype = {
-	get: function(att) {
+	nodeType: null
+	,nodeName: null
+	,nodeValue: null
+	,parent: null
+	,children: null
+	,attributeMap: null
+	,get: function(att) {
 		if(this.nodeType != Xml.Element) {
 			throw new js__$Boot_HaxeError("Bad node type, expected Element but found " + this.nodeType);
 		}
@@ -615,7 +669,8 @@ var format_gif_Reader = function(i) {
 $hxClasses["format.gif.Reader"] = format_gif_Reader;
 format_gif_Reader.__name__ = ["format","gif","Reader"];
 format_gif_Reader.prototype = {
-	read: function() {
+	i: null
+	,read: function() {
 		var _g = 0;
 		var _g1 = [71,73,70];
 		while(_g < _g1.length) {
@@ -1714,7 +1769,16 @@ var format_mp3_Reader = function(i) {
 $hxClasses["format.mp3.Reader"] = format_mp3_Reader;
 format_mp3_Reader.__name__ = ["format","mp3","Reader"];
 format_mp3_Reader.prototype = {
-	skipID3v2: function() {
+	i: null
+	,bits: null
+	,version: null
+	,samples: null
+	,sampleSize: null
+	,any_read: null
+	,id3v2_data: null
+	,id3v2_version: null
+	,id3v2_flags: null
+	,skipID3v2: function() {
 		this.id3v2_version = this.i.readUInt16();
 		this.id3v2_flags = this.i.readByte();
 		var size = this.i.readByte() & 127;
@@ -1749,6 +1813,7 @@ format_mp3_Reader.prototype = {
 				}
 			}
 		} catch( ex ) {
+			haxe_CallStack.lastException = ex;
 			if (ex instanceof js__$Boot_HaxeError) ex = ex.val;
 			if( js_Boot.__instanceof(ex,haxe_io_Eof) ) {
 				return format_mp3_FrameType.FT_NONE;
@@ -1813,6 +1878,7 @@ format_mp3_Reader.prototype = {
 			this.sampleSize += data.length;
 			return { header : header, data : data};
 		} catch( e ) {
+			haxe_CallStack.lastException = e;
 			if (e instanceof js__$Boot_HaxeError) e = e.val;
 			if( js_Boot.__instanceof(e,haxe_io_Eof) ) {
 				return null;
@@ -1886,7 +1952,9 @@ var format_png_Reader = function(i) {
 $hxClasses["format.png.Reader"] = format_png_Reader;
 format_png_Reader.__name__ = ["format","png","Reader"];
 format_png_Reader.prototype = {
-	read: function() {
+	i: null
+	,checkCRC: null
+	,read: function() {
 		var _g = 0;
 		var _g1 = [137,80,78,71,13,10,26,10];
 		while(_g < _g1.length) {
@@ -3004,7 +3072,8 @@ var format_png_Writer = function(o) {
 $hxClasses["format.png.Writer"] = format_png_Writer;
 format_png_Writer.__name__ = ["format","png","Writer"];
 format_png_Writer.prototype = {
-	write: function(png) {
+	o: null
+	,write: function(png) {
 		var _g = 0;
 		var _g1 = [137,80,78,71,13,10,26,10];
 		while(_g < _g1.length) {
@@ -3086,7 +3155,10 @@ var format_tools_BitsInput = function(i) {
 $hxClasses["format.tools.BitsInput"] = format_tools_BitsInput;
 format_tools_BitsInput.__name__ = ["format","tools","BitsInput"];
 format_tools_BitsInput.prototype = {
-	readBits: function(n) {
+	i: null
+	,nbits: null
+	,bits: null
+	,readBits: function(n) {
 		if(this.nbits >= n) {
 			var c = this.nbits - n;
 			this.nbits = c;
@@ -3148,7 +3220,9 @@ var format_wav_Reader = function(i) {
 $hxClasses["format.wav.Reader"] = format_wav_Reader;
 format_wav_Reader.__name__ = ["format","wav","Reader"];
 format_wav_Reader.prototype = {
-	readInt: function() {
+	i: null
+	,version: null
+	,readInt: function() {
 		return this.i.readInt32();
 	}
 	,read: function() {
@@ -3241,7 +3315,28 @@ var h2d_Sprite = function(parent) {
 $hxClasses["h2d.Sprite"] = h2d_Sprite;
 h2d_Sprite.__name__ = ["h2d","Sprite"];
 h2d_Sprite.prototype = {
-	getBounds: function(relativeTo,out) {
+	children: null
+	,parentContainer: null
+	,parent: null
+	,x: null
+	,y: null
+	,scaleX: null
+	,scaleY: null
+	,rotation: null
+	,visible: null
+	,name: null
+	,alpha: null
+	,filter: null
+	,matA: null
+	,matB: null
+	,matC: null
+	,matD: null
+	,absX: null
+	,absY: null
+	,posChanged: null
+	,allocated: null
+	,lastFrame: null
+	,getBounds: function(relativeTo,out) {
 		if(out == null) {
 			out = new h2d_col_Bounds();
 		} else {
@@ -4275,7 +4370,13 @@ $hxClasses["h2d.Drawable"] = h2d_Drawable;
 h2d_Drawable.__name__ = ["h2d","Drawable"];
 h2d_Drawable.__super__ = h2d_Sprite;
 h2d_Drawable.prototype = $extend(h2d_Sprite.prototype,{
-	set_tileWrap: function(b) {
+	color: null
+	,blendMode: null
+	,smooth: null
+	,tileWrap: null
+	,colorKey: null
+	,shaders: null
+	,set_tileWrap: function(b) {
 		return this.tileWrap = b;
 	}
 	,get_colorAdd: function() {
@@ -4441,7 +4542,8 @@ $hxClasses["h2d.Bitmap"] = h2d_Bitmap;
 h2d_Bitmap.__name__ = ["h2d","Bitmap"];
 h2d_Bitmap.__super__ = h2d_Drawable;
 h2d_Bitmap.prototype = $extend(h2d_Drawable.prototype,{
-	set_tileWrap: function(b) {
+	tile: null
+	,set_tileWrap: function(b) {
 		if(b && this.tile != null && (this.tile.innerTex.flags & 16) != 0) {
 			throw new js__$Boot_HaxeError("Cannot set tileWrap on a non power-of-two texture");
 		}
@@ -4514,7 +4616,23 @@ var h2d_FlowProperties = function(elt) {
 $hxClasses["h2d.FlowProperties"] = h2d_FlowProperties;
 h2d_FlowProperties.__name__ = ["h2d","FlowProperties"];
 h2d_FlowProperties.prototype = {
-	align: function(vertical,horizontal) {
+	elt: null
+	,paddingLeft: null
+	,paddingTop: null
+	,paddingRight: null
+	,paddingBottom: null
+	,isAbsolute: null
+	,horizontalAlign: null
+	,verticalAlign: null
+	,offsetX: null
+	,offsetY: null
+	,minWidth: null
+	,minHeight: null
+	,calculatedWidth: null
+	,calculatedHeight: null
+	,isBreak: null
+	,constraint: null
+	,align: function(vertical,horizontal) {
 		this.verticalAlign = vertical;
 		this.horizontalAlign = horizontal;
 	}
@@ -4551,7 +4669,11 @@ h2d_col_Bounds.fromPoints = function(min,max) {
 	return b;
 };
 h2d_col_Bounds.prototype = {
-	toIBounds: function(scale) {
+	xMin: null
+	,yMin: null
+	,xMax: null
+	,yMax: null
+	,toIBounds: function(scale) {
 		if(scale == null) {
 			scale = 1.;
 		}
@@ -4892,7 +5014,41 @@ $hxClasses["h2d.Flow"] = h2d_Flow;
 h2d_Flow.__name__ = ["h2d","Flow"];
 h2d_Flow.__super__ = h2d_Sprite;
 h2d_Flow.prototype = $extend(h2d_Sprite.prototype,{
-	getProperties: function(e) {
+	needReflow: null
+	,horizontalAlign: null
+	,verticalAlign: null
+	,minWidth: null
+	,minHeight: null
+	,maxWidth: null
+	,maxHeight: null
+	,lineHeight: null
+	,colWidth: null
+	,overflow: null
+	,paddingLeft: null
+	,paddingRight: null
+	,paddingTop: null
+	,paddingBottom: null
+	,horizontalSpacing: null
+	,verticalSpacing: null
+	,enableInteractive: null
+	,interactive: null
+	,backgroundTile: null
+	,borderWidth: null
+	,borderHeight: null
+	,isVertical: null
+	,isInline: null
+	,debug: null
+	,multiline: null
+	,background: null
+	,debugGraphics: null
+	,properties: null
+	,calculatedWidth: null
+	,calculatedHeight: null
+	,constraintWidth: null
+	,constraintHeight: null
+	,realMaxWidth: null
+	,realMaxHeight: null
+	,getProperties: function(e) {
 		this.set_needReflow(true);
 		return this.properties[this.getChildIndex(e)];
 	}
@@ -5719,7 +5875,10 @@ var h2d_Kerning = function(c,o) {
 $hxClasses["h2d.Kerning"] = h2d_Kerning;
 h2d_Kerning.__name__ = ["h2d","Kerning"];
 h2d_Kerning.prototype = {
-	__class__: h2d_Kerning
+	prevChar: null
+	,offset: null
+	,next: null
+	,__class__: h2d_Kerning
 };
 var h2d_FontChar = function(t,w) {
 	this.t = t;
@@ -5728,7 +5887,10 @@ var h2d_FontChar = function(t,w) {
 $hxClasses["h2d.FontChar"] = h2d_FontChar;
 h2d_FontChar.__name__ = ["h2d","FontChar"];
 h2d_FontChar.prototype = {
-	addKerning: function(prevChar,offset) {
+	t: null
+	,width: null
+	,kerning: null
+	,addKerning: function(prevChar,offset) {
 		var k = new h2d_Kerning(prevChar,offset);
 		k.next = this.kerning;
 		this.kerning = k;
@@ -5760,7 +5922,15 @@ var h2d_Font = function(name,size) {
 $hxClasses["h2d.Font"] = h2d_Font;
 h2d_Font.__name__ = ["h2d","Font"];
 h2d_Font.prototype = {
-	getChar: function(code) {
+	name: null
+	,size: null
+	,baseLine: null
+	,lineHeight: null
+	,tile: null
+	,charset: null
+	,glyphs: null
+	,defaultChar: null
+	,getChar: function(code) {
 		var c = this.glyphs.h[code];
 		if(c == null) {
 			c = this.charset.resolveChar(code,this.glyphs);
@@ -5822,7 +5992,13 @@ var h2d__$Graphics_GPoint = function(x,y,r,g,b,a) {
 $hxClasses["h2d._Graphics.GPoint"] = h2d__$Graphics_GPoint;
 h2d__$Graphics_GPoint.__name__ = ["h2d","_Graphics","GPoint"];
 h2d__$Graphics_GPoint.prototype = {
-	__class__: h2d__$Graphics_GPoint
+	x: null
+	,y: null
+	,r: null
+	,g: null
+	,b: null
+	,a: null
+	,__class__: h2d__$Graphics_GPoint
 };
 var h3d_impl__$Serializable_EmptyInterface = function() { };
 $hxClasses["h3d.impl._Serializable.EmptyInterface"] = h3d_impl__$Serializable_EmptyInterface;
@@ -5832,7 +6008,9 @@ $hxClasses["h3d.prim.Primitive"] = h3d_prim_Primitive;
 h3d_prim_Primitive.__name__ = ["h3d","prim","Primitive"];
 h3d_prim_Primitive.__interfaces__ = [h3d_impl__$Serializable_EmptyInterface];
 h3d_prim_Primitive.prototype = {
-	triCount: function() {
+	buffer: null
+	,indexes: null
+	,triCount: function() {
 		if(this.indexes != null) {
 			return this.indexes.count / 3 | 0;
 		} else if(this.buffer == null) {
@@ -5894,7 +6072,10 @@ $hxClasses["h2d._Graphics.GraphicsContent"] = h2d__$Graphics_GraphicsContent;
 h2d__$Graphics_GraphicsContent.__name__ = ["h2d","_Graphics","GraphicsContent"];
 h2d__$Graphics_GraphicsContent.__super__ = h3d_prim_Primitive;
 h2d__$Graphics_GraphicsContent.prototype = $extend(h3d_prim_Primitive.prototype,{
-	addIndex: function(i) {
+	tmp: null
+	,index: null
+	,buffers: null
+	,addIndex: function(i) {
 		this.index.push(i);
 	}
 	,add: function(x,y,u,v,r,g,b,a) {
@@ -6079,7 +6260,32 @@ $hxClasses["h2d.Graphics"] = h2d_Graphics;
 h2d_Graphics.__name__ = ["h2d","Graphics"];
 h2d_Graphics.__super__ = h2d_Drawable;
 h2d_Graphics.prototype = $extend(h2d_Drawable.prototype,{
-	onRemove: function() {
+	content: null
+	,tmpPoints: null
+	,pindex: null
+	,curR: null
+	,curG: null
+	,curB: null
+	,curA: null
+	,lineSize: null
+	,lineR: null
+	,lineG: null
+	,lineB: null
+	,lineA: null
+	,doFill: null
+	,xMin: null
+	,yMin: null
+	,xMax: null
+	,yMax: null
+	,ma: null
+	,mb: null
+	,mc: null
+	,md: null
+	,mx: null
+	,my: null
+	,tile: null
+	,bevel: null
+	,onRemove: function() {
 		h2d_Drawable.prototype.onRemove.call(this);
 		this.clear();
 	}
@@ -7313,7 +7519,9 @@ var hxd_Interactive = function() { };
 $hxClasses["hxd.Interactive"] = hxd_Interactive;
 hxd_Interactive.__name__ = ["hxd","Interactive"];
 hxd_Interactive.prototype = {
-	__class__: hxd_Interactive
+	handleEvent: null
+	,getInteractiveScene: null
+	,__class__: hxd_Interactive
 };
 var h2d_Interactive = function(width,height,parent) {
 	this.mouseDownButton = -1;
@@ -7329,7 +7537,18 @@ h2d_Interactive.__name__ = ["h2d","Interactive"];
 h2d_Interactive.__interfaces__ = [hxd_Interactive];
 h2d_Interactive.__super__ = h2d_Drawable;
 h2d_Interactive.prototype = $extend(h2d_Drawable.prototype,{
-	onAdd: function() {
+	width: null
+	,height: null
+	,cursor: null
+	,isEllipse: null
+	,cancelEvents: null
+	,propagateEvents: null
+	,backgroundColor: null
+	,enableRightButton: null
+	,scene: null
+	,mouseDownButton: null
+	,parentMask: null
+	,onAdd: function() {
 		this.scene = this.getScene();
 		if(this.scene != null) {
 			this.scene.addEventTarget(this);
@@ -7581,7 +7800,9 @@ $hxClasses["h2d.Layers"] = h2d_Layers;
 h2d_Layers.__name__ = ["h2d","Layers"];
 h2d_Layers.__super__ = h2d_Sprite;
 h2d_Layers.prototype = $extend(h2d_Sprite.prototype,{
-	addChild: function(s) {
+	layersIndexes: null
+	,layerCount: null
+	,addChild: function(s) {
 		this.addChildAt(s,0);
 	}
 	,add: function(s,layer) {
@@ -7725,7 +7946,10 @@ $hxClasses["h2d.Mask"] = h2d_Mask;
 h2d_Mask.__name__ = ["h2d","Mask"];
 h2d_Mask.__super__ = h2d_Sprite;
 h2d_Mask.prototype = $extend(h2d_Sprite.prototype,{
-	onParentChanged: function() {
+	width: null
+	,height: null
+	,parentMask: null
+	,onParentChanged: function() {
 		h2d_Sprite.prototype.onParentChanged.call(this);
 		this.updateMask();
 	}
@@ -7800,7 +8024,11 @@ var h3d_impl_RenderContext = function() {
 $hxClasses["h3d.impl.RenderContext"] = h3d_impl_RenderContext;
 h3d_impl_RenderContext.__name__ = ["h3d","impl","RenderContext"];
 h3d_impl_RenderContext.prototype = {
-	__class__: h3d_impl_RenderContext
+	engine: null
+	,time: null
+	,elapsedTime: null
+	,frame: null
+	,__class__: h3d_impl_RenderContext
 };
 var h2d_RenderContext = function(scene) {
 	this.tmpBounds = new h2d_col_Bounds();
@@ -7825,7 +8053,43 @@ $hxClasses["h2d.RenderContext"] = h2d_RenderContext;
 h2d_RenderContext.__name__ = ["h2d","RenderContext"];
 h2d_RenderContext.__super__ = h3d_impl_RenderContext;
 h2d_RenderContext.prototype = $extend(h3d_impl_RenderContext.prototype,{
-	dispose: function() {
+	globalAlpha: null
+	,buffer: null
+	,bufPos: null
+	,textures: null
+	,scene: null
+	,defaultSmooth: null
+	,killAlpha: null
+	,front2back: null
+	,onBeginDraw: null
+	,onEnterFilter: null
+	,onLeaveFilter: null
+	,tmpBounds: null
+	,texture: null
+	,baseShader: null
+	,manager: null
+	,compiledShader: null
+	,buffers: null
+	,fixedBuffer: null
+	,pass: null
+	,currentShaders: null
+	,baseShaderList: null
+	,currentObj: null
+	,stride: null
+	,targetsStack: null
+	,hasUVPos: null
+	,filterStack: null
+	,inFilter: null
+	,curX: null
+	,curY: null
+	,curWidth: null
+	,curHeight: null
+	,hasRenderZone: null
+	,renderX: null
+	,renderY: null
+	,renderW: null
+	,renderH: null
+	,dispose: function() {
 		this.textures.dispose();
 		if(this.fixedBuffer != null) {
 			this.fixedBuffer.dispose();
@@ -8340,7 +8604,12 @@ $hxClasses["h2d.TileGroup"] = h2d_TileGroup;
 h2d_TileGroup.__name__ = ["h2d","TileGroup"];
 h2d_TileGroup.__super__ = h2d_Drawable;
 h2d_TileGroup.prototype = $extend(h2d_Drawable.prototype,{
-	getBoundsRec: function(relativeTo,out,forSize) {
+	content: null
+	,curColor: null
+	,tile: null
+	,rangeMin: null
+	,rangeMax: null
+	,getBoundsRec: function(relativeTo,out,forSize) {
 		h2d_Drawable.prototype.getBoundsRec.call(this,relativeTo,out,forSize);
 		this.addBounds(relativeTo,out,this.content.xMin,this.content.yMin,this.content.xMax - this.content.xMin,this.content.yMax - this.content.yMin);
 	}
@@ -8412,7 +8681,12 @@ $hxClasses["h2d.ScaleGrid"] = h2d_ScaleGrid;
 h2d_ScaleGrid.__name__ = ["h2d","ScaleGrid"];
 h2d_ScaleGrid.__super__ = h2d_TileGroup;
 h2d_ScaleGrid.prototype = $extend(h2d_TileGroup.prototype,{
-	set_tileBorders: function(b) {
+	borderWidth: null
+	,borderHeight: null
+	,width: null
+	,height: null
+	,tileBorders: null
+	,set_tileBorders: function(b) {
 		this.tileBorders = b;
 		this.clear();
 		return b;
@@ -8559,13 +8833,19 @@ var hxd_InteractiveScene = function() { };
 $hxClasses["hxd.InteractiveScene"] = hxd_InteractiveScene;
 hxd_InteractiveScene.__name__ = ["hxd","InteractiveScene"];
 hxd_InteractiveScene.prototype = {
-	__class__: hxd_InteractiveScene
+	setEvents: null
+	,handleEvent: null
+	,dispatchEvent: null
+	,dispatchListeners: null
+	,isInteractiveVisible: null
+	,__class__: hxd_InteractiveScene
 };
 var h3d_IDrawable = function() { };
 $hxClasses["h3d.IDrawable"] = h3d_IDrawable;
 h3d_IDrawable.__name__ = ["h3d","IDrawable"];
 h3d_IDrawable.prototype = {
-	__class__: h3d_IDrawable
+	render: null
+	,__class__: h3d_IDrawable
 };
 var h2d_Scene = function() {
 	h2d_Layers.call(this,null);
@@ -8583,7 +8863,17 @@ h2d_Scene.__name__ = ["h2d","Scene"];
 h2d_Scene.__interfaces__ = [hxd_InteractiveScene,h3d_IDrawable];
 h2d_Scene.__super__ = h2d_Layers;
 h2d_Scene.prototype = $extend(h2d_Layers.prototype,{
-	get_defaultSmooth: function() {
+	width: null
+	,height: null
+	,mouseX: null
+	,mouseY: null
+	,fixedSize: null
+	,interactive: null
+	,eventListeners: null
+	,ctx: null
+	,stage: null
+	,events: null
+	,get_defaultSmooth: function() {
 		return this.ctx.defaultSmooth;
 	}
 	,set_defaultSmooth: function(v) {
@@ -9099,7 +9389,18 @@ h2d_Tile.isEmpty = function(b,px,py,width,height,bg) {
 	}
 };
 h2d_Tile.prototype = {
-	getTexture: function() {
+	innerTex: null
+	,u: null
+	,v: null
+	,u2: null
+	,v2: null
+	,dx: null
+	,dy: null
+	,x: null
+	,y: null
+	,width: null
+	,height: null
+	,getTexture: function() {
 		return this.innerTex;
 	}
 	,isDisposed: function() {
@@ -9288,7 +9589,12 @@ $hxClasses["h2d._TileGroup.TileLayerContent"] = h2d__$TileGroup_TileLayerContent
 h2d__$TileGroup_TileLayerContent.__name__ = ["h2d","_TileGroup","TileLayerContent"];
 h2d__$TileGroup_TileLayerContent.__super__ = h3d_prim_Primitive;
 h2d__$TileGroup_TileLayerContent.prototype = $extend(h3d_prim_Primitive.prototype,{
-	clear: function() {
+	tmp: null
+	,xMin: null
+	,yMin: null
+	,xMax: null
+	,yMax: null
+	,clear: function() {
 		this.tmp = hxd__$FloatBuffer_Float32Expand_$Impl_$._new(0);
 		if(this.buffer != null) {
 			this.buffer.dispose();
@@ -11225,7 +11531,11 @@ h2d_col_IBounds.fromPoints = function(min,max) {
 	return b;
 };
 h2d_col_IBounds.prototype = {
-	toBounds: function(scale) {
+	xMin: null
+	,yMin: null
+	,xMax: null
+	,yMax: null
+	,toBounds: function(scale) {
 		if(scale == null) {
 			scale = 1.;
 		}
@@ -11469,7 +11779,9 @@ var h2d_col_IPoint = function(x,y) {
 $hxClasses["h2d.col.IPoint"] = h2d_col_IPoint;
 h2d_col_IPoint.__name__ = ["h2d","col","IPoint"];
 h2d_col_IPoint.prototype = {
-	toPoint: function(scale) {
+	x: null
+	,y: null
+	,toPoint: function(scale) {
 		if(scale == null) {
 			scale = 1.;
 		}
@@ -11523,7 +11835,13 @@ var h2d_col_Matrix = function() {
 $hxClasses["h2d.col.Matrix"] = h2d_col_Matrix;
 h2d_col_Matrix.__name__ = ["h2d","col","Matrix"];
 h2d_col_Matrix.prototype = {
-	identity: function() {
+	a: null
+	,b: null
+	,c: null
+	,d: null
+	,x: null
+	,y: null
+	,identity: function() {
 		this.a = 1;
 		this.b = 0;
 		this.c = 0;
@@ -11607,7 +11925,9 @@ var h2d_col_Point = function(x,y) {
 $hxClasses["h2d.col.Point"] = h2d_col_Point;
 h2d_col_Point.__name__ = ["h2d","col","Point"];
 h2d_col_Point.prototype = {
-	toIPoint: function(scale) {
+	x: null
+	,y: null
+	,toIPoint: function(scale) {
 		if(scale == null) {
 			scale = 1.;
 		}
@@ -11685,7 +12005,10 @@ var h2d_filter_Filter = function() {
 $hxClasses["h2d.filter.Filter"] = h2d_filter_Filter;
 h2d_filter_Filter.__name__ = ["h2d","filter","Filter"];
 h2d_filter_Filter.prototype = {
-	sync: function(ctx,s) {
+	autoBounds: null
+	,boundsExtend: null
+	,smooth: null
+	,sync: function(ctx,s) {
 	}
 	,bind: function(s) {
 	}
@@ -11753,7 +12076,13 @@ h3d_Buffer.ofSubFloats = function(v,stride,vertices,flags,allocPos) {
 	return b;
 };
 h3d_Buffer.prototype = {
-	isDisposed: function() {
+	id: null
+	,buffer: null
+	,position: null
+	,vertices: null
+	,next: null
+	,flags: null
+	,isDisposed: function() {
 		if(this.buffer != null) {
 			return this.buffer.vbuf == null;
 		} else {
@@ -11843,7 +12172,11 @@ var h3d_BufferOffset = function(buffer,offset) {
 $hxClasses["h3d.BufferOffset"] = h3d_BufferOffset;
 h3d_BufferOffset.__name__ = ["h3d","BufferOffset"];
 h3d_BufferOffset.prototype = {
-	dispose: function() {
+	id: null
+	,buffer: null
+	,offset: null
+	,next: null
+	,dispose: function() {
 		if(this.buffer != null) {
 			this.buffer.dispose();
 			this.buffer = null;
@@ -11890,7 +12223,26 @@ var h3d_Camera = function(fovY,zoom,screenRatio,zNear,zFar,rightHanded) {
 $hxClasses["h3d.Camera"] = h3d_Camera;
 h3d_Camera.__name__ = ["h3d","Camera"];
 h3d_Camera.prototype = {
-	setFovX: function(fovX,withRatio) {
+	zoom: null
+	,screenRatio: null
+	,fovY: null
+	,zNear: null
+	,zFar: null
+	,orthoBounds: null
+	,rightHanded: null
+	,mproj: null
+	,mcam: null
+	,m: null
+	,pos: null
+	,up: null
+	,target: null
+	,viewX: null
+	,viewY: null
+	,follow: null
+	,minv: null
+	,miview: null
+	,needInv: null
+	,setFovX: function(fovX,withRatio) {
 		var degToRad = Math.PI / 180;
 		this.fovY = 2 * Math.atan(Math.tan(fovX * 0.5 * degToRad) / withRatio) / degToRad;
 	}
@@ -12175,7 +12527,9 @@ var h3d__$Engine_TargetTmp = function(t,n) {
 $hxClasses["h3d._Engine.TargetTmp"] = h3d__$Engine_TargetTmp;
 h3d__$Engine_TargetTmp.__name__ = ["h3d","_Engine","TargetTmp"];
 h3d__$Engine_TargetTmp.prototype = {
-	__class__: h3d__$Engine_TargetTmp
+	t: null
+	,next: null
+	,__class__: h3d__$Engine_TargetTmp
 };
 var h3d_Engine = function(hardware,aa) {
 	if(aa == null) {
@@ -12206,7 +12560,32 @@ h3d_Engine.getCurrent = function() {
 	return h3d_Engine.CURRENT;
 };
 h3d_Engine.prototype = {
-	setDriver: function(d) {
+	driver: null
+	,mem: null
+	,hardware: null
+	,width: null
+	,height: null
+	,debug: null
+	,drawTriangles: null
+	,drawCalls: null
+	,shaderSwitches: null
+	,backgroundColor: null
+	,autoResize: null
+	,fullScreen: null
+	,frameCount: null
+	,realFps: null
+	,lastTime: null
+	,antiAlias: null
+	,tmpVector: null
+	,stage: null
+	,targetTmp: null
+	,targetStack: null
+	,currentTarget: null
+	,needFlushTarget: null
+	,nullTexture: null
+	,textureColorCache: null
+	,resCache: null
+	,setDriver: function(d) {
 		this.driver = d;
 		if(this.mem != null) {
 			this.mem.driver = d;
@@ -12578,7 +12957,10 @@ h3d_Indexes.alloc = function(i,startPos,length) {
 	return idx;
 };
 h3d_Indexes.prototype = {
-	isDisposed: function() {
+	mem: null
+	,ibuf: null
+	,count: null
+	,isDisposed: function() {
 		return this.ibuf == null;
 	}
 	,upload: function(indexes,pos,count,bufferPos) {
@@ -12708,7 +13090,23 @@ h3d_Matrix.lookAtX = function(dir,up,m) {
 	return m;
 };
 h3d_Matrix.prototype = {
-	get_tx: function() {
+	_11: null
+	,_12: null
+	,_13: null
+	,_14: null
+	,_21: null
+	,_22: null
+	,_23: null
+	,_24: null
+	,_31: null
+	,_32: null
+	,_33: null
+	,_34: null
+	,_41: null
+	,_42: null
+	,_43: null
+	,_44: null
+	,get_tx: function() {
 		return this._41;
 	}
 	,get_ty: function() {
@@ -13632,7 +14030,11 @@ var h3d_Quat = function(x,y,z,w) {
 $hxClasses["h3d.Quat"] = h3d_Quat;
 h3d_Quat.__name__ = ["h3d","Quat"];
 h3d_Quat.prototype = {
-	set: function(x,y,z,w) {
+	x: null
+	,y: null
+	,z: null
+	,w: null
+	,set: function(x,y,z,w) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -13936,7 +14338,11 @@ h3d_Vector.fromColor = function(c,scale) {
 	return new h3d_Vector((c >> 16 & 255) * s,(c >> 8 & 255) * s,(c & 255) * s,(c >>> 24) * s);
 };
 h3d_Vector.prototype = {
-	distance: function(v) {
+	x: null
+	,y: null
+	,z: null
+	,w: null
+	,distance: function(v) {
 		var dx = v.x - this.x;
 		var dy = v.y - this.y;
 		var dz = v.z - this.z;
@@ -14172,7 +14578,11 @@ var h3d_anim_AnimatedObject = function(name) {
 $hxClasses["h3d.anim.AnimatedObject"] = h3d_anim_AnimatedObject;
 h3d_anim_AnimatedObject.__name__ = ["h3d","anim","AnimatedObject"];
 h3d_anim_AnimatedObject.prototype = {
-	clone: function() {
+	objectName: null
+	,targetObject: null
+	,targetSkin: null
+	,targetJoint: null
+	,clone: function() {
 		return new h3d_anim_AnimatedObject(this.objectName);
 	}
 	,__class__: h3d_anim_AnimatedObject
@@ -14191,7 +14601,21 @@ var h3d_anim_Animation = function(name,frameCount,sampling) {
 $hxClasses["h3d.anim.Animation"] = h3d_anim_Animation;
 h3d_anim_Animation.__name__ = ["h3d","anim","Animation"];
 h3d_anim_Animation.prototype = {
-	getDuration: function() {
+	name: null
+	,frameCount: null
+	,sampling: null
+	,frame: null
+	,speed: null
+	,onAnimEnd: null
+	,onEvent: null
+	,pause: null
+	,loop: null
+	,isInstance: null
+	,objects: null
+	,isSync: null
+	,events: null
+	,lastEvent: null
+	,getDuration: function() {
 		return this.frameCount / (this.sampling * this.speed);
 	}
 	,getIFrame: function() {
@@ -14398,7 +14822,17 @@ var h3d_anim_LinearFrame = function() {
 $hxClasses["h3d.anim.LinearFrame"] = h3d_anim_LinearFrame;
 h3d_anim_LinearFrame.__name__ = ["h3d","anim","LinearFrame"];
 h3d_anim_LinearFrame.prototype = {
-	toMatrix: function() {
+	tx: null
+	,ty: null
+	,tz: null
+	,qx: null
+	,qy: null
+	,qz: null
+	,qw: null
+	,sx: null
+	,sy: null
+	,sz: null
+	,toMatrix: function() {
 		var m = new h3d_Matrix();
 		new h3d_Quat(this.qx,this.qy,this.qz,this.qw).saveToMatrix(m);
 		m.prependScale(this.sx,this.sy,this.sz);
@@ -14414,7 +14848,16 @@ $hxClasses["h3d.anim.LinearObject"] = h3d_anim_LinearObject;
 h3d_anim_LinearObject.__name__ = ["h3d","anim","LinearObject"];
 h3d_anim_LinearObject.__super__ = h3d_anim_AnimatedObject;
 h3d_anim_LinearObject.prototype = $extend(h3d_anim_AnimatedObject.prototype,{
-	clone: function() {
+	hasRotation: null
+	,hasScale: null
+	,frames: null
+	,alphas: null
+	,uvs: null
+	,propName: null
+	,propValues: null
+	,matrix: null
+	,propCurrentValue: null
+	,clone: function() {
 		var o = new h3d_anim_LinearObject(this.objectName);
 		o.hasRotation = this.hasRotation;
 		o.hasScale = this.hasScale;
@@ -14435,7 +14878,8 @@ $hxClasses["h3d.anim.LinearAnimation"] = h3d_anim_LinearAnimation;
 h3d_anim_LinearAnimation.__name__ = ["h3d","anim","LinearAnimation"];
 h3d_anim_LinearAnimation.__super__ = h3d_anim_Animation;
 h3d_anim_LinearAnimation.prototype = $extend(h3d_anim_Animation.prototype,{
-	addCurve: function(objName,frames,hasRot,hasScale) {
+	syncFrame: null
+	,addCurve: function(objName,frames,hasRot,hasScale) {
 		var f = new h3d_anim_LinearObject(objName);
 		f.frames = frames;
 		f.hasRotation = hasRot;
@@ -14722,14 +15166,27 @@ var h3d_anim_Joint = function() {
 $hxClasses["h3d.anim.Joint"] = h3d_anim_Joint;
 h3d_anim_Joint.__name__ = ["h3d","anim","Joint"];
 h3d_anim_Joint.prototype = {
-	__class__: h3d_anim_Joint
+	index: null
+	,name: null
+	,bindIndex: null
+	,splitIndex: null
+	,defMat: null
+	,transPos: null
+	,parent: null
+	,subs: null
+	,retargetAnim: null
+	,__class__: h3d_anim_Joint
 };
 var h3d_anim__$Skin_Permut = function() {
 };
 $hxClasses["h3d.anim._Skin.Permut"] = h3d_anim__$Skin_Permut;
 h3d_anim__$Skin_Permut.__name__ = ["h3d","anim","_Skin","Permut"];
 h3d_anim__$Skin_Permut.prototype = {
-	__class__: h3d_anim__$Skin_Permut
+	joints: null
+	,triangles: null
+	,material: null
+	,indexedJoints: null
+	,__class__: h3d_anim__$Skin_Permut
 };
 var h3d_anim__$Skin_Influence = function(j,w) {
 	this.j = j;
@@ -14738,7 +15195,9 @@ var h3d_anim__$Skin_Influence = function(j,w) {
 $hxClasses["h3d.anim._Skin.Influence"] = h3d_anim__$Skin_Influence;
 h3d_anim__$Skin_Influence.__name__ = ["h3d","anim","_Skin","Influence"];
 h3d_anim__$Skin_Influence.prototype = {
-	__class__: h3d_anim__$Skin_Influence
+	j: null
+	,w: null
+	,__class__: h3d_anim__$Skin_Influence
 };
 var h3d_anim_Skin = function(name,vertexCount,bonesPerVertex) {
 	this.name = name;
@@ -14753,7 +15212,20 @@ var h3d_anim_Skin = function(name,vertexCount,bonesPerVertex) {
 $hxClasses["h3d.anim.Skin"] = h3d_anim_Skin;
 h3d_anim_Skin.__name__ = ["h3d","anim","Skin"];
 h3d_anim_Skin.prototype = {
-	setJoints: function(joints,roots) {
+	name: null
+	,vertexCount: null
+	,bonesPerVertex: null
+	,vertexJoints: null
+	,vertexWeights: null
+	,rootJoints: null
+	,namedJoints: null
+	,allJoints: null
+	,boundJoints: null
+	,primitive: null
+	,splitJoints: null
+	,triangleGroups: null
+	,envelop: null
+	,setJoints: function(joints,roots) {
 		this.rootJoints = roots;
 		this.allJoints = joints;
 		this.namedJoints = new haxe_ds_StringMap();
@@ -15128,7 +15600,10 @@ $hxClasses["h3d.col.Collider"] = h3d_col_Collider;
 h3d_col_Collider.__name__ = ["h3d","col","Collider"];
 h3d_col_Collider.__interfaces__ = [h3d_impl__$Serializable_EmptyInterface];
 h3d_col_Collider.prototype = {
-	__class__: h3d_col_Collider
+	rayIntersection: null
+	,contains: null
+	,inFrustum: null
+	,__class__: h3d_col_Collider
 };
 var h3d_col_Bounds = function() {
 	this.xMin = 1e20;
@@ -15162,7 +15637,13 @@ h3d_col_Bounds.fromValues = function(x,y,z,dx,dy,dz) {
 	return b;
 };
 h3d_col_Bounds.prototype = {
-	inFrustum: function(mvp) {
+	xMin: null
+	,xMax: null
+	,yMin: null
+	,yMax: null
+	,zMin: null
+	,zMax: null
+	,inFrustum: function(mvp) {
 		var nx = mvp._14 + mvp._11;
 		var ny = mvp._24 + mvp._21;
 		var nz = mvp._34 + mvp._31;
@@ -16020,7 +16501,9 @@ $hxClasses["h3d.col.OptimizedCollider"] = h3d_col_OptimizedCollider;
 h3d_col_OptimizedCollider.__name__ = ["h3d","col","OptimizedCollider"];
 h3d_col_OptimizedCollider.__interfaces__ = [h3d_col_Collider,h3d_impl__$Serializable_EmptyInterface];
 h3d_col_OptimizedCollider.prototype = {
-	rayIntersection: function(r,bestMatch) {
+	a: null
+	,b: null
+	,rayIntersection: function(r,bestMatch) {
 		if(this.a.rayIntersection(r,bestMatch) < 0) {
 			return -1;
 		}
@@ -16049,7 +16532,8 @@ $hxClasses["h3d.col.GroupCollider"] = h3d_col_GroupCollider;
 h3d_col_GroupCollider.__name__ = ["h3d","col","GroupCollider"];
 h3d_col_GroupCollider.__interfaces__ = [h3d_col_Collider];
 h3d_col_GroupCollider.prototype = {
-	rayIntersection: function(r,bestMatch) {
+	colliders: null
+	,rayIntersection: function(r,bestMatch) {
 		var best = -1.;
 		var _g = 0;
 		var _g1 = this.colliders;
@@ -16111,7 +16595,10 @@ var h3d_col_FPoint = function(x,y,z) {
 $hxClasses["h3d.col.FPoint"] = h3d_col_FPoint;
 h3d_col_FPoint.__name__ = ["h3d","col","FPoint"];
 h3d_col_FPoint.prototype = {
-	sub: function(p) {
+	x: null
+	,y: null
+	,z: null
+	,sub: function(p) {
 		return new h3d_col_FPoint(this.x - p.x,this.y - p.y,this.z - p.z);
 	}
 	,add: function(p) {
@@ -16176,7 +16663,14 @@ var h3d_col_Frustum = function(mvp) {
 $hxClasses["h3d.col.Frustum"] = h3d_col_Frustum;
 h3d_col_Frustum.__name__ = ["h3d","col","Frustum"];
 h3d_col_Frustum.prototype = {
-	transform: function(m) {
+	pleft: null
+	,pright: null
+	,ptop: null
+	,pbottom: null
+	,pnear: null
+	,pfar: null
+	,checkNearFar: null
+	,transform: function(m) {
 		var m2 = new h3d_Matrix();
 		m2.initInverse(m);
 		m2.transpose();
@@ -16658,7 +17152,10 @@ $hxClasses["h3d.col.ObjectCollider"] = h3d_col_ObjectCollider;
 h3d_col_ObjectCollider.__name__ = ["h3d","col","ObjectCollider"];
 h3d_col_ObjectCollider.__interfaces__ = [h3d_impl__$Serializable_EmptyInterface,h3d_col_Collider];
 h3d_col_ObjectCollider.prototype = {
-	rayIntersection: function(r,bestMatch) {
+	obj: null
+	,collider: null
+	,tmpRay: null
+	,rayIntersection: function(r,bestMatch) {
 		var _this = this.tmpRay;
 		_this.px = r.px;
 		_this.py = r.py;
@@ -16806,7 +17303,11 @@ h3d_col_Plane.frustumFar = function(mvp) {
 	return new h3d_col_Plane(mvp._14 - mvp._13,mvp._24 - mvp._23,mvp._34 - mvp._33,mvp._43 - mvp._44);
 };
 h3d_col_Plane.prototype = {
-	getNormal: function() {
+	nx: null
+	,ny: null
+	,nz: null
+	,d: null
+	,getNormal: function() {
 		return new h3d_col_Point(this.nx,this.ny,this.nz);
 	}
 	,getNormalDistance: function() {
@@ -16929,7 +17430,10 @@ var h3d_col_Point = function(x,y,z) {
 $hxClasses["h3d.col.Point"] = h3d_col_Point;
 h3d_col_Point.__name__ = ["h3d","col","Point"];
 h3d_col_Point.prototype = {
-	scale: function(v) {
+	x: null
+	,y: null
+	,z: null
+	,scale: function(v) {
 		this.x *= v;
 		this.y *= v;
 		this.z *= v;
@@ -17054,7 +17558,25 @@ $hxClasses["h3d.col.TriPlane"] = h3d_col_TriPlane;
 h3d_col_TriPlane.__name__ = ["h3d","col","TriPlane"];
 h3d_col_TriPlane.__interfaces__ = [h3d_col_Collider];
 h3d_col_TriPlane.prototype = {
-	init: function(p0,p1,p2) {
+	next: null
+	,p0x: null
+	,p0y: null
+	,p0z: null
+	,d1x: null
+	,d1y: null
+	,d1z: null
+	,d2x: null
+	,d2y: null
+	,d2z: null
+	,dot00: null
+	,dot01: null
+	,dot11: null
+	,invDenom: null
+	,nx: null
+	,ny: null
+	,nz: null
+	,d: null
+	,init: function(p0,p1,p2) {
 		this.p0x = p0.x;
 		this.p0y = p0.y;
 		this.p0z = p0.z;
@@ -17145,7 +17667,8 @@ $hxClasses["h3d.col.Polygon"] = h3d_col_Polygon;
 h3d_col_Polygon.__name__ = ["h3d","col","Polygon"];
 h3d_col_Polygon.__interfaces__ = [h3d_col_Collider];
 h3d_col_Polygon.prototype = {
-	addBuffers: function(vertexes,indexes,stride) {
+	triPlanes: null
+	,addBuffers: function(vertexes,indexes,stride) {
 		if(stride == null) {
 			stride = 3;
 		}
@@ -17271,7 +17794,12 @@ $hxClasses["h3d.col.PolygonBuffer"] = h3d_col_PolygonBuffer;
 h3d_col_PolygonBuffer.__name__ = ["h3d","col","PolygonBuffer"];
 h3d_col_PolygonBuffer.__interfaces__ = [h3d_col_Collider];
 h3d_col_PolygonBuffer.prototype = {
-	setData: function(buffer,indexes,startIndex,triCount) {
+	buffer: null
+	,indexes: null
+	,startIndex: null
+	,triCount: null
+	,source: null
+	,setData: function(buffer,indexes,startIndex,triCount) {
 		if(triCount == null) {
 			triCount = -1;
 		}
@@ -17405,7 +17933,13 @@ h3d_col_Ray.fromValues = function(x,y,z,dx,dy,dz) {
 	return r;
 };
 h3d_col_Ray.prototype = {
-	clone: function() {
+	px: null
+	,py: null
+	,pz: null
+	,lx: null
+	,ly: null
+	,lz: null
+	,clone: function() {
 		var r = new h3d_col_Ray();
 		r.px = this.px;
 		r.py = this.py;
@@ -17587,7 +18121,11 @@ $hxClasses["h3d.col.SkinCollider"] = h3d_col_SkinCollider;
 h3d_col_SkinCollider.__name__ = ["h3d","col","SkinCollider"];
 h3d_col_SkinCollider.__interfaces__ = [h3d_col_Collider,h3d_impl__$Serializable_EmptyInterface];
 h3d_col_SkinCollider.prototype = {
-	contains: function(p) {
+	obj: null
+	,col: null
+	,transform: null
+	,lastFrame: null
+	,contains: function(p) {
 		this.applyTransform();
 		return this.transform.contains(p);
 	}
@@ -17668,7 +18206,11 @@ $hxClasses["h3d.col.Sphere"] = h3d_col_Sphere;
 h3d_col_Sphere.__name__ = ["h3d","col","Sphere"];
 h3d_col_Sphere.__interfaces__ = [h3d_col_Collider];
 h3d_col_Sphere.prototype = {
-	getCenter: function() {
+	x: null
+	,y: null
+	,z: null
+	,r: null
+	,getCenter: function() {
 		return new h3d_col_Point(this.x,this.y,this.z);
 	}
 	,contains: function(p) {
@@ -17829,7 +18371,8 @@ var h3d_impl_Driver = function() { };
 $hxClasses["h3d.impl.Driver"] = h3d_impl_Driver;
 h3d_impl_Driver.__name__ = ["h3d","impl","Driver"];
 h3d_impl_Driver.prototype = {
-	hasFeature: function(f) {
+	logEnable: null
+	,hasFeature: function(f) {
 		return false;
 	}
 	,isSupportedFormat: function(fmt) {
@@ -17967,21 +18510,38 @@ var h3d_impl__$GlDriver_CompiledShader = function(s,vertex,shader) {
 $hxClasses["h3d.impl._GlDriver.CompiledShader"] = h3d_impl__$GlDriver_CompiledShader;
 h3d_impl__$GlDriver_CompiledShader.__name__ = ["h3d","impl","_GlDriver","CompiledShader"];
 h3d_impl__$GlDriver_CompiledShader.prototype = {
-	__class__: h3d_impl__$GlDriver_CompiledShader
+	s: null
+	,vertex: null
+	,globals: null
+	,params: null
+	,textures: null
+	,cubeTextures: null
+	,shader: null
+	,__class__: h3d_impl__$GlDriver_CompiledShader
 };
 var h3d_impl__$GlDriver_CompiledAttribute = function() {
 };
 $hxClasses["h3d.impl._GlDriver.CompiledAttribute"] = h3d_impl__$GlDriver_CompiledAttribute;
 h3d_impl__$GlDriver_CompiledAttribute.__name__ = ["h3d","impl","_GlDriver","CompiledAttribute"];
 h3d_impl__$GlDriver_CompiledAttribute.prototype = {
-	__class__: h3d_impl__$GlDriver_CompiledAttribute
+	index: null
+	,type: null
+	,size: null
+	,offset: null
+	,__class__: h3d_impl__$GlDriver_CompiledAttribute
 };
 var h3d_impl__$GlDriver_CompiledProgram = function() {
 };
 $hxClasses["h3d.impl._GlDriver.CompiledProgram"] = h3d_impl__$GlDriver_CompiledProgram;
 h3d_impl__$GlDriver_CompiledProgram.__name__ = ["h3d","impl","_GlDriver","CompiledProgram"];
 h3d_impl__$GlDriver_CompiledProgram.prototype = {
-	__class__: h3d_impl__$GlDriver_CompiledProgram
+	p: null
+	,vertex: null
+	,fragment: null
+	,stride: null
+	,attribNames: null
+	,attribs: null
+	,__class__: h3d_impl__$GlDriver_CompiledProgram
 };
 var h3d_impl_GlDriver = function(antiAlias) {
 	if(antiAlias == null) {
@@ -18010,7 +18570,31 @@ h3d_impl_GlDriver.bytesToUint8Array = function(b) {
 };
 h3d_impl_GlDriver.__super__ = h3d_impl_Driver;
 h3d_impl_GlDriver.prototype = $extend(h3d_impl_Driver.prototype,{
-	logImpl: function(str) {
+	canvas: null
+	,mrtExt: null
+	,gl: null
+	,commonFB: null
+	,curAttribs: null
+	,curShader: null
+	,curBuffer: null
+	,curIndexBuffer: null
+	,curMatBits: null
+	,curStOpBits: null
+	,curStFrBits: null
+	,curStBrBits: null
+	,curStEnabled: null
+	,defStencil: null
+	,programs: null
+	,frame: null
+	,bufferWidth: null
+	,bufferHeight: null
+	,curTarget: null
+	,numTargets: null
+	,debug: null
+	,boundTextures: null
+	,shaderVersion: null
+	,firstShader: null
+	,logImpl: function(str) {
 		console.log(str);
 	}
 	,setDebug: function(d) {
@@ -18101,6 +18685,7 @@ h3d_impl_GlDriver.prototype = $extend(h3d_impl_Driver.prototype,{
 					log = this.gl.getProgramInfoLog(p.p);
 				}
 			} catch( e ) {
+				haxe_CallStack.lastException = e;
 				if (e instanceof js__$Boot_HaxeError) e = e.val;
 				throw new js__$Boot_HaxeError("Shader linkage error: " + Std.string(e) + " (" + this.getDriverName(false) + ")");
 			}
@@ -18478,6 +19063,7 @@ h3d_impl_GlDriver.prototype = $extend(h3d_impl_Driver.prototype,{
 			b.b = null;
 		}
 	}
+	,defaultDepth: null
 	,getDefaultDepthBuffer: function() {
 		if(this.defaultDepth != null) {
 			return this.defaultDepth;
@@ -18831,7 +19417,10 @@ var h3d_impl__$ManagedBuffer_FreeCell = function(pos,count,next) {
 $hxClasses["h3d.impl._ManagedBuffer.FreeCell"] = h3d_impl__$ManagedBuffer_FreeCell;
 h3d_impl__$ManagedBuffer_FreeCell.__name__ = ["h3d","impl","_ManagedBuffer","FreeCell"];
 h3d_impl__$ManagedBuffer_FreeCell.prototype = {
-	__class__: h3d_impl__$ManagedBuffer_FreeCell
+	pos: null
+	,count: null
+	,next: null
+	,__class__: h3d_impl__$ManagedBuffer_FreeCell
 };
 var h3d_impl_ManagedBuffer = function(stride,size,flags) {
 	this.flags = 0;
@@ -18852,7 +19441,14 @@ var h3d_impl_ManagedBuffer = function(stride,size,flags) {
 $hxClasses["h3d.impl.ManagedBuffer"] = h3d_impl_ManagedBuffer;
 h3d_impl_ManagedBuffer.__name__ = ["h3d","impl","ManagedBuffer"];
 h3d_impl_ManagedBuffer.prototype = {
-	uploadVertexBuffer: function(start,vertices,buf,bufPos) {
+	mem: null
+	,stride: null
+	,size: null
+	,flags: null
+	,vbuf: null
+	,freeList: null
+	,next: null
+	,uploadVertexBuffer: function(start,vertices,buf,bufPos) {
 		if(bufPos == null) {
 			bufPos = 0;
 		}
@@ -18980,7 +19576,16 @@ var h3d_impl_MemoryManager = function(driver) {
 $hxClasses["h3d.impl.MemoryManager"] = h3d_impl_MemoryManager;
 h3d_impl_MemoryManager.__name__ = ["h3d","impl","MemoryManager"];
 h3d_impl_MemoryManager.prototype = {
-	init: function() {
+	driver: null
+	,buffers: null
+	,indexes: null
+	,textures: null
+	,triIndexes: null
+	,quadIndexes: null
+	,usedMemory: null
+	,texMemory: null
+	,bufferCount: null
+	,init: function() {
 		this.indexes = [];
 		this.textures = [];
 		this.buffers = [];
@@ -19289,7 +19894,12 @@ var h3d_impl_TextureCache = function() {
 $hxClasses["h3d.impl.TextureCache"] = h3d_impl_TextureCache;
 h3d_impl_TextureCache.__name__ = ["h3d","impl","TextureCache"];
 h3d_impl_TextureCache.prototype = {
-	get: function(index) {
+	cache: null
+	,position: null
+	,frame: null
+	,defaultDepthBuffer: null
+	,defaultFormat: null
+	,get: function(index) {
 		if(index == null) {
 			index = 0;
 		}
@@ -19353,7 +19963,9 @@ $hxClasses["h3d.mat.BaseMaterial"] = h3d_mat_BaseMaterial;
 h3d_mat_BaseMaterial.__name__ = ["h3d","mat","BaseMaterial"];
 h3d_mat_BaseMaterial.__interfaces__ = [h3d_impl__$Serializable_EmptyInterface];
 h3d_mat_BaseMaterial.prototype = {
-	addPass: function(p) {
+	passes: null
+	,name: null
+	,addPass: function(p) {
 		var prev = null;
 		var cur = this.passes;
 		while(cur != null) {
@@ -19646,7 +20258,10 @@ h3d_mat_DepthBuffer.getDefault = function() {
 	return h3d_Engine.CURRENT.driver.getDefaultDepthBuffer();
 };
 h3d_mat_DepthBuffer.prototype = {
-	dispose: function() {
+	b: null
+	,width: null
+	,height: null
+	,dispose: function() {
 		if(this.b != null) {
 			h3d_Engine.CURRENT.driver.disposeDepthBuffer(this);
 			this.b = null;
@@ -19667,7 +20282,15 @@ $hxClasses["h3d.mat.Material"] = h3d_mat_Material;
 h3d_mat_Material.__name__ = ["h3d","mat","Material"];
 h3d_mat_Material.__super__ = h3d_mat_BaseMaterial;
 h3d_mat_Material.prototype = $extend(h3d_mat_BaseMaterial.prototype,{
-	get_specularPower: function() {
+	mshader: null
+	,props: null
+	,model: null
+	,castShadows: null
+	,receiveShadows: null
+	,textureShader: null
+	,specularShader: null
+	,blendMode: null
+	,get_specularPower: function() {
 		return this.mshader.specularPower__;
 	}
 	,set_specularPower: function(v) {
@@ -19837,7 +20460,9 @@ var h3d_mat_MaterialDatabase = function(file) {
 $hxClasses["h3d.mat.MaterialDatabase"] = h3d_mat_MaterialDatabase;
 h3d_mat_MaterialDatabase.__name__ = ["h3d","mat","MaterialDatabase"];
 h3d_mat_MaterialDatabase.prototype = {
-	getPath: function(material,setup) {
+	file: null
+	,db: null
+	,getPath: function(material,setup) {
 		var path = material.model == null ? [] : material.model.entry.get_path().split("/");
 		path.pop();
 		path.push(material.name);
@@ -19849,6 +20474,7 @@ h3d_mat_MaterialDatabase.prototype = {
 		try {
 			tmp = JSON.parse(hxd_res_Loader.currentInstance.load(this.file).toText());
 		} catch( e ) {
+			haxe_CallStack.lastException = e;
 			if (e instanceof js__$Boot_HaxeError) e = e.val;
 			if( js_Boot.__instanceof(e,hxd_fs_NotFound) ) {
 				tmp = { type : "materialDB"};
@@ -19922,7 +20548,9 @@ var h3d_mat_MaterialSetup = function(name) {
 $hxClasses["h3d.mat.MaterialSetup"] = h3d_mat_MaterialSetup;
 h3d_mat_MaterialSetup.__name__ = ["h3d","mat","MaterialSetup"];
 h3d_mat_MaterialSetup.prototype = {
-	createRenderer: function() {
+	name: null
+	,database: null
+	,createRenderer: function() {
 		return new h3d_scene_Renderer();
 	}
 	,createLightSystem: function() {
@@ -20054,7 +20682,27 @@ h3d_mat_Pass.getColorMask = function(v) {
 	return v >> 26 & 15;
 };
 h3d_mat_Pass.prototype = {
-	load: function(p) {
+	name: null
+	,passId: null
+	,bits: null
+	,parentPass: null
+	,parentShaders: null
+	,shaders: null
+	,nextPass: null
+	,enableLights: null
+	,dynamicParameters: null
+	,culling: null
+	,depthWrite: null
+	,depthTest: null
+	,blendSrc: null
+	,blendDst: null
+	,blendAlphaSrc: null
+	,blendAlphaDst: null
+	,blendOp: null
+	,blendAlphaOp: null
+	,colorMask: null
+	,stencil: null
+	,load: function(p) {
 		this.name = p.name;
 		this.passId = p.passId;
 		this.bits = p.bits;
@@ -20364,7 +21012,24 @@ h3d_mat_Stencil.getBackWriteMask = function(v) {
 	return v >> 16 & 255;
 };
 h3d_mat_Stencil.prototype = {
-	setOp: function(face,stfail,dpfail,dppass) {
+	frontRefBits: null
+	,backRefBits: null
+	,opBits: null
+	,frontTest: null
+	,frontSTfail: null
+	,frontDPfail: null
+	,frontDPpass: null
+	,frontRef: null
+	,frontReadMask: null
+	,frontWriteMask: null
+	,backTest: null
+	,backSTfail: null
+	,backDPfail: null
+	,backDPpass: null
+	,backRef: null
+	,backReadMask: null
+	,backWriteMask: null
+	,setOp: function(face,stfail,dpfail,dppass) {
 		if(face == null) {
 			face = h3d_mat_Face.Both;
 		}
@@ -20678,7 +21343,23 @@ h3d_mat_Texture.allocNoise = function(t,size) {
 	b.pixel = null;
 };
 h3d_mat_Texture.prototype = {
-	alloc: function() {
+	t: null
+	,mem: null
+	,id: null
+	,name: null
+	,width: null
+	,height: null
+	,flags: null
+	,format: null
+	,lastFrame: null
+	,bits: null
+	,waitLoads: null
+	,mipMap: null
+	,filter: null
+	,wrap: null
+	,realloc: null
+	,depthBuffer: null
+	,alloc: function() {
 		if(this.t == null) {
 			this.mem.allocTexture(this);
 		}
@@ -20852,7 +21533,10 @@ var h3d_pass_Base = function() {
 $hxClasses["h3d.pass.Base"] = h3d_pass_Base;
 h3d_pass_Base.__name__ = ["h3d","pass","Base"];
 h3d_pass_Base.prototype = {
-	getTexture: function(index) {
+	ctx: null
+	,priority: null
+	,forceProcessing: null
+	,getTexture: function(index) {
 		if(index == null) {
 			index = 0;
 		}
@@ -20890,7 +21574,14 @@ var h3d_pass_ScreenFx = function(shader) {
 $hxClasses["h3d.pass.ScreenFx"] = h3d_pass_ScreenFx;
 h3d_pass_ScreenFx.__name__ = ["h3d","pass","ScreenFx"];
 h3d_pass_ScreenFx.prototype = {
-	setGlobals: function(ctx) {
+	shader: null
+	,pass: null
+	,manager: null
+	,plan: null
+	,engine: null
+	,shaders: null
+	,buffers: null
+	,setGlobals: function(ctx) {
 		var _g = 0;
 		var _g1 = ctx.sharedGlobals;
 		while(_g < _g1.length) {
@@ -20940,7 +21631,12 @@ $hxClasses["h3d.pass.Blur"] = h3d_pass_Blur;
 h3d_pass_Blur.__name__ = ["h3d","pass","Blur"];
 h3d_pass_Blur.__super__ = h3d_pass_ScreenFx;
 h3d_pass_Blur.prototype = $extend(h3d_pass_ScreenFx.prototype,{
-	set_quality: function(q) {
+	quality: null
+	,sigma: null
+	,passes: null
+	,depthBlur: null
+	,values: null
+	,set_quality: function(q) {
 		this.values = null;
 		return this.quality = q;
 	}
@@ -21063,7 +21759,12 @@ var hxsl_Shader = function() {
 $hxClasses["hxsl.Shader"] = hxsl_Shader;
 hxsl_Shader.__name__ = ["hxsl","Shader"];
 hxsl_Shader.prototype = {
-	initialize: function() {
+	priority: null
+	,shader: null
+	,instance: null
+	,constBits: null
+	,constModified: null
+	,initialize: function() {
 		this.constModified = true;
 		if(this.shader != null) {
 			return;
@@ -21171,7 +21872,8 @@ $hxClasses["h3d.pass._Border.BorderShader"] = h3d_pass__$Border_BorderShader;
 h3d_pass__$Border_BorderShader.__name__ = ["h3d","pass","_Border","BorderShader"];
 h3d_pass__$Border_BorderShader.__super__ = hxsl_Shader;
 h3d_pass__$Border_BorderShader.prototype = $extend(hxsl_Shader.prototype,{
-	get_color: function() {
+	color__: null
+	,get_color: function() {
 		return this.color__;
 	}
 	,set_color: function(_v) {
@@ -21563,7 +22265,8 @@ $hxClasses["h3d.pass._Copy.CopyShader"] = h3d_pass__$Copy_CopyShader;
 h3d_pass__$Copy_CopyShader.__name__ = ["h3d","pass","_Copy","CopyShader"];
 h3d_pass__$Copy_CopyShader.__super__ = h3d_shader_ScreenShader;
 h3d_pass__$Copy_CopyShader.prototype = $extend(h3d_shader_ScreenShader.prototype,{
-	get_texture: function() {
+	texture__: null
+	,get_texture: function() {
 		return this.texture__;
 	}
 	,set_texture: function(_v) {
@@ -21646,7 +22349,15 @@ $hxClasses["h3d.pass.Default"] = h3d_pass_Default;
 h3d_pass_Default.__name__ = ["h3d","pass","Default"];
 h3d_pass_Default.__super__ = h3d_pass_Base;
 h3d_pass_Default.prototype = $extend(h3d_pass_Base.prototype,{
-	get_globals: function() {
+	manager: null
+	,cachedBuffer: null
+	,tcache: null
+	,shaderCount: null
+	,textureCount: null
+	,shaderIdMap: null
+	,textureIdMap: null
+	,sortPasses: null
+	,get_globals: function() {
 		return this.manager.globals;
 	}
 	,get_logEnable: function() {
@@ -21871,6 +22582,7 @@ h3d_pass_Default.prototype = $extend(h3d_pass_Base.prototype,{
 		_this.drawPass = null;
 		return passes;
 	}
+	,cameraView_id: null
 	,get_cameraView: function() {
 		return this.manager.globals.map.get(this.cameraView_id);
 	}
@@ -21878,6 +22590,7 @@ h3d_pass_Default.prototype = $extend(h3d_pass_Base.prototype,{
 		this.manager.globals.map.set(this.cameraView_id,v);
 		return v;
 	}
+	,cameraNear_id: null
 	,get_cameraNear: function() {
 		return this.manager.globals.map.get(this.cameraNear_id);
 	}
@@ -21885,6 +22598,7 @@ h3d_pass_Default.prototype = $extend(h3d_pass_Base.prototype,{
 		this.manager.globals.map.set(this.cameraNear_id,v);
 		return v;
 	}
+	,cameraFar_id: null
 	,get_cameraFar: function() {
 		return this.manager.globals.map.get(this.cameraFar_id);
 	}
@@ -21892,6 +22606,7 @@ h3d_pass_Default.prototype = $extend(h3d_pass_Base.prototype,{
 		this.manager.globals.map.set(this.cameraFar_id,v);
 		return v;
 	}
+	,cameraProj_id: null
 	,get_cameraProj: function() {
 		return this.manager.globals.map.get(this.cameraProj_id);
 	}
@@ -21899,6 +22614,7 @@ h3d_pass_Default.prototype = $extend(h3d_pass_Base.prototype,{
 		this.manager.globals.map.set(this.cameraProj_id,v);
 		return v;
 	}
+	,cameraPos_id: null
 	,get_cameraPos: function() {
 		return this.manager.globals.map.get(this.cameraPos_id);
 	}
@@ -21906,6 +22622,7 @@ h3d_pass_Default.prototype = $extend(h3d_pass_Base.prototype,{
 		this.manager.globals.map.set(this.cameraPos_id,v);
 		return v;
 	}
+	,cameraProjDiag_id: null
 	,get_cameraProjDiag: function() {
 		return this.manager.globals.map.get(this.cameraProjDiag_id);
 	}
@@ -21913,6 +22630,7 @@ h3d_pass_Default.prototype = $extend(h3d_pass_Base.prototype,{
 		this.manager.globals.map.set(this.cameraProjDiag_id,v);
 		return v;
 	}
+	,cameraViewProj_id: null
 	,get_cameraViewProj: function() {
 		return this.manager.globals.map.get(this.cameraViewProj_id);
 	}
@@ -21920,6 +22638,7 @@ h3d_pass_Default.prototype = $extend(h3d_pass_Base.prototype,{
 		this.manager.globals.map.set(this.cameraViewProj_id,v);
 		return v;
 	}
+	,cameraInverseViewProj_id: null
 	,get_cameraInverseViewProj: function() {
 		return this.manager.globals.map.get(this.cameraInverseViewProj_id);
 	}
@@ -21927,6 +22646,7 @@ h3d_pass_Default.prototype = $extend(h3d_pass_Base.prototype,{
 		this.manager.globals.map.set(this.cameraInverseViewProj_id,v);
 		return v;
 	}
+	,globalTime_id: null
 	,get_globalTime: function() {
 		return this.manager.globals.map.get(this.globalTime_id);
 	}
@@ -21934,6 +22654,7 @@ h3d_pass_Default.prototype = $extend(h3d_pass_Base.prototype,{
 		this.manager.globals.map.set(this.globalTime_id,v);
 		return v;
 	}
+	,pixelSize_id: null
 	,get_pixelSize: function() {
 		return this.manager.globals.map.get(this.pixelSize_id);
 	}
@@ -21941,6 +22662,7 @@ h3d_pass_Default.prototype = $extend(h3d_pass_Base.prototype,{
 		this.manager.globals.map.set(this.pixelSize_id,v);
 		return v;
 	}
+	,globalModelView_id: null
 	,get_globalModelView: function() {
 		return this.manager.globals.map.get(this.globalModelView_id);
 	}
@@ -21948,6 +22670,7 @@ h3d_pass_Default.prototype = $extend(h3d_pass_Base.prototype,{
 		this.manager.globals.map.set(this.globalModelView_id,v);
 		return v;
 	}
+	,globalModelViewInverse_id: null
 	,get_globalModelViewInverse: function() {
 		return this.manager.globals.map.get(this.globalModelViewInverse_id);
 	}
@@ -21995,7 +22718,10 @@ $hxClasses["h3d.pass.Depth"] = h3d_pass_Depth;
 h3d_pass_Depth.__name__ = ["h3d","pass","Depth"];
 h3d_pass_Depth.__super__ = h3d_pass_Default;
 h3d_pass_Depth.prototype = $extend(h3d_pass_Default.prototype,{
-	getOutputs: function() {
+	depthMapId: null
+	,enableSky: null
+	,reduceSize: null
+	,getOutputs: function() {
 		return [hxsl_Output.PackFloat(hxsl_Output.Value("output.depth"))];
 	}
 	,draw: function(passes) {
@@ -22018,12 +22744,14 @@ $hxClasses["h3d.pass._HardwarePick.FixedColor"] = h3d_pass__$HardwarePick_FixedC
 h3d_pass__$HardwarePick_FixedColor.__name__ = ["h3d","pass","_HardwarePick","FixedColor"];
 h3d_pass__$HardwarePick_FixedColor.__super__ = hxsl_Shader;
 h3d_pass__$HardwarePick_FixedColor.prototype = $extend(hxsl_Shader.prototype,{
-	get_colorID: function() {
+	colorID__: null
+	,get_colorID: function() {
 		return this.colorID__;
 	}
 	,set_colorID: function(_v) {
 		return this.colorID__ = _v;
 	}
+	,viewport__: null
 	,get_viewport: function() {
 		return this.viewport__;
 	}
@@ -22075,7 +22803,14 @@ $hxClasses["h3d.pass.HardwarePick"] = h3d_pass_HardwarePick;
 h3d_pass_HardwarePick.__name__ = ["h3d","pass","HardwarePick"];
 h3d_pass_HardwarePick.__super__ = h3d_pass_Default;
 h3d_pass_HardwarePick.prototype = $extend(h3d_pass_Default.prototype,{
-	dispose: function() {
+	pickX: null
+	,pickY: null
+	,fixedColor: null
+	,colorID: null
+	,texOut: null
+	,material: null
+	,pickedIndex: null
+	,dispose: function() {
 		h3d_pass_Default.prototype.dispose.call(this);
 		this.texOut.dispose();
 		this.texOut.depthBuffer.dispose();
@@ -22153,7 +22888,15 @@ var h3d_pass_LightSystem = function() {
 $hxClasses["h3d.pass.LightSystem"] = h3d_pass_LightSystem;
 h3d_pass_LightSystem.__name__ = ["h3d","pass","LightSystem"];
 h3d_pass_LightSystem.prototype = {
-	get_additiveLighting: function() {
+	maxLightsPerObject: null
+	,globals: null
+	,ambientShader: null
+	,lightCount: null
+	,ctx: null
+	,shadowLight: null
+	,ambientLight: null
+	,perPixelLighting: null
+	,get_additiveLighting: function() {
 		var value = this.ambientShader;
 		return ((value instanceof h3d_shader_AmbientLight) ? value : null).additive__;
 	}
@@ -22392,7 +23135,8 @@ $hxClasses["h3d.pass.Normal"] = h3d_pass_Normal;
 h3d_pass_Normal.__name__ = ["h3d","pass","Normal"];
 h3d_pass_Normal.__super__ = h3d_pass_Default;
 h3d_pass_Normal.prototype = $extend(h3d_pass_Default.prototype,{
-	getOutputs: function() {
+	normalMapId: null
+	,getOutputs: function() {
 		return [hxsl_Output.PackNormal(hxsl_Output.Value("output.normal"))];
 	}
 	,draw: function(passes) {
@@ -22412,7 +23156,16 @@ var h3d_pass_Object = function() {
 $hxClasses["h3d.pass.Object"] = h3d_pass_Object;
 h3d_pass_Object.__name__ = ["h3d","pass","Object"];
 h3d_pass_Object.prototype = {
-	__class__: h3d_pass_Object
+	pass: null
+	,obj: null
+	,index: null
+	,next: null
+	,nextAlloc: null
+	,shaders: null
+	,shader: null
+	,depth: null
+	,texture: null
+	,__class__: h3d_pass_Object
 };
 var h3d_pass_ShaderManager = function(output) {
 	this.shaderCache = hxsl_Cache.get();
@@ -22423,7 +23176,10 @@ var h3d_pass_ShaderManager = function(output) {
 $hxClasses["h3d.pass.ShaderManager"] = h3d_pass_ShaderManager;
 h3d_pass_ShaderManager.__name__ = ["h3d","pass","ShaderManager"];
 h3d_pass_ShaderManager.prototype = {
-	setOutput: function(output) {
+	globals: null
+	,shaderCache: null
+	,currentOutput: null
+	,setOutput: function(output) {
 		if(output == null) {
 			output = [hxsl_Output.Value("output.color")];
 		}
@@ -22930,7 +23686,21 @@ $hxClasses["h3d.pass.ShadowMap"] = h3d_pass_ShadowMap;
 h3d_pass_ShadowMap.__name__ = ["h3d","pass","ShadowMap"];
 h3d_pass_ShadowMap.__super__ = h3d_pass_Default;
 h3d_pass_ShadowMap.prototype = $extend(h3d_pass_Default.prototype,{
-	set_size: function(s) {
+	lightCamera: null
+	,shadowMapId: null
+	,shadowProjId: null
+	,shadowColorId: null
+	,shadowPowerId: null
+	,shadowBiasId: null
+	,customDepth: null
+	,depth: null
+	,border: null
+	,size: null
+	,color: null
+	,power: null
+	,bias: null
+	,blur: null
+	,set_size: function(s) {
 		if(this.border != null && this.size != s) {
 			this.border = new h3d_pass_Border(s,s);
 		}
@@ -23321,7 +24091,18 @@ $hxClasses["h3d.prim.BigPrimitive"] = h3d_prim_BigPrimitive;
 h3d_prim_BigPrimitive.__name__ = ["h3d","prim","BigPrimitive"];
 h3d_prim_BigPrimitive.__super__ = h3d_prim_Primitive;
 h3d_prim_BigPrimitive.prototype = $extend(h3d_prim_Primitive.prototype,{
-	begin: function(vcount,icount) {
+	isRaw: null
+	,stride: null
+	,buffers: null
+	,allIndexes: null
+	,tmpBuf: null
+	,tmpIdx: null
+	,bounds: null
+	,bufPos: null
+	,idxPos: null
+	,startIndex: null
+	,flushing: null
+	,begin: function(vcount,icount) {
 		this.startIndex = this.bufPos / this.stride | 0;
 		if(this.startIndex + vcount >= 65535) {
 			if(vcount >= 65535) {
@@ -23689,7 +24470,10 @@ $hxClasses["h3d.prim.MeshPrimitive"] = h3d_prim_MeshPrimitive;
 h3d_prim_MeshPrimitive.__name__ = ["h3d","prim","MeshPrimitive"];
 h3d_prim_MeshPrimitive.__super__ = h3d_prim_Primitive;
 h3d_prim_MeshPrimitive.prototype = $extend(h3d_prim_Primitive.prototype,{
-	allocBuffer: function(engine,name) {
+	bufferCache: null
+	,prevNames: null
+	,prevBuffers: null
+	,allocBuffer: function(engine,name) {
 		return null;
 	}
 	,hasBuffer: function(name) {
@@ -23778,7 +24562,16 @@ $hxClasses["h3d.prim.HMDModel"] = h3d_prim_HMDModel;
 h3d_prim_HMDModel.__name__ = ["h3d","prim","HMDModel"];
 h3d_prim_HMDModel.__super__ = h3d_prim_MeshPrimitive;
 h3d_prim_HMDModel.prototype = $extend(h3d_prim_MeshPrimitive.prototype,{
-	triCount: function() {
+	data: null
+	,dataPosition: null
+	,indexCount: null
+	,indexesTriPos: null
+	,lib: null
+	,curMaterial: null
+	,collider: null
+	,normalsRecomputed: null
+	,bufferAliases: null
+	,triCount: function() {
 		return this.data.get_indexCount() / 3 | 0;
 	}
 	,vertexCount: function() {
@@ -24190,7 +24983,16 @@ $hxClasses["h3d.prim.Polygon"] = h3d_prim_Polygon;
 h3d_prim_Polygon.__name__ = ["h3d","prim","Polygon"];
 h3d_prim_Polygon.__super__ = h3d_prim_Primitive;
 h3d_prim_Polygon.prototype = $extend(h3d_prim_Primitive.prototype,{
-	getBounds: function() {
+	points: null
+	,normals: null
+	,uvs: null
+	,idx: null
+	,colors: null
+	,scaled: null
+	,translatedX: null
+	,translatedY: null
+	,translatedZ: null
+	,getBounds: function() {
 		var b = new h3d_col_Bounds();
 		var _g = 0;
 		var _g1 = this.points;
@@ -24572,7 +25374,11 @@ $hxClasses["h3d.prim.RawPrimitive"] = h3d_prim_RawPrimitive;
 h3d_prim_RawPrimitive.__name__ = ["h3d","prim","RawPrimitive"];
 h3d_prim_RawPrimitive.__super__ = h3d_prim_Primitive;
 h3d_prim_RawPrimitive.prototype = $extend(h3d_prim_Primitive.prototype,{
-	alloc: function(engine) {
+	vcount: null
+	,tcount: null
+	,bounds: null
+	,onContextLost: null
+	,alloc: function(engine) {
 		if(this.onContextLost == null) {
 			throw new js__$Boot_HaxeError("Cannot realloc " + Std.string(this));
 		}
@@ -24615,7 +25421,9 @@ var h3d_prim_UV = function(u,v) {
 $hxClasses["h3d.prim.UV"] = h3d_prim_UV;
 h3d_prim_UV.__name__ = ["h3d","prim","UV"];
 h3d_prim_UV.prototype = {
-	clone: function() {
+	u: null
+	,v: null
+	,clone: function() {
 		return new h3d_prim_UV(this.u,this.v);
 	}
 	,toString: function() {
@@ -24655,7 +25463,24 @@ $hxClasses["h3d.scene.Object"] = h3d_scene_Object;
 h3d_scene_Object.__name__ = ["h3d","scene","Object"];
 h3d_scene_Object.__interfaces__ = [h3d_impl__$Serializable_EmptyInterface];
 h3d_scene_Object.prototype = {
-	get_visible: function() {
+	flags: null
+	,children: null
+	,parent: null
+	,name: null
+	,x: null
+	,y: null
+	,z: null
+	,scaleX: null
+	,scaleY: null
+	,scaleZ: null
+	,follow: null
+	,defaultTransform: null
+	,currentAnimation: null
+	,absPos: null
+	,invPos: null
+	,qRot: null
+	,lastFrame: null
+	,get_visible: function() {
 		return (this.flags & 2) != 0;
 	}
 	,get_allocated: function() {
@@ -25494,7 +26319,12 @@ $hxClasses["h3d.scene.Light"] = h3d_scene_Light;
 h3d_scene_Light.__name__ = ["h3d","scene","Light"];
 h3d_scene_Light.__super__ = h3d_scene_Object;
 h3d_scene_Light.prototype = $extend(h3d_scene_Object.prototype,{
-	get_color: function() {
+	shader: null
+	,objectDistance: null
+	,cullingDistance: null
+	,next: null
+	,priority: null
+	,get_color: function() {
 		return new h3d_Vector();
 	}
 	,get_enableSpecular: function() {
@@ -25521,7 +26351,9 @@ $hxClasses["h3d.scene.DirLight"] = h3d_scene_DirLight;
 h3d_scene_DirLight.__name__ = ["h3d","scene","DirLight"];
 h3d_scene_DirLight.__super__ = h3d_scene_Light;
 h3d_scene_DirLight.prototype = $extend(h3d_scene_Light.prototype,{
-	get_color: function() {
+	dshader: null
+	,direction: null
+	,get_color: function() {
 		return this.dshader.color__;
 	}
 	,get_enableSpecular: function() {
@@ -25555,7 +26387,14 @@ var h3d_scene__$Graphics_GPoint = function(x,y,z,r,g,b,a) {
 $hxClasses["h3d.scene._Graphics.GPoint"] = h3d_scene__$Graphics_GPoint;
 h3d_scene__$Graphics_GPoint.__name__ = ["h3d","scene","_Graphics","GPoint"];
 h3d_scene__$Graphics_GPoint.prototype = {
-	__class__: h3d_scene__$Graphics_GPoint
+	x: null
+	,y: null
+	,z: null
+	,r: null
+	,g: null
+	,b: null
+	,a: null
+	,__class__: h3d_scene__$Graphics_GPoint
 };
 var h3d_scene_Mesh = function(prim,mat,parent) {
 	h3d_scene_Object.call(this,parent);
@@ -25569,7 +26408,9 @@ $hxClasses["h3d.scene.Mesh"] = h3d_scene_Mesh;
 h3d_scene_Mesh.__name__ = ["h3d","scene","Mesh"];
 h3d_scene_Mesh.__super__ = h3d_scene_Object;
 h3d_scene_Mesh.prototype = $extend(h3d_scene_Object.prototype,{
-	getMeshMaterials: function() {
+	primitive: null
+	,material: null
+	,getMeshMaterials: function() {
 		return [this.material];
 	}
 	,getBounds: function(b,rec) {
@@ -25670,7 +26511,19 @@ $hxClasses["h3d.scene.Graphics"] = h3d_scene_Graphics;
 h3d_scene_Graphics.__name__ = ["h3d","scene","Graphics"];
 h3d_scene_Graphics.__super__ = h3d_scene_Mesh;
 h3d_scene_Graphics.prototype = $extend(h3d_scene_Mesh.prototype,{
-	set_is3D: function(v) {
+	bprim: null
+	,curX: null
+	,curY: null
+	,curZ: null
+	,curR: null
+	,curG: null
+	,curB: null
+	,curA: null
+	,lineSize: null
+	,lineShader: null
+	,tmpPoints: null
+	,is3D: null
+	,set_is3D: function(v) {
 		if(this.is3D == v) {
 			return v;
 		}
@@ -26047,7 +26900,18 @@ h3d_scene_Interactive.__name__ = ["h3d","scene","Interactive"];
 h3d_scene_Interactive.__interfaces__ = [hxd_Interactive];
 h3d_scene_Interactive.__super__ = h3d_scene_Object;
 h3d_scene_Interactive.prototype = $extend(h3d_scene_Object.prototype,{
-	onAdd: function() {
+	shape: null
+	,preciseShape: null
+	,priority: null
+	,cursor: null
+	,cancelEvents: null
+	,propagateEvents: null
+	,enableRightButton: null
+	,bestMatch: null
+	,scene: null
+	,mouseDownButton: null
+	,hitPoint: null
+	,onAdd: function() {
 		this.scene = this.getScene();
 		if(this.scene != null) {
 			this.scene.addEventTarget(this);
@@ -26205,7 +27069,8 @@ $hxClasses["h3d.scene.MultiMaterial"] = h3d_scene_MultiMaterial;
 h3d_scene_MultiMaterial.__name__ = ["h3d","scene","MultiMaterial"];
 h3d_scene_MultiMaterial.__super__ = h3d_scene_Mesh;
 h3d_scene_MultiMaterial.prototype = $extend(h3d_scene_Mesh.prototype,{
-	getMeshMaterials: function() {
+	materials: null
+	,getMeshMaterials: function() {
 		return this.materials.slice();
 	}
 	,clone: function(o) {
@@ -26307,7 +27172,9 @@ var h3d_scene__$RenderContext_SharedGlobal = function(gid,value) {
 $hxClasses["h3d.scene._RenderContext.SharedGlobal"] = h3d_scene__$RenderContext_SharedGlobal;
 h3d_scene__$RenderContext_SharedGlobal.__name__ = ["h3d","scene","_RenderContext","SharedGlobal"];
 h3d_scene__$RenderContext_SharedGlobal.prototype = {
-	__class__: h3d_scene__$RenderContext_SharedGlobal
+	gid: null
+	,value: null
+	,__class__: h3d_scene__$RenderContext_SharedGlobal
 };
 var h3d_scene_RenderContext = function() {
 	h3d_impl_RenderContext.call(this);
@@ -26317,7 +27184,21 @@ $hxClasses["h3d.scene.RenderContext"] = h3d_scene_RenderContext;
 h3d_scene_RenderContext.__name__ = ["h3d","scene","RenderContext"];
 h3d_scene_RenderContext.__super__ = h3d_impl_RenderContext;
 h3d_scene_RenderContext.prototype = $extend(h3d_impl_RenderContext.prototype,{
-	emit: function(mat,obj,index) {
+	camera: null
+	,scene: null
+	,drawPass: null
+	,sharedGlobals: null
+	,lightSystem: null
+	,uploadParams: null
+	,extraShaders: null
+	,visibleFlag: null
+	,pool: null
+	,firstAlloc: null
+	,cachedShaderList: null
+	,cachedPos: null
+	,passes: null
+	,lights: null
+	,emit: function(mat,obj,index) {
 		if(index == null) {
 			index = 0;
 		}
@@ -26435,7 +27316,10 @@ var h3d_scene_PassGroup = function(name,passes) {
 $hxClasses["h3d.scene.PassGroup"] = h3d_scene_PassGroup;
 h3d_scene_PassGroup.__name__ = ["h3d","scene","PassGroup"];
 h3d_scene_PassGroup.prototype = {
-	__class__: h3d_scene_PassGroup
+	name: null
+	,passes: null
+	,rendered: null
+	,__class__: h3d_scene_PassGroup
 };
 var h3d_scene_Renderer = function() {
 	this.hasSetTarget = false;
@@ -26447,7 +27331,17 @@ var h3d_scene_Renderer = function() {
 $hxClasses["h3d.scene.Renderer"] = h3d_scene_Renderer;
 h3d_scene_Renderer.__name__ = ["h3d","scene","Renderer"];
 h3d_scene_Renderer.prototype = {
-	dispose: function() {
+	def: null
+	,depth: null
+	,normal: null
+	,shadow: null
+	,passes: null
+	,passGroups: null
+	,allPasses: null
+	,ctx: null
+	,tcache: null
+	,hasSetTarget: null
+	,dispose: function() {
 		var _g = 0;
 		var _g1 = this.allPasses;
 		while(_g < _g1.length) {
@@ -26806,7 +27700,16 @@ h3d_scene_Scene.__name__ = ["h3d","scene","Scene"];
 h3d_scene_Scene.__interfaces__ = [hxd_InteractiveScene,h3d_IDrawable];
 h3d_scene_Scene.__super__ = h3d_scene_Object;
 h3d_scene_Scene.prototype = $extend(h3d_scene_Object.prototype,{
-	setEvents: function(events) {
+	camera: null
+	,lightSystem: null
+	,renderer: null
+	,ctx: null
+	,interactives: null
+	,events: null
+	,hitInteractives: null
+	,eventListeners: null
+	,stage: null
+	,setEvents: function(events) {
 		this.events = events;
 	}
 	,addEventListener: function(f) {
@@ -27109,6 +28012,7 @@ h3d_scene_Scene.prototype = $extend(h3d_scene_Object.prototype,{
 	,setElapsedTime: function(elapsedTime) {
 		this.ctx.elapsedTime = elapsedTime;
 	}
+	,hardwarePass: null
 	,hardwarePick: function(pixelX,pixelY) {
 		var l_w;
 		var p_w;
@@ -27347,7 +28251,9 @@ $hxClasses["h3d.scene.Joint"] = h3d_scene_Joint;
 h3d_scene_Joint.__name__ = ["h3d","scene","Joint"];
 h3d_scene_Joint.__super__ = h3d_scene_Object;
 h3d_scene_Joint.prototype = $extend(h3d_scene_Object.prototype,{
-	syncPos: function() {
+	skin: null
+	,index: null
+	,syncPos: function() {
 		var p = this.parent;
 		while(p != null) {
 			if((p.flags & 1) != 0) {
@@ -27385,7 +28291,18 @@ $hxClasses["h3d.scene.Skin"] = h3d_scene_Skin;
 h3d_scene_Skin.__name__ = ["h3d","scene","Skin"];
 h3d_scene_Skin.__super__ = h3d_scene_MultiMaterial;
 h3d_scene_Skin.prototype = $extend(h3d_scene_MultiMaterial.prototype,{
-	clone: function(o) {
+	skinData: null
+	,currentRelPose: null
+	,currentAbsPose: null
+	,currentPalette: null
+	,splitPalette: null
+	,jointsUpdated: null
+	,jointsAbsPosInv: null
+	,paletteChanged: null
+	,skinShader: null
+	,jointsGraphics: null
+	,showJoints: null
+	,clone: function(o) {
 		var s = o == null ? new h3d_scene_Skin(null,this.materials.slice()) : o;
 		h3d_scene_MultiMaterial.prototype.clone.call(this,s);
 		s.setSkinData(this.skinData);
@@ -27770,7 +28687,8 @@ $hxClasses["h3d.shader.AmbientLight"] = h3d_shader_AmbientLight;
 h3d_shader_AmbientLight.__name__ = ["h3d","shader","AmbientLight"];
 h3d_shader_AmbientLight.__super__ = hxsl_Shader;
 h3d_shader_AmbientLight.prototype = $extend(hxsl_Shader.prototype,{
-	get_additive: function() {
+	additive__: null
+	,get_additive: function() {
 		return this.additive__;
 	}
 	,set_additive: function(_v) {
@@ -27817,18 +28735,21 @@ $hxClasses["h3d.shader.Base2d"] = h3d_shader_Base2d;
 h3d_shader_Base2d.__name__ = ["h3d","shader","Base2d"];
 h3d_shader_Base2d.__super__ = hxsl_Shader;
 h3d_shader_Base2d.prototype = $extend(hxsl_Shader.prototype,{
-	get_zValue: function() {
+	zValue__: null
+	,get_zValue: function() {
 		return this.zValue__;
 	}
 	,set_zValue: function(_v) {
 		return this.zValue__ = _v;
 	}
+	,texture__: null
 	,get_texture: function() {
 		return this.texture__;
 	}
 	,set_texture: function(_v) {
 		return this.texture__ = _v;
 	}
+	,isRelative__: null
 	,get_isRelative: function() {
 		return this.isRelative__;
 	}
@@ -27836,36 +28757,42 @@ h3d_shader_Base2d.prototype = $extend(hxsl_Shader.prototype,{
 		this.constModified = true;
 		return this.isRelative__ = _v;
 	}
+	,color__: null
 	,get_color: function() {
 		return this.color__;
 	}
 	,set_color: function(_v) {
 		return this.color__ = _v;
 	}
+	,absoluteMatrixA__: null
 	,get_absoluteMatrixA: function() {
 		return this.absoluteMatrixA__;
 	}
 	,set_absoluteMatrixA: function(_v) {
 		return this.absoluteMatrixA__ = _v;
 	}
+	,absoluteMatrixB__: null
 	,get_absoluteMatrixB: function() {
 		return this.absoluteMatrixB__;
 	}
 	,set_absoluteMatrixB: function(_v) {
 		return this.absoluteMatrixB__ = _v;
 	}
+	,filterMatrixA__: null
 	,get_filterMatrixA: function() {
 		return this.filterMatrixA__;
 	}
 	,set_filterMatrixA: function(_v) {
 		return this.filterMatrixA__ = _v;
 	}
+	,filterMatrixB__: null
 	,get_filterMatrixB: function() {
 		return this.filterMatrixB__;
 	}
 	,set_filterMatrixB: function(_v) {
 		return this.filterMatrixB__ = _v;
 	}
+	,hasUVPos__: null
 	,get_hasUVPos: function() {
 		return this.hasUVPos__;
 	}
@@ -27873,12 +28800,14 @@ h3d_shader_Base2d.prototype = $extend(hxsl_Shader.prototype,{
 		this.constModified = true;
 		return this.hasUVPos__ = _v;
 	}
+	,uvPos__: null
 	,get_uvPos: function() {
 		return this.uvPos__;
 	}
 	,set_uvPos: function(_v) {
 		return this.uvPos__ = _v;
 	}
+	,killAlpha__: null
 	,get_killAlpha: function() {
 		return this.killAlpha__;
 	}
@@ -27886,6 +28815,7 @@ h3d_shader_Base2d.prototype = $extend(hxsl_Shader.prototype,{
 		this.constModified = true;
 		return this.killAlpha__ = _v;
 	}
+	,pixelAlign__: null
 	,get_pixelAlign: function() {
 		return this.pixelAlign__;
 	}
@@ -27893,12 +28823,14 @@ h3d_shader_Base2d.prototype = $extend(hxsl_Shader.prototype,{
 		this.constModified = true;
 		return this.pixelAlign__ = _v;
 	}
+	,halfPixelInverse__: null
 	,get_halfPixelInverse: function() {
 		return this.halfPixelInverse__;
 	}
 	,set_halfPixelInverse: function(_v) {
 		return this.halfPixelInverse__ = _v;
 	}
+	,viewport__: null
 	,get_viewport: function() {
 		return this.viewport__;
 	}
@@ -28005,24 +28937,28 @@ $hxClasses["h3d.shader.BaseMesh"] = h3d_shader_BaseMesh;
 h3d_shader_BaseMesh.__name__ = ["h3d","shader","BaseMesh"];
 h3d_shader_BaseMesh.__super__ = hxsl_Shader;
 h3d_shader_BaseMesh.prototype = $extend(hxsl_Shader.prototype,{
-	get_color: function() {
+	color__: null
+	,get_color: function() {
 		return this.color__;
 	}
 	,set_color: function(_v) {
 		return this.color__ = _v;
 	}
+	,specularPower__: null
 	,get_specularPower: function() {
 		return this.specularPower__;
 	}
 	,set_specularPower: function(_v) {
 		return this.specularPower__ = _v;
 	}
+	,specularAmount__: null
 	,get_specularAmount: function() {
 		return this.specularAmount__;
 	}
 	,set_specularAmount: function(_v) {
 		return this.specularAmount__ = _v;
 	}
+	,specularColor__: null
 	,get_specularColor: function() {
 		return this.specularColor__;
 	}
@@ -28080,24 +29016,28 @@ $hxClasses["h3d.shader.Blur"] = h3d_shader_Blur;
 h3d_shader_Blur.__name__ = ["h3d","shader","Blur"];
 h3d_shader_Blur.__super__ = h3d_shader_ScreenShader;
 h3d_shader_Blur.prototype = $extend(h3d_shader_ScreenShader.prototype,{
-	get_cameraInverseViewProj: function() {
+	cameraInverseViewProj__: null
+	,get_cameraInverseViewProj: function() {
 		return this.cameraInverseViewProj__;
 	}
 	,set_cameraInverseViewProj: function(_v) {
 		return this.cameraInverseViewProj__ = _v;
 	}
+	,texture__: null
 	,get_texture: function() {
 		return this.texture__;
 	}
 	,set_texture: function(_v) {
 		return this.texture__ = _v;
 	}
+	,depthTexture__: null
 	,get_depthTexture: function() {
 		return this.depthTexture__;
 	}
 	,set_depthTexture: function(_v) {
 		return this.depthTexture__ = _v;
 	}
+	,Quality__: null
 	,get_Quality: function() {
 		return this.Quality__;
 	}
@@ -28105,6 +29045,7 @@ h3d_shader_Blur.prototype = $extend(h3d_shader_ScreenShader.prototype,{
 		this.constModified = true;
 		return this.Quality__ = _v;
 	}
+	,isDepth__: null
 	,get_isDepth: function() {
 		return this.isDepth__;
 	}
@@ -28112,18 +29053,21 @@ h3d_shader_Blur.prototype = $extend(h3d_shader_ScreenShader.prototype,{
 		this.constModified = true;
 		return this.isDepth__ = _v;
 	}
+	,values__: null
 	,get_values: function() {
 		return this.values__;
 	}
 	,set_values: function(_v) {
 		return this.values__ = _v;
 	}
+	,pixel__: null
 	,get_pixel: function() {
 		return this.pixel__;
 	}
 	,set_pixel: function(_v) {
 		return this.pixel__ = _v;
 	}
+	,hasFixedColor__: null
 	,get_hasFixedColor: function() {
 		return this.hasFixedColor__;
 	}
@@ -28131,6 +29075,7 @@ h3d_shader_Blur.prototype = $extend(h3d_shader_ScreenShader.prototype,{
 		this.constModified = true;
 		return this.hasFixedColor__ = _v;
 	}
+	,smoothFixedColor__: null
 	,get_smoothFixedColor: function() {
 		return this.smoothFixedColor__;
 	}
@@ -28138,12 +29083,14 @@ h3d_shader_Blur.prototype = $extend(h3d_shader_ScreenShader.prototype,{
 		this.constModified = true;
 		return this.smoothFixedColor__ = _v;
 	}
+	,fixedColor__: null
 	,get_fixedColor: function() {
 		return this.fixedColor__;
 	}
 	,set_fixedColor: function(_v) {
 		return this.fixedColor__ = _v;
 	}
+	,isDepthDependant__: null
 	,get_isDepthDependant: function() {
 		return this.isDepthDependant__;
 	}
@@ -28151,6 +29098,7 @@ h3d_shader_Blur.prototype = $extend(h3d_shader_ScreenShader.prototype,{
 		this.constModified = true;
 		return this.isDepthDependant__ = _v;
 	}
+	,hasNormal__: null
 	,get_hasNormal: function() {
 		return this.hasNormal__;
 	}
@@ -28158,6 +29106,7 @@ h3d_shader_Blur.prototype = $extend(h3d_shader_ScreenShader.prototype,{
 		this.constModified = true;
 		return this.hasNormal__ = _v;
 	}
+	,normalTexture__: null
 	,get_normalTexture: function() {
 		return this.normalTexture__;
 	}
@@ -28252,7 +29201,10 @@ var h3d_shader_ShaderBuffers = function(s) {
 $hxClasses["h3d.shader.ShaderBuffers"] = h3d_shader_ShaderBuffers;
 h3d_shader_ShaderBuffers.__name__ = ["h3d","shader","ShaderBuffers"];
 h3d_shader_ShaderBuffers.prototype = {
-	grow: function(s) {
+	globals: null
+	,params: null
+	,tex: null
+	,grow: function(s) {
 		var ng = s.globalsSize << 2;
 		var np = s.paramsSize << 2;
 		var nt = s.textures2DCount + s.texturesCubeCount;
@@ -28275,7 +29227,9 @@ var h3d_shader_Buffers = function(s) {
 $hxClasses["h3d.shader.Buffers"] = h3d_shader_Buffers;
 h3d_shader_Buffers.__name__ = ["h3d","shader","Buffers"];
 h3d_shader_Buffers.prototype = {
-	grow: function(s) {
+	vertex: null
+	,fragment: null
+	,grow: function(s) {
 		this.vertex.grow(s.vertex);
 		this.fragment.grow(s.fragment);
 	}
@@ -28297,7 +29251,8 @@ $hxClasses["h3d.shader.ColorAdd"] = h3d_shader_ColorAdd;
 h3d_shader_ColorAdd.__name__ = ["h3d","shader","ColorAdd"];
 h3d_shader_ColorAdd.__super__ = hxsl_Shader;
 h3d_shader_ColorAdd.prototype = $extend(hxsl_Shader.prototype,{
-	get_color: function() {
+	color__: null
+	,get_color: function() {
 		return this.color__;
 	}
 	,set_color: function(_v) {
@@ -28340,7 +29295,8 @@ $hxClasses["h3d.shader.ColorKey"] = h3d_shader_ColorKey;
 h3d_shader_ColorKey.__name__ = ["h3d","shader","ColorKey"];
 h3d_shader_ColorKey.__super__ = hxsl_Shader;
 h3d_shader_ColorKey.prototype = $extend(hxsl_Shader.prototype,{
-	get_colorKey: function() {
+	colorKey__: null
+	,get_colorKey: function() {
 		return this.colorKey__;
 	}
 	,set_colorKey: function(_v) {
@@ -28380,7 +29336,8 @@ $hxClasses["h3d.shader.ColorMatrix"] = h3d_shader_ColorMatrix;
 h3d_shader_ColorMatrix.__name__ = ["h3d","shader","ColorMatrix"];
 h3d_shader_ColorMatrix.__super__ = hxsl_Shader;
 h3d_shader_ColorMatrix.prototype = $extend(hxsl_Shader.prototype,{
-	get_matrix: function() {
+	matrix__: null
+	,get_matrix: function() {
 		return this.matrix__;
 	}
 	,set_matrix: function(_v) {
@@ -28421,18 +29378,21 @@ $hxClasses["h3d.shader.DirLight"] = h3d_shader_DirLight;
 h3d_shader_DirLight.__name__ = ["h3d","shader","DirLight"];
 h3d_shader_DirLight.__super__ = hxsl_Shader;
 h3d_shader_DirLight.prototype = $extend(hxsl_Shader.prototype,{
-	get_color: function() {
+	color__: null
+	,get_color: function() {
 		return this.color__;
 	}
 	,set_color: function(_v) {
 		return this.color__ = _v;
 	}
+	,direction__: null
 	,get_direction: function() {
 		return this.direction__;
 	}
 	,set_direction: function(_v) {
 		return this.direction__ = _v;
 	}
+	,enableSpecular__: null
 	,get_enableSpecular: function() {
 		return this.enableSpecular__;
 	}
@@ -28489,12 +29449,14 @@ $hxClasses["h3d.shader.LineShader"] = h3d_shader_LineShader;
 h3d_shader_LineShader.__name__ = ["h3d","shader","LineShader"];
 h3d_shader_LineShader.__super__ = hxsl_Shader;
 h3d_shader_LineShader.prototype = $extend(hxsl_Shader.prototype,{
-	get_lengthScale: function() {
+	lengthScale__: null
+	,get_lengthScale: function() {
 		return this.lengthScale__;
 	}
 	,set_lengthScale: function(_v) {
 		return this.lengthScale__ = _v;
 	}
+	,width__: null
 	,get_width: function() {
 		return this.width__;
 	}
@@ -28541,7 +29503,8 @@ $hxClasses["h3d.shader.Shadow"] = h3d_shader_Shadow;
 h3d_shader_Shadow.__name__ = ["h3d","shader","Shadow"];
 h3d_shader_Shadow.__super__ = hxsl_Shader;
 h3d_shader_Shadow.prototype = $extend(hxsl_Shader.prototype,{
-	get_perPixel: function() {
+	perPixel__: null
+	,get_perPixel: function() {
 		return this.perPixel__;
 	}
 	,set_perPixel: function(_v) {
@@ -28583,13 +29546,15 @@ $hxClasses["h3d.shader.Skin"] = h3d_shader_Skin;
 h3d_shader_Skin.__name__ = ["h3d","shader","Skin"];
 h3d_shader_Skin.__super__ = hxsl_Shader;
 h3d_shader_Skin.prototype = $extend(hxsl_Shader.prototype,{
-	get_MaxBones: function() {
+	MaxBones__: null
+	,get_MaxBones: function() {
 		return this.MaxBones__;
 	}
 	,set_MaxBones: function(_v) {
 		this.constModified = true;
 		return this.MaxBones__ = _v;
 	}
+	,bonesMatrixes__: null
 	,get_bonesMatrixes: function() {
 		return this.bonesMatrixes__;
 	}
@@ -28635,7 +29600,8 @@ $hxClasses["h3d.shader.SpecularTexture"] = h3d_shader_SpecularTexture;
 h3d_shader_SpecularTexture.__name__ = ["h3d","shader","SpecularTexture"];
 h3d_shader_SpecularTexture.__super__ = hxsl_Shader;
 h3d_shader_SpecularTexture.prototype = $extend(hxsl_Shader.prototype,{
-	get_texture: function() {
+	texture__: null
+	,get_texture: function() {
 		return this.texture__;
 	}
 	,set_texture: function(_v) {
@@ -28672,13 +29638,15 @@ $hxClasses["h3d.shader.Texture"] = h3d_shader_Texture;
 h3d_shader_Texture.__name__ = ["h3d","shader","Texture"];
 h3d_shader_Texture.__super__ = hxsl_Shader;
 h3d_shader_Texture.prototype = $extend(hxsl_Shader.prototype,{
-	get_additive: function() {
+	additive__: null
+	,get_additive: function() {
 		return this.additive__;
 	}
 	,set_additive: function(_v) {
 		this.constModified = true;
 		return this.additive__ = _v;
 	}
+	,killAlpha__: null
 	,get_killAlpha: function() {
 		return this.killAlpha__;
 	}
@@ -28686,6 +29654,7 @@ h3d_shader_Texture.prototype = $extend(hxsl_Shader.prototype,{
 		this.constModified = true;
 		return this.killAlpha__ = _v;
 	}
+	,specularAlpha__: null
 	,get_specularAlpha: function() {
 		return this.specularAlpha__;
 	}
@@ -28693,12 +29662,14 @@ h3d_shader_Texture.prototype = $extend(hxsl_Shader.prototype,{
 		this.constModified = true;
 		return this.specularAlpha__ = _v;
 	}
+	,killAlphaThreshold__: null
 	,get_killAlphaThreshold: function() {
 		return this.killAlphaThreshold__;
 	}
 	,set_killAlphaThreshold: function(_v) {
 		return this.killAlphaThreshold__ = _v;
 	}
+	,texture__: null
 	,get_texture: function() {
 		return this.texture__;
 	}
@@ -28783,12 +29754,14 @@ $hxClasses["h3d.shader.UVDelta"] = h3d_shader_UVDelta;
 h3d_shader_UVDelta.__name__ = ["h3d","shader","UVDelta"];
 h3d_shader_UVDelta.__super__ = hxsl_Shader;
 h3d_shader_UVDelta.prototype = $extend(hxsl_Shader.prototype,{
-	get_uvDelta: function() {
+	uvDelta__: null
+	,get_uvDelta: function() {
 		return this.uvDelta__;
 	}
 	,set_uvDelta: function(_v) {
 		return this.uvDelta__ = _v;
 	}
+	,uvScale__: null
 	,get_uvScale: function() {
 		return this.uvScale__;
 	}
@@ -28828,7 +29801,8 @@ $hxClasses["h3d.shader.VertexColorAlpha"] = h3d_shader_VertexColorAlpha;
 h3d_shader_VertexColorAlpha.__name__ = ["h3d","shader","VertexColorAlpha"];
 h3d_shader_VertexColorAlpha.__super__ = hxsl_Shader;
 h3d_shader_VertexColorAlpha.prototype = $extend(hxsl_Shader.prototype,{
-	get_additive: function() {
+	additive__: null
+	,get_additive: function() {
 		return this.additive__;
 	}
 	,set_additive: function(_v) {
@@ -28878,12 +29852,14 @@ $hxClasses["h3d.shader.VolumeDecal"] = h3d_shader_VolumeDecal;
 h3d_shader_VolumeDecal.__name__ = ["h3d","shader","VolumeDecal"];
 h3d_shader_VolumeDecal.__super__ = hxsl_Shader;
 h3d_shader_VolumeDecal.prototype = $extend(hxsl_Shader.prototype,{
-	get_scale: function() {
+	scale__: null
+	,get_scale: function() {
 		return this.scale__;
 	}
 	,set_scale: function(_v) {
 		return this.scale__ = _v;
 	}
+	,normal__: null
 	,get_normal: function() {
 		return this.normal__;
 	}
@@ -28916,11 +29892,137 @@ h3d_shader_VolumeDecal.prototype = $extend(hxsl_Shader.prototype,{
 	}
 	,__class__: h3d_shader_VolumeDecal
 });
+var haxe_StackItem = $hxClasses["haxe.StackItem"] = { __ename__ : true, __constructs__ : ["CFunction","Module","FilePos","Method","LocalFunction"] };
+haxe_StackItem.CFunction = ["CFunction",0];
+haxe_StackItem.CFunction.toString = $estr;
+haxe_StackItem.CFunction.__enum__ = haxe_StackItem;
+haxe_StackItem.Module = function(m) { var $x = ["Module",1,m]; $x.__enum__ = haxe_StackItem; $x.toString = $estr; return $x; };
+haxe_StackItem.FilePos = function(s,file,line) { var $x = ["FilePos",2,s,file,line]; $x.__enum__ = haxe_StackItem; $x.toString = $estr; return $x; };
+haxe_StackItem.Method = function(classname,method) { var $x = ["Method",3,classname,method]; $x.__enum__ = haxe_StackItem; $x.toString = $estr; return $x; };
+haxe_StackItem.LocalFunction = function(v) { var $x = ["LocalFunction",4,v]; $x.__enum__ = haxe_StackItem; $x.toString = $estr; return $x; };
+haxe_StackItem.__empty_constructs__ = [haxe_StackItem.CFunction];
+var haxe_CallStack = function() { };
+$hxClasses["haxe.CallStack"] = haxe_CallStack;
+haxe_CallStack.__name__ = ["haxe","CallStack"];
+haxe_CallStack.getStack = function(e) {
+	if(e == null) {
+		return [];
+	}
+	var oldValue = Error.prepareStackTrace;
+	Error.prepareStackTrace = function(error,callsites) {
+		var stack = [];
+		var _g = 0;
+		while(_g < callsites.length) {
+			var site = callsites[_g];
+			++_g;
+			if(haxe_CallStack.wrapCallSite != null) {
+				site = haxe_CallStack.wrapCallSite(site);
+			}
+			var method = null;
+			var fullName = site.getFunctionName();
+			if(fullName != null) {
+				var idx = fullName.lastIndexOf(".");
+				if(idx >= 0) {
+					var className = HxOverrides.substr(fullName,0,idx);
+					var methodName = HxOverrides.substr(fullName,idx + 1,null);
+					method = haxe_StackItem.Method(className,methodName);
+				}
+			}
+			stack.push(haxe_StackItem.FilePos(method,site.getFileName(),site.getLineNumber()));
+		}
+		return stack;
+	};
+	var a = haxe_CallStack.makeStack(e.stack);
+	Error.prepareStackTrace = oldValue;
+	return a;
+};
+haxe_CallStack.exceptionStack = function() {
+	return haxe_CallStack.getStack(haxe_CallStack.lastException);
+};
+haxe_CallStack.toString = function(stack) {
+	var b = new StringBuf();
+	var _g = 0;
+	while(_g < stack.length) {
+		var s = stack[_g];
+		++_g;
+		b.b += "\nCalled from ";
+		haxe_CallStack.itemToString(b,s);
+	}
+	return b.b;
+};
+haxe_CallStack.itemToString = function(b,s) {
+	switch(s[1]) {
+	case 0:
+		b.b += "a C function";
+		break;
+	case 1:
+		var m = s[2];
+		b.b = (b.b += "module ") + (m == null ? "null" : "" + m);
+		break;
+	case 2:
+		var line = s[4];
+		var file = s[3];
+		var s1 = s[2];
+		if(s1 != null) {
+			haxe_CallStack.itemToString(b,s1);
+			b.b += " (";
+		}
+		b.b = (b.b += file == null ? "null" : "" + file) + " line ";
+		b.b += line == null ? "null" : "" + line;
+		if(s1 != null) {
+			b.b += ")";
+		}
+		break;
+	case 3:
+		var meth = s[3];
+		var cname = s[2];
+		b.b = (b.b += cname == null ? "null" : "" + cname) + ".";
+		b.b += meth == null ? "null" : "" + meth;
+		break;
+	case 4:
+		var n = s[2];
+		b.b = (b.b += "local function #") + (n == null ? "null" : "" + n);
+		break;
+	}
+};
+haxe_CallStack.makeStack = function(s) {
+	if(s == null) {
+		return [];
+	} else if(typeof(s) == "string") {
+		var stack = s.split("\n");
+		if(stack[0] == "Error") {
+			stack.shift();
+		}
+		var m = [];
+		var rie10 = new EReg("^   at ([A-Za-z0-9_. ]+) \\(([^)]+):([0-9]+):([0-9]+)\\)$","");
+		var _g = 0;
+		while(_g < stack.length) {
+			var line = stack[_g];
+			++_g;
+			if(rie10.match(line)) {
+				var path = rie10.matched(1).split(".");
+				var meth = path.pop();
+				var file = rie10.matched(2);
+				var line1 = Std.parseInt(rie10.matched(3));
+				m.push(haxe_StackItem.FilePos(meth == "Anonymous function" ? haxe_StackItem.LocalFunction() : meth == "Global code" ? null : haxe_StackItem.Method(path.join("."),meth),file,line1));
+			} else {
+				m.push(haxe_StackItem.Module(StringTools.trim(line)));
+			}
+		}
+		return m;
+	} else {
+		return s;
+	}
+};
 var haxe_IMap = function() { };
 $hxClasses["haxe.IMap"] = haxe_IMap;
 haxe_IMap.__name__ = ["haxe","IMap"];
 haxe_IMap.prototype = {
-	__class__: haxe_IMap
+	get: null
+	,set: null
+	,exists: null
+	,remove: null
+	,__class__: haxe_IMap
 };
 var haxe_EntryPoint = function() { };
 $hxClasses["haxe.EntryPoint"] = haxe_EntryPoint;
@@ -28950,7 +30052,9 @@ var haxe__$Int64__$_$_$Int64 = function(high,low) {
 $hxClasses["haxe._Int64.___Int64"] = haxe__$Int64__$_$_$Int64;
 haxe__$Int64__$_$_$Int64.__name__ = ["haxe","_Int64","___Int64"];
 haxe__$Int64__$_$_$Int64.prototype = {
-	__class__: haxe__$Int64__$_$_$Int64
+	high: null
+	,low: null
+	,__class__: haxe__$Int64__$_$_$Int64
 };
 var haxe_Log = function() { };
 $hxClasses["haxe.Log"] = haxe_Log;
@@ -28966,7 +30070,12 @@ var haxe_MainEvent = function(f,p) {
 $hxClasses["haxe.MainEvent"] = haxe_MainEvent;
 haxe_MainEvent.__name__ = ["haxe","MainEvent"];
 haxe_MainEvent.prototype = {
-	__class__: haxe_MainEvent
+	f: null
+	,prev: null
+	,next: null
+	,nextRun: null
+	,priority: null
+	,__class__: haxe_MainEvent
 };
 var haxe_MainLoop = function() { };
 $hxClasses["haxe.MainLoop"] = haxe_MainLoop;
@@ -29090,7 +30199,8 @@ haxe_Timer.delay = function(f,time_ms) {
 	return t;
 };
 haxe_Timer.prototype = {
-	stop: function() {
+	id: null
+	,stop: function() {
 		if(this.id == null) {
 			return;
 		}
@@ -29143,7 +30253,13 @@ haxe_Unserializer.run = function(v) {
 	return new haxe_Unserializer(v).unserialize();
 };
 haxe_Unserializer.prototype = {
-	readDigits: function() {
+	buf: null
+	,pos: null
+	,length: null
+	,cache: null
+	,scache: null
+	,resolver: null
+	,readDigits: function() {
 		var k = 0;
 		var s = false;
 		var fpos = this.pos;
@@ -29453,7 +30569,9 @@ haxe_crypto_Adler32.read = function(i) {
 	return a;
 };
 haxe_crypto_Adler32.prototype = {
-	update: function(b,pos,len) {
+	a1: null
+	,a2: null
+	,update: function(b,pos,len) {
 		var a1 = this.a1;
 		var a2 = this.a2;
 		var _g1 = pos;
@@ -29487,7 +30605,10 @@ var haxe_crypto_BaseCode = function(base) {
 $hxClasses["haxe.crypto.BaseCode"] = haxe_crypto_BaseCode;
 haxe_crypto_BaseCode.__name__ = ["haxe","crypto","BaseCode"];
 haxe_crypto_BaseCode.prototype = {
-	initTable: function() {
+	base: null
+	,nbits: null
+	,tbl: null
+	,initTable: function() {
 		var tbl = [];
 		var _g = 0;
 		while(_g < 256) tbl[_g++] = -1;
@@ -29534,7 +30655,8 @@ var haxe_crypto_Crc32 = function() {
 $hxClasses["haxe.crypto.Crc32"] = haxe_crypto_Crc32;
 haxe_crypto_Crc32.__name__ = ["haxe","crypto","Crc32"];
 haxe_crypto_Crc32.prototype = {
-	'byte': function(b) {
+	crc: null
+	,'byte': function(b) {
 		var tmp = (this.crc ^ b) & 255;
 		var _g = 0;
 		while(_g < 8) {
@@ -29864,7 +30986,8 @@ var haxe_ds_BalancedTree = function() {
 $hxClasses["haxe.ds.BalancedTree"] = haxe_ds_BalancedTree;
 haxe_ds_BalancedTree.__name__ = ["haxe","ds","BalancedTree"];
 haxe_ds_BalancedTree.prototype = {
-	set: function(key,value) {
+	root: null
+	,set: function(key,value) {
 		this.root = this.setLoop(key,value,this.root);
 	}
 	,get: function(key) {
@@ -29887,6 +31010,7 @@ haxe_ds_BalancedTree.prototype = {
 			this.root = this.removeLoop(key,this.root);
 			return true;
 		} catch( e ) {
+			haxe_CallStack.lastException = e;
 			if (e instanceof js__$Boot_HaxeError) e = e.val;
 			if( js_Boot.__instanceof(e,String) ) {
 				return false;
@@ -30035,7 +31159,12 @@ var haxe_ds_TreeNode = function(l,k,v,r,h) {
 $hxClasses["haxe.ds.TreeNode"] = haxe_ds_TreeNode;
 haxe_ds_TreeNode.__name__ = ["haxe","ds","TreeNode"];
 haxe_ds_TreeNode.prototype = {
-	__class__: haxe_ds_TreeNode
+	left: null
+	,right: null
+	,key: null
+	,value: null
+	,_height: null
+	,__class__: haxe_ds_TreeNode
 };
 var haxe_ds_EnumValueMap = function() {
 	haxe_ds_BalancedTree.call(this);
@@ -30091,7 +31220,8 @@ $hxClasses["haxe.ds.IntMap"] = haxe_ds_IntMap;
 haxe_ds_IntMap.__name__ = ["haxe","ds","IntMap"];
 haxe_ds_IntMap.__interfaces__ = [haxe_IMap];
 haxe_ds_IntMap.prototype = {
-	set: function(key,value) {
+	h: null
+	,set: function(key,value) {
 		this.h[key] = value;
 	}
 	,get: function(key) {
@@ -30131,7 +31261,8 @@ $hxClasses["haxe.ds.ObjectMap"] = haxe_ds_ObjectMap;
 haxe_ds_ObjectMap.__name__ = ["haxe","ds","ObjectMap"];
 haxe_ds_ObjectMap.__interfaces__ = [haxe_IMap];
 haxe_ds_ObjectMap.prototype = {
-	set: function(key,value) {
+	h: null
+	,set: function(key,value) {
 		var id = key.__id__ || (key.__id__ = ++haxe_ds_ObjectMap.count);
 		this.h[id] = value;
 		this.h.__keys__[id] = key;
@@ -30171,7 +31302,11 @@ var haxe_ds__$StringMap_StringMapIterator = function(map,keys) {
 $hxClasses["haxe.ds._StringMap.StringMapIterator"] = haxe_ds__$StringMap_StringMapIterator;
 haxe_ds__$StringMap_StringMapIterator.__name__ = ["haxe","ds","_StringMap","StringMapIterator"];
 haxe_ds__$StringMap_StringMapIterator.prototype = {
-	hasNext: function() {
+	map: null
+	,keys: null
+	,index: null
+	,count: null
+	,hasNext: function() {
 		return this.index < this.count;
 	}
 	,next: function() {
@@ -30192,7 +31327,9 @@ $hxClasses["haxe.ds.StringMap"] = haxe_ds_StringMap;
 haxe_ds_StringMap.__name__ = ["haxe","ds","StringMap"];
 haxe_ds_StringMap.__interfaces__ = [haxe_IMap];
 haxe_ds_StringMap.prototype = {
-	set: function(key,value) {
+	h: null
+	,rh: null
+	,set: function(key,value) {
 		if(__map_reserved[key] != null) {
 			this.setReserved(key,value);
 		} else {
@@ -30347,7 +31484,10 @@ haxe_io_Bytes.ofData = function(b) {
 	return new haxe_io_Bytes(b);
 };
 haxe_io_Bytes.prototype = {
-	blit: function(pos,src,srcpos,len) {
+	length: null
+	,b: null
+	,data: null
+	,blit: function(pos,src,srcpos,len) {
 		if(pos < 0 || srcpos < 0 || len < 0 || pos + len > this.length || srcpos + len > src.length) {
 			throw new js__$Boot_HaxeError(haxe_io_Error.OutsideBounds);
 		}
@@ -30445,7 +31585,8 @@ var haxe_io_BytesBuffer = function() {
 $hxClasses["haxe.io.BytesBuffer"] = haxe_io_BytesBuffer;
 haxe_io_BytesBuffer.__name__ = ["haxe","io","BytesBuffer"];
 haxe_io_BytesBuffer.prototype = {
-	getBytes: function() {
+	b: null
+	,getBytes: function() {
 		var bytes = new haxe_io_Bytes(new Uint8Array(this.b).buffer);
 		this.b = null;
 		return bytes;
@@ -30456,7 +31597,8 @@ var haxe_io_Input = function() { };
 $hxClasses["haxe.io.Input"] = haxe_io_Input;
 haxe_io_Input.__name__ = ["haxe","io","Input"];
 haxe_io_Input.prototype = {
-	readByte: function() {
+	bigEndian: null
+	,readByte: function() {
 		throw new js__$Boot_HaxeError("Not implemented");
 	}
 	,readBytes: function(s,pos,len) {
@@ -30472,6 +31614,7 @@ haxe_io_Input.prototype = {
 				--k;
 			}
 		} catch( eof ) {
+			haxe_CallStack.lastException = eof;
 			if (eof instanceof js__$Boot_HaxeError) eof = eof.val;
 			if( js_Boot.__instanceof(eof,haxe_io_Eof) ) {
 			} else throw(eof);
@@ -30502,6 +31645,7 @@ haxe_io_Input.prototype = {
 				while(_g1 < len) total.b.push(b2[_g1++]);
 			}
 		} catch( e ) {
+			haxe_CallStack.lastException = e;
 			if (e instanceof js__$Boot_HaxeError) e = e.val;
 			if( js_Boot.__instanceof(e,haxe_io_Eof) ) {
 			} else throw(e);
@@ -30598,7 +31742,11 @@ $hxClasses["haxe.io.BytesInput"] = haxe_io_BytesInput;
 haxe_io_BytesInput.__name__ = ["haxe","io","BytesInput"];
 haxe_io_BytesInput.__super__ = haxe_io_Input;
 haxe_io_BytesInput.prototype = $extend(haxe_io_Input.prototype,{
-	readByte: function() {
+	b: null
+	,pos: null
+	,len: null
+	,totlen: null
+	,readByte: function() {
 		if(this.len == 0) {
 			throw new js__$Boot_HaxeError(new haxe_io_Eof());
 		}
@@ -30633,7 +31781,8 @@ var haxe_io_Output = function() { };
 $hxClasses["haxe.io.Output"] = haxe_io_Output;
 haxe_io_Output.__name__ = ["haxe","io","Output"];
 haxe_io_Output.prototype = {
-	writeByte: function(c) {
+	bigEndian: null
+	,writeByte: function(c) {
 		throw new js__$Boot_HaxeError("Not implemented");
 	}
 	,writeBytes: function(s,pos,len) {
@@ -30698,7 +31847,8 @@ $hxClasses["haxe.io.BytesOutput"] = haxe_io_BytesOutput;
 haxe_io_BytesOutput.__name__ = ["haxe","io","BytesOutput"];
 haxe_io_BytesOutput.__super__ = haxe_io_Output;
 haxe_io_BytesOutput.prototype = $extend(haxe_io_Output.prototype,{
-	writeByte: function(c) {
+	b: null
+	,writeByte: function(c) {
 		this.b.b.push(c);
 	}
 	,writeBytes: function(buf,pos,len) {
@@ -30884,13 +32034,239 @@ haxe_macro_Unop.OpNegBits = ["OpNegBits",4];
 haxe_macro_Unop.OpNegBits.toString = $estr;
 haxe_macro_Unop.OpNegBits.__enum__ = haxe_macro_Unop;
 haxe_macro_Unop.__empty_constructs__ = [haxe_macro_Unop.OpIncrement,haxe_macro_Unop.OpDecrement,haxe_macro_Unop.OpNot,haxe_macro_Unop.OpNeg,haxe_macro_Unop.OpNegBits];
+var haxe_unit_TestCase = function() {
+};
+$hxClasses["haxe.unit.TestCase"] = haxe_unit_TestCase;
+haxe_unit_TestCase.__name__ = ["haxe","unit","TestCase"];
+haxe_unit_TestCase.prototype = {
+	currentTest: null
+	,setup: function() {
+	}
+	,tearDown: function() {
+	}
+	,print: function(v) {
+		haxe_unit_TestRunner.print(v);
+	}
+	,assertTrue: function(b,c) {
+		this.currentTest.done = true;
+		if(b != true) {
+			this.currentTest.success = false;
+			this.currentTest.error = "expected true but was false";
+			this.currentTest.posInfos = c;
+			throw new js__$Boot_HaxeError(this.currentTest);
+		}
+	}
+	,assertFalse: function(b,c) {
+		this.currentTest.done = true;
+		if(b == true) {
+			this.currentTest.success = false;
+			this.currentTest.error = "expected false but was true";
+			this.currentTest.posInfos = c;
+			throw new js__$Boot_HaxeError(this.currentTest);
+		}
+	}
+	,assertEquals: function(expected,actual,c) {
+		this.currentTest.done = true;
+		if(actual != expected) {
+			this.currentTest.success = false;
+			this.currentTest.error = "expected '" + Std.string(expected) + "' but was '" + Std.string(actual) + "'";
+			this.currentTest.posInfos = c;
+			throw new js__$Boot_HaxeError(this.currentTest);
+		}
+	}
+	,__class__: haxe_unit_TestCase
+};
+var haxe_unit_TestResult = function() {
+	this.m_tests = new List();
+	this.success = true;
+};
+$hxClasses["haxe.unit.TestResult"] = haxe_unit_TestResult;
+haxe_unit_TestResult.__name__ = ["haxe","unit","TestResult"];
+haxe_unit_TestResult.prototype = {
+	m_tests: null
+	,success: null
+	,add: function(t) {
+		this.m_tests.add(t);
+		if(!t.success) {
+			this.success = false;
+		}
+	}
+	,toString: function() {
+		var buf_b = "";
+		var failures = 0;
+		var _g_head = this.m_tests.h;
+		while(_g_head != null) {
+			var val = _g_head.item;
+			_g_head = _g_head.next;
+			if(val.success == false) {
+				buf_b += "* ";
+				buf_b += Std.string(val.classname);
+				buf_b += "::";
+				buf_b += Std.string(val.method);
+				buf_b += "()";
+				buf_b += "\n";
+				buf_b += "ERR: ";
+				if(val.posInfos != null) {
+					buf_b += Std.string(val.posInfos.fileName);
+					buf_b += ":";
+					buf_b += Std.string(val.posInfos.lineNumber);
+					buf_b += "(";
+					buf_b += Std.string(val.posInfos.className);
+					buf_b += ".";
+					buf_b += Std.string(val.posInfos.methodName);
+					buf_b += ") - ";
+				}
+				buf_b += Std.string(val.error);
+				buf_b += "\n";
+				if(val.backtrace != null) {
+					buf_b += Std.string(val.backtrace);
+					buf_b += "\n";
+				}
+				buf_b += "\n";
+				++failures;
+			}
+		}
+		buf_b += "\n";
+		if(failures == 0) {
+			buf_b += "OK ";
+		} else {
+			buf_b += "FAILED ";
+		}
+		buf_b += Std.string(this.m_tests.length);
+		buf_b += " tests, ";
+		buf_b += failures == null ? "null" : "" + failures;
+		buf_b += " failed, ";
+		buf_b += Std.string(this.m_tests.length - failures);
+		buf_b += " success";
+		buf_b += "\n";
+		return buf_b;
+	}
+	,__class__: haxe_unit_TestResult
+};
+var haxe_unit_TestRunner = function() {
+	this.result = new haxe_unit_TestResult();
+	this.cases = new List();
+};
+$hxClasses["haxe.unit.TestRunner"] = haxe_unit_TestRunner;
+haxe_unit_TestRunner.__name__ = ["haxe","unit","TestRunner"];
+haxe_unit_TestRunner.print = function(v) {
+	var msg = js_Boot.__string_rec(v,"");
+	var d;
+	var tmp;
+	if(typeof(document) != "undefined") {
+		d = document.getElementById("haxe:trace");
+		tmp = d != null;
+	} else {
+		tmp = false;
+	}
+	if(tmp) {
+		msg = StringTools.htmlEscape(msg).split("\n").join("<br/>");
+		d.innerHTML += msg + "<br/>";
+	} else if(typeof process != "undefined" && process.stdout != null && process.stdout.write != null) {
+		process.stdout.write(msg);
+	} else if(typeof console != "undefined" && console.log != null) {
+		console.log(msg);
+	}
+};
+haxe_unit_TestRunner.customTrace = function(v,p) {
+	haxe_unit_TestRunner.print(p.fileName + ":" + p.lineNumber + ": " + Std.string(v) + "\n");
+};
+haxe_unit_TestRunner.prototype = {
+	result: null
+	,cases: null
+	,add: function(c) {
+		this.cases.add(c);
+	}
+	,run: function() {
+		this.result = new haxe_unit_TestResult();
+		var _g_head = this.cases.h;
+		while(_g_head != null) {
+			var val = _g_head.item;
+			_g_head = _g_head.next;
+			this.runCase(val);
+		}
+		haxe_unit_TestRunner.print(this.result.toString());
+		return this.result.success;
+	}
+	,runCase: function(t) {
+		var old = haxe_Log.trace;
+		haxe_Log.trace = haxe_unit_TestRunner.customTrace;
+		var cl = t == null ? null : js_Boot.getClass(t);
+		var fields = Type.getInstanceFields(cl);
+		haxe_unit_TestRunner.print("Class: " + Type.getClassName(cl) + " ");
+		var _g = 0;
+		while(_g < fields.length) {
+			var f = fields[_g];
+			++_g;
+			var field = Reflect.field(t,f);
+			if(StringTools.startsWith(f,"test") && Reflect.isFunction(field)) {
+				t.currentTest = new haxe_unit_TestStatus();
+				t.currentTest.classname = Type.getClassName(cl);
+				t.currentTest.method = f;
+				t.setup();
+				try {
+					var args = [];
+					field.apply(t,args);
+					if(t.currentTest.done) {
+						t.currentTest.success = true;
+						haxe_unit_TestRunner.print(".");
+					} else {
+						t.currentTest.success = false;
+						t.currentTest.error = "(warning) no assert";
+						haxe_unit_TestRunner.print("W");
+					}
+				} catch( $e0 ) {
+					haxe_CallStack.lastException = $e0;
+					if ($e0 instanceof js__$Boot_HaxeError) $e0 = $e0.val;
+					if( js_Boot.__instanceof($e0,haxe_unit_TestStatus) ) {
+						var e = $e0;
+						haxe_unit_TestRunner.print("F");
+						var tmp = haxe_CallStack.exceptionStack();
+						t.currentTest.backtrace = haxe_CallStack.toString(tmp);
+					} else {
+					var e1 = $e0;
+					haxe_unit_TestRunner.print("E");
+					if(e1.message != null) {
+						t.currentTest.error = "exception thrown : " + Std.string(e1) + " [" + Std.string(e1.message) + "]";
+					} else {
+						t.currentTest.error = "exception thrown : " + Std.string(e1);
+					}
+					var tmp1 = haxe_CallStack.exceptionStack();
+					t.currentTest.backtrace = haxe_CallStack.toString(tmp1);
+					}
+				}
+				this.result.add(t.currentTest);
+			}
+		}
+		haxe_unit_TestRunner.print("\n");
+		haxe_Log.trace = old;
+	}
+	,__class__: haxe_unit_TestRunner
+};
+var haxe_unit_TestStatus = function() {
+	this.done = false;
+	this.success = false;
+};
+$hxClasses["haxe.unit.TestStatus"] = haxe_unit_TestStatus;
+haxe_unit_TestStatus.__name__ = ["haxe","unit","TestStatus"];
+haxe_unit_TestStatus.prototype = {
+	done: null
+	,success: null
+	,error: null
+	,method: null
+	,classname: null
+	,posInfos: null
+	,backtrace: null
+	,__class__: haxe_unit_TestStatus
+};
 var haxe_xml__$Fast_NodeAccess = function(x) {
 	this.__x = x;
 };
 $hxClasses["haxe.xml._Fast.NodeAccess"] = haxe_xml__$Fast_NodeAccess;
 haxe_xml__$Fast_NodeAccess.__name__ = ["haxe","xml","_Fast","NodeAccess"];
 haxe_xml__$Fast_NodeAccess.prototype = {
-	resolve: function(name) {
+	__x: null
+	,resolve: function(name) {
 		var x = this.__x.elementsNamed(name).next();
 		if(x == null) {
 			var xname;
@@ -30915,7 +32291,8 @@ var haxe_xml__$Fast_AttribAccess = function(x) {
 $hxClasses["haxe.xml._Fast.AttribAccess"] = haxe_xml__$Fast_AttribAccess;
 haxe_xml__$Fast_AttribAccess.__name__ = ["haxe","xml","_Fast","AttribAccess"];
 haxe_xml__$Fast_AttribAccess.prototype = {
-	resolve: function(name) {
+	__x: null
+	,resolve: function(name) {
 		if(this.__x.nodeType == Xml.Document) {
 			throw new js__$Boot_HaxeError("Cannot access document attribute " + name);
 		}
@@ -30937,7 +32314,8 @@ var haxe_xml__$Fast_HasAttribAccess = function(x) {
 $hxClasses["haxe.xml._Fast.HasAttribAccess"] = haxe_xml__$Fast_HasAttribAccess;
 haxe_xml__$Fast_HasAttribAccess.__name__ = ["haxe","xml","_Fast","HasAttribAccess"];
 haxe_xml__$Fast_HasAttribAccess.prototype = {
-	resolve: function(name) {
+	__x: null
+	,resolve: function(name) {
 		if(this.__x.nodeType == Xml.Document) {
 			throw new js__$Boot_HaxeError("Cannot access document attribute " + name);
 		}
@@ -30951,7 +32329,8 @@ var haxe_xml__$Fast_HasNodeAccess = function(x) {
 $hxClasses["haxe.xml._Fast.HasNodeAccess"] = haxe_xml__$Fast_HasNodeAccess;
 haxe_xml__$Fast_HasNodeAccess.__name__ = ["haxe","xml","_Fast","HasNodeAccess"];
 haxe_xml__$Fast_HasNodeAccess.prototype = {
-	__class__: haxe_xml__$Fast_HasNodeAccess
+	__x: null
+	,__class__: haxe_xml__$Fast_HasNodeAccess
 };
 var haxe_xml__$Fast_NodeListAccess = function(x) {
 	this.__x = x;
@@ -30959,7 +32338,8 @@ var haxe_xml__$Fast_NodeListAccess = function(x) {
 $hxClasses["haxe.xml._Fast.NodeListAccess"] = haxe_xml__$Fast_NodeListAccess;
 haxe_xml__$Fast_NodeListAccess.__name__ = ["haxe","xml","_Fast","NodeListAccess"];
 haxe_xml__$Fast_NodeListAccess.prototype = {
-	resolve: function(name) {
+	__x: null
+	,resolve: function(name) {
 		var l = new List();
 		var x = this.__x.elementsNamed(name);
 		while(x.hasNext()) l.add(new haxe_xml_Fast(x.next()));
@@ -30981,7 +32361,13 @@ var haxe_xml_Fast = function(x) {
 $hxClasses["haxe.xml.Fast"] = haxe_xml_Fast;
 haxe_xml_Fast.__name__ = ["haxe","xml","Fast"];
 haxe_xml_Fast.prototype = {
-	get_name: function() {
+	x: null
+	,node: null
+	,nodes: null
+	,att: null
+	,has: null
+	,hasNode: null
+	,get_name: function() {
 		if(this.x.nodeType == Xml.Document) {
 			return "Document";
 		} else {
@@ -31085,7 +32471,12 @@ var haxe_xml_XmlParserException = function(message,xml,position) {
 $hxClasses["haxe.xml.XmlParserException"] = haxe_xml_XmlParserException;
 haxe_xml_XmlParserException.__name__ = ["haxe","xml","XmlParserException"];
 haxe_xml_XmlParserException.prototype = {
-	toString: function() {
+	message: null
+	,lineNumber: null
+	,positionAtLine: null
+	,position: null
+	,xml: null
+	,toString: function() {
 		return Type.getClassName(js_Boot.getClass(this)) + ": " + this.message + " at line " + this.lineNumber + " char " + this.positionAtLine;
 	}
 	,__class__: haxe_xml_XmlParserException
@@ -31556,7 +32947,10 @@ var haxe_zip__$InflateImpl_Window = function(hasCrc) {
 $hxClasses["haxe.zip._InflateImpl.Window"] = haxe_zip__$InflateImpl_Window;
 haxe_zip__$InflateImpl_Window.__name__ = ["haxe","zip","_InflateImpl","Window"];
 haxe_zip__$InflateImpl_Window.prototype = {
-	slide: function() {
+	buffer: null
+	,pos: null
+	,crc: null
+	,slide: function() {
 		if(this.crc != null) {
 			this.crc.update(this.buffer,0,32768);
 		}
@@ -31671,7 +33065,22 @@ haxe_zip_InflateImpl.run = function(i,bufsize) {
 	return output.getBytes();
 };
 haxe_zip_InflateImpl.prototype = {
-	buildFixedHuffman: function() {
+	nbits: null
+	,bits: null
+	,state: null
+	,'final': null
+	,huffman: null
+	,huffdist: null
+	,htools: null
+	,len: null
+	,dist: null
+	,needed: null
+	,output: null
+	,outpos: null
+	,input: null
+	,lengths: null
+	,window: null
+	,buildFixedHuffman: function() {
 		if(haxe_zip_InflateImpl.FIXED_HUFFMAN != null) {
 			return haxe_zip_InflateImpl.FIXED_HUFFMAN;
 		}
@@ -31955,7 +33364,12 @@ $hxClasses["hxd.App"] = hxd_App;
 hxd_App.__name__ = ["hxd","App"];
 hxd_App.__interfaces__ = [h3d_IDrawable];
 hxd_App.prototype = {
-	get_wantedFPS: function() {
+	engine: null
+	,s3d: null
+	,s2d: null
+	,sevents: null
+	,isDisposed: null
+	,get_wantedFPS: function() {
 		return hxd_Timer.wantedFPS;
 	}
 	,set_wantedFPS: function(fps) {
@@ -32078,7 +33492,10 @@ hxd_BitmapData.fromNative = function(data) {
 	return b;
 };
 hxd_BitmapData.prototype = {
-	clear: function(color) {
+	ctx: null
+	,lockImage: null
+	,pixel: null
+	,clear: function(color) {
 		this.fill(0,0,this.ctx.canvas.width,this.ctx.canvas.height,color);
 	}
 	,fill: function(x,y,width,height,color) {
@@ -32276,7 +33693,8 @@ hxd_Charset.getDefault = function() {
 	return hxd_Charset.inst;
 };
 hxd_Charset.prototype = {
-	resolveChar: function(code,glyphs) {
+	map: null
+	,resolveChar: function(code,glyphs) {
 		var c = code;
 		while(c != null) {
 			var g = glyphs.h[c];
@@ -32337,7 +33755,12 @@ var hxd_CustomCursor = function(frames,speed,offsetX,offsetY) {
 $hxClasses["hxd.CustomCursor"] = hxd_CustomCursor;
 hxd_CustomCursor.__name__ = ["hxd","CustomCursor"];
 hxd_CustomCursor.prototype = {
-	dispose: function() {
+	frames: null
+	,speed: null
+	,offsetX: null
+	,offsetY: null
+	,alloc: null
+	,dispose: function() {
 		var _g = 0;
 		var _g1 = this.frames;
 		while(_g < _g1.length) {
@@ -32409,7 +33832,18 @@ var hxd_Event = function(k,x,y) {
 $hxClasses["hxd.Event"] = hxd_Event;
 hxd_Event.__name__ = ["hxd","Event"];
 hxd_Event.prototype = {
-	toString: function() {
+	kind: null
+	,relX: null
+	,relY: null
+	,relZ: null
+	,propagate: null
+	,cancel: null
+	,button: null
+	,touchId: null
+	,keyCode: null
+	,charCode: null
+	,wheelDelta: null
+	,toString: function() {
 		var tmp = Std.string(this.kind) + "[" + (this.relX | 0) + "," + (this.relY | 0) + "]";
 		var tmp1;
 		switch(this.kind[1]) {
@@ -32487,7 +33921,10 @@ var hxd__$FloatBuffer_InnerIterator = function(b) {
 $hxClasses["hxd._FloatBuffer.InnerIterator"] = hxd__$FloatBuffer_InnerIterator;
 hxd__$FloatBuffer_InnerIterator.__name__ = ["hxd","_FloatBuffer","InnerIterator"];
 hxd__$FloatBuffer_InnerIterator.prototype = {
-	hasNext: function() {
+	b: null
+	,len: null
+	,pos: null
+	,hasNext: function() {
 		return this.pos < this.len;
 	}
 	,next: function() {
@@ -32563,7 +34000,10 @@ var hxd__$IndexBuffer_InnerIterator = function(b) {
 $hxClasses["hxd._IndexBuffer.InnerIterator"] = hxd__$IndexBuffer_InnerIterator;
 hxd__$IndexBuffer_InnerIterator.__name__ = ["hxd","_IndexBuffer","InnerIterator"];
 hxd__$IndexBuffer_InnerIterator.prototype = {
-	hasNext: function() {
+	b: null
+	,len: null
+	,pos: null
+	,hasNext: function() {
 		return this.pos < this.len;
 	}
 	,next: function() {
@@ -32996,7 +34436,14 @@ hxd_Pixels.alloc = function(width,height,format) {
 	return new hxd_Pixels(width,height,hxd_impl_Tmp.getBytes(width * height * hxd_Pixels.bytesPerPixel(format)),format);
 };
 hxd_Pixels.prototype = {
-	get_format: function() {
+	bytes: null
+	,width: null
+	,height: null
+	,offset: null
+	,flags: null
+	,bpp: null
+	,innerFormat: null
+	,get_format: function() {
 		return this.innerFormat;
 	}
 	,set_innerFormat: function(fmt) {
@@ -33439,7 +34886,20 @@ var hxd_SceneEvents = function(stage) {
 $hxClasses["hxd.SceneEvents"] = hxd_SceneEvents;
 hxd_SceneEvents.__name__ = ["hxd","SceneEvents"];
 hxd_SceneEvents.prototype = {
-	onRemove: function(i) {
+	stage: null
+	,scenes: null
+	,currentOver: null
+	,currentFocus: null
+	,pendingEvents: null
+	,pushList: null
+	,currentDrag: null
+	,mouseX: null
+	,mouseY: null
+	,lastTouch: null
+	,focusLost: null
+	,checkPos: null
+	,onOut: null
+	,onRemove: function(i) {
 		if(i == this.currentFocus) {
 			this.currentFocus = null;
 		}
@@ -33791,7 +35251,17 @@ hxd_Stage.getInstance = function() {
 	return hxd_Stage.inst;
 };
 hxd_Stage.prototype = {
-	checkResize: function() {
+	resizeEvents: null
+	,eventTargets: null
+	,curMouseX: null
+	,curMouseY: null
+	,canvas: null
+	,element: null
+	,canvasPos: null
+	,timer: null
+	,curW: null
+	,curH: null
+	,checkResize: function() {
 		this.canvasPos = this.canvas.getBoundingClientRect();
 		var cw = this.get_width();
 		var ch = this.get_height();
@@ -34145,7 +35615,17 @@ var hxd_earcut_EarNode = function() {
 $hxClasses["hxd.earcut.EarNode"] = hxd_earcut_EarNode;
 hxd_earcut_EarNode.__name__ = ["hxd","earcut","EarNode"];
 hxd_earcut_EarNode.prototype = {
-	__class__: hxd_earcut_EarNode
+	next: null
+	,prev: null
+	,nextZ: null
+	,prevZ: null
+	,allocNext: null
+	,x: null
+	,y: null
+	,i: null
+	,z: null
+	,steiner: null
+	,__class__: hxd_earcut_EarNode
 };
 var hxd_earcut_Earcut = function() {
 };
@@ -34359,6 +35839,13 @@ hxd_earcut_Earcut.prototype = {
 		node.next.prev = node;
 		return node;
 	}
+	,triangles: null
+	,cache: null
+	,allocated: null
+	,minX: null
+	,minY: null
+	,size: null
+	,hasSize: null
 	,triangulateNode: function(root,useZOrder) {
 		this.triangles = [];
 		root = this.filterPoints(root);
@@ -35192,14 +36679,23 @@ var hxd_fmt_grd_Gradient = function() {
 $hxClasses["hxd.fmt.grd.Gradient"] = hxd_fmt_grd_Gradient;
 hxd_fmt_grd_Gradient.__name__ = ["hxd","fmt","grd","Gradient"];
 hxd_fmt_grd_Gradient.prototype = {
-	__class__: hxd_fmt_grd_Gradient
+	name: null
+	,interpolation: null
+	,colorStops: null
+	,transparencyStops: null
+	,gradientStops: null
+	,__class__: hxd_fmt_grd_Gradient
 };
 var hxd_fmt_grd_ColorStop = function() {
 };
 $hxClasses["hxd.fmt.grd.ColorStop"] = hxd_fmt_grd_ColorStop;
 hxd_fmt_grd_ColorStop.__name__ = ["hxd","fmt","grd","ColorStop"];
 hxd_fmt_grd_ColorStop.prototype = {
-	__class__: hxd_fmt_grd_ColorStop
+	color: null
+	,location: null
+	,midpoint: null
+	,type: null
+	,__class__: hxd_fmt_grd_ColorStop
 };
 var hxd_fmt_grd_ColorStopType = $hxClasses["hxd.fmt.grd.ColorStopType"] = { __ename__ : true, __constructs__ : ["User","Background","Foreground"] };
 hxd_fmt_grd_ColorStopType.User = ["User",0];
@@ -35217,7 +36713,10 @@ var hxd_fmt_grd_TransparencyStop = function() {
 $hxClasses["hxd.fmt.grd.TransparencyStop"] = hxd_fmt_grd_TransparencyStop;
 hxd_fmt_grd_TransparencyStop.__name__ = ["hxd","fmt","grd","TransparencyStop"];
 hxd_fmt_grd_TransparencyStop.prototype = {
-	__class__: hxd_fmt_grd_TransparencyStop
+	opacity: null
+	,location: null
+	,midpoint: null
+	,__class__: hxd_fmt_grd_TransparencyStop
 };
 var hxd_fmt_grd_Color = $hxClasses["hxd.fmt.grd.Color"] = { __ename__ : true, __constructs__ : ["RGB","HSB"] };
 hxd_fmt_grd_Color.RGB = function(r,g,b) { var $x = ["RGB",0,r,g,b]; $x.__enum__ = hxd_fmt_grd_Color; $x.toString = $estr; return $x; };
@@ -35228,7 +36727,9 @@ var hxd_fmt_grd_GradientStop = function() {
 $hxClasses["hxd.fmt.grd.GradientStop"] = hxd_fmt_grd_GradientStop;
 hxd_fmt_grd_GradientStop.__name__ = ["hxd","fmt","grd","GradientStop"];
 hxd_fmt_grd_GradientStop.prototype = {
-	__class__: hxd_fmt_grd_GradientStop
+	opacity: null
+	,colorStop: null
+	,__class__: hxd_fmt_grd_GradientStop
 };
 var hxd_fmt_grd_Data = function() {
 	haxe_ds_StringMap.call(this);
@@ -35246,7 +36747,9 @@ var hxd_fmt_grd_Reader = function(i) {
 $hxClasses["hxd.fmt.grd.Reader"] = hxd_fmt_grd_Reader;
 hxd_fmt_grd_Reader.__name__ = ["hxd","fmt","grd","Reader"];
 hxd_fmt_grd_Reader.prototype = {
-	readUnicode: function(input,len) {
+	i: null
+	,version: null
+	,readUnicode: function(input,len) {
 		var res = "";
 		var _g1 = 0;
 		var _g = len - 1;
@@ -35501,7 +37004,16 @@ var hxd_fmt_hmd_Position = function() {
 $hxClasses["hxd.fmt.hmd.Position"] = hxd_fmt_hmd_Position;
 hxd_fmt_hmd_Position.__name__ = ["hxd","fmt","hmd","Position"];
 hxd_fmt_hmd_Position.prototype = {
-	loadQuaternion: function(q) {
+	x: null
+	,y: null
+	,z: null
+	,qx: null
+	,qy: null
+	,qz: null
+	,sx: null
+	,sy: null
+	,sz: null
+	,loadQuaternion: function(q) {
 		q.x = this.qx;
 		q.y = this.qy;
 		q.z = this.qz;
@@ -35552,14 +37064,24 @@ var hxd_fmt_hmd_GeometryFormat = function(name,format) {
 $hxClasses["hxd.fmt.hmd.GeometryFormat"] = hxd_fmt_hmd_GeometryFormat;
 hxd_fmt_hmd_GeometryFormat.__name__ = ["hxd","fmt","hmd","GeometryFormat"];
 hxd_fmt_hmd_GeometryFormat.prototype = {
-	__class__: hxd_fmt_hmd_GeometryFormat
+	name: null
+	,format: null
+	,__class__: hxd_fmt_hmd_GeometryFormat
 };
 var hxd_fmt_hmd_Geometry = function() {
 };
 $hxClasses["hxd.fmt.hmd.Geometry"] = hxd_fmt_hmd_Geometry;
 hxd_fmt_hmd_Geometry.__name__ = ["hxd","fmt","hmd","Geometry"];
 hxd_fmt_hmd_Geometry.prototype = {
-	get_indexCount: function() {
+	props: null
+	,vertexCount: null
+	,vertexStride: null
+	,vertexFormat: null
+	,vertexPosition: null
+	,indexCounts: null
+	,indexPosition: null
+	,bounds: null
+	,get_indexCount: function() {
 		var k = 0;
 		var _g = 0;
 		var _g1 = this.indexCounts;
@@ -35594,35 +37116,62 @@ var hxd_fmt_hmd_Material = function() {
 $hxClasses["hxd.fmt.hmd.Material"] = hxd_fmt_hmd_Material;
 hxd_fmt_hmd_Material.__name__ = ["hxd","fmt","hmd","Material"];
 hxd_fmt_hmd_Material.prototype = {
-	__class__: hxd_fmt_hmd_Material
+	name: null
+	,props: null
+	,diffuseTexture: null
+	,blendMode: null
+	,culling: null
+	,killAlpha: null
+	,flags: null
+	,__class__: hxd_fmt_hmd_Material
 };
 var hxd_fmt_hmd_SkinJoint = function() {
 };
 $hxClasses["hxd.fmt.hmd.SkinJoint"] = hxd_fmt_hmd_SkinJoint;
 hxd_fmt_hmd_SkinJoint.__name__ = ["hxd","fmt","hmd","SkinJoint"];
 hxd_fmt_hmd_SkinJoint.prototype = {
-	__class__: hxd_fmt_hmd_SkinJoint
+	name: null
+	,props: null
+	,parent: null
+	,position: null
+	,bind: null
+	,transpos: null
+	,__class__: hxd_fmt_hmd_SkinJoint
 };
 var hxd_fmt_hmd_SkinSplit = function() {
 };
 $hxClasses["hxd.fmt.hmd.SkinSplit"] = hxd_fmt_hmd_SkinSplit;
 hxd_fmt_hmd_SkinSplit.__name__ = ["hxd","fmt","hmd","SkinSplit"];
 hxd_fmt_hmd_SkinSplit.prototype = {
-	__class__: hxd_fmt_hmd_SkinSplit
+	materialIndex: null
+	,joints: null
+	,__class__: hxd_fmt_hmd_SkinSplit
 };
 var hxd_fmt_hmd_Skin = function() {
 };
 $hxClasses["hxd.fmt.hmd.Skin"] = hxd_fmt_hmd_Skin;
 hxd_fmt_hmd_Skin.__name__ = ["hxd","fmt","hmd","Skin"];
 hxd_fmt_hmd_Skin.prototype = {
-	__class__: hxd_fmt_hmd_Skin
+	name: null
+	,props: null
+	,joints: null
+	,split: null
+	,__class__: hxd_fmt_hmd_Skin
 };
 var hxd_fmt_hmd_Model = function() {
 };
 $hxClasses["hxd.fmt.hmd.Model"] = hxd_fmt_hmd_Model;
 hxd_fmt_hmd_Model.__name__ = ["hxd","fmt","hmd","Model"];
 hxd_fmt_hmd_Model.prototype = {
-	__class__: hxd_fmt_hmd_Model
+	name: null
+	,props: null
+	,parent: null
+	,follow: null
+	,position: null
+	,geometry: null
+	,materials: null
+	,skin: null
+	,__class__: hxd_fmt_hmd_Model
 };
 var hxd_fmt_hmd_AnimationFlag = $hxClasses["hxd.fmt.hmd.AnimationFlag"] = { __ename__ : true, __constructs__ : ["HasPosition","HasRotation","HasScale","HasUV","HasAlpha","SinglePosition","HasProps","Reserved"] };
 hxd_fmt_hmd_AnimationFlag.HasPosition = ["HasPosition",0];
@@ -35655,28 +37204,50 @@ var hxd_fmt_hmd_AnimationObject = function() {
 $hxClasses["hxd.fmt.hmd.AnimationObject"] = hxd_fmt_hmd_AnimationObject;
 hxd_fmt_hmd_AnimationObject.__name__ = ["hxd","fmt","hmd","AnimationObject"];
 hxd_fmt_hmd_AnimationObject.prototype = {
-	__class__: hxd_fmt_hmd_AnimationObject
+	name: null
+	,flags: null
+	,props: null
+	,__class__: hxd_fmt_hmd_AnimationObject
 };
 var hxd_fmt_hmd_AnimationEvent = function() {
 };
 $hxClasses["hxd.fmt.hmd.AnimationEvent"] = hxd_fmt_hmd_AnimationEvent;
 hxd_fmt_hmd_AnimationEvent.__name__ = ["hxd","fmt","hmd","AnimationEvent"];
 hxd_fmt_hmd_AnimationEvent.prototype = {
-	__class__: hxd_fmt_hmd_AnimationEvent
+	frame: null
+	,data: null
+	,__class__: hxd_fmt_hmd_AnimationEvent
 };
 var hxd_fmt_hmd_Animation = function() {
 };
 $hxClasses["hxd.fmt.hmd.Animation"] = hxd_fmt_hmd_Animation;
 hxd_fmt_hmd_Animation.__name__ = ["hxd","fmt","hmd","Animation"];
 hxd_fmt_hmd_Animation.prototype = {
-	__class__: hxd_fmt_hmd_Animation
+	name: null
+	,props: null
+	,frames: null
+	,sampling: null
+	,speed: null
+	,loop: null
+	,objects: null
+	,events: null
+	,dataPosition: null
+	,__class__: hxd_fmt_hmd_Animation
 };
 var hxd_fmt_hmd_Data = function() {
 };
 $hxClasses["hxd.fmt.hmd.Data"] = hxd_fmt_hmd_Data;
 hxd_fmt_hmd_Data.__name__ = ["hxd","fmt","hmd","Data"];
 hxd_fmt_hmd_Data.prototype = {
-	__class__: hxd_fmt_hmd_Data
+	version: null
+	,props: null
+	,geometries: null
+	,materials: null
+	,models: null
+	,animations: null
+	,dataPosition: null
+	,data: null
+	,__class__: hxd_fmt_hmd_Data
 };
 var hxd_fmt_hmd__$Library_FormatMap = function(size,offset,def,next) {
 	this.size = size;
@@ -35687,14 +37258,20 @@ var hxd_fmt_hmd__$Library_FormatMap = function(size,offset,def,next) {
 $hxClasses["hxd.fmt.hmd._Library.FormatMap"] = hxd_fmt_hmd__$Library_FormatMap;
 hxd_fmt_hmd__$Library_FormatMap.__name__ = ["hxd","fmt","hmd","_Library","FormatMap"];
 hxd_fmt_hmd__$Library_FormatMap.prototype = {
-	__class__: hxd_fmt_hmd__$Library_FormatMap
+	size: null
+	,offset: null
+	,def: null
+	,next: null
+	,__class__: hxd_fmt_hmd__$Library_FormatMap
 };
 var hxd_fmt_hmd_GeometryBuffer = function() {
 };
 $hxClasses["hxd.fmt.hmd.GeometryBuffer"] = hxd_fmt_hmd_GeometryBuffer;
 hxd_fmt_hmd_GeometryBuffer.__name__ = ["hxd","fmt","hmd","GeometryBuffer"];
 hxd_fmt_hmd_GeometryBuffer.prototype = {
-	__class__: hxd_fmt_hmd_GeometryBuffer
+	vertexes: null
+	,indexes: null
+	,__class__: hxd_fmt_hmd_GeometryBuffer
 };
 var hxd_fmt_hmd_Library = function(entry,header) {
 	this.tmp = new haxe_io_Bytes(new ArrayBuffer(4));
@@ -35707,7 +37284,13 @@ var hxd_fmt_hmd_Library = function(entry,header) {
 $hxClasses["hxd.fmt.hmd.Library"] = hxd_fmt_hmd_Library;
 hxd_fmt_hmd_Library.__name__ = ["hxd","fmt","hmd","Library"];
 hxd_fmt_hmd_Library.prototype = {
-	getData: function() {
+	header: null
+	,entry: null
+	,cachedPrimitives: null
+	,cachedAnimations: null
+	,cachedSkin: null
+	,tmp: null
+	,getData: function() {
 		var b = new haxe_io_Bytes(new ArrayBuffer(this.entry.get_size() - this.header.dataPosition));
 		this.entry.open();
 		this.entry.skip(this.header.dataPosition);
@@ -36540,7 +38123,9 @@ var hxd_fmt_hmd_Reader = function(i) {
 $hxClasses["hxd.fmt.hmd.Reader"] = hxd_fmt_hmd_Reader;
 hxd_fmt_hmd_Reader.__name__ = ["hxd","fmt","hmd","Reader"];
 hxd_fmt_hmd_Reader.prototype = {
-	readProperty: function() {
+	i: null
+	,version: null
+	,readProperty: function() {
 		var _g = this.i.readByte();
 		switch(_g) {
 		case 0:
@@ -36808,7 +38393,8 @@ var hxd_fs_FileEntry = function() { };
 $hxClasses["hxd.fs.FileEntry"] = hxd_fs_FileEntry;
 hxd_fs_FileEntry.__name__ = ["hxd","fs","FileEntry"];
 hxd_fs_FileEntry.prototype = {
-	getSign: function() {
+	name: null
+	,getSign: function() {
 		return 0;
 	}
 	,getBytes: function() {
@@ -36888,7 +38474,10 @@ $hxClasses["hxd.fs.BytesFileEntry"] = hxd_fs_BytesFileEntry;
 hxd_fs_BytesFileEntry.__name__ = ["hxd","fs","BytesFileEntry"];
 hxd_fs_BytesFileEntry.__super__ = hxd_fs_FileEntry;
 hxd_fs_BytesFileEntry.prototype = $extend(hxd_fs_FileEntry.prototype,{
-	get_path: function() {
+	fullPath: null
+	,bytes: null
+	,pos: null
+	,get_path: function() {
 		return this.fullPath;
 	}
 	,getSign: function() {
@@ -36936,7 +38525,11 @@ var hxd_fs_FileSystem = function() { };
 $hxClasses["hxd.fs.FileSystem"] = hxd_fs_FileSystem;
 hxd_fs_FileSystem.__name__ = ["hxd","fs","FileSystem"];
 hxd_fs_FileSystem.prototype = {
-	__class__: hxd_fs_FileSystem
+	getRoot: null
+	,get: null
+	,exists: null
+	,dispose: null
+	,__class__: hxd_fs_FileSystem
 };
 var hxd_fs_BytesFileSystem = function() {
 };
@@ -36972,7 +38565,8 @@ $hxClasses["hxd.fs.FileInput"] = hxd_fs_FileInput;
 hxd_fs_FileInput.__name__ = ["hxd","fs","FileInput"];
 hxd_fs_FileInput.__super__ = haxe_io_Input;
 hxd_fs_FileInput.prototype = $extend(haxe_io_Input.prototype,{
-	skip: function(nbytes) {
+	f: null
+	,skip: function(nbytes) {
 		this.f.skip(nbytes);
 	}
 	,readByte: function() {
@@ -37006,7 +38600,8 @@ var hxd_fs_NotFound = function(path) {
 $hxClasses["hxd.fs.NotFound"] = hxd_fs_NotFound;
 hxd_fs_NotFound.__name__ = ["hxd","fs","NotFound"];
 hxd_fs_NotFound.prototype = {
-	toString: function() {
+	path: null
+	,toString: function() {
 		return "Resource file not found '" + this.path + "'";
 	}
 	,__class__: hxd_fs_NotFound
@@ -37019,7 +38614,10 @@ var hxd_impl_ArrayIterator = function(a) {
 $hxClasses["hxd.impl.ArrayIterator"] = hxd_impl_ArrayIterator;
 hxd_impl_ArrayIterator.__name__ = ["hxd","impl","ArrayIterator"];
 hxd_impl_ArrayIterator.prototype = {
-	hasNext: function() {
+	i: null
+	,l: null
+	,a: null
+	,hasNext: function() {
 		return this.i < this.l;
 	}
 	,next: function() {
@@ -37035,7 +38633,10 @@ var hxd_impl_ArrayIterator_$h2d_$Sprite = function(a) {
 $hxClasses["hxd.impl.ArrayIterator_h2d_Sprite"] = hxd_impl_ArrayIterator_$h2d_$Sprite;
 hxd_impl_ArrayIterator_$h2d_$Sprite.__name__ = ["hxd","impl","ArrayIterator_h2d_Sprite"];
 hxd_impl_ArrayIterator_$h2d_$Sprite.prototype = {
-	hasNext: function() {
+	i: null
+	,l: null
+	,a: null
+	,hasNext: function() {
 		return this.i < this.l;
 	}
 	,next: function() {
@@ -37051,7 +38652,10 @@ var hxd_impl_ArrayIterator_$h3d_$scene_$Object = function(a) {
 $hxClasses["hxd.impl.ArrayIterator_h3d_scene_Object"] = hxd_impl_ArrayIterator_$h3d_$scene_$Object;
 hxd_impl_ArrayIterator_$h3d_$scene_$Object.__name__ = ["hxd","impl","ArrayIterator_h3d_scene_Object"];
 hxd_impl_ArrayIterator_$h3d_$scene_$Object.prototype = {
-	hasNext: function() {
+	i: null
+	,l: null
+	,a: null
+	,hasNext: function() {
 		return this.i < this.l;
 	}
 	,next: function() {
@@ -37067,7 +38671,10 @@ var hxd_impl_ArrayIterator_$hxd_$fs_$FileEntry = function(a) {
 $hxClasses["hxd.impl.ArrayIterator_hxd_fs_FileEntry"] = hxd_impl_ArrayIterator_$hxd_$fs_$FileEntry;
 hxd_impl_ArrayIterator_$hxd_$fs_$FileEntry.__name__ = ["hxd","impl","ArrayIterator_hxd_fs_FileEntry"];
 hxd_impl_ArrayIterator_$hxd_$fs_$FileEntry.prototype = {
-	hasNext: function() {
+	i: null
+	,l: null
+	,a: null
+	,hasNext: function() {
 		return this.i < this.l;
 	}
 	,next: function() {
@@ -37083,7 +38690,10 @@ var hxd_impl_ArrayIterator_$hxd_$res_$Any = function(a) {
 $hxClasses["hxd.impl.ArrayIterator_hxd_res_Any"] = hxd_impl_ArrayIterator_$hxd_$res_$Any;
 hxd_impl_ArrayIterator_$hxd_$res_$Any.__name__ = ["hxd","impl","ArrayIterator_hxd_res_Any"];
 hxd_impl_ArrayIterator_$hxd_$res_$Any.prototype = {
-	hasNext: function() {
+	i: null
+	,l: null
+	,a: null
+	,hasNext: function() {
 		return this.i < this.l;
 	}
 	,next: function() {
@@ -37167,6 +38777,7 @@ hxd_impl_Tmp.allocBytes = function(size) {
 	try {
 		return new haxe_io_Bytes(new ArrayBuffer(size));
 	} catch( e ) {
+		haxe_CallStack.lastException = e;
 		hxd_impl_Tmp.freeMemory();
 		return new haxe_io_Bytes(new ArrayBuffer(size));
 	}
@@ -37211,7 +38822,9 @@ var hxd_poly2tri_Edge = function(p1,p2) {
 $hxClasses["hxd.poly2tri.Edge"] = hxd_poly2tri_Edge;
 hxd_poly2tri_Edge.__name__ = ["hxd","poly2tri","Edge"];
 hxd_poly2tri_Edge.prototype = {
-	toString: function() {
+	p: null
+	,q: null
+	,toString: function() {
 		return "Edge(" + Std.string(this.p) + ", " + Std.string(this.q) + ")";
 	}
 	,__class__: hxd_poly2tri_Edge
@@ -37241,7 +38854,11 @@ hxd_poly2tri_Point.cmpPoints = function(l,r) {
 	return 0;
 };
 hxd_poly2tri_Point.prototype = {
-	get_edge_list: function() {
+	id: null
+	,x: null
+	,y: null
+	,edge_list: null
+	,get_edge_list: function() {
 		if(this.edge_list == null) {
 			this.edge_list = [];
 		}
@@ -37268,7 +38885,9 @@ $hxClasses["hxd.res._Any.SingleFileSystem"] = hxd_res__$Any_SingleFileSystem;
 hxd_res__$Any_SingleFileSystem.__name__ = ["hxd","res","_Any","SingleFileSystem"];
 hxd_res__$Any_SingleFileSystem.__super__ = hxd_fs_BytesFileSystem;
 hxd_res__$Any_SingleFileSystem.prototype = $extend(hxd_fs_BytesFileSystem.prototype,{
-	getBytes: function(p) {
+	path: null
+	,bytes: null
+	,getBytes: function(p) {
 		if(p == this.path) {
 			return this.bytes;
 		} else {
@@ -37283,7 +38902,8 @@ var hxd_res_Resource = function(entry) {
 $hxClasses["hxd.res.Resource"] = hxd_res_Resource;
 hxd_res_Resource.__name__ = ["hxd","res","Resource"];
 hxd_res_Resource.prototype = {
-	get_name: function() {
+	entry: null
+	,get_name: function() {
 		return this.entry.name;
 	}
 	,toString: function() {
@@ -37304,7 +38924,8 @@ hxd_res_Any.fromBytes = function(path,bytes) {
 };
 hxd_res_Any.__super__ = hxd_res_Resource;
 hxd_res_Any.prototype = $extend(hxd_res_Resource.prototype,{
-	toModel: function() {
+	loader: null
+	,toModel: function() {
 		return this.loader.loadModel(this.entry.get_path());
 	}
 	,toHmd: function() {
@@ -37355,7 +38976,8 @@ $hxClasses["hxd.res.Atlas"] = hxd_res_Atlas;
 hxd_res_Atlas.__name__ = ["hxd","res","Atlas"];
 hxd_res_Atlas.__super__ = hxd_res_Resource;
 hxd_res_Atlas.prototype = $extend(hxd_res_Resource.prototype,{
-	tileAlign: function(t,halign,valign,width,height) {
+	contents: null
+	,tileAlign: function(t,halign,valign,width,height) {
 		if(halign == null) {
 			halign = h2d_FlowAlign.Left;
 		}
@@ -37525,7 +39147,9 @@ $hxClasses["hxd.res.BitmapFont"] = hxd_res_BitmapFont;
 hxd_res_BitmapFont.__name__ = ["hxd","res","BitmapFont"];
 hxd_res_BitmapFont.__super__ = hxd_res_Resource;
 hxd_res_BitmapFont.prototype = $extend(hxd_res_Resource.prototype,{
-	toFont: function() {
+	loader: null
+	,font: null
+	,toFont: function() {
 		if(this.font != null) {
 			return this.font;
 		}
@@ -37662,7 +39286,10 @@ hxd_res_FontBuilder.dispose = function() {
 	hxd_res_FontBuilder.FONTS = new haxe_ds_StringMap();
 };
 hxd_res_FontBuilder.prototype = {
-	build: function() {
+	font: null
+	,options: null
+	,innerTex: null
+	,build: function() {
 		var bmp = window.document.createElement("canvas");
 		var ctx = bmp.getContext("2d",null);
 		ctx.font = "" + this.font.size + "px " + this.font.name;
@@ -37910,7 +39537,8 @@ hxd_res_Gradients.HSVtoRGB = function(h,s,v) {
 };
 hxd_res_Gradients.__super__ = hxd_res_Resource;
 hxd_res_Gradients.prototype = $extend(hxd_res_Resource.prototype,{
-	toTexture: function(name,resolution) {
+	data: null
+	,toTexture: function(name,resolution) {
 		if(resolution == null) {
 			resolution = 256;
 		}
@@ -37987,7 +39615,9 @@ $hxClasses["hxd.res.Image"] = hxd_res_Image;
 hxd_res_Image.__name__ = ["hxd","res","Image"];
 hxd_res_Image.__super__ = hxd_res_Resource;
 hxd_res_Image.prototype = $extend(hxd_res_Resource.prototype,{
-	getFormat: function() {
+	tex: null
+	,inf: null
+	,getFormat: function() {
 		this.getSize();
 		return this.inf.format;
 	}
@@ -38054,6 +39684,7 @@ hxd_res_Image.prototype = $extend(hxd_res_Resource.prototype,{
 			try {
 				p = hxd_res_NanoJpeg.decode(bytes);
 			} catch( e ) {
+				haxe_CallStack.lastException = e;
 				if (e instanceof js__$Boot_HaxeError) e = e.val;
 				throw new js__$Boot_HaxeError("Failed to decode JPG " + this.entry.get_path() + " (" + Std.string(e) + ")");
 			}
@@ -38067,6 +39698,7 @@ hxd_res_Image.prototype = $extend(hxd_res_Resource.prototype,{
 			try {
 				format_png_Tools.extract32(pdata,pixels.bytes,flipY);
 			} catch( e1 ) {
+				haxe_CallStack.lastException = e1;
 				hxd_impl_Tmp.freeMemory();
 				format_png_Tools.extract32(pdata,pixels.bytes,flipY);
 			}
@@ -38192,7 +39824,9 @@ var hxd_res_Loader = function(fs) {
 $hxClasses["hxd.res.Loader"] = hxd_res_Loader;
 hxd_res_Loader.__name__ = ["hxd","res","Loader"];
 hxd_res_Loader.prototype = {
-	cleanCache: function() {
+	fs: null
+	,cache: null
+	,cleanCache: function() {
 		this.cache = new haxe_ds_StringMap();
 	}
 	,exists: function(path) {
@@ -38327,7 +39961,18 @@ var hxd_res__$NanoJpeg_Component = function() {
 $hxClasses["hxd.res._NanoJpeg.Component"] = hxd_res__$NanoJpeg_Component;
 hxd_res__$NanoJpeg_Component.__name__ = ["hxd","res","_NanoJpeg","Component"];
 hxd_res__$NanoJpeg_Component.prototype = {
-	__class__: hxd_res__$NanoJpeg_Component
+	cid: null
+	,ssx: null
+	,ssy: null
+	,width: null
+	,height: null
+	,stride: null
+	,qtsel: null
+	,actabsel: null
+	,dctabsel: null
+	,dcpred: null
+	,pixels: null
+	,__class__: hxd_res__$NanoJpeg_Component
 };
 var hxd_res_NanoJpeg = function() {
 	this.comps = [new hxd_res__$NanoJpeg_Component(),new hxd_res__$NanoJpeg_Component(),new hxd_res__$NanoJpeg_Component()].slice(0);
@@ -38372,7 +40017,32 @@ hxd_res_NanoJpeg.decode = function(bytes,filter,position,size) {
 	return hxd_res_NanoJpeg.inst.njDecode();
 };
 hxd_res_NanoJpeg.prototype = {
-	alloc: function(nbytes) {
+	bytes: null
+	,pos: null
+	,size: null
+	,length: null
+	,width: null
+	,height: null
+	,ncomp: null
+	,comps: null
+	,counts: null
+	,qtab: null
+	,qtused: null
+	,qtavail: null
+	,vlctab: null
+	,block: null
+	,njZZ: null
+	,progressive: null
+	,mbsizex: null
+	,mbsizey: null
+	,mbwidth: null
+	,mbheight: null
+	,rstinterval: null
+	,buf: null
+	,bufbits: null
+	,pixels: null
+	,filter: null
+	,alloc: function(nbytes) {
 		return hxd_impl_Tmp.getBytes(nbytes);
 	}
 	,free: function(bytes) {
@@ -38654,6 +40324,7 @@ hxd_res_NanoJpeg.prototype = {
 		this.size -= count;
 		this.length -= count;
 	}
+	,vlcCode: null
 	,njGetVLC: function(vlc) {
 		var value = this.njShowBits(16);
 		var bits = vlc.b[value << 1];
@@ -39384,7 +41055,10 @@ hxd_res_Sound.startWorker = function() {
 };
 hxd_res_Sound.__super__ = hxd_res_Resource;
 hxd_res_Sound.prototype = $extend(hxd_res_Resource.prototype,{
-	getData: function() {
+	data: null
+	,channel: null
+	,lastPlay: null
+	,getData: function() {
 		if(this.data != null) {
 			return this.data;
 		}
@@ -39498,9 +41172,11 @@ hxd_snd_NativeChannel.getContext = function() {
 		try {
 			hxd_snd_NativeChannel.ctx = new AudioContext();
 		} catch( e ) {
+			haxe_CallStack.lastException = e;
 			try {
 				hxd_snd_NativeChannel.ctx = new window.webkitAudioContext();
 			} catch( e1 ) {
+				haxe_CallStack.lastException = e1;
 				hxd_snd_NativeChannel.ctx = null;
 			}
 		}
@@ -39508,7 +41184,10 @@ hxd_snd_NativeChannel.getContext = function() {
 	return hxd_snd_NativeChannel.ctx;
 };
 hxd_snd_NativeChannel.prototype = {
-	onJsSample: function(event) {
+	sproc: null
+	,tmpBuffer: null
+	,bufferSamples: null
+	,onJsSample: function(event) {
 		this.onSample(this.tmpBuffer);
 		var r = 0;
 		var left = event.outputBuffer.getChannelData(0);
@@ -39540,7 +41219,9 @@ $hxClasses["hxd.snd._ALEmulator.ALChannel"] = hxd_snd__$ALEmulator_ALChannel;
 hxd_snd__$ALEmulator_ALChannel.__name__ = ["hxd","snd","_ALEmulator","ALChannel"];
 hxd_snd__$ALEmulator_ALChannel.__super__ = hxd_snd_NativeChannel;
 hxd_snd__$ALEmulator_ALChannel.prototype = $extend(hxd_snd_NativeChannel.prototype,{
-	onSample: function(out) {
+	source: null
+	,startup: null
+	,onSample: function(out) {
 		var pos = 0;
 		var count = out.length >> 1;
 		if(this.source.duration > 0) {
@@ -39628,7 +41309,16 @@ hxd_snd_ALSource.ofInt = function(i) {
 	return hxd_snd_ALSource.all.h[i];
 };
 hxd_snd_ALSource.prototype = {
-	updateDuration: function() {
+	id: null
+	,chan: null
+	,playedTime: null
+	,currentSample: null
+	,buffers: null
+	,loop: null
+	,volume: null
+	,duration: null
+	,frequency: null
+	,updateDuration: function() {
 		this.frequency = this.buffers.length == 0 ? 1 : this.buffers[0].frequency;
 		this.duration = 0.;
 		var _g = 0;
@@ -39683,7 +41373,11 @@ hxd_snd_ALBuffer.ofInt = function(i) {
 	return hxd_snd_ALBuffer.all.h[i];
 };
 hxd_snd_ALBuffer.prototype = {
-	dispose: function() {
+	id: null
+	,data: null
+	,frequency: null
+	,samples: null
+	,dispose: function() {
 		this.data = null;
 		hxd_snd_ALBuffer.all.remove(this.id);
 		this.id = 0;
@@ -40107,7 +41801,8 @@ var hxd_snd_ALContext = function(d) {
 $hxClasses["hxd.snd.ALContext"] = hxd_snd_ALContext;
 hxd_snd_ALContext.__name__ = ["hxd","snd","ALContext"];
 hxd_snd_ALContext.prototype = {
-	__class__: hxd_snd_ALContext
+	device: null
+	,__class__: hxd_snd_ALContext
 };
 var hxd_snd_ALCEmulator = function() { };
 $hxClasses["hxd.snd.ALCEmulator"] = hxd_snd_ALCEmulator;
@@ -40164,7 +41859,14 @@ var hxd_snd_ChannelBase = function() {
 $hxClasses["hxd.snd.ChannelBase"] = hxd_snd_ChannelBase;
 hxd_snd_ChannelBase.__name__ = ["hxd","snd","ChannelBase"];
 hxd_snd_ChannelBase.prototype = {
-	getEffect: function(etype) {
+	priority: null
+	,mute: null
+	,effects: null
+	,removedEffects: null
+	,volume: null
+	,currentFade: null
+	,currentVolume: null
+	,getEffect: function(etype) {
 		var _g = 0;
 		var _g1 = this.effects;
 		while(_g < _g1.length) {
@@ -40239,7 +41941,24 @@ $hxClasses["hxd.snd.Channel"] = hxd_snd_Channel;
 hxd_snd_Channel.__name__ = ["hxd","snd","Channel"];
 hxd_snd_Channel.__super__ = hxd_snd_ChannelBase;
 hxd_snd_Channel.prototype = $extend(hxd_snd_ChannelBase.prototype,{
-	onEnd: function() {
+	next: null
+	,driver: null
+	,source: null
+	,id: null
+	,sound: null
+	,soundGroup: null
+	,channelGroup: null
+	,duration: null
+	,position: null
+	,pause: null
+	,loop: null
+	,streaming: null
+	,audibleGain: null
+	,lastStamp: null
+	,isVirtual: null
+	,positionChanged: null
+	,queue: null
+	,onEnd: function() {
 	}
 	,set_position: function(v) {
 		this.lastStamp = new Date().getTime() / 1000;
@@ -40323,7 +42042,8 @@ $hxClasses["hxd.snd.ChannelGroup"] = hxd_snd_ChannelGroup;
 hxd_snd_ChannelGroup.__name__ = ["hxd","snd","ChannelGroup"];
 hxd_snd_ChannelGroup.__super__ = hxd_snd_ChannelBase;
 hxd_snd_ChannelGroup.prototype = $extend(hxd_snd_ChannelBase.prototype,{
-	__class__: hxd_snd_ChannelGroup
+	name: null
+	,__class__: hxd_snd_ChannelGroup
 });
 var hxd_snd_SampleFormat = $hxClasses["hxd.snd.SampleFormat"] = { __ename__ : true, __constructs__ : ["UI8","I16","F32"] };
 hxd_snd_SampleFormat.UI8 = ["UI8",0];
@@ -40350,7 +42070,11 @@ hxd_snd_Data.formatBytes = function(format) {
 	}
 };
 hxd_snd_Data.prototype = {
-	decode: function(out,outPos,sampleStart,sampleCount) {
+	samples: null
+	,samplingRate: null
+	,sampleFormat: null
+	,channels: null
+	,decode: function(out,outPos,sampleStart,sampleCount) {
 		var bpp = this.getBytesPerSample();
 		if(sampleStart < 0 || sampleCount < 0 || outPos < 0 || outPos + sampleCount * bpp > out.length) {
 			throw new js__$Boot_HaxeError(haxe_io_Error.OutsideBounds);
@@ -40560,7 +42284,18 @@ var hxd_snd_Source = function(inst) {
 $hxClasses["hxd.snd.Source"] = hxd_snd_Source;
 hxd_snd_Source.__name__ = ["hxd","snd","Source"];
 hxd_snd_Source.prototype = {
-	__class__: hxd_snd_Source
+	inst: null
+	,channel: null
+	,buffers: null
+	,loop: null
+	,volume: null
+	,playing: null
+	,hasQueue: null
+	,streamData: null
+	,streamSample: null
+	,streamPosition: null
+	,streamPositionNext: null
+	,__class__: hxd_snd_Source
 };
 var hxd_snd_Buffer = function(inst) {
 	this.inst = inst;
@@ -40568,7 +42303,11 @@ var hxd_snd_Buffer = function(inst) {
 $hxClasses["hxd.snd.Buffer"] = hxd_snd_Buffer;
 hxd_snd_Buffer.__name__ = ["hxd","snd","Buffer"];
 hxd_snd_Buffer.prototype = {
-	unref: function() {
+	inst: null
+	,sound: null
+	,playCount: null
+	,lastStop: null
+	,unref: function() {
 		if(this.sound == null) {
 			var tmp = new haxe_io_Bytes(new ArrayBuffer(4));
 			tmp.setInt32(0,this.inst.id);
@@ -40639,7 +42378,21 @@ hxd_snd_Driver.get = function() {
 	return hxd_snd_Driver.instance;
 };
 hxd_snd_Driver.prototype = {
-	addPreUpdateCallback: function(f) {
+	masterVolume: null
+	,masterSoundGroup: null
+	,masterChannelGroup: null
+	,listener: null
+	,channels: null
+	,cachedBytes: null
+	,resampleBytes: null
+	,alDevice: null
+	,alContext: null
+	,buffers: null
+	,sources: null
+	,bufferMap: null
+	,preUpdateCallbacks: null
+	,postUpdateCallbacks: null
+	,addPreUpdateCallback: function(f) {
 		this.preUpdateCallbacks.push(f);
 	}
 	,addPostUpdateCallback: function(f) {
@@ -41135,6 +42888,10 @@ hxd_snd_Driver.prototype = {
 			buffer.playCount++;
 		}
 	}
+	,targetRate: null
+	,targetFormat: null
+	,targetChannels: null
+	,alFormat: null
 	,checkTargetFormat: function(dat,forceMono) {
 		if(forceMono == null) {
 			forceMono = false;
@@ -41337,7 +43094,8 @@ var hxd_snd_Effect = function() {
 $hxClasses["hxd.snd.Effect"] = hxd_snd_Effect;
 hxd_snd_Effect.__name__ = ["hxd","snd","Effect"];
 hxd_snd_Effect.prototype = {
-	get_allocated: function() {
+	refs: null
+	,get_allocated: function() {
 		return this.refs > 0;
 	}
 	,applyAudibleGainModifier: function(v) {
@@ -41374,7 +43132,11 @@ var hxd_snd_Listener = function() {
 $hxClasses["hxd.snd.Listener"] = hxd_snd_Listener;
 hxd_snd_Listener.__name__ = ["hxd","snd","Listener"];
 hxd_snd_Listener.prototype = {
-	syncCamera: function(cam) {
+	position: null
+	,direction: null
+	,velocity: null
+	,up: null
+	,syncCamera: function(cam) {
 		var _this = this.position;
 		var v = cam.pos;
 		_this.x = v.x;
@@ -41431,7 +43193,9 @@ $hxClasses["hxd.snd.Mp3Data"] = hxd_snd_Mp3Data;
 hxd_snd_Mp3Data.__name__ = ["hxd","snd","Mp3Data"];
 hxd_snd_Mp3Data.__super__ = hxd_snd_Data;
 hxd_snd_Mp3Data.prototype = $extend(hxd_snd_Data.prototype,{
-	load: function(onEnd) {
+	buffer: null
+	,onEnd: null
+	,load: function(onEnd) {
 		if(this.buffer != null) {
 			onEnd();
 		} else {
@@ -41479,7 +43243,11 @@ var hxd_snd_SoundGroup = function(name) {
 $hxClasses["hxd.snd.SoundGroup"] = hxd_snd_SoundGroup;
 hxd_snd_SoundGroup.__name__ = ["hxd","snd","SoundGroup"];
 hxd_snd_SoundGroup.prototype = {
-	__class__: hxd_snd_SoundGroup
+	name: null
+	,volume: null
+	,maxAudible: null
+	,mono: null
+	,__class__: hxd_snd_SoundGroup
 };
 var hxd_snd_WavData = function(bytes) {
 	if(bytes != null) {
@@ -41490,7 +43258,8 @@ $hxClasses["hxd.snd.WavData"] = hxd_snd_WavData;
 hxd_snd_WavData.__name__ = ["hxd","snd","WavData"];
 hxd_snd_WavData.__super__ = hxd_snd_Data;
 hxd_snd_WavData.prototype = $extend(hxd_snd_Data.prototype,{
-	init: function(d) {
+	rawData: null
+	,init: function(d) {
 		var h = d.header;
 		this.samplingRate = h.samplingRate;
 		this.channels = h.channels;
@@ -41578,7 +43347,9 @@ hxsl_Error.t = function(msg,pos) {
 	throw new js__$Boot_HaxeError(new hxsl_Error(msg,pos));
 };
 hxsl_Error.prototype = {
-	toString: function() {
+	msg: null
+	,pos: null
+	,toString: function() {
 		return "Error(" + this.msg + ")@" + Std.string(this.pos);
 	}
 	,__class__: hxsl_Error
@@ -42465,7 +44236,9 @@ var hxsl_SearchMap = function() {
 $hxClasses["hxsl.SearchMap"] = hxsl_SearchMap;
 hxsl_SearchMap.__name__ = ["hxsl","SearchMap"];
 hxsl_SearchMap.prototype = {
-	__class__: hxsl_SearchMap
+	linked: null
+	,next: null
+	,__class__: hxsl_SearchMap
 };
 var hxsl_Cache = function() {
 	this.constsToGlobal = false;
@@ -42487,7 +44260,11 @@ hxsl_Cache.clear = function() {
 	hxsl_Cache.INST = null;
 };
 hxsl_Cache.prototype = {
-	getLinkShader: function(vars) {
+	linkCache: null
+	,linkShaders: null
+	,byID: null
+	,constsToGlobal: null
+	,getLinkShader: function(vars) {
 		var key = vars.join(",");
 		var _this = this.linkShaders;
 		var shader = __map_reserved[key] != null ? _this.getReserved(key) : _this.h[key];
@@ -42873,7 +44650,8 @@ hxsl_Clone.shaderData = function(s) {
 	return new hxsl_Clone().shader(s);
 };
 hxsl_Clone.prototype = {
-	tvar: function(v) {
+	varMap: null
+	,tvar: function(v) {
 		var v2 = this.varMap.h[v.id];
 		if(v2 != null) {
 			return v2;
@@ -43008,14 +44786,20 @@ var hxsl__$Dce_VarDeps = function(v) {
 $hxClasses["hxsl._Dce.VarDeps"] = hxsl__$Dce_VarDeps;
 hxsl__$Dce_VarDeps.__name__ = ["hxsl","_Dce","VarDeps"];
 hxsl__$Dce_VarDeps.prototype = {
-	__class__: hxsl__$Dce_VarDeps
+	v: null
+	,keep: null
+	,used: null
+	,deps: null
+	,__class__: hxsl__$Dce_VarDeps
 };
 var hxsl_Dce = function() {
 };
 $hxClasses["hxsl.Dce"] = hxsl_Dce;
 hxsl_Dce.__name__ = ["hxsl","Dce"];
 hxsl_Dce.prototype = {
-	dce: function(vertex,fragment) {
+	used: null
+	,channelVars: null
+	,dce: function(vertex,fragment) {
 		this.used = new haxe_ds_IntMap();
 		this.channelVars = [];
 		var inputs = [];
@@ -43136,6 +44920,7 @@ hxsl_Dce.prototype = {
 			this.hasDiscardRec(e);
 			return false;
 		} catch( e1 ) {
+			haxe_CallStack.lastException = e1;
 			if (e1 instanceof js__$Boot_HaxeError) e1 = e1.val;
 			if( js_Boot.__instanceof(e1,hxsl__$Dce_Exit) ) {
 				return true;
@@ -43497,7 +45282,10 @@ $hxClasses["hxsl.DynamicShader"] = hxsl_DynamicShader;
 hxsl_DynamicShader.__name__ = ["hxsl","DynamicShader"];
 hxsl_DynamicShader.__super__ = hxsl_Shader;
 hxsl_DynamicShader.prototype = $extend(hxsl_Shader.prototype,{
-	addVarIndex: function(v) {
+	params: null
+	,varIndexes: null
+	,varIndex: null
+	,addVarIndex: function(v) {
 		if(v.kind != hxsl_VarKind.Param) {
 			return;
 		}
@@ -43574,7 +45362,14 @@ var hxsl_Eval = function() {
 $hxClasses["hxsl.Eval"] = hxsl_Eval;
 hxsl_Eval.__name__ = ["hxsl","Eval"];
 hxsl_Eval.prototype = {
-	setConstant: function(v,c) {
+	varMap: null
+	,inlineCalls: null
+	,unrollLoops: null
+	,eliminateConditionals: null
+	,constants: null
+	,funMap: null
+	,curFun: null
+	,setConstant: function(v,c) {
 		this.constants.h[v.id] = hxsl_TExprDef.TConst(c);
 	}
 	,mapVar: function(v) {
@@ -43683,6 +45478,7 @@ hxsl_Eval.prototype = {
 		}
 		return { name : s1, vars : _g6, funs : funs};
 	}
+	,markReturn: null
 	,hasReturn: function(e) {
 		this.markReturn = false;
 		this.hasReturnLoop(e);
@@ -45261,7 +47057,12 @@ var hxsl__$Flatten_Alloc = function(g,t,pos,size) {
 $hxClasses["hxsl._Flatten.Alloc"] = hxsl__$Flatten_Alloc;
 hxsl__$Flatten_Alloc.__name__ = ["hxsl","_Flatten","Alloc"];
 hxsl__$Flatten_Alloc.prototype = {
-	__class__: hxsl__$Flatten_Alloc
+	t: null
+	,pos: null
+	,size: null
+	,g: null
+	,v: null
+	,__class__: hxsl__$Flatten_Alloc
 };
 var hxsl_ARead = $hxClasses["hxsl.ARead"] = { __ename__ : true, __constructs__ : ["AIndex","AOffset"] };
 hxsl_ARead.AIndex = function(a) { var $x = ["AIndex",0,a]; $x.__enum__ = hxsl_ARead; $x.toString = $estr; return $x; };
@@ -45272,7 +47073,14 @@ var hxsl_Flatten = function() {
 $hxClasses["hxsl.Flatten"] = hxsl_Flatten;
 hxsl_Flatten.__name__ = ["hxsl","Flatten"];
 hxsl_Flatten.prototype = {
-	flatten: function(s,kind,constsToGlobal) {
+	globals: null
+	,params: null
+	,outVars: null
+	,varMap: null
+	,econsts: null
+	,consts: null
+	,allocData: null
+	,flatten: function(s,kind,constsToGlobal) {
 		this.globals = [];
 		this.params = [];
 		this.outVars = [];
@@ -46052,7 +47860,10 @@ hxsl_Globals.allocID = function(path) {
 	return id;
 };
 hxsl_Globals.prototype = {
-	set: function(path,v) {
+	map: null
+	,channels: null
+	,maxChannels: null
+	,set: function(path,v) {
 		var this1 = this.map;
 		var key = hxsl_Globals.allocID(path);
 		this1.h[key] = v;
@@ -46187,6 +47998,7 @@ js_Boot.__string_rec = function(o,s) {
 		try {
 			tostr = o.toString;
 		} catch( e ) {
+			haxe_CallStack.lastException = e;
 			return "???";
 		}
 		if(tostr != null && tostr != Object.toString && typeof(tostr) == "function") {
@@ -46327,7 +48139,19 @@ hxsl_GlslOut.toGlsl = function(s) {
 	return out.run(s);
 };
 hxsl_GlslOut.prototype = {
-	add: function(v) {
+	buf: null
+	,exprIds: null
+	,exprValues: null
+	,locals: null
+	,decls: null
+	,isVertex: null
+	,allNames: null
+	,outIndexes: null
+	,varNames: null
+	,flipY: null
+	,glES: null
+	,version: null
+	,add: function(v) {
 		this.buf.b += Std.string(v);
 	}
 	,ident: function(v) {
@@ -47543,7 +49367,14 @@ var hxsl__$Linker_AllocatedVar = function() {
 $hxClasses["hxsl._Linker.AllocatedVar"] = hxsl__$Linker_AllocatedVar;
 hxsl__$Linker_AllocatedVar.__name__ = ["hxsl","_Linker","AllocatedVar"];
 hxsl__$Linker_AllocatedVar.prototype = {
-	__class__: hxsl__$Linker_AllocatedVar
+	id: null
+	,v: null
+	,path: null
+	,merged: null
+	,kind: null
+	,parent: null
+	,instanceIndex: null
+	,__class__: hxsl__$Linker_AllocatedVar
 };
 var hxsl__$Linker_ShaderInfos = function(n,v) {
 	this.name = n;
@@ -47556,7 +49387,19 @@ var hxsl__$Linker_ShaderInfos = function(n,v) {
 $hxClasses["hxsl._Linker.ShaderInfos"] = hxsl__$Linker_ShaderInfos;
 hxsl__$Linker_ShaderInfos.__name__ = ["hxsl","_Linker","ShaderInfos"];
 hxsl__$Linker_ShaderInfos.prototype = {
-	__class__: hxsl__$Linker_ShaderInfos
+	name: null
+	,priority: null
+	,body: null
+	,usedFunctions: null
+	,deps: null
+	,read: null
+	,write: null
+	,processed: null
+	,vertex: null
+	,onStack: null
+	,hasDiscard: null
+	,marked: null
+	,__class__: hxsl__$Linker_ShaderInfos
 };
 var hxsl_Linker = function() {
 	this.debugDepth = 0;
@@ -47564,7 +49407,15 @@ var hxsl_Linker = function() {
 $hxClasses["hxsl.Linker"] = hxsl_Linker;
 hxsl_Linker.__name__ = ["hxsl","Linker"];
 hxsl_Linker.prototype = {
-	debug: function(msg,pos) {
+	allVars: null
+	,varMap: null
+	,curShader: null
+	,shaders: null
+	,varIdMap: null
+	,locals: null
+	,curInstance: null
+	,debugDepth: null
+	,debug: function(msg,pos) {
 	}
 	,error: function(msg,p) {
 		return hxsl_Error.t(msg,p);
@@ -48434,6 +50285,7 @@ hxsl_Printer.check = function(s,from) {
 			}
 		}
 	} catch( e2 ) {
+		haxe_CallStack.lastException = e2;
 		if (e2 instanceof js__$Boot_HaxeError) e2 = e2.val;
 		if( js_Boot.__instanceof(e2,String) ) {
 			var msg = e2 + "\n    in\n" + hxsl_Printer.shaderToString(s,true);
@@ -48452,7 +50304,9 @@ hxsl_Printer.check = function(s,from) {
 	}
 };
 hxsl_Printer.prototype = {
-	add: function(v) {
+	buffer: null
+	,varId: null
+	,add: function(v) {
 		this.buffer.b += Std.string(v);
 	}
 	,shaderString: function(s) {
@@ -48907,7 +50761,14 @@ var hxsl_AllocParam = function(name,pos,instance,index,type) {
 $hxClasses["hxsl.AllocParam"] = hxsl_AllocParam;
 hxsl_AllocParam.__name__ = ["hxsl","AllocParam"];
 hxsl_AllocParam.prototype = {
-	__class__: hxsl_AllocParam
+	name: null
+	,pos: null
+	,instance: null
+	,index: null
+	,type: null
+	,perObjectGlobal: null
+	,next: null
+	,__class__: hxsl_AllocParam
 };
 var hxsl_AllocGlobal = function(pos,path,type) {
 	this.pos = pos;
@@ -48918,14 +50779,30 @@ var hxsl_AllocGlobal = function(pos,path,type) {
 $hxClasses["hxsl.AllocGlobal"] = hxsl_AllocGlobal;
 hxsl_AllocGlobal.__name__ = ["hxsl","AllocGlobal"];
 hxsl_AllocGlobal.prototype = {
-	__class__: hxsl_AllocGlobal
+	pos: null
+	,gid: null
+	,path: null
+	,type: null
+	,next: null
+	,__class__: hxsl_AllocGlobal
 };
 var hxsl_RuntimeShaderData = function() {
 };
 $hxClasses["hxsl.RuntimeShaderData"] = hxsl_RuntimeShaderData;
 hxsl_RuntimeShaderData.__name__ = ["hxsl","RuntimeShaderData"];
 hxsl_RuntimeShaderData.prototype = {
-	__class__: hxsl_RuntimeShaderData
+	vertex: null
+	,data: null
+	,params: null
+	,paramsSize: null
+	,globals: null
+	,globalsSize: null
+	,textures2D: null
+	,textures2DCount: null
+	,texturesCube: null
+	,texturesCubeCount: null
+	,consts: null
+	,__class__: hxsl_RuntimeShaderData
 };
 var hxsl_RuntimeShader = function() {
 	this.id = hxsl_RuntimeShader.UID++;
@@ -48933,7 +50810,12 @@ var hxsl_RuntimeShader = function() {
 $hxClasses["hxsl.RuntimeShader"] = hxsl_RuntimeShader;
 hxsl_RuntimeShader.__name__ = ["hxsl","RuntimeShader"];
 hxsl_RuntimeShader.prototype = {
-	hasGlobal: function(gid) {
+	id: null
+	,vertex: null
+	,fragment: null
+	,globals: null
+	,signature: null
+	,hasGlobal: function(gid) {
 		return this.globals.h.hasOwnProperty(gid);
 	}
 	,__class__: hxsl_RuntimeShader
@@ -48945,7 +50827,9 @@ var hxsl_ShaderList = function(s,n) {
 $hxClasses["hxsl.ShaderList"] = hxsl_ShaderList;
 hxsl_ShaderList.__name__ = ["hxsl","ShaderList"];
 hxsl_ShaderList.prototype = {
-	clone: function() {
+	s: null
+	,next: null
+	,clone: function() {
 		return new hxsl_ShaderList(this.s.clone(),this.next == null ? null : this.next.clone());
 	}
 	,iterator: function() {
@@ -48963,7 +50847,9 @@ var hxsl__$ShaderList_ShaderIterator = function(l,last) {
 $hxClasses["hxsl._ShaderList.ShaderIterator"] = hxsl__$ShaderList_ShaderIterator;
 hxsl__$ShaderList_ShaderIterator.__name__ = ["hxsl","_ShaderList","ShaderIterator"];
 hxsl__$ShaderList_ShaderIterator.prototype = {
-	hasNext: function() {
+	l: null
+	,last: null
+	,hasNext: function() {
 		return this.l != this.last;
 	}
 	,next: function() {
@@ -48981,7 +50867,10 @@ var hxsl_ShaderInstance = function(shader) {
 $hxClasses["hxsl.ShaderInstance"] = hxsl_ShaderInstance;
 hxsl_ShaderInstance.__name__ = ["hxsl","ShaderInstance"];
 hxsl_ShaderInstance.prototype = {
-	__class__: hxsl_ShaderInstance
+	id: null
+	,shader: null
+	,params: null
+	,__class__: hxsl_ShaderInstance
 };
 var hxsl_ShaderGlobal = function(v,gid) {
 	this.v = v;
@@ -48990,7 +50879,9 @@ var hxsl_ShaderGlobal = function(v,gid) {
 $hxClasses["hxsl.ShaderGlobal"] = hxsl_ShaderGlobal;
 hxsl_ShaderGlobal.__name__ = ["hxsl","ShaderGlobal"];
 hxsl_ShaderGlobal.prototype = {
-	__class__: hxsl_ShaderGlobal
+	v: null
+	,globalId: null
+	,__class__: hxsl_ShaderGlobal
 };
 var hxsl_ShaderConst = function(v,pos,bits) {
 	this.v = v;
@@ -49000,7 +50891,12 @@ var hxsl_ShaderConst = function(v,pos,bits) {
 $hxClasses["hxsl.ShaderConst"] = hxsl_ShaderConst;
 hxsl_ShaderConst.__name__ = ["hxsl","ShaderConst"];
 hxsl_ShaderConst.prototype = {
-	__class__: hxsl_ShaderConst
+	v: null
+	,pos: null
+	,bits: null
+	,globalId: null
+	,next: null
+	,__class__: hxsl_ShaderConst
 };
 var hxsl_SharedShader = function(src) {
 	this.instanceCache = new haxe_ds_IntMap();
@@ -49015,7 +50911,12 @@ var hxsl_SharedShader = function(src) {
 $hxClasses["hxsl.SharedShader"] = hxsl_SharedShader;
 hxsl_SharedShader.__name__ = ["hxsl","SharedShader"];
 hxsl_SharedShader.prototype = {
-	initialize: function() {
+	data: null
+	,globals: null
+	,consts: null
+	,instanceCache: null
+	,paramsCount: null
+	,initialize: function() {
 		var _g = 0;
 		var _g1 = this.data.vars;
 		while(_g < _g1.length) {
@@ -49139,14 +51040,22 @@ var hxsl__$Splitter_VarProps = function(v) {
 $hxClasses["hxsl._Splitter.VarProps"] = hxsl__$Splitter_VarProps;
 hxsl__$Splitter_VarProps.__name__ = ["hxsl","_Splitter","VarProps"];
 hxsl__$Splitter_VarProps.prototype = {
-	__class__: hxsl__$Splitter_VarProps
+	v: null
+	,read: null
+	,write: null
+	,local: null
+	,requireInit: null
+	,__class__: hxsl__$Splitter_VarProps
 };
 var hxsl_Splitter = function() {
 };
 $hxClasses["hxsl.Splitter"] = hxsl_Splitter;
 hxsl_Splitter.__name__ = ["hxsl","Splitter"];
 hxsl_Splitter.prototype = {
-	split: function(s) {
+	vars: null
+	,varNames: null
+	,varMap: null
+	,split: function(s) {
 		var vfun = null;
 		var vvars = new haxe_ds_IntMap();
 		var ffun = null;
@@ -49490,7 +51399,8 @@ js__$Boot_HaxeError.wrap = function(val) {
 };
 js__$Boot_HaxeError.__super__ = Error;
 js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
-	__class__: js__$Boot_HaxeError
+	val: null
+	,__class__: js__$Boot_HaxeError
 });
 var js_html__$CanvasElement_CanvasUtil = function() { };
 $hxClasses["js.html._CanvasElement.CanvasUtil"] = js_html__$CanvasElement_CanvasUtil;
@@ -49530,7 +51440,9 @@ js_html_compat_ArrayBuffer.sliceImpl = function(begin,end) {
 	return result;
 };
 js_html_compat_ArrayBuffer.prototype = {
-	slice: function(begin,end) {
+	byteLength: null
+	,a: null
+	,slice: function(begin,end) {
 		return new js_html_compat_ArrayBuffer(this.a.slice(begin,end));
 	}
 	,__class__: js_html_compat_ArrayBuffer
@@ -49549,7 +51461,13 @@ var js_html_compat_DataView = function(buffer,byteOffset,byteLength) {
 $hxClasses["js.html.compat.DataView"] = js_html_compat_DataView;
 js_html_compat_DataView.__name__ = ["js","html","compat","DataView"];
 js_html_compat_DataView.prototype = {
-	getInt8: function(byteOffset) {
+	buf: null
+	,offset: null
+	,length: null
+	,byteLength: null
+	,byteOffset: null
+	,buffer: null
+	,getInt8: function(byteOffset) {
 		var v = this.buf.a[this.offset + byteOffset];
 		if(v >= 128) {
 			return v - 256;
@@ -49876,7 +51794,21 @@ justTriangles_Triangle.cross = function(p0,p1) {
 	return p0.x * p1.y - p0.y * p1.x;
 };
 justTriangles_Triangle.prototype = {
-	get_x: function() {
+	id: null
+	,colorID: null
+	,windingAdjusted: null
+	,colorA: null
+	,colorB: null
+	,colorC: null
+	,outline: null
+	,depth: null
+	,ax: null
+	,bx: null
+	,cx: null
+	,ay: null
+	,by: null
+	,cy: null
+	,get_x: function() {
 		return Math.min(Math.min(this.ax,this.bx),this.cx);
 	}
 	,set_x: function(x) {
@@ -49934,6 +51866,68 @@ justTriangles_Triangle.prototype = {
 			return false;
 		}
 	}
+	,rotate: function(p,theta) {
+		var cos = Math.cos(theta);
+		var sin = Math.sin(theta);
+		var px = p.x;
+		var py = p.y;
+		this.ax -= px;
+		this.ay -= py;
+		this.bx -= px;
+		this.by -= py;
+		this.cx -= px;
+		this.cy -= py;
+		var dx;
+		var dy;
+		dx = this.ax;
+		dy = this.ay;
+		this.ax = dx * cos - dy * sin;
+		this.ay = dx * sin + dy * cos;
+		dx = this.bx;
+		dy = this.by;
+		this.bx = dx * cos - dy * sin;
+		this.by = dx * sin + dy * cos;
+		dx = this.cx;
+		dy = this.cy;
+		this.cx = dx * cos - dy * sin;
+		this.cy = dx * sin + dy * cos;
+		this.ax += px;
+		this.ay += py;
+		this.bx += px;
+		this.by += py;
+		this.cx += px;
+		this.cy += py;
+	}
+	,rotateTrig: function(p,cos,sin) {
+		var px = p.x;
+		var py = p.y;
+		this.ax -= px;
+		this.ay -= py;
+		this.bx -= px;
+		this.by -= py;
+		this.cx -= px;
+		this.cy -= py;
+		var dx;
+		var dy;
+		dx = this.ax;
+		dy = this.ay;
+		this.ax = dx * cos - dy * sin;
+		this.ay = dx * sin + dy * cos;
+		dx = this.bx;
+		dy = this.by;
+		this.bx = dx * cos - dy * sin;
+		this.by = dx * sin + dy * cos;
+		dx = this.cx;
+		dy = this.cy;
+		this.cx = dx * cos - dy * sin;
+		this.cy = dx * sin + dy * cos;
+		this.ax += px;
+		this.ay += py;
+		this.bx += px;
+		this.by += py;
+		this.cx += px;
+		this.cy += py;
+	}
 	,drawStrips: function(drawRect) {
 		var xi = Math.floor(this.get_x());
 		var righti = Math.ceil(this.get_right());
@@ -49977,7 +51971,7 @@ justTriangles_Triangle.prototype = {
 	,__class__: justTriangles_Triangle
 };
 var tetrisTriangles_TetrisTrianglesHeaps = function() {
-	this.gameColors = [0,16711680,16744192,16776960,65280,255,4915330,9699539,4473924,3355443,789516,1118481];
+	this.gameColors = [-16777216,-65536,-33024,-256,-16711936,-16776961,-11861886,-7077677,-12303292,-13421773,-15987700,-15658735,-1,1711276287,855703296,1727987712];
 	hxd_App.call(this);
 };
 $hxClasses["tetrisTriangles.TetrisTrianglesHeaps"] = tetrisTriangles_TetrisTrianglesHeaps;
@@ -49987,9 +51981,13 @@ tetrisTriangles_TetrisTrianglesHeaps.main = function() {
 };
 tetrisTriangles_TetrisTrianglesHeaps.__super__ = hxd_App;
 tetrisTriangles_TetrisTrianglesHeaps.prototype = $extend(hxd_App.prototype,{
-	init: function() {
+	gameColors: null
+	,bmp: null
+	,tetris: null
+	,g: null
+	,init: function() {
 		this.g = new h2d_Graphics(this.s2d);
-		this.tetrisTriangles = new tetrisTriangles_game_TetrisTriangles();
+		this.tetris = new tetrisTriangles_game_Tetris();
 	}
 	,renderTriangles: function() {
 		var tri;
@@ -50001,570 +51999,4579 @@ tetrisTriangles_TetrisTrianglesHeaps.prototype = $extend(hxd_App.prototype,{
 			tri = triangles[_g1++];
 			this.g.beginFill(this.gameColors[tri.colorID]);
 			var _this = this.g;
-			var x = 400 + tri.ax * 600;
-			var y = 400 + tri.ay * 600;
+			var x = 500 + tri.ax * 600;
+			var y = 100 + tri.ay * 600;
 			_this.addVertex(x,y,_this.curR,_this.curG,_this.curB,_this.curA,x * _this.ma + y * _this.mc + _this.mx,x * _this.mb + y * _this.md + _this.my);
 			var _this1 = this.g;
-			var x1 = 400 + tri.bx * 600;
-			var y1 = 400 + tri.by * 600;
+			var x1 = 500 + tri.bx * 600;
+			var y1 = 100 + tri.by * 600;
 			_this1.addVertex(x1,y1,_this1.curR,_this1.curG,_this1.curB,_this1.curA,x1 * _this1.ma + y1 * _this1.mc + _this1.mx,x1 * _this1.mb + y1 * _this1.md + _this1.my);
 			var _this2 = this.g;
-			var x2 = 400 + tri.cx * 600;
-			var y2 = 400 + tri.cy * 600;
+			var x2 = 500 + tri.cx * 600;
+			var y2 = 100 + tri.cy * 600;
 			_this2.addVertex(x2,y2,_this2.curR,_this2.curG,_this2.curB,_this2.curA,x2 * _this2.ma + y2 * _this2.mc + _this2.mx,x2 * _this2.mb + y2 * _this2.md + _this2.my);
 			this.g.endFill();
 		}
 	}
 	,update: function(dt) {
-		var _this = this.tetrisTriangles;
-		var _this1 = _this.tetrisGenerator;
-		_this1._points = _this1.horizontal.getPoints([]);
-		var points = _this1._points;
-		var pl = points.length;
-		var tl = _this1.tetrisShapes.length;
-		var count = -1;
-		var _g1 = 0;
-		while(_g1 < tl) {
-			var i = _g1++;
-			var _g3 = 0;
-			while(_g3 < pl) if(_this1.tetrisShapes[i].hitTest(points[_g3++])) {
-				count = i;
+		var c1_y;
+		var c1_x;
+		var c0_y;
+		var c0_x;
+		if(hxd_Key.isDown(38)) {
+			var _this = this.tetris.rotation;
+			if(!_this.toggle) {
+				_this.toggle = true;
+				_this.count = 1.0;
 			}
 		}
-		if(count != -1) {
-			var newBlocks = _this1.tetrisShapes[count].clearBlocks();
-			var _g11 = 0;
-			var _g = newBlocks.length;
-			while(_g11 < _g) _this1.horizontal.pushBlock(newBlocks[_g11++]);
-		}
-		if(_this.count % 10 == 0) {
-			_this.toggle = !_this.toggle;
-		}
-		_this.count += 1.;
-		if(_this.toggle) {
-			_this.count += 1.;
-			var _this2 = _this.tetrisGenerator;
-			var theta = Math.PI / 10;
-			var _g12 = 0;
-			var _g2 = _this2.tetrisShapes.length;
-			while(_g12 < _g2) _this2.tetrisShapes[_g12++].rotate(theta);
-		}
-		var _this3 = _this.tetrisGenerator;
-		var _g13 = 0;
-		var _g4 = _this3.tetrisShapes.length;
-		while(_g13 < _g4) _this3.tetrisShapes[_g13++].moveDelta(0.0,0.15);
-		var _this4 = _this.tetrisGenerator;
-		_this4._points = _this4.horizontal.getPoints([]);
-		var points1 = _this4._points;
-		var pl1 = points1.length;
-		var tl1 = _this4.tetrisShapes.length;
-		var count1 = -1;
-		var _g14 = 0;
-		while(_g14 < tl1) {
-			var i1 = _g14++;
-			var _g31 = 0;
-			while(_g31 < pl1) if(_this4.tetrisShapes[i1].hitTest(points1[_g31++])) {
-				count1 = i1;
+		if(hxd_Key.isDown(40)) {
+			var _this1 = this.tetris.movement;
+			if(!_this1.toggleX) {
+				if(!_this1.toggleY) {
+					_this1.toggleY = true;
+					_this1.jumpX = 0 * _this1.dia;
+					_this1.jumpY = _this1.dia;
+				}
 			}
 		}
-		if(count1 != -1) {
-			var newBlocks1 = _this4.tetrisShapes[count1].clearBlocks();
-			var _g15 = 0;
-			var _g5 = newBlocks1.length;
-			while(_g15 < _g5) _this4.horizontal.pushBlock(newBlocks1[_g15++]);
+		if(hxd_Key.isDown(37)) {
+			var _this2 = this.tetris.movement;
+			if(!_this2.toggleX) {
+				if(!_this2.toggleY) {
+					_this2.toggleX = true;
+					_this2.jumpX = -1 * _this2.dia;
+					_this2.jumpY = 0 * _this2.dia;
+				}
+			}
+		} else if(hxd_Key.isDown(39)) {
+			var _this3 = this.tetris.movement;
+			if(!_this3.toggleX) {
+				if(!_this3.toggleY) {
+					_this3.toggleX = true;
+					_this3.jumpX = _this3.dia;
+					_this3.jumpY = 0 * _this3.dia;
+				}
+			}
+		}
+		var _this4 = this.tetris;
+		if(!_this4.end) {
+			var _this5 = _this4.controller;
+			var l = _this5.shapes.length;
+			var shape;
+			var hit = false;
+			var _g1 = 0;
+			while(_g1 < l) {
+				shape = _this5.shapes[_g1++];
+				shape.getLocation();
+				var diaSq = _this5.diaSq;
+				var vb0 = shape.virtualBlocks;
+				var vb1 = _this5.bottom.blocks;
+				var l0 = vb0.length;
+				var l1 = vb1.length;
+				var sq0;
+				var sq1;
+				var out = false;
+				var _g11 = 0;
+				while(_g11 < l0) {
+					sq0 = vb0[_g11++];
+					var _g3 = 0;
+					while(_g3 < l1) {
+						sq1 = vb1[_g3++];
+						var dx = sq0.t0.bx;
+						var dy = sq0.t0.by;
+						var ex = sq0.t0.cx;
+						var ey = sq0.t0.cy;
+						if(dx < ex) {
+							c0_x = dx + (ex - dx) / 2;
+						} else {
+							c0_x = ex + (dx - ex) / 2;
+						}
+						if(dy < ey) {
+							c0_y = dy + (ey - dy) / 2;
+						} else {
+							c0_y = dy + (dy - ey) / 2 - sq0.dia;
+						}
+						var dx1 = sq1.t0.bx;
+						var dy1 = sq1.t0.by;
+						var ex1 = sq1.t0.cx;
+						var ey1 = sq1.t0.cy;
+						if(dx1 < ex1) {
+							c1_x = dx1 + (ex1 - dx1) / 2;
+						} else {
+							c1_x = ex1 + (dx1 - ex1) / 2;
+						}
+						if(dy1 < ey1) {
+							c1_y = dy1 + (ey1 - dy1) / 2;
+						} else {
+							c1_y = dy1 + (dy1 - ey1) / 2 - sq1.dia;
+						}
+						var dx2 = c0_x - c1_x;
+						var dy2 = c0_y - c1_y;
+						if(dx2 * dx2 + dy2 * dy2 < diaSq) {
+							out = true;
+							break;
+						}
+					}
+				}
+				if(out) {
+					var beta;
+					if(shape.angle < 0) {
+						beta = -shape.angle + 180;
+					}
+					beta = shape.angle % (2 * Math.PI);
+					shape.rotate(shape.rook - beta);
+					var newLoc;
+					var _g12 = 0;
+					var _g = shape.lastLocation.length;
+					while(_g12 < _g) {
+						var i = _g12++;
+						newLoc = shape.newLocation[i];
+						shape.blocks[i].set_x(newLoc.x * shape.dia);
+						shape.blocks[i].set_y(newLoc.y * shape.dia);
+						shape.virtualBlocks[i].set_x(newLoc.x * shape.dia);
+						shape.virtualBlocks[i].set_y(newLoc.y * shape.dia);
+					}
+					var newBlocks = shape.clearBlocks();
+					var l2 = newBlocks.length;
+					var _g13 = 0;
+					while(_g13 < l2) _this5.bottom.pushBlock(newBlocks[_g13++]);
+					var arrP = shape.lastLocation;
+					var arr2d = _this5.inertArr;
+					var lp = arrP.length;
+					var p;
+					var _g14 = 0;
+					while(_g14 < lp) {
+						p = arrP[_g14++];
+						arr2d[2 + arr2d[0] * (p.y + -2) + p.x | 0] = 1;
+					}
+					_this5.removeFullRows();
+					hit = true;
+				}
+			}
+			var this1 = _this5.inertArr;
+			var w = this1[0];
+			var s = 2 + w * 0 | 0;
+			var e = s + w;
+			var emp = true;
+			var _g15 = s;
+			while(_g15 < e) if(this1[_g15++] == 1) {
+				emp = false;
+				break;
+			}
+			var end = !emp;
+			if(end) {
+				_this5.onGameEnd();
+			}
+			if(_this5.onTetrisShapeLanded != null && hit && !end) {
+				_this5.onTetrisShapeLanded();
+			}
+			if(!hit) {
+				var _this6 = _this4.rotation;
+				if(_this6.toggle) {
+					var _this7 = _this6.controller;
+					var theta = Math.PI / _this6.rotationSpeed;
+					var l3 = _this7.shapes.length;
+					var _g16 = 0;
+					while(_g16 < l3) _this7.shapes[_g16++].rotate(theta);
+				}
+				if(_this6.count % (_this6.rotationSpeed / 2) == 0.) {
+					_this6.count = 0.;
+					_this6.toggle = false;
+				}
+				_this6.count += 1.;
+				var _this8 = _this4.movement;
+				var djx = 0.;
+				var djy = 0.;
+				if(_this8.toggleX) {
+					if(_this8.jumpX > 0) {
+						djx = _this8.jumpX / _this8.jumpSpeed;
+						if((_this8.jx += djx) > _this8.jumpX + djx / 2) {
+							_this8.toggleX = false;
+							_this8.jx = 0.;
+							djx = 0.;
+						}
+					} else {
+						djx = _this8.jumpX / _this8.jumpSpeed;
+						if((_this8.jx += djx) < _this8.jumpX + djx / 2) {
+							_this8.toggleX = false;
+							_this8.jx = 0.;
+							djx = 0.;
+						}
+					}
+				}
+				if(_this8.toggleY) {
+					if(_this8.jumpY > 0) {
+						djy = _this8.jumpY / _this8.jumpSpeed;
+						if((_this8.jy += djy) > _this8.jumpY + djy / 2) {
+							_this8.toggleY = false;
+							_this8.jy = 0.;
+							djy = 0.;
+						}
+					} else {
+						djy = _this8.jumpY / _this8.jumpSpeed;
+						if((_this8.jy += djx) < _this8.jumpY + djy / 2) {
+							_this8.toggleY = false;
+							_this8.jy = 0.;
+							djy = 0.;
+						}
+					}
+				}
+				if(_this8.toggleX) {
+					var _this9 = _this8.controller;
+					var leftStop = _this8.leftStop;
+					var rightStop = _this8.rightStop;
+					var l4 = _this9.shapes.length;
+					var shape1;
+					var _g17 = 0;
+					while(_g17 < l4) {
+						shape1 = _this9.shapes[_g17++];
+						if(shape1.blocks != null && shape1.blocks.length != 0) {
+							var sqr = shape1.blocks;
+							var sides0;
+							if(sqr == null) {
+								sides0 = null;
+							} else if(sqr.length == 0) {
+								sides0 = null;
+							} else {
+								var l5 = sqr.length;
+								var square = sqr[0];
+								var bx = square.get_x();
+								var br = square.get_right();
+								var _g18 = 1;
+								while(_g18 < l5) {
+									square = sqr[_g18++];
+									bx = Math.min(bx,square.get_x());
+									br = Math.max(br,square.get_right());
+								}
+								sides0 = { x : bx, right : br};
+							}
+							var sqr1 = shape1.virtualBlocks;
+							var sides1;
+							if(sqr1 == null) {
+								sides1 = null;
+							} else if(sqr1.length == 0) {
+								sides1 = null;
+							} else {
+								var l6 = sqr1.length;
+								var square1 = sqr1[0];
+								var bx1 = square1.get_x();
+								var br1 = square1.get_right();
+								var _g19 = 1;
+								while(_g19 < l6) {
+									square1 = sqr1[_g19++];
+									bx1 = Math.min(bx1,square1.get_x());
+									br1 = Math.max(br1,square1.get_right());
+								}
+								sides1 = { x : bx1, right : br1};
+							}
+							var sides = { x : Math.min(sides0.x,sides1.x), right : Math.max(sides0.right,sides1.right)};
+							if(sides != null) {
+								if(djx < 0) {
+									if(sides.x + djx > leftStop) {
+										shape1.moveX(djx);
+									} else {
+										shape1.moveX(leftStop - sides.x);
+									}
+								} else if(djx > 0) {
+									if(sides.right + djx < rightStop) {
+										shape1.moveX(djx);
+									} else {
+										shape1.moveX(rightStop - sides.right);
+									}
+								}
+							}
+						}
+					}
+				}
+				var _this10 = _this8.controller;
+				var y = _this8.fallSpeed + djy;
+				var l7 = _this10.shapes.length;
+				var _g110 = 0;
+				while(_g110 < l7) _this10.shapes[_g110++].moveDelta(0.0,y);
+			}
 		}
 		var tri;
 		var triangles = justTriangles_Triangle.triangles;
 		this.g.clear();
-		var _g16 = 0;
-		var _g6 = triangles.length;
-		while(_g16 < _g6) {
-			tri = triangles[_g16++];
+		var _g111 = 0;
+		var _g2 = triangles.length;
+		while(_g111 < _g2) {
+			tri = triangles[_g111++];
 			this.g.beginFill(this.gameColors[tri.colorID]);
-			var _this5 = this.g;
-			var x = 400 + tri.ax * 600;
-			var y = 400 + tri.ay * 600;
-			_this5.addVertex(x,y,_this5.curR,_this5.curG,_this5.curB,_this5.curA,x * _this5.ma + y * _this5.mc + _this5.mx,x * _this5.mb + y * _this5.md + _this5.my);
-			var _this6 = this.g;
-			var x1 = 400 + tri.bx * 600;
-			var y1 = 400 + tri.by * 600;
-			_this6.addVertex(x1,y1,_this6.curR,_this6.curG,_this6.curB,_this6.curA,x1 * _this6.ma + y1 * _this6.mc + _this6.mx,x1 * _this6.mb + y1 * _this6.md + _this6.my);
-			var _this7 = this.g;
-			var x2 = 400 + tri.cx * 600;
-			var y2 = 400 + tri.cy * 600;
-			_this7.addVertex(x2,y2,_this7.curR,_this7.curG,_this7.curB,_this7.curA,x2 * _this7.ma + y2 * _this7.mc + _this7.mx,x2 * _this7.mb + y2 * _this7.md + _this7.my);
+			var _this11 = this.g;
+			var x = 500 + tri.ax * 600;
+			var y1 = 100 + tri.ay * 600;
+			_this11.addVertex(x,y1,_this11.curR,_this11.curG,_this11.curB,_this11.curA,x * _this11.ma + y1 * _this11.mc + _this11.mx,x * _this11.mb + y1 * _this11.md + _this11.my);
+			var _this12 = this.g;
+			var x1 = 500 + tri.bx * 600;
+			var y2 = 100 + tri.by * 600;
+			_this12.addVertex(x1,y2,_this12.curR,_this12.curG,_this12.curB,_this12.curA,x1 * _this12.ma + y2 * _this12.mc + _this12.mx,x1 * _this12.mb + y2 * _this12.md + _this12.my);
+			var _this13 = this.g;
+			var x2 = 500 + tri.cx * 600;
+			var y3 = 100 + tri.cy * 600;
+			_this13.addVertex(x2,y3,_this13.curR,_this13.curG,_this13.curB,_this13.curA,x2 * _this13.ma + y3 * _this13.mc + _this13.mx,x2 * _this13.mb + y3 * _this13.md + _this13.my);
 			this.g.endFill();
 		}
 	}
 	,__class__: tetrisTriangles_TetrisTrianglesHeaps
 });
-var tetrisTriangles_game_TetrisTriangles = function(scale) {
-	if(scale == null) {
-		scale = 1;
-	}
-	this.hi = 15;
-	this.wide = 22;
-	this.toggle = true;
-	this.count = 0.;
-	this.above = 7;
-	this.right = 10;
-	this.y = -4;
-	this.x = -4;
-	this.edge = 0.01;
-	this.dia = 0.15;
-	this.dia = scale * this.dia;
-	this.edge = scale * this.edge;
-	this.tetrisGenerator = new tetrisTriangles_visual_TetrisGenerator(0,justTriangles_Triangle.triangles,this.dia,this.edge);
-	var dx = this.dia * this.x;
-	var dy = this.dia * this.y;
-	var sy = this.dia * this.above;
-	this.tetrisGenerator.generateBackground({ x : dx, y : dy},this.wide,this.hi,10,0);
-	var _g = 0;
-	while(_g < 30) {
-		var i = _g++;
-		var m = i % 6;
-		var randX = this.dia;
-		var randX1 = this.dia;
-		var randX2 = Math.random();
-		this.tetrisGenerator.generateRandom({ x : dx + (randX + randX1 * Math.round(randX2 * (this.wide - 0.5))), y : dy - i * sy},m + 1,m + 2);
-	}
-	this.tetrisGenerator.generateHoriz({ x : dx, y : dy + this.dia * this.hi},this.wide,8,9);
+var tetrisTriangles_game_ABC = function(createTetris_) {
+	this.createTetris = createTetris_;
 };
-$hxClasses["tetrisTriangles.game.TetrisTriangles"] = tetrisTriangles_game_TetrisTriangles;
-tetrisTriangles_game_TetrisTriangles.__name__ = ["tetrisTriangles","game","TetrisTriangles"];
-tetrisTriangles_game_TetrisTriangles.prototype = {
-	update: function() {
-		var _this = this.tetrisGenerator;
-		_this._points = _this.horizontal.getPoints([]);
-		var points = _this._points;
-		var pl = points.length;
-		var tl = _this.tetrisShapes.length;
-		var count = -1;
-		var _g1 = 0;
-		while(_g1 < tl) {
-			var i = _g1++;
-			var _g3 = 0;
-			while(_g3 < pl) if(_this.tetrisShapes[i].hitTest(points[_g3++])) {
-				count = i;
+$hxClasses["tetrisTriangles.game.ABC"] = tetrisTriangles_game_ABC;
+tetrisTriangles_game_ABC.__name__ = ["tetrisTriangles","game","ABC"];
+tetrisTriangles_game_ABC.prototype = {
+	createTetris: null
+	,rnd: function(p) {
+		return this.createABC(HxOverrides.substr("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",Math.round(Math.random() * ("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".length - 1)),1),p);
+	}
+	,createABC: function(letter,p) {
+		var arr;
+		switch(letter) {
+		case "!":
+			var v = [3,5,0,0,1,0,0,1,0,0,1,0,0,0,0,0,1];
+			var this1;
+			if(v == null) {
+				var _g = [];
+				var _g2 = 0;
+				while(_g2 < 10002) {
+					++_g2;
+					_g.push(0);
+				}
+				_g[0] = 100;
+				_g[1] = 100;
+				v = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g);
 			}
-		}
-		if(count != -1) {
-			var newBlocks = _this.tetrisShapes[count].clearBlocks();
+			this1 = v;
+			arr = this1;
+			var snapped = null;
+			if(snapped == null) {
+				snapped = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts = this.createTetris(p,snapped);
+			var w = arr[0];
+			var h = arr[1];
+			var _g1 = 0;
+			while(_g1 < w) {
+				var x = _g1++;
+				var _g3 = 0;
+				while(_g3 < h) {
+					var y = _g3++;
+					if(arr[2 + arr[0] * y + x | 0] == 1) {
+						ts.addBlock(-2 + x,-2.5 + y);
+					}
+				}
+			}
+			return ts;
+		case "\"":
+			var v1 = [4,5,1,0,1,1,0,1,0,0,0,0,0,0,0,0,0];
+			var this2;
+			if(v1 == null) {
+				var _g4 = [];
+				var _g21 = 0;
+				while(_g21 < 10002) {
+					++_g21;
+					_g4.push(0);
+				}
+				_g4[0] = 100;
+				_g4[1] = 100;
+				v1 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g4);
+			}
+			this2 = v1;
+			arr = this2;
+			var snapped1 = null;
+			if(snapped1 == null) {
+				snapped1 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts1 = this.createTetris(p,snapped1);
+			var w1 = arr[0];
+			var h1 = arr[1];
 			var _g11 = 0;
-			var _g = newBlocks.length;
-			while(_g11 < _g) _this.horizontal.pushBlock(newBlocks[_g11++]);
-		}
-		if(this.count % 10 == 0) {
-			this.toggle = !this.toggle;
-		}
-		this.count += 1.;
-		if(this.toggle) {
-			this.count += 1.;
-			var _this1 = this.tetrisGenerator;
-			var theta = Math.PI / 10;
+			while(_g11 < w1) {
+				var x1 = _g11++;
+				var _g31 = 0;
+				while(_g31 < h1) {
+					var y1 = _g31++;
+					if(arr[2 + arr[0] * y1 + x1 | 0] == 1) {
+						ts1.addBlock(-2 + x1,-2.5 + y1);
+					}
+				}
+			}
+			return ts1;
+		case "#":
+			var v2 = [5,5,0,1,0,1,0,1,1,1,1,1,0,1,0,1,0,1,1,1,1,1,0,1,0,1,0];
+			var this3;
+			if(v2 == null) {
+				var _g5 = [];
+				var _g22 = 0;
+				while(_g22 < 10002) {
+					++_g22;
+					_g5.push(0);
+				}
+				_g5[0] = 100;
+				_g5[1] = 100;
+				v2 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g5);
+			}
+			this3 = v2;
+			arr = this3;
+			var snapped2 = null;
+			if(snapped2 == null) {
+				snapped2 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts2 = this.createTetris(p,snapped2);
+			var w2 = arr[0];
+			var h2 = arr[1];
 			var _g12 = 0;
-			var _g2 = _this1.tetrisShapes.length;
-			while(_g12 < _g2) _this1.tetrisShapes[_g12++].rotate(theta);
+			while(_g12 < w2) {
+				var x2 = _g12++;
+				var _g32 = 0;
+				while(_g32 < h2) {
+					var y2 = _g32++;
+					if(arr[2 + arr[0] * y2 + x2 | 0] == 1) {
+						ts2.addBlock(-2 + x2,-2.5 + y2);
+					}
+				}
+			}
+			return ts2;
+		case "%":
+			var v3 = [5,5,1,1,0,0,1,1,0,0,1,0,0,0,1,0,0,0,1,0,0,1,1,0,0,1,1];
+			var this4;
+			if(v3 == null) {
+				var _g6 = [];
+				var _g23 = 0;
+				while(_g23 < 10002) {
+					++_g23;
+					_g6.push(0);
+				}
+				_g6[0] = 100;
+				_g6[1] = 100;
+				v3 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g6);
+			}
+			this4 = v3;
+			arr = this4;
+			var snapped3 = null;
+			if(snapped3 == null) {
+				snapped3 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts3 = this.createTetris(p,snapped3);
+			var w3 = arr[0];
+			var h3 = arr[1];
+			var _g13 = 0;
+			while(_g13 < w3) {
+				var x3 = _g13++;
+				var _g33 = 0;
+				while(_g33 < h3) {
+					var y3 = _g33++;
+					if(arr[2 + arr[0] * y3 + x3 | 0] == 1) {
+						ts3.addBlock(-2 + x3,-2.5 + y3);
+					}
+				}
+			}
+			return ts3;
+		case "&":
+			var v4 = [4,5,0,1,1,0,1,0,1,0,0,1,0,1,1,0,1,0,0,1,0,1];
+			var this5;
+			if(v4 == null) {
+				var _g7 = [];
+				var _g24 = 0;
+				while(_g24 < 10002) {
+					++_g24;
+					_g7.push(0);
+				}
+				_g7[0] = 100;
+				_g7[1] = 100;
+				v4 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g7);
+			}
+			this5 = v4;
+			arr = this5;
+			var snapped4 = null;
+			if(snapped4 == null) {
+				snapped4 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts4 = this.createTetris(p,snapped4);
+			var w4 = arr[0];
+			var h4 = arr[1];
+			var _g14 = 0;
+			while(_g14 < w4) {
+				var x4 = _g14++;
+				var _g34 = 0;
+				while(_g34 < h4) {
+					var y4 = _g34++;
+					if(arr[2 + arr[0] * y4 + x4 | 0] == 1) {
+						ts4.addBlock(-2 + x4,-2.5 + y4);
+					}
+				}
+			}
+			return ts4;
+		case "(":
+			var v5 = [4,5,0,1,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0];
+			var this6;
+			if(v5 == null) {
+				var _g8 = [];
+				var _g25 = 0;
+				while(_g25 < 10002) {
+					++_g25;
+					_g8.push(0);
+				}
+				_g8[0] = 100;
+				_g8[1] = 100;
+				v5 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g8);
+			}
+			this6 = v5;
+			arr = this6;
+			var snapped5 = null;
+			if(snapped5 == null) {
+				snapped5 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts5 = this.createTetris(p,snapped5);
+			var w5 = arr[0];
+			var h5 = arr[1];
+			var _g15 = 0;
+			while(_g15 < w5) {
+				var x5 = _g15++;
+				var _g35 = 0;
+				while(_g35 < h5) {
+					var y5 = _g35++;
+					if(arr[2 + arr[0] * y5 + x5 | 0] == 1) {
+						ts5.addBlock(-2 + x5,-2.5 + y5);
+					}
+				}
+			}
+			return ts5;
+		case ")":
+			var v6 = [4,5,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,1,0];
+			var this7;
+			if(v6 == null) {
+				var _g9 = [];
+				var _g26 = 0;
+				while(_g26 < 10002) {
+					++_g26;
+					_g9.push(0);
+				}
+				_g9[0] = 100;
+				_g9[1] = 100;
+				v6 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g9);
+			}
+			this7 = v6;
+			arr = this7;
+			var snapped6 = null;
+			if(snapped6 == null) {
+				snapped6 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts6 = this.createTetris(p,snapped6);
+			var w6 = arr[0];
+			var h6 = arr[1];
+			var _g16 = 0;
+			while(_g16 < w6) {
+				var x6 = _g16++;
+				var _g36 = 0;
+				while(_g36 < h6) {
+					var y6 = _g36++;
+					if(arr[2 + arr[0] * y6 + x6 | 0] == 1) {
+						ts6.addBlock(-2 + x6,-2.5 + y6);
+					}
+				}
+			}
+			return ts6;
+		case "*":
+			var v7 = [5,5,1,0,1,0,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,0,1,0,1,0,1];
+			var this8;
+			if(v7 == null) {
+				var _g10 = [];
+				var _g27 = 0;
+				while(_g27 < 10002) {
+					++_g27;
+					_g10.push(0);
+				}
+				_g10[0] = 100;
+				_g10[1] = 100;
+				v7 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g10);
+			}
+			this8 = v7;
+			arr = this8;
+			var snapped7 = null;
+			if(snapped7 == null) {
+				snapped7 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts7 = this.createTetris(p,snapped7);
+			var w7 = arr[0];
+			var h7 = arr[1];
+			var _g17 = 0;
+			while(_g17 < w7) {
+				var x7 = _g17++;
+				var _g37 = 0;
+				while(_g37 < h7) {
+					var y7 = _g37++;
+					if(arr[2 + arr[0] * y7 + x7 | 0] == 1) {
+						ts7.addBlock(-2 + x7,-2.5 + y7);
+					}
+				}
+			}
+			return ts7;
+		case "+":
+			var v8 = [4,5,0,0,0,0,1,0,1,1,1,0,1,0,0,0,0];
+			var this9;
+			if(v8 == null) {
+				var _g18 = [];
+				var _g28 = 0;
+				while(_g28 < 10002) {
+					++_g28;
+					_g18.push(0);
+				}
+				_g18[0] = 100;
+				_g18[1] = 100;
+				v8 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g18);
+			}
+			this9 = v8;
+			arr = this9;
+			var snapped8 = null;
+			if(snapped8 == null) {
+				snapped8 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts8 = this.createTetris(p,snapped8);
+			var w8 = arr[0];
+			var h8 = arr[1];
+			var _g19 = 0;
+			while(_g19 < w8) {
+				var x8 = _g19++;
+				var _g38 = 0;
+				while(_g38 < h8) {
+					var y8 = _g38++;
+					if(arr[2 + arr[0] * y8 + x8 | 0] == 1) {
+						ts8.addBlock(-2 + x8,-2.5 + y8);
+					}
+				}
+			}
+			return ts8;
+		case ",":
+			var v9 = [3,5,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0];
+			var this10;
+			if(v9 == null) {
+				var _g20 = [];
+				var _g29 = 0;
+				while(_g29 < 10002) {
+					++_g29;
+					_g20.push(0);
+				}
+				_g20[0] = 100;
+				_g20[1] = 100;
+				v9 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g20);
+			}
+			this10 = v9;
+			arr = this10;
+			var snapped9 = null;
+			if(snapped9 == null) {
+				snapped9 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts9 = this.createTetris(p,snapped9);
+			var w9 = arr[0];
+			var h9 = arr[1];
+			var _g110 = 0;
+			while(_g110 < w9) {
+				var x9 = _g110++;
+				var _g39 = 0;
+				while(_g39 < h9) {
+					var y9 = _g39++;
+					if(arr[2 + arr[0] * y9 + x9 | 0] == 1) {
+						ts9.addBlock(-2 + x9,-2.5 + y9);
+					}
+				}
+			}
+			return ts9;
+		case "-":
+			var v10 = [4,5,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0];
+			var this11;
+			if(v10 == null) {
+				var _g30 = [];
+				var _g210 = 0;
+				while(_g210 < 10002) {
+					++_g210;
+					_g30.push(0);
+				}
+				_g30[0] = 100;
+				_g30[1] = 100;
+				v10 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g30);
+			}
+			this11 = v10;
+			arr = this11;
+			var snapped10 = null;
+			if(snapped10 == null) {
+				snapped10 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts10 = this.createTetris(p,snapped10);
+			var w10 = arr[0];
+			var h10 = arr[1];
+			var _g111 = 0;
+			while(_g111 < w10) {
+				var x10 = _g111++;
+				var _g310 = 0;
+				while(_g310 < h10) {
+					var y10 = _g310++;
+					if(arr[2 + arr[0] * y10 + x10 | 0] == 1) {
+						ts10.addBlock(-2 + x10,-2.5 + y10);
+					}
+				}
+			}
+			return ts10;
+		case ".":
+			var v11 = [3,5,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1];
+			var this12;
+			if(v11 == null) {
+				var _g40 = [];
+				var _g211 = 0;
+				while(_g211 < 10002) {
+					++_g211;
+					_g40.push(0);
+				}
+				_g40[0] = 100;
+				_g40[1] = 100;
+				v11 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g40);
+			}
+			this12 = v11;
+			arr = this12;
+			var snapped11 = null;
+			if(snapped11 == null) {
+				snapped11 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts11 = this.createTetris(p,snapped11);
+			var w11 = arr[0];
+			var h11 = arr[1];
+			var _g112 = 0;
+			while(_g112 < w11) {
+				var x11 = _g112++;
+				var _g311 = 0;
+				while(_g311 < h11) {
+					var y11 = _g311++;
+					if(arr[2 + arr[0] * y11 + x11 | 0] == 1) {
+						ts11.addBlock(-2 + x11,-2.5 + y11);
+					}
+				}
+			}
+			return ts11;
+		case "/":
+			var v12 = [4,5,0,0,0,1,0,0,1,0,0,1,0,0,0,1,0,0,1,0,0,0];
+			var this13;
+			if(v12 == null) {
+				var _g41 = [];
+				var _g212 = 0;
+				while(_g212 < 10002) {
+					++_g212;
+					_g41.push(0);
+				}
+				_g41[0] = 100;
+				_g41[1] = 100;
+				v12 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g41);
+			}
+			this13 = v12;
+			arr = this13;
+			var snapped12 = null;
+			if(snapped12 == null) {
+				snapped12 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts12 = this.createTetris(p,snapped12);
+			var w12 = arr[0];
+			var h12 = arr[1];
+			var _g113 = 0;
+			while(_g113 < w12) {
+				var x12 = _g113++;
+				var _g312 = 0;
+				while(_g312 < h12) {
+					var y12 = _g312++;
+					if(arr[2 + arr[0] * y12 + x12 | 0] == 1) {
+						ts12.addBlock(-2 + x12,-2.5 + y12);
+					}
+				}
+			}
+			return ts12;
+		case "0":
+			var v13 = [4,5,0,1,1,0,1,0,1,1,1,1,0,1,1,0,0,1,0,1,1,0];
+			var this14;
+			if(v13 == null) {
+				var _g42 = [];
+				var _g213 = 0;
+				while(_g213 < 10002) {
+					++_g213;
+					_g42.push(0);
+				}
+				_g42[0] = 100;
+				_g42[1] = 100;
+				v13 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g42);
+			}
+			this14 = v13;
+			arr = this14;
+			var snapped13 = null;
+			if(snapped13 == null) {
+				snapped13 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts13 = this.createTetris(p,snapped13);
+			var w13 = arr[0];
+			var h13 = arr[1];
+			var _g114 = 0;
+			while(_g114 < w13) {
+				var x13 = _g114++;
+				var _g313 = 0;
+				while(_g313 < h13) {
+					var y13 = _g313++;
+					if(arr[2 + arr[0] * y13 + x13 | 0] == 1) {
+						ts13.addBlock(-2 + x13,-2.5 + y13);
+					}
+				}
+			}
+			return ts13;
+		case "1":
+			var v14 = [3,5,0,1,0,1,1,0,0,1,0,0,1,0,1,1,1];
+			var this15;
+			if(v14 == null) {
+				var _g43 = [];
+				var _g214 = 0;
+				while(_g214 < 10002) {
+					++_g214;
+					_g43.push(0);
+				}
+				_g43[0] = 100;
+				_g43[1] = 100;
+				v14 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g43);
+			}
+			this15 = v14;
+			arr = this15;
+			var snapped14 = null;
+			if(snapped14 == null) {
+				snapped14 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts14 = this.createTetris(p,snapped14);
+			var w14 = arr[0];
+			var h14 = arr[1];
+			var _g115 = 0;
+			while(_g115 < w14) {
+				var x14 = _g115++;
+				var _g314 = 0;
+				while(_g314 < h14) {
+					var y14 = _g314++;
+					if(arr[2 + arr[0] * y14 + x14 | 0] == 1) {
+						ts14.addBlock(-2 + x14,-2.5 + y14);
+					}
+				}
+			}
+			return ts14;
+		case "2":
+			var v15 = [4,5,0,1,1,0,1,0,0,1,0,0,1,0,0,1,0,0,1,1,1,1];
+			var this16;
+			if(v15 == null) {
+				var _g44 = [];
+				var _g215 = 0;
+				while(_g215 < 10002) {
+					++_g215;
+					_g44.push(0);
+				}
+				_g44[0] = 100;
+				_g44[1] = 100;
+				v15 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g44);
+			}
+			this16 = v15;
+			arr = this16;
+			var snapped15 = null;
+			if(snapped15 == null) {
+				snapped15 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts15 = this.createTetris(p,snapped15);
+			var w15 = arr[0];
+			var h15 = arr[1];
+			var _g116 = 0;
+			while(_g116 < w15) {
+				var x15 = _g116++;
+				var _g315 = 0;
+				while(_g315 < h15) {
+					var y15 = _g315++;
+					if(arr[2 + arr[0] * y15 + x15 | 0] == 1) {
+						ts15.addBlock(-2 + x15,-2.5 + y15);
+					}
+				}
+			}
+			return ts15;
+		case "3":
+			var v16 = [4,5,1,1,1,0,0,0,0,1,0,1,1,0,0,0,0,1,1,1,1,0];
+			var this17;
+			if(v16 == null) {
+				var _g45 = [];
+				var _g216 = 0;
+				while(_g216 < 10002) {
+					++_g216;
+					_g45.push(0);
+				}
+				_g45[0] = 100;
+				_g45[1] = 100;
+				v16 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g45);
+			}
+			this17 = v16;
+			arr = this17;
+			var snapped16 = null;
+			if(snapped16 == null) {
+				snapped16 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts16 = this.createTetris(p,snapped16);
+			var w16 = arr[0];
+			var h16 = arr[1];
+			var _g117 = 0;
+			while(_g117 < w16) {
+				var x16 = _g117++;
+				var _g316 = 0;
+				while(_g316 < h16) {
+					var y16 = _g316++;
+					if(arr[2 + arr[0] * y16 + x16 | 0] == 1) {
+						ts16.addBlock(-2 + x16,-2.5 + y16);
+					}
+				}
+			}
+			return ts16;
+		case "4":
+			var v17 = [4,5,1,0,0,0,1,0,0,0,1,0,1,0,1,1,1,1,0,0,1,0];
+			var this18;
+			if(v17 == null) {
+				var _g46 = [];
+				var _g217 = 0;
+				while(_g217 < 10002) {
+					++_g217;
+					_g46.push(0);
+				}
+				_g46[0] = 100;
+				_g46[1] = 100;
+				v17 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g46);
+			}
+			this18 = v17;
+			arr = this18;
+			var snapped17 = null;
+			if(snapped17 == null) {
+				snapped17 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts17 = this.createTetris(p,snapped17);
+			var w17 = arr[0];
+			var h17 = arr[1];
+			var _g118 = 0;
+			while(_g118 < w17) {
+				var x17 = _g118++;
+				var _g317 = 0;
+				while(_g317 < h17) {
+					var y17 = _g317++;
+					if(arr[2 + arr[0] * y17 + x17 | 0] == 1) {
+						ts17.addBlock(-2 + x17,-2.5 + y17);
+					}
+				}
+			}
+			return ts17;
+		case "5":
+			var v18 = [4,5,1,1,1,1,1,0,0,0,1,1,1,0,0,0,0,1,1,1,1,0];
+			var this19;
+			if(v18 == null) {
+				var _g47 = [];
+				var _g218 = 0;
+				while(_g218 < 10002) {
+					++_g218;
+					_g47.push(0);
+				}
+				_g47[0] = 100;
+				_g47[1] = 100;
+				v18 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g47);
+			}
+			this19 = v18;
+			arr = this19;
+			var snapped18 = null;
+			if(snapped18 == null) {
+				snapped18 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts18 = this.createTetris(p,snapped18);
+			var w18 = arr[0];
+			var h18 = arr[1];
+			var _g119 = 0;
+			while(_g119 < w18) {
+				var x18 = _g119++;
+				var _g318 = 0;
+				while(_g318 < h18) {
+					var y18 = _g318++;
+					if(arr[2 + arr[0] * y18 + x18 | 0] == 1) {
+						ts18.addBlock(-2 + x18,-2.5 + y18);
+					}
+				}
+			}
+			return ts18;
+		case "6":
+			var v19 = [4,5,0,1,1,1,1,0,0,0,1,1,1,0,1,0,0,1,0,1,1,0];
+			var this20;
+			if(v19 == null) {
+				var _g48 = [];
+				var _g219 = 0;
+				while(_g219 < 10002) {
+					++_g219;
+					_g48.push(0);
+				}
+				_g48[0] = 100;
+				_g48[1] = 100;
+				v19 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g48);
+			}
+			this20 = v19;
+			arr = this20;
+			var snapped19 = null;
+			if(snapped19 == null) {
+				snapped19 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts19 = this.createTetris(p,snapped19);
+			var w19 = arr[0];
+			var h19 = arr[1];
+			var _g120 = 0;
+			while(_g120 < w19) {
+				var x19 = _g120++;
+				var _g319 = 0;
+				while(_g319 < h19) {
+					var y19 = _g319++;
+					if(arr[2 + arr[0] * y19 + x19 | 0] == 1) {
+						ts19.addBlock(-2 + x19,-2.5 + y19);
+					}
+				}
+			}
+			return ts19;
+		case "7":
+			var v20 = [4,5,1,1,1,1,0,0,1,0,0,0,1,0,0,1,0,0,0,1,0,0];
+			var this21;
+			if(v20 == null) {
+				var _g49 = [];
+				var _g220 = 0;
+				while(_g220 < 10002) {
+					++_g220;
+					_g49.push(0);
+				}
+				_g49[0] = 100;
+				_g49[1] = 100;
+				v20 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g49);
+			}
+			this21 = v20;
+			arr = this21;
+			var snapped20 = null;
+			if(snapped20 == null) {
+				snapped20 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts20 = this.createTetris(p,snapped20);
+			var w20 = arr[0];
+			var h20 = arr[1];
+			var _g121 = 0;
+			while(_g121 < w20) {
+				var x20 = _g121++;
+				var _g320 = 0;
+				while(_g320 < h20) {
+					var y20 = _g320++;
+					if(arr[2 + arr[0] * y20 + x20 | 0] == 1) {
+						ts20.addBlock(-2 + x20,-2.5 + y20);
+					}
+				}
+			}
+			return ts20;
+		case "8":
+			var v21 = [4,5,0,1,1,0,1,0,0,1,0,1,1,0,1,0,0,1,0,1,1,0];
+			var this22;
+			if(v21 == null) {
+				var _g50 = [];
+				var _g221 = 0;
+				while(_g221 < 10002) {
+					++_g221;
+					_g50.push(0);
+				}
+				_g50[0] = 100;
+				_g50[1] = 100;
+				v21 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g50);
+			}
+			this22 = v21;
+			arr = this22;
+			var snapped21 = null;
+			if(snapped21 == null) {
+				snapped21 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts21 = this.createTetris(p,snapped21);
+			var w21 = arr[0];
+			var h21 = arr[1];
+			var _g122 = 0;
+			while(_g122 < w21) {
+				var x21 = _g122++;
+				var _g321 = 0;
+				while(_g321 < h21) {
+					var y21 = _g321++;
+					if(arr[2 + arr[0] * y21 + x21 | 0] == 1) {
+						ts21.addBlock(-2 + x21,-2.5 + y21);
+					}
+				}
+			}
+			return ts21;
+		case "9":
+			var v22 = [4,5,0,1,1,0,1,0,0,1,0,1,1,1,0,0,0,1,1,1,1,0];
+			var this23;
+			if(v22 == null) {
+				var _g51 = [];
+				var _g222 = 0;
+				while(_g222 < 10002) {
+					++_g222;
+					_g51.push(0);
+				}
+				_g51[0] = 100;
+				_g51[1] = 100;
+				v22 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g51);
+			}
+			this23 = v22;
+			arr = this23;
+			var snapped22 = null;
+			if(snapped22 == null) {
+				snapped22 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts22 = this.createTetris(p,snapped22);
+			var w22 = arr[0];
+			var h22 = arr[1];
+			var _g123 = 0;
+			while(_g123 < w22) {
+				var x22 = _g123++;
+				var _g322 = 0;
+				while(_g322 < h22) {
+					var y22 = _g322++;
+					if(arr[2 + arr[0] * y22 + x22 | 0] == 1) {
+						ts22.addBlock(-2 + x22,-2.5 + y22);
+					}
+				}
+			}
+			return ts22;
+		case ":":
+			var v23 = [3,5,0,0,1,0,0,1,0,0,0,0,0,1,0,0,1];
+			var this24;
+			if(v23 == null) {
+				var _g52 = [];
+				var _g223 = 0;
+				while(_g223 < 10002) {
+					++_g223;
+					_g52.push(0);
+				}
+				_g52[0] = 100;
+				_g52[1] = 100;
+				v23 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g52);
+			}
+			this24 = v23;
+			arr = this24;
+			var snapped23 = null;
+			if(snapped23 == null) {
+				snapped23 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts23 = this.createTetris(p,snapped23);
+			var w23 = arr[0];
+			var h23 = arr[1];
+			var _g124 = 0;
+			while(_g124 < w23) {
+				var x23 = _g124++;
+				var _g323 = 0;
+				while(_g323 < h23) {
+					var y23 = _g323++;
+					if(arr[2 + arr[0] * y23 + x23 | 0] == 1) {
+						ts23.addBlock(-2 + x23,-2.5 + y23);
+					}
+				}
+			}
+			return ts23;
+		case ";":
+			var v24 = [3,5,0,0,1,0,0,1,0,0,0,0,0,1,0,1,0];
+			var this25;
+			if(v24 == null) {
+				var _g53 = [];
+				var _g224 = 0;
+				while(_g224 < 10002) {
+					++_g224;
+					_g53.push(0);
+				}
+				_g53[0] = 100;
+				_g53[1] = 100;
+				v24 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g53);
+			}
+			this25 = v24;
+			arr = this25;
+			var snapped24 = null;
+			if(snapped24 == null) {
+				snapped24 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts24 = this.createTetris(p,snapped24);
+			var w24 = arr[0];
+			var h24 = arr[1];
+			var _g125 = 0;
+			while(_g125 < w24) {
+				var x24 = _g125++;
+				var _g324 = 0;
+				while(_g324 < h24) {
+					var y24 = _g324++;
+					if(arr[2 + arr[0] * y24 + x24 | 0] == 1) {
+						ts24.addBlock(-2 + x24,-2.5 + y24);
+					}
+				}
+			}
+			return ts24;
+		case "<":
+			var v25 = [4,5,0,0,1,0,0,1,0,0,1,0,0,0,0,1,0,0,0,0,1,0];
+			var this26;
+			if(v25 == null) {
+				var _g54 = [];
+				var _g225 = 0;
+				while(_g225 < 10002) {
+					++_g225;
+					_g54.push(0);
+				}
+				_g54[0] = 100;
+				_g54[1] = 100;
+				v25 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g54);
+			}
+			this26 = v25;
+			arr = this26;
+			var snapped25 = null;
+			if(snapped25 == null) {
+				snapped25 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts25 = this.createTetris(p,snapped25);
+			var w25 = arr[0];
+			var h25 = arr[1];
+			var _g126 = 0;
+			while(_g126 < w25) {
+				var x25 = _g126++;
+				var _g325 = 0;
+				while(_g325 < h25) {
+					var y25 = _g325++;
+					if(arr[2 + arr[0] * y25 + x25 | 0] == 1) {
+						ts25.addBlock(-2 + x25,-2.5 + y25);
+					}
+				}
+			}
+			return ts25;
+		case "=":
+			var v26 = [4,5,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0];
+			var this27;
+			if(v26 == null) {
+				var _g55 = [];
+				var _g226 = 0;
+				while(_g226 < 10002) {
+					++_g226;
+					_g55.push(0);
+				}
+				_g55[0] = 100;
+				_g55[1] = 100;
+				v26 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g55);
+			}
+			this27 = v26;
+			arr = this27;
+			var snapped26 = null;
+			if(snapped26 == null) {
+				snapped26 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts26 = this.createTetris(p,snapped26);
+			var w26 = arr[0];
+			var h26 = arr[1];
+			var _g127 = 0;
+			while(_g127 < w26) {
+				var x26 = _g127++;
+				var _g326 = 0;
+				while(_g326 < h26) {
+					var y26 = _g326++;
+					if(arr[2 + arr[0] * y26 + x26 | 0] == 1) {
+						ts26.addBlock(-2 + x26,-2.5 + y26);
+					}
+				}
+			}
+			return ts26;
+		case ">":
+			var v27 = [4,5,0,1,0,0,0,0,1,0,0,0,0,1,0,0,1,0,0,1,0,0];
+			var this28;
+			if(v27 == null) {
+				var _g56 = [];
+				var _g227 = 0;
+				while(_g227 < 10002) {
+					++_g227;
+					_g56.push(0);
+				}
+				_g56[0] = 100;
+				_g56[1] = 100;
+				v27 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g56);
+			}
+			this28 = v27;
+			arr = this28;
+			var snapped27 = null;
+			if(snapped27 == null) {
+				snapped27 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts27 = this.createTetris(p,snapped27);
+			var w27 = arr[0];
+			var h27 = arr[1];
+			var _g128 = 0;
+			while(_g128 < w27) {
+				var x27 = _g128++;
+				var _g327 = 0;
+				while(_g327 < h27) {
+					var y27 = _g327++;
+					if(arr[2 + arr[0] * y27 + x27 | 0] == 1) {
+						ts27.addBlock(-2 + x27,-2.5 + y27);
+					}
+				}
+			}
+			return ts27;
+		case "?":
+			var v28 = [4,5,0,1,1,1,1,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0];
+			var this29;
+			if(v28 == null) {
+				var _g57 = [];
+				var _g228 = 0;
+				while(_g228 < 10002) {
+					++_g228;
+					_g57.push(0);
+				}
+				_g57[0] = 100;
+				_g57[1] = 100;
+				v28 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g57);
+			}
+			this29 = v28;
+			arr = this29;
+			var snapped28 = null;
+			if(snapped28 == null) {
+				snapped28 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts28 = this.createTetris(p,snapped28);
+			var w28 = arr[0];
+			var h28 = arr[1];
+			var _g129 = 0;
+			while(_g129 < w28) {
+				var x28 = _g129++;
+				var _g328 = 0;
+				while(_g328 < h28) {
+					var y28 = _g328++;
+					if(arr[2 + arr[0] * y28 + x28 | 0] == 1) {
+						ts28.addBlock(-2 + x28,-2.5 + y28);
+					}
+				}
+			}
+			return ts28;
+		case "@":
+			var v29 = [4,5,1,1,1,1,1,0,0,1,0,1,1,1,0,1,0,1,0,1,1,0];
+			var this30;
+			if(v29 == null) {
+				var _g58 = [];
+				var _g229 = 0;
+				while(_g229 < 10002) {
+					++_g229;
+					_g58.push(0);
+				}
+				_g58[0] = 100;
+				_g58[1] = 100;
+				v29 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g58);
+			}
+			this30 = v29;
+			arr = this30;
+			var snapped29 = null;
+			if(snapped29 == null) {
+				snapped29 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts29 = this.createTetris(p,snapped29);
+			var w29 = arr[0];
+			var h29 = arr[1];
+			var _g130 = 0;
+			while(_g130 < w29) {
+				var x29 = _g130++;
+				var _g329 = 0;
+				while(_g329 < h29) {
+					var y29 = _g329++;
+					if(arr[2 + arr[0] * y29 + x29 | 0] == 1) {
+						ts29.addBlock(-2 + x29,-2.5 + y29);
+					}
+				}
+			}
+			return ts29;
+		case "A":
+			var v30 = [4,5,0,1,1,0,1,0,0,1,1,0,0,1,1,1,1,1,1,0,0,1];
+			var this31;
+			if(v30 == null) {
+				var _g59 = [];
+				var _g230 = 0;
+				while(_g230 < 10002) {
+					++_g230;
+					_g59.push(0);
+				}
+				_g59[0] = 100;
+				_g59[1] = 100;
+				v30 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g59);
+			}
+			this31 = v30;
+			arr = this31;
+			var snapped30 = null;
+			if(snapped30 == null) {
+				snapped30 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts30 = this.createTetris(p,snapped30);
+			var w30 = arr[0];
+			var h30 = arr[1];
+			var _g131 = 0;
+			while(_g131 < w30) {
+				var x30 = _g131++;
+				var _g330 = 0;
+				while(_g330 < h30) {
+					var y30 = _g330++;
+					if(arr[2 + arr[0] * y30 + x30 | 0] == 1) {
+						ts30.addBlock(-2 + x30,-2.5 + y30);
+					}
+				}
+			}
+			return ts30;
+		case "B":
+			var v31 = [4,5,1,1,1,0,1,0,0,1,1,1,1,0,1,0,0,1,1,1,1,0];
+			var this32;
+			if(v31 == null) {
+				var _g60 = [];
+				var _g231 = 0;
+				while(_g231 < 10002) {
+					++_g231;
+					_g60.push(0);
+				}
+				_g60[0] = 100;
+				_g60[1] = 100;
+				v31 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g60);
+			}
+			this32 = v31;
+			arr = this32;
+			var snapped31 = null;
+			if(snapped31 == null) {
+				snapped31 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts31 = this.createTetris(p,snapped31);
+			var w31 = arr[0];
+			var h31 = arr[1];
+			var _g132 = 0;
+			while(_g132 < w31) {
+				var x31 = _g132++;
+				var _g331 = 0;
+				while(_g331 < h31) {
+					var y31 = _g331++;
+					if(arr[2 + arr[0] * y31 + x31 | 0] == 1) {
+						ts31.addBlock(-2 + x31,-2.5 + y31);
+					}
+				}
+			}
+			return ts31;
+		case "C":
+			var v32 = [4,5,0,1,1,1,1,0,0,0,1,0,0,0,1,0,0,0,0,1,1,1];
+			var this33;
+			if(v32 == null) {
+				var _g61 = [];
+				var _g232 = 0;
+				while(_g232 < 10002) {
+					++_g232;
+					_g61.push(0);
+				}
+				_g61[0] = 100;
+				_g61[1] = 100;
+				v32 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g61);
+			}
+			this33 = v32;
+			arr = this33;
+			var snapped32 = null;
+			if(snapped32 == null) {
+				snapped32 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts32 = this.createTetris(p,snapped32);
+			var w32 = arr[0];
+			var h32 = arr[1];
+			var _g133 = 0;
+			while(_g133 < w32) {
+				var x32 = _g133++;
+				var _g332 = 0;
+				while(_g332 < h32) {
+					var y32 = _g332++;
+					if(arr[2 + arr[0] * y32 + x32 | 0] == 1) {
+						ts32.addBlock(-2 + x32,-2.5 + y32);
+					}
+				}
+			}
+			return ts32;
+		case "D":
+			var v33 = [4,5,1,1,1,0,1,0,0,1,1,0,0,1,1,0,0,1,1,1,1,0];
+			var this34;
+			if(v33 == null) {
+				var _g62 = [];
+				var _g233 = 0;
+				while(_g233 < 10002) {
+					++_g233;
+					_g62.push(0);
+				}
+				_g62[0] = 100;
+				_g62[1] = 100;
+				v33 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g62);
+			}
+			this34 = v33;
+			arr = this34;
+			var snapped33 = null;
+			if(snapped33 == null) {
+				snapped33 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts33 = this.createTetris(p,snapped33);
+			var w33 = arr[0];
+			var h33 = arr[1];
+			var _g134 = 0;
+			while(_g134 < w33) {
+				var x33 = _g134++;
+				var _g333 = 0;
+				while(_g333 < h33) {
+					var y33 = _g333++;
+					if(arr[2 + arr[0] * y33 + x33 | 0] == 1) {
+						ts33.addBlock(-2 + x33,-2.5 + y33);
+					}
+				}
+			}
+			return ts33;
+		case "E":
+			var v34 = [4,5,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1];
+			var this35;
+			if(v34 == null) {
+				var _g63 = [];
+				var _g234 = 0;
+				while(_g234 < 10002) {
+					++_g234;
+					_g63.push(0);
+				}
+				_g63[0] = 100;
+				_g63[1] = 100;
+				v34 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g63);
+			}
+			this35 = v34;
+			arr = this35;
+			var snapped34 = null;
+			if(snapped34 == null) {
+				snapped34 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts34 = this.createTetris(p,snapped34);
+			var w34 = arr[0];
+			var h34 = arr[1];
+			var _g135 = 0;
+			while(_g135 < w34) {
+				var x34 = _g135++;
+				var _g334 = 0;
+				while(_g334 < h34) {
+					var y34 = _g334++;
+					if(arr[2 + arr[0] * y34 + x34 | 0] == 1) {
+						ts34.addBlock(-2 + x34,-2.5 + y34);
+					}
+				}
+			}
+			return ts34;
+		case "F":
+			var v35 = [4,5,1,1,1,1,1,0,0,0,1,1,1,0,1,0,0,0,1,0,0,0];
+			var this36;
+			if(v35 == null) {
+				var _g64 = [];
+				var _g235 = 0;
+				while(_g235 < 10002) {
+					++_g235;
+					_g64.push(0);
+				}
+				_g64[0] = 100;
+				_g64[1] = 100;
+				v35 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g64);
+			}
+			this36 = v35;
+			arr = this36;
+			var snapped35 = null;
+			if(snapped35 == null) {
+				snapped35 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts35 = this.createTetris(p,snapped35);
+			var w35 = arr[0];
+			var h35 = arr[1];
+			var _g136 = 0;
+			while(_g136 < w35) {
+				var x35 = _g136++;
+				var _g335 = 0;
+				while(_g335 < h35) {
+					var y35 = _g335++;
+					if(arr[2 + arr[0] * y35 + x35 | 0] == 1) {
+						ts35.addBlock(-2 + x35,-2.5 + y35);
+					}
+				}
+			}
+			return ts35;
+		case "G":
+			var v36 = [4,5,1,1,1,1,1,0,0,0,1,0,1,1,1,0,0,1,1,1,1,1];
+			var this37;
+			if(v36 == null) {
+				var _g65 = [];
+				var _g236 = 0;
+				while(_g236 < 10002) {
+					++_g236;
+					_g65.push(0);
+				}
+				_g65[0] = 100;
+				_g65[1] = 100;
+				v36 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g65);
+			}
+			this37 = v36;
+			arr = this37;
+			var snapped36 = null;
+			if(snapped36 == null) {
+				snapped36 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts36 = this.createTetris(p,snapped36);
+			var w36 = arr[0];
+			var h36 = arr[1];
+			var _g137 = 0;
+			while(_g137 < w36) {
+				var x36 = _g137++;
+				var _g336 = 0;
+				while(_g336 < h36) {
+					var y36 = _g336++;
+					if(arr[2 + arr[0] * y36 + x36 | 0] == 1) {
+						ts36.addBlock(-2 + x36,-2.5 + y36);
+					}
+				}
+			}
+			return ts36;
+		case "H":
+			var v37 = [4,5,1,0,0,1,1,0,0,1,1,1,1,1,1,0,0,1,1,0,0,1];
+			var this38;
+			if(v37 == null) {
+				var _g66 = [];
+				var _g237 = 0;
+				while(_g237 < 10002) {
+					++_g237;
+					_g66.push(0);
+				}
+				_g66[0] = 100;
+				_g66[1] = 100;
+				v37 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g66);
+			}
+			this38 = v37;
+			arr = this38;
+			var snapped37 = null;
+			if(snapped37 == null) {
+				snapped37 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts37 = this.createTetris(p,snapped37);
+			var w37 = arr[0];
+			var h37 = arr[1];
+			var _g138 = 0;
+			while(_g138 < w37) {
+				var x37 = _g138++;
+				var _g337 = 0;
+				while(_g337 < h37) {
+					var y37 = _g337++;
+					if(arr[2 + arr[0] * y37 + x37 | 0] == 1) {
+						ts37.addBlock(-2 + x37,-2.5 + y37);
+					}
+				}
+			}
+			return ts37;
+		case "I":
+			var v38 = [3,5,1,1,1,0,1,0,0,1,0,0,1,0,1,1,1];
+			var this39;
+			if(v38 == null) {
+				var _g67 = [];
+				var _g238 = 0;
+				while(_g238 < 10002) {
+					++_g238;
+					_g67.push(0);
+				}
+				_g67[0] = 100;
+				_g67[1] = 100;
+				v38 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g67);
+			}
+			this39 = v38;
+			arr = this39;
+			var snapped38 = null;
+			if(snapped38 == null) {
+				snapped38 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts38 = this.createTetris(p,snapped38);
+			var w38 = arr[0];
+			var h38 = arr[1];
+			var _g139 = 0;
+			while(_g139 < w38) {
+				var x38 = _g139++;
+				var _g338 = 0;
+				while(_g338 < h38) {
+					var y38 = _g338++;
+					if(arr[2 + arr[0] * y38 + x38 | 0] == 1) {
+						ts38.addBlock(-2 + x38,-2.5 + y38);
+					}
+				}
+			}
+			return ts38;
+		case "J":
+			var v39 = [4,5,1,1,1,1,0,0,1,0,0,0,1,0,1,0,1,0,0,1,0,0];
+			var this40;
+			if(v39 == null) {
+				var _g68 = [];
+				var _g239 = 0;
+				while(_g239 < 10002) {
+					++_g239;
+					_g68.push(0);
+				}
+				_g68[0] = 100;
+				_g68[1] = 100;
+				v39 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g68);
+			}
+			this40 = v39;
+			arr = this40;
+			var snapped39 = null;
+			if(snapped39 == null) {
+				snapped39 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts39 = this.createTetris(p,snapped39);
+			var w39 = arr[0];
+			var h39 = arr[1];
+			var _g140 = 0;
+			while(_g140 < w39) {
+				var x39 = _g140++;
+				var _g339 = 0;
+				while(_g339 < h39) {
+					var y39 = _g339++;
+					if(arr[2 + arr[0] * y39 + x39 | 0] == 1) {
+						ts39.addBlock(-2 + x39,-2.5 + y39);
+					}
+				}
+			}
+			return ts39;
+		case "K":
+			var v40 = [4,5,1,0,0,1,1,0,1,0,1,1,0,0,1,0,1,0,1,0,0,1];
+			var this41;
+			if(v40 == null) {
+				var _g69 = [];
+				var _g240 = 0;
+				while(_g240 < 10002) {
+					++_g240;
+					_g69.push(0);
+				}
+				_g69[0] = 100;
+				_g69[1] = 100;
+				v40 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g69);
+			}
+			this41 = v40;
+			arr = this41;
+			var snapped40 = null;
+			if(snapped40 == null) {
+				snapped40 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts40 = this.createTetris(p,snapped40);
+			var w40 = arr[0];
+			var h40 = arr[1];
+			var _g141 = 0;
+			while(_g141 < w40) {
+				var x40 = _g141++;
+				var _g340 = 0;
+				while(_g340 < h40) {
+					var y40 = _g340++;
+					if(arr[2 + arr[0] * y40 + x40 | 0] == 1) {
+						ts40.addBlock(-2 + x40,-2.5 + y40);
+					}
+				}
+			}
+			return ts40;
+		case "KHA":
+			var v41 = [14,5,1,0,0,1,0,1,0,0,1,0,0,1,1,0,1,0,1,0,0,1,0,0,1,0,1,0,0,1,1,1,0,0,0,1,1,1,1,0,1,0,0,1,1,0,1,0,0,1,0,0,1,0,1,1,1,1,1,0,0,1,0,1,0,0,1,0,1,0,0,1];
+			var this42;
+			if(v41 == null) {
+				var _g70 = [];
+				var _g241 = 0;
+				while(_g241 < 10002) {
+					++_g241;
+					_g70.push(0);
+				}
+				_g70[0] = 100;
+				_g70[1] = 100;
+				v41 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g70);
+			}
+			this42 = v41;
+			arr = this42;
+			var snapped41 = null;
+			if(snapped41 == null) {
+				snapped41 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts41 = this.createTetris(p,snapped41);
+			var w41 = arr[0];
+			var h41 = arr[1];
+			var _g142 = 0;
+			while(_g142 < w41) {
+				var x41 = _g142++;
+				var _g341 = 0;
+				while(_g341 < h41) {
+					var y41 = _g341++;
+					if(arr[2 + arr[0] * y41 + x41 | 0] == 1) {
+						ts41.addBlock(-2 + x41,-2.5 + y41);
+					}
+				}
+			}
+			return ts41;
+		case "L":
+			var v42 = [4,5,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,1,1,1];
+			var this43;
+			if(v42 == null) {
+				var _g71 = [];
+				var _g242 = 0;
+				while(_g242 < 10002) {
+					++_g242;
+					_g71.push(0);
+				}
+				_g71[0] = 100;
+				_g71[1] = 100;
+				v42 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g71);
+			}
+			this43 = v42;
+			arr = this43;
+			var snapped42 = null;
+			if(snapped42 == null) {
+				snapped42 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts42 = this.createTetris(p,snapped42);
+			var w42 = arr[0];
+			var h42 = arr[1];
+			var _g143 = 0;
+			while(_g143 < w42) {
+				var x42 = _g143++;
+				var _g342 = 0;
+				while(_g342 < h42) {
+					var y42 = _g342++;
+					if(arr[2 + arr[0] * y42 + x42 | 0] == 1) {
+						ts42.addBlock(-2 + x42,-2.5 + y42);
+					}
+				}
+			}
+			return ts42;
+		case "M":
+			var v43 = [5,5,1,0,0,0,1,1,1,0,1,1,1,0,1,0,1,1,0,0,0,1,1,0,0,0,1];
+			var this44;
+			if(v43 == null) {
+				var _g72 = [];
+				var _g243 = 0;
+				while(_g243 < 10002) {
+					++_g243;
+					_g72.push(0);
+				}
+				_g72[0] = 100;
+				_g72[1] = 100;
+				v43 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g72);
+			}
+			this44 = v43;
+			arr = this44;
+			var snapped43 = null;
+			if(snapped43 == null) {
+				snapped43 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts43 = this.createTetris(p,snapped43);
+			var w43 = arr[0];
+			var h43 = arr[1];
+			var _g144 = 0;
+			while(_g144 < w43) {
+				var x43 = _g144++;
+				var _g343 = 0;
+				while(_g343 < h43) {
+					var y43 = _g343++;
+					if(arr[2 + arr[0] * y43 + x43 | 0] == 1) {
+						ts43.addBlock(-2 + x43,-2.5 + y43);
+					}
+				}
+			}
+			return ts43;
+		case "N":
+			var v44 = [4,5,1,0,0,1,1,1,0,1,1,0,1,1,1,0,0,1,1,0,0,1];
+			var this45;
+			if(v44 == null) {
+				var _g73 = [];
+				var _g244 = 0;
+				while(_g244 < 10002) {
+					++_g244;
+					_g73.push(0);
+				}
+				_g73[0] = 100;
+				_g73[1] = 100;
+				v44 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g73);
+			}
+			this45 = v44;
+			arr = this45;
+			var snapped44 = null;
+			if(snapped44 == null) {
+				snapped44 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts44 = this.createTetris(p,snapped44);
+			var w44 = arr[0];
+			var h44 = arr[1];
+			var _g145 = 0;
+			while(_g145 < w44) {
+				var x44 = _g145++;
+				var _g344 = 0;
+				while(_g344 < h44) {
+					var y44 = _g344++;
+					if(arr[2 + arr[0] * y44 + x44 | 0] == 1) {
+						ts44.addBlock(-2 + x44,-2.5 + y44);
+					}
+				}
+			}
+			return ts44;
+		case "O":
+			var v45 = [4,5,0,1,1,0,1,0,0,1,1,0,0,1,1,0,0,1,0,1,1,0];
+			var this46;
+			if(v45 == null) {
+				var _g74 = [];
+				var _g245 = 0;
+				while(_g245 < 10002) {
+					++_g245;
+					_g74.push(0);
+				}
+				_g74[0] = 100;
+				_g74[1] = 100;
+				v45 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g74);
+			}
+			this46 = v45;
+			arr = this46;
+			var snapped45 = null;
+			if(snapped45 == null) {
+				snapped45 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts45 = this.createTetris(p,snapped45);
+			var w45 = arr[0];
+			var h45 = arr[1];
+			var _g146 = 0;
+			while(_g146 < w45) {
+				var x45 = _g146++;
+				var _g345 = 0;
+				while(_g345 < h45) {
+					var y45 = _g345++;
+					if(arr[2 + arr[0] * y45 + x45 | 0] == 1) {
+						ts45.addBlock(-2 + x45,-2.5 + y45);
+					}
+				}
+			}
+			return ts45;
+		case "P":
+			var v46 = [4,5,1,1,1,0,1,0,0,1,1,1,1,0,1,0,0,0,1,0,0,0];
+			var this47;
+			if(v46 == null) {
+				var _g75 = [];
+				var _g246 = 0;
+				while(_g246 < 10002) {
+					++_g246;
+					_g75.push(0);
+				}
+				_g75[0] = 100;
+				_g75[1] = 100;
+				v46 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g75);
+			}
+			this47 = v46;
+			arr = this47;
+			var snapped46 = null;
+			if(snapped46 == null) {
+				snapped46 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts46 = this.createTetris(p,snapped46);
+			var w46 = arr[0];
+			var h46 = arr[1];
+			var _g147 = 0;
+			while(_g147 < w46) {
+				var x46 = _g147++;
+				var _g346 = 0;
+				while(_g346 < h46) {
+					var y46 = _g346++;
+					if(arr[2 + arr[0] * y46 + x46 | 0] == 1) {
+						ts46.addBlock(-2 + x46,-2.5 + y46);
+					}
+				}
+			}
+			return ts46;
+		case "Q":
+			var v47 = [4,5,0,1,1,0,1,0,0,1,1,0,0,1,1,0,1,0,0,1,0,1];
+			var this48;
+			if(v47 == null) {
+				var _g76 = [];
+				var _g247 = 0;
+				while(_g247 < 10002) {
+					++_g247;
+					_g76.push(0);
+				}
+				_g76[0] = 100;
+				_g76[1] = 100;
+				v47 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g76);
+			}
+			this48 = v47;
+			arr = this48;
+			var snapped47 = null;
+			if(snapped47 == null) {
+				snapped47 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts47 = this.createTetris(p,snapped47);
+			var w47 = arr[0];
+			var h47 = arr[1];
+			var _g148 = 0;
+			while(_g148 < w47) {
+				var x47 = _g148++;
+				var _g347 = 0;
+				while(_g347 < h47) {
+					var y47 = _g347++;
+					if(arr[2 + arr[0] * y47 + x47 | 0] == 1) {
+						ts47.addBlock(-2 + x47,-2.5 + y47);
+					}
+				}
+			}
+			return ts47;
+		case "R":
+			var v48 = [4,5,1,1,1,0,1,0,0,1,1,1,1,0,1,0,1,0,1,0,0,1];
+			var this49;
+			if(v48 == null) {
+				var _g77 = [];
+				var _g248 = 0;
+				while(_g248 < 10002) {
+					++_g248;
+					_g77.push(0);
+				}
+				_g77[0] = 100;
+				_g77[1] = 100;
+				v48 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g77);
+			}
+			this49 = v48;
+			arr = this49;
+			var snapped48 = null;
+			if(snapped48 == null) {
+				snapped48 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts48 = this.createTetris(p,snapped48);
+			var w48 = arr[0];
+			var h48 = arr[1];
+			var _g149 = 0;
+			while(_g149 < w48) {
+				var x48 = _g149++;
+				var _g348 = 0;
+				while(_g348 < h48) {
+					var y48 = _g348++;
+					if(arr[2 + arr[0] * y48 + x48 | 0] == 1) {
+						ts48.addBlock(-2 + x48,-2.5 + y48);
+					}
+				}
+			}
+			return ts48;
+		case "S":
+			var v49 = [4,5,0,1,1,1,1,0,0,0,0,1,1,0,0,0,0,1,1,1,1,0];
+			var this50;
+			if(v49 == null) {
+				var _g78 = [];
+				var _g249 = 0;
+				while(_g249 < 10002) {
+					++_g249;
+					_g78.push(0);
+				}
+				_g78[0] = 100;
+				_g78[1] = 100;
+				v49 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g78);
+			}
+			this50 = v49;
+			arr = this50;
+			var snapped49 = null;
+			if(snapped49 == null) {
+				snapped49 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts49 = this.createTetris(p,snapped49);
+			var w49 = arr[0];
+			var h49 = arr[1];
+			var _g150 = 0;
+			while(_g150 < w49) {
+				var x49 = _g150++;
+				var _g349 = 0;
+				while(_g349 < h49) {
+					var y49 = _g349++;
+					if(arr[2 + arr[0] * y49 + x49 | 0] == 1) {
+						ts49.addBlock(-2 + x49,-2.5 + y49);
+					}
+				}
+			}
+			return ts49;
+		case "T":
+			var v50 = [5,5,1,1,1,1,1,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0];
+			var this51;
+			if(v50 == null) {
+				var _g79 = [];
+				var _g250 = 0;
+				while(_g250 < 10002) {
+					++_g250;
+					_g79.push(0);
+				}
+				_g79[0] = 100;
+				_g79[1] = 100;
+				v50 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g79);
+			}
+			this51 = v50;
+			arr = this51;
+			var snapped50 = null;
+			if(snapped50 == null) {
+				snapped50 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts50 = this.createTetris(p,snapped50);
+			var w50 = arr[0];
+			var h50 = arr[1];
+			var _g151 = 0;
+			while(_g151 < w50) {
+				var x50 = _g151++;
+				var _g350 = 0;
+				while(_g350 < h50) {
+					var y50 = _g350++;
+					if(arr[2 + arr[0] * y50 + x50 | 0] == 1) {
+						ts50.addBlock(-2 + x50,-2.5 + y50);
+					}
+				}
+			}
+			return ts50;
+		case "U":
+			var v51 = [4,5,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,0,1,1,1];
+			var this52;
+			if(v51 == null) {
+				var _g80 = [];
+				var _g251 = 0;
+				while(_g251 < 10002) {
+					++_g251;
+					_g80.push(0);
+				}
+				_g80[0] = 100;
+				_g80[1] = 100;
+				v51 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g80);
+			}
+			this52 = v51;
+			arr = this52;
+			var snapped51 = null;
+			if(snapped51 == null) {
+				snapped51 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts51 = this.createTetris(p,snapped51);
+			var w51 = arr[0];
+			var h51 = arr[1];
+			var _g152 = 0;
+			while(_g152 < w51) {
+				var x51 = _g152++;
+				var _g351 = 0;
+				while(_g351 < h51) {
+					var y51 = _g351++;
+					if(arr[2 + arr[0] * y51 + x51 | 0] == 1) {
+						ts51.addBlock(-2 + x51,-2.5 + y51);
+					}
+				}
+			}
+			return ts51;
+		case "V":
+			var v52 = [5,5,1,0,0,0,1,1,0,0,0,1,0,1,0,1,0,0,1,0,1,0,0,0,1,0,0];
+			var this53;
+			if(v52 == null) {
+				var _g81 = [];
+				var _g252 = 0;
+				while(_g252 < 10002) {
+					++_g252;
+					_g81.push(0);
+				}
+				_g81[0] = 100;
+				_g81[1] = 100;
+				v52 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g81);
+			}
+			this53 = v52;
+			arr = this53;
+			var snapped52 = null;
+			if(snapped52 == null) {
+				snapped52 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts52 = this.createTetris(p,snapped52);
+			var w52 = arr[0];
+			var h52 = arr[1];
+			var _g153 = 0;
+			while(_g153 < w52) {
+				var x52 = _g153++;
+				var _g352 = 0;
+				while(_g352 < h52) {
+					var y52 = _g352++;
+					if(arr[2 + arr[0] * y52 + x52 | 0] == 1) {
+						ts52.addBlock(-2 + x52,-2.5 + y52);
+					}
+				}
+			}
+			return ts52;
+		case "W":
+			var v53 = [5,5,1,0,0,0,1,1,0,0,0,1,1,0,1,0,1,0,1,0,1,0,0,1,0,1,0];
+			var this54;
+			if(v53 == null) {
+				var _g82 = [];
+				var _g253 = 0;
+				while(_g253 < 10002) {
+					++_g253;
+					_g82.push(0);
+				}
+				_g82[0] = 100;
+				_g82[1] = 100;
+				v53 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g82);
+			}
+			this54 = v53;
+			arr = this54;
+			var snapped53 = null;
+			if(snapped53 == null) {
+				snapped53 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts53 = this.createTetris(p,snapped53);
+			var w53 = arr[0];
+			var h53 = arr[1];
+			var _g154 = 0;
+			while(_g154 < w53) {
+				var x53 = _g154++;
+				var _g353 = 0;
+				while(_g353 < h53) {
+					var y53 = _g353++;
+					if(arr[2 + arr[0] * y53 + x53 | 0] == 1) {
+						ts53.addBlock(-2 + x53,-2.5 + y53);
+					}
+				}
+			}
+			return ts53;
+		case "X":
+			var v54 = [4,5,1,0,0,1,1,0,0,1,0,1,1,0,1,0,0,1,1,0,0,1];
+			var this55;
+			if(v54 == null) {
+				var _g83 = [];
+				var _g254 = 0;
+				while(_g254 < 10002) {
+					++_g254;
+					_g83.push(0);
+				}
+				_g83[0] = 100;
+				_g83[1] = 100;
+				v54 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g83);
+			}
+			this55 = v54;
+			arr = this55;
+			var snapped54 = null;
+			if(snapped54 == null) {
+				snapped54 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts54 = this.createTetris(p,snapped54);
+			var w54 = arr[0];
+			var h54 = arr[1];
+			var _g155 = 0;
+			while(_g155 < w54) {
+				var x54 = _g155++;
+				var _g354 = 0;
+				while(_g354 < h54) {
+					var y54 = _g354++;
+					if(arr[2 + arr[0] * y54 + x54 | 0] == 1) {
+						ts54.addBlock(-2 + x54,-2.5 + y54);
+					}
+				}
+			}
+			return ts54;
+		case "Y":
+			var v55 = [4,5,1,0,0,1,1,0,0,1,0,1,1,1,0,0,0,1,0,1,1,0];
+			var this56;
+			if(v55 == null) {
+				var _g84 = [];
+				var _g255 = 0;
+				while(_g255 < 10002) {
+					++_g255;
+					_g84.push(0);
+				}
+				_g84[0] = 100;
+				_g84[1] = 100;
+				v55 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g84);
+			}
+			this56 = v55;
+			arr = this56;
+			var snapped55 = null;
+			if(snapped55 == null) {
+				snapped55 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts55 = this.createTetris(p,snapped55);
+			var w55 = arr[0];
+			var h55 = arr[1];
+			var _g156 = 0;
+			while(_g156 < w55) {
+				var x55 = _g156++;
+				var _g355 = 0;
+				while(_g355 < h55) {
+					var y55 = _g355++;
+					if(arr[2 + arr[0] * y55 + x55 | 0] == 1) {
+						ts55.addBlock(-2 + x55,-2.5 + y55);
+					}
+				}
+			}
+			return ts55;
+		case "Z":
+			var v56 = [4,5,1,1,1,1,0,0,0,1,0,1,1,0,1,0,0,0,1,1,1,1];
+			var this57;
+			if(v56 == null) {
+				var _g85 = [];
+				var _g256 = 0;
+				while(_g256 < 10002) {
+					++_g256;
+					_g85.push(0);
+				}
+				_g85[0] = 100;
+				_g85[1] = 100;
+				v56 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g85);
+			}
+			this57 = v56;
+			arr = this57;
+			var snapped56 = null;
+			if(snapped56 == null) {
+				snapped56 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts56 = this.createTetris(p,snapped56);
+			var w56 = arr[0];
+			var h56 = arr[1];
+			var _g157 = 0;
+			while(_g157 < w56) {
+				var x56 = _g157++;
+				var _g356 = 0;
+				while(_g356 < h56) {
+					var y56 = _g356++;
+					if(arr[2 + arr[0] * y56 + x56 | 0] == 1) {
+						ts56.addBlock(-2 + x56,-2.5 + y56);
+					}
+				}
+			}
+			return ts56;
+		case "[":
+			var v57 = [2,5,1,1,1,0,1,0,1,0,1,1];
+			var this58;
+			if(v57 == null) {
+				var _g86 = [];
+				var _g257 = 0;
+				while(_g257 < 10002) {
+					++_g257;
+					_g86.push(0);
+				}
+				_g86[0] = 100;
+				_g86[1] = 100;
+				v57 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g86);
+			}
+			this58 = v57;
+			arr = this58;
+			var snapped57 = null;
+			if(snapped57 == null) {
+				snapped57 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts57 = this.createTetris(p,snapped57);
+			var w57 = arr[0];
+			var h57 = arr[1];
+			var _g158 = 0;
+			while(_g158 < w57) {
+				var x57 = _g158++;
+				var _g357 = 0;
+				while(_g357 < h57) {
+					var y57 = _g357++;
+					if(arr[2 + arr[0] * y57 + x57 | 0] == 1) {
+						ts57.addBlock(-2 + x57,-2.5 + y57);
+					}
+				}
+			}
+			return ts57;
+		case "\\":
+			var v58 = [4,5,1,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,1];
+			var this59;
+			if(v58 == null) {
+				var _g87 = [];
+				var _g258 = 0;
+				while(_g258 < 10002) {
+					++_g258;
+					_g87.push(0);
+				}
+				_g87[0] = 100;
+				_g87[1] = 100;
+				v58 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g87);
+			}
+			this59 = v58;
+			arr = this59;
+			var snapped58 = null;
+			if(snapped58 == null) {
+				snapped58 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts58 = this.createTetris(p,snapped58);
+			var w58 = arr[0];
+			var h58 = arr[1];
+			var _g159 = 0;
+			while(_g159 < w58) {
+				var x58 = _g159++;
+				var _g358 = 0;
+				while(_g358 < h58) {
+					var y58 = _g358++;
+					if(arr[2 + arr[0] * y58 + x58 | 0] == 1) {
+						ts58.addBlock(-2 + x58,-2.5 + y58);
+					}
+				}
+			}
+			return ts58;
+		case "]":
+			var v59 = [4,5,0,0,1,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,1,1];
+			var this60;
+			if(v59 == null) {
+				var _g88 = [];
+				var _g259 = 0;
+				while(_g259 < 10002) {
+					++_g259;
+					_g88.push(0);
+				}
+				_g88[0] = 100;
+				_g88[1] = 100;
+				v59 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g88);
+			}
+			this60 = v59;
+			arr = this60;
+			var snapped59 = null;
+			if(snapped59 == null) {
+				snapped59 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts59 = this.createTetris(p,snapped59);
+			var w59 = arr[0];
+			var h59 = arr[1];
+			var _g160 = 0;
+			while(_g160 < w59) {
+				var x59 = _g160++;
+				var _g359 = 0;
+				while(_g359 < h59) {
+					var y59 = _g359++;
+					if(arr[2 + arr[0] * y59 + x59 | 0] == 1) {
+						ts59.addBlock(-2 + x59,-2.5 + y59);
+					}
+				}
+			}
+			return ts59;
+		case "^":
+			var v60 = [3,5,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0];
+			var this61;
+			if(v60 == null) {
+				var _g89 = [];
+				var _g260 = 0;
+				while(_g260 < 10002) {
+					++_g260;
+					_g89.push(0);
+				}
+				_g89[0] = 100;
+				_g89[1] = 100;
+				v60 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g89);
+			}
+			this61 = v60;
+			arr = this61;
+			var snapped60 = null;
+			if(snapped60 == null) {
+				snapped60 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts60 = this.createTetris(p,snapped60);
+			var w60 = arr[0];
+			var h60 = arr[1];
+			var _g161 = 0;
+			while(_g161 < w60) {
+				var x60 = _g161++;
+				var _g360 = 0;
+				while(_g360 < h60) {
+					var y60 = _g360++;
+					if(arr[2 + arr[0] * y60 + x60 | 0] == 1) {
+						ts60.addBlock(-2 + x60,-2.5 + y60);
+					}
+				}
+			}
+			return ts60;
+		case "_":
+			var v61 = [4,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1];
+			var this62;
+			if(v61 == null) {
+				var _g90 = [];
+				var _g261 = 0;
+				while(_g261 < 10002) {
+					++_g261;
+					_g90.push(0);
+				}
+				_g90[0] = 100;
+				_g90[1] = 100;
+				v61 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g90);
+			}
+			this62 = v61;
+			arr = this62;
+			var snapped61 = null;
+			if(snapped61 == null) {
+				snapped61 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts61 = this.createTetris(p,snapped61);
+			var w61 = arr[0];
+			var h61 = arr[1];
+			var _g162 = 0;
+			while(_g162 < w61) {
+				var x61 = _g162++;
+				var _g361 = 0;
+				while(_g361 < h61) {
+					var y61 = _g361++;
+					if(arr[2 + arr[0] * y61 + x61 | 0] == 1) {
+						ts61.addBlock(-2 + x61,-2.5 + y61);
+					}
+				}
+			}
+			return ts61;
+		case "|":
+			var v62 = [2,5,0,1,0,1,0,1,0,1,0,1];
+			var this63;
+			if(v62 == null) {
+				var _g91 = [];
+				var _g262 = 0;
+				while(_g262 < 10002) {
+					++_g262;
+					_g91.push(0);
+				}
+				_g91[0] = 100;
+				_g91[1] = 100;
+				v62 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g91);
+			}
+			this63 = v62;
+			arr = this63;
+			var snapped62 = null;
+			if(snapped62 == null) {
+				snapped62 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts62 = this.createTetris(p,snapped62);
+			var w62 = arr[0];
+			var h62 = arr[1];
+			var _g163 = 0;
+			while(_g163 < w62) {
+				var x62 = _g163++;
+				var _g362 = 0;
+				while(_g362 < h62) {
+					var y62 = _g362++;
+					if(arr[2 + arr[0] * y62 + x62 | 0] == 1) {
+						ts62.addBlock(-2 + x62,-2.5 + y62);
+					}
+				}
+			}
+			return ts62;
+		case "~":
+			var v63 = [4,5,0,0,0,0,0,1,0,1,1,0,1,0,0,0,0,0,0,0,0,0];
+			var this64;
+			if(v63 == null) {
+				var _g92 = [];
+				var _g263 = 0;
+				while(_g263 < 10002) {
+					++_g263;
+					_g92.push(0);
+				}
+				_g92[0] = 100;
+				_g92[1] = 100;
+				v63 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g92);
+			}
+			this64 = v63;
+			arr = this64;
+			var snapped63 = null;
+			if(snapped63 == null) {
+				snapped63 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts63 = this.createTetris(p,snapped63);
+			var w63 = arr[0];
+			var h63 = arr[1];
+			var _g164 = 0;
+			while(_g164 < w63) {
+				var x63 = _g164++;
+				var _g363 = 0;
+				while(_g363 < h63) {
+					var y63 = _g363++;
+					if(arr[2 + arr[0] * y63 + x63 | 0] == 1) {
+						ts63.addBlock(-2 + x63,-2.5 + y63);
+					}
+				}
+			}
+			return ts63;
+		default:
+			var v64 = [4,5,1,0,0,1,1,0,0,1,0,0,0,0,1,0,0,1,0,1,1,0];
+			var this65;
+			if(v64 == null) {
+				var _g93 = [];
+				var _g264 = 0;
+				while(_g264 < 10002) {
+					++_g264;
+					_g93.push(0);
+				}
+				_g93[0] = 100;
+				_g93[1] = 100;
+				v64 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g93);
+			}
+			this65 = v64;
+			arr = this65;
+			var snapped64 = null;
+			if(snapped64 == null) {
+				snapped64 = tetrisTriangles_game_Snapped.Always;
+			}
+			var ts64 = this.createTetris(p,snapped64);
+			var w64 = arr[0];
+			var h64 = arr[1];
+			var _g165 = 0;
+			while(_g165 < w64) {
+				var x64 = _g165++;
+				var _g364 = 0;
+				while(_g364 < h64) {
+					var y64 = _g364++;
+					if(arr[2 + arr[0] * y64 + x64 | 0] == 1) {
+						ts64.addBlock(-2 + x64,-2.5 + y64);
+					}
+				}
+			}
+			return ts64;
 		}
-		var _this2 = this.tetrisGenerator;
-		var _g13 = 0;
-		var _g4 = _this2.tetrisShapes.length;
-		while(_g13 < _g4) _this2.tetrisShapes[_g13++].moveDelta(0.0,0.15);
-		var _this3 = this.tetrisGenerator;
-		_this3._points = _this3.horizontal.getPoints([]);
-		var points1 = _this3._points;
-		var pl1 = points1.length;
-		var tl1 = _this3.tetrisShapes.length;
-		var count1 = -1;
-		var _g14 = 0;
-		while(_g14 < tl1) {
-			var i1 = _g14++;
-			var _g31 = 0;
-			while(_g31 < pl1) if(_this3.tetrisShapes[i1].hitTest(points1[_g31++])) {
-				count1 = i1;
+	}
+	,abc: function(p,pos,snapped) {
+		if(snapped == null) {
+			snapped = tetrisTriangles_game_Snapped.Always;
+		}
+		var ts = this.createTetris(p,snapped);
+		var w = pos[0];
+		var h = pos[1];
+		var _g1 = 0;
+		while(_g1 < w) {
+			var x = _g1++;
+			var _g3 = 0;
+			while(_g3 < h) {
+				var y = _g3++;
+				if(pos[2 + pos[0] * y + x | 0] == 1) {
+					ts.addBlock(-2 + x,-2.5 + y);
+				}
 			}
 		}
-		if(count1 != -1) {
-			var newBlocks1 = _this3.tetrisShapes[count1].clearBlocks();
-			var _g15 = 0;
-			var _g5 = newBlocks1.length;
-			while(_g15 < _g5) _this3.horizontal.pushBlock(newBlocks1[_g15++]);
-		}
+		return ts;
 	}
-	,__class__: tetrisTriangles_game_TetrisTriangles
+	,__class__: tetrisTriangles_game_ABC
 };
-var tetrisTriangles_visual_Square = function(id,triangles,x_,y_,col0_id_,col1_id_,dia_,gap_) {
-	this.dirtyY = false;
-	this.dirtyX = false;
-	this._x = x_;
-	this._y = y_;
-	this.col0_id = col0_id_;
-	this.col1_id = col1_id_;
-	this.dia = dia_;
-	this.gap = 0.;
-	this._x2 = x_ + dia_;
-	this._y2 = y_ + dia_;
-	var x2 = this._x2;
-	var y2 = this._y2;
-	var l = triangles.length;
-	this.t0 = new justTriangles_Triangle(id,true,{ x : x_, y : y_},{ x : x2, y : y_},{ x : x_, y : y2},0,this.col0_id);
-	this.t1 = new justTriangles_Triangle(id,true,{ x : x_, y : y2},{ x : x2, y : y_},{ x : x2, y : y2},0,this.col1_id);
-	triangles[l++] = this.t0;
-	triangles[l++] = this.t1;
+var tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$ = {};
+$hxClasses["tetrisTriangles.game._Arr2D.Arr2D_Impl_"] = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$;
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.__name__ = ["tetrisTriangles","game","_Arr2D","Arr2D_Impl_"];
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new = function(w,h,v) {
+	if(h == null) {
+		h = 100;
+	}
+	if(w == null) {
+		w = 100;
+	}
+	var this1;
+	if(v == null) {
+		if(w == null) {
+			w = 100;
+		}
+		if(h == null) {
+			h = 100;
+		}
+		var l = w * h + 2;
+		var _g = [];
+		var _g2 = 0;
+		while(_g2 < l) {
+			++_g2;
+			_g.push(0);
+		}
+		_g[0] = w;
+		_g[1] = h;
+		v = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
+	}
+	this1 = v;
+	return this1;
 };
-$hxClasses["tetrisTriangles.visual.Square"] = tetrisTriangles_visual_Square;
-tetrisTriangles_visual_Square.__name__ = ["tetrisTriangles","visual","Square"];
-tetrisTriangles_visual_Square.prototype = {
-	getPoints: function(arr) {
-		var l = arr.length;
-		arr[l++] = { x : this.t0.ax, y : this.t0.ay};
-		arr[l++] = { x : this.t0.bx, y : this.t0.by};
-		arr[l++] = { x : this.t0.cx, y : this.t0.cy};
-		arr[l++] = { x : this.t1.ax, y : this.t1.ay};
-		arr[l++] = { x : this.t1.bx, y : this.t1.by};
-		arr[l++] = { x : this.t1.cx, y : this.t1.cy};
-		return arr;
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.getEmpty = function(w,h) {
+	var l = w * h + 2;
+	var _g = [];
+	var _g2 = 0;
+	while(_g2 < l) {
+		++_g2;
+		_g.push(0);
 	}
-	,moveDelta: function(dx,dy) {
-		this.t0.moveDelta(dx,dy);
-		this.t1.moveDelta(dx,dy);
-	}
-	,rotateAroundTheta: function(p,theta) {
-		var cos = Math.cos(theta);
-		var sin = Math.sin(theta);
-		var t = this.t0;
-		this.dirtyX = true;
-		this.dirtyY = true;
-		t.moveDelta(-p.x,-p.y);
-		t.moveDelta(-p.x,-p.y);
-		var x;
-		var y;
-		x = t.ax;
-		y = t.ay;
-		t.ax = x * cos - y * sin;
-		t.ay = x * sin + y * cos;
-		x = t.bx;
-		y = t.by;
-		t.bx = x * cos - y * sin;
-		t.by = x * sin + y * cos;
-		x = t.cx;
-		y = t.cy;
-		t.cx = x * cos - y * sin;
-		t.cy = x * sin + y * cos;
-		t.moveDelta(p.x,p.y);
-		t.moveDelta(p.x,p.y);
-		this.dirtyX = true;
-		this.dirtyY = true;
-		var t1 = this.t1;
-		this.dirtyX = true;
-		this.dirtyY = true;
-		t1.moveDelta(-p.x,-p.y);
-		t1.moveDelta(-p.x,-p.y);
-		var x1;
-		var y1;
-		x1 = t1.ax;
-		y1 = t1.ay;
-		t1.ax = x1 * cos - y1 * sin;
-		t1.ay = x1 * sin + y1 * cos;
-		x1 = t1.bx;
-		y1 = t1.by;
-		t1.bx = x1 * cos - y1 * sin;
-		t1.by = x1 * sin + y1 * cos;
-		x1 = t1.cx;
-		y1 = t1.cy;
-		t1.cx = x1 * cos - y1 * sin;
-		t1.cy = x1 * sin + y1 * cos;
-		t1.moveDelta(p.x,p.y);
-		t1.moveDelta(p.x,p.y);
-		this.dirtyX = true;
-		this.dirtyY = true;
-	}
-	,rotateAround: function(p,cos,sin) {
-		var t = this.t0;
-		this.dirtyX = true;
-		this.dirtyY = true;
-		t.moveDelta(-p.x,-p.y);
-		t.moveDelta(-p.x,-p.y);
-		var x;
-		var y;
-		x = t.ax;
-		y = t.ay;
-		t.ax = x * cos - y * sin;
-		t.ay = x * sin + y * cos;
-		x = t.bx;
-		y = t.by;
-		t.bx = x * cos - y * sin;
-		t.by = x * sin + y * cos;
-		x = t.cx;
-		y = t.cy;
-		t.cx = x * cos - y * sin;
-		t.cy = x * sin + y * cos;
-		t.moveDelta(p.x,p.y);
-		t.moveDelta(p.x,p.y);
-		this.dirtyX = true;
-		this.dirtyY = true;
-		var t1 = this.t1;
-		this.dirtyX = true;
-		this.dirtyY = true;
-		t1.moveDelta(-p.x,-p.y);
-		t1.moveDelta(-p.x,-p.y);
-		var x1;
-		var y1;
-		x1 = t1.ax;
-		y1 = t1.ay;
-		t1.ax = x1 * cos - y1 * sin;
-		t1.ay = x1 * sin + y1 * cos;
-		x1 = t1.bx;
-		y1 = t1.by;
-		t1.bx = x1 * cos - y1 * sin;
-		t1.by = x1 * sin + y1 * cos;
-		x1 = t1.cx;
-		y1 = t1.cy;
-		t1.cx = x1 * cos - y1 * sin;
-		t1.cy = x1 * sin + y1 * cos;
-		t1.moveDelta(p.x,p.y);
-		t1.moveDelta(p.x,p.y);
-		this.dirtyX = true;
-		this.dirtyY = true;
-	}
-	,rotateTriangle: function(t,p,cos,sin) {
-		this.dirtyX = true;
-		this.dirtyY = true;
-		t.moveDelta(-p.x,-p.y);
-		t.moveDelta(-p.x,-p.y);
-		var x;
-		var y;
-		x = t.ax;
-		y = t.ay;
-		t.ax = x * cos - y * sin;
-		t.ay = x * sin + y * cos;
-		x = t.bx;
-		y = t.by;
-		t.bx = x * cos - y * sin;
-		t.by = x * sin + y * cos;
-		x = t.cx;
-		y = t.cy;
-		t.cx = x * cos - y * sin;
-		t.cy = x * sin + y * cos;
-		t.moveDelta(p.x,p.y);
-		t.moveDelta(p.x,p.y);
-		this.dirtyX = true;
-		this.dirtyY = true;
-	}
-	,get_right: function() {
-		return Math.max(this.t0.get_right(),this.t1.get_right());
-	}
-	,get_bottom: function() {
-		return Math.max(this.t0.get_bottom(),this.t1.get_bottom());
-	}
-	,get_x: function() {
-		if(this.dirtyX) {
-			return Math.min(this.t0.get_x(),this.t1.get_x());
-		} else {
-			return this._x;
-		}
-	}
-	,set_x: function(x) {
-		var x0 = this.t0.get_x();
-		var x1 = this.t1.get_x();
-		if(x0 < x1) {
-			this.t0.set_x(x);
-			this.t1.set_x(x + (x0 - x));
-		} else {
-			this.t0.set_x(x + (x1 - x));
-			this.t1.set_x(x);
-		}
-		this._x = x;
-		this.dirtyX = false;
-		return x;
-	}
-	,get_y: function() {
-		if(this.dirtyY) {
-			return Math.min(this.t0.get_y(),this.t1.get_y());
-		} else {
-			return this._y;
-		}
-	}
-	,set_y: function(y) {
-		var y0 = this.t0.get_y();
-		var y1 = this.t1.get_y();
-		if(y0 < y1) {
-			this.t0.set_y(y);
-			this.t1.set_y(y + (y0 - y));
-		} else {
-			this.t0.set_y(y + (y1 - y));
-			this.t1.set_y(y);
-		}
-		this.dirtyY = false;
-		this._y = y;
-		return y;
-	}
-	,hitTest: function(p) {
-		if(!this.t0.hitTest(p)) {
-			return this.t1.hitTest(p);
-		} else {
-			return true;
-		}
-	}
-	,__class__: tetrisTriangles_visual_Square
+	_g[0] = w;
+	_g[1] = h;
+	return tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
 };
-var tetrisTriangles_visual_TetrisGenerator = function(id_,triangles_,dia_,gap_) {
-	this.last = -1;
-	this.col1_id = 5;
-	this.col0_id = 1;
-	this.tetrisShapes = [];
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.clear = function(this1) {
+	var w = this1[0];
+	var h = this1[1];
+	var v = null;
+	var this2;
+	if(v == null) {
+		if(w == null) {
+			w = 100;
+		}
+		if(h == null) {
+			h = 100;
+		}
+		var l = w * h + 2;
+		var _g = [];
+		var _g2 = 0;
+		while(_g2 < l) {
+			++_g2;
+			_g.push(0);
+		}
+		_g[0] = w;
+		_g[1] = h;
+		v = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
+	}
+	this2 = v;
+	this1 = this2;
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.fill = function(this1) {
+	var i = 2;
+	var l = this1.length;
+	while(i < l) {
+		this1[i] = 1;
+		++i;
+	}
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.addOne = function(this1,x,y) {
+	this1[2 + this1[0] * y + x | 0] = 1;
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.addZero = function(this1,x,y) {
+	this1[2 + this1[0] * y + x | 0] = 0;
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.id = function(x,y,w) {
+	return 2 + w * y + x | 0;
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.get_width = function(this1) {
+	return this1[0];
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.get_height = function(this1) {
+	return this1[1];
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.isZero = function(this1,x,y) {
+	return this1[2 + this1[0] * y + x | 0] == 0;
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.isOne = function(this1,x,y) {
+	return this1[2 + this1[0] * y + x | 0] == 1;
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.getValue = function(this1,x,y) {
+	return this1[2 + this1[0] * y + x | 0];
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.setValue = function(this1,x,y,value) {
+	this1[2 + this1[0] * y + x | 0] = value;
+	return value;
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.rowFull = function(this1,y) {
+	var w = this1[0];
+	var s = 2 + w * y | 0;
+	var e = s + w;
+	var ful = true;
+	var _g1 = s;
+	while(_g1 < e) if(this1[_g1++] == 0) {
+		ful = false;
+		break;
+	}
+	return ful;
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.getFullRows = function(this1) {
+	var arr = [];
+	var _g1 = 0;
+	var _g = this1[1];
+	while(_g1 < _g) {
+		var y = _g1++;
+		var w = this1[0];
+		var s = 2 + w * y | 0;
+		var e = s + w;
+		var ful = true;
+		var _g11 = s;
+		while(_g11 < e) if(this1[_g11++] == 0) {
+			ful = false;
+			break;
+		}
+		arr[y] = ful;
+	}
+	return arr;
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.rowEmpty = function(this1,y) {
+	var w = this1[0];
+	var s = 2 + w * y | 0;
+	var e = s + w;
+	var emp = true;
+	var _g1 = s;
+	while(_g1 < e) if(this1[_g1++] == 1) {
+		emp = false;
+		break;
+	}
+	return emp;
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.moveRow = function(this1,startY,endY) {
+	var w = this1[0];
+	var s0 = 2 + w * startY | 0;
+	var e0 = 2 + w * endY | 0;
+	var _g1 = 0;
+	while(_g1 < w) {
+		var i = _g1++;
+		this1[e0 + i] = this1[s0 + i];
+		this1[s0 + i] = 0;
+	}
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.copyRow = function(this1,startY,endY) {
+	var w = this1[0];
+	var s0 = 2 + w * startY | 0;
+	var e0 = 2 + w * endY | 0;
+	var _g1 = 0;
+	while(_g1 < w) {
+		var i = _g1++;
+		this1[e0 + i] = this1[s0 + i];
+	}
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.oneRow = function(this1,y) {
+	var w = this1[0];
+	var s = 2 + w * y | 0;
+	var _g1 = 0;
+	while(_g1 < w) this1[s + _g1++] = 1;
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.zeroRow = function(this1,y) {
+	var w = this1[0];
+	var s = 2 + w * y | 0;
+	var _g1 = 0;
+	while(_g1 < w) this1[s + _g1++] = 0;
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.removeRowsUnshift0 = function(this1,rowStart,rowEnd) {
+	var l = rowEnd - rowStart + 1;
+	var rowUpto = rowStart - 1;
+	var _g1 = 0;
+	while(_g1 < rowStart) {
+		var j = rowUpto - _g1++;
+		var w = this1[0];
+		var s0 = 2 + w * j | 0;
+		var e0 = 2 + w * (j + l) | 0;
+		var _g11 = 0;
+		while(_g11 < w) {
+			var i = _g11++;
+			this1[e0 + i] = this1[s0 + i];
+			this1[s0 + i] = 0;
+		}
+	}
+	if(l > rowUpto) {
+		var _g12 = 0;
+		var _g = l - rowUpto;
+		while(_g12 < _g) {
+			var w1 = this1[0];
+			var s = 2 + w1 * _g12++ | 0;
+			var _g13 = 0;
+			while(_g13 < w1) this1[s + _g13++] = 0;
+		}
+	}
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.rowToString = function(this1,y) {
+	var w = this1[0];
+	var s = 2 + w * y | 0;
+	var e = s + w;
+	var str = "\n";
+	var _g1 = s;
+	while(_g1 < e) str = str + this1[_g1++] + "  ";
+	return str;
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.clash = function(this1,arrP,offX,offY) {
+	if(offY == null) {
+		offY = 0;
+	}
+	if(offX == null) {
+		offX = 0;
+	}
+	var lp = arrP.length;
+	var p;
+	var clash = false;
+	var _g1 = 0;
+	while(_g1 < lp) {
+		p = arrP[_g1++];
+		if(this1[2 + this1[0] * (p.y + offY) + (p.x + offX) | 0] == 1) {
+			clash = true;
+			break;
+		}
+	}
+	return clash;
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.addPoints = function(this1,arrP,offX,offY) {
+	if(offY == null) {
+		offY = 0;
+	}
+	if(offX == null) {
+		offX = 0;
+	}
+	var lp = arrP.length;
+	var p;
+	var _g1 = 0;
+	while(_g1 < lp) {
+		p = arrP[_g1++];
+		this1[2 + this1[0] * (p.y + offY) + (p.x + offX) | 0] = 1;
+	}
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.overlap = function(a,b) {
+	var la = a.length;
+	if(la != b.length) {
+		throw new js__$Boot_HaxeError("can t compare Arr2D");
+	}
+	var overlapped = false;
+	var ai;
+	var bi;
+	var _g1 = 2;
+	while(_g1 < la) {
+		var i = _g1++;
+		ai = a[i];
+		bi = b[i];
+		if(ai == 1 && bi == 1) {
+			overlapped = true;
+			break;
+		}
+	}
+	return overlapped;
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.merge = function(this1,b) {
+	var la = this1.length;
+	if(la != b.length) {
+		throw new js__$Boot_HaxeError("can t compare Arr2D");
+	}
+	var overlapped = false;
+	var ai;
+	var bi;
+	var _g1 = 2;
+	while(_g1 < la) {
+		var i = _g1++;
+		ai = this1[i];
+		bi = b[i];
+		if(ai == 1 && bi == 1) {
+			overlapped = true;
+			break;
+		}
+	}
+	if(overlapped) {
+		return false;
+	} else {
+		var la1 = this1.length;
+		var ai1;
+		var _g11 = 2;
+		while(_g11 < la1) {
+			var i1 = _g11++;
+			ai1 = this1[i1];
+			if(ai1 == 0) {
+				this1[i1] = b[i1];
+			}
+		}
+		return true;
+	}
+};
+tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.prettyString = function(this1) {
+	var str = "";
+	var _g1 = 0;
+	var _g = this1[1];
+	while(_g1 < _g) {
+		var w = this1[0];
+		var s = 2 + w * _g1++ | 0;
+		var e = s + w;
+		var str1 = "\n";
+		var _g11 = s;
+		while(_g11 < e) str1 = str1 + this1[_g11++] + "  ";
+		str += str1;
+	}
+	return str;
+};
+var tetrisTriangles_game_Background = function(shape_,wide_,hi_,col0_,col1_,col2_,col3_) {
+	this.shape = shape_;
+	this.wide = wide_;
+	this.hi = hi_;
+	this.bgCol0 = col0_;
+	this.bgCol1 = col1_;
+	this.bgCol2 = col2_;
+	this.bgCol3 = col3_;
+	this.bgSquares = [];
+	var toggle = false;
+	var _g1 = 0;
+	var _g = this.wide;
+	while(_g1 < _g) {
+		var w = _g1++;
+		if(toggle) {
+			shape_.col0 = col0_;
+			shape_.col1 = col1_;
+		} else {
+			shape_.col0 = col2_;
+			shape_.col1 = col3_;
+		}
+		toggle = !toggle;
+		var _g3 = 2;
+		var _g2 = this.hi;
+		while(_g3 < _g2) {
+			var h = _g3++;
+			this.bgSquares[2 + this.wide * h + w | 0] = shape_.addBlock(w,h,false);
+		}
+	}
+};
+$hxClasses["tetrisTriangles.game.Background"] = tetrisTriangles_game_Background;
+tetrisTriangles_game_Background.__name__ = ["tetrisTriangles","game","Background"];
+tetrisTriangles_game_Background.prototype = {
+	shape: null
+	,wide: null
+	,hi: null
+	,bgCol0: null
+	,bgCol1: null
+	,bgCol2: null
+	,bgCol3: null
+	,bgSquares: null
+	,drawTetris: function(shapePositions,offX,offY) {
+		var col0_ = this.bgCol0;
+		var col1_ = this.bgCol1;
+		var col2_ = this.bgCol2;
+		var col3_ = this.bgCol3;
+		var c0;
+		var c1;
+		var toggle = false;
+		var indx = 0;
+		var _g1 = 0;
+		var _g = this.wide;
+		while(_g1 < _g) {
+			var w = _g1++;
+			if(toggle) {
+				c0 = col0_;
+				c1 = col1_;
+			} else {
+				c0 = col2_;
+				c1 = col3_;
+			}
+			toggle = !toggle;
+			var _g3 = 0;
+			var _g2 = this.hi;
+			while(_g3 < _g2) {
+				indx = 2 + this.wide * _g3++ + w | 0;
+				var _this = this.bgSquares[indx];
+				_this.col0 = c0;
+				_this.col1 = c1;
+				_this.t0.colorID = c0;
+				_this.t1.colorID = c1;
+				_this.t0.colorA = c0;
+				_this.t0.colorB = c0;
+				_this.t0.colorC = c0;
+				_this.t1.colorA = c1;
+				_this.t1.colorB = c1;
+				_this.t1.colorC = c1;
+			}
+		}
+		var ls = shapePositions.length;
+		var pos;
+		var indx1 = 0;
+		var dx = 0;
+		var dy = 0;
+		var _g11 = 0;
+		while(_g11 < ls) {
+			pos = shapePositions[_g11++];
+			dx = pos.x + offX;
+			dy = pos.y + offY;
+			if(dx > 0 && dx < this.wide && dy > 0 && dy < this.hi) {
+				indx1 = 2 + this.wide * dy + dx | 0;
+				var _this1 = this.bgSquares[indx1];
+				_this1.col0 = 14;
+				_this1.col1 = 14;
+				_this1.t0.colorID = 14;
+				_this1.t1.colorID = 14;
+				_this1.t0.colorA = 14;
+				_this1.t0.colorB = 14;
+				_this1.t0.colorC = 14;
+				_this1.t1.colorA = 14;
+				_this1.t1.colorB = 14;
+				_this1.t1.colorC = 14;
+			}
+		}
+	}
+	,resetBgColor: function() {
+		var col0_ = this.bgCol0;
+		var col1_ = this.bgCol1;
+		var col2_ = this.bgCol2;
+		var col3_ = this.bgCol3;
+		var c0;
+		var c1;
+		var toggle = false;
+		var indx = 0;
+		var _g1 = 0;
+		var _g = this.wide;
+		while(_g1 < _g) {
+			var w = _g1++;
+			if(toggle) {
+				c0 = col0_;
+				c1 = col1_;
+			} else {
+				c0 = col2_;
+				c1 = col3_;
+			}
+			toggle = !toggle;
+			var _g3 = 0;
+			var _g2 = this.hi;
+			while(_g3 < _g2) {
+				indx = 2 + this.wide * _g3++ + w | 0;
+				var _this = this.bgSquares[indx];
+				_this.col0 = c0;
+				_this.col1 = c1;
+				_this.t0.colorID = c0;
+				_this.t1.colorID = c1;
+				_this.t0.colorA = c0;
+				_this.t0.colorB = c0;
+				_this.t0.colorC = c0;
+				_this.t1.colorA = c1;
+				_this.t1.colorB = c1;
+				_this.t1.colorC = c1;
+			}
+		}
+	}
+	,locations: function(arr) {
+		return this.shape.getCentreInt(arr);
+	}
+	,__class__: tetrisTriangles_game_Background
+};
+var tetrisTriangles_game_Controller = function(id_,triangles_,wide_,hi_,dia_,gap_,offX_,offY_) {
+	this.col1 = 5;
+	this.col0 = 1;
+	this.shapes = [];
 	this.id = id_;
+	var w = wide_;
+	var h = hi_ - 1;
+	var v = null;
+	var this1;
+	if(v == null) {
+		if(wide_ == null) {
+			w = 100;
+		}
+		if(h == null) {
+			h = 100;
+		}
+		var l = w * h + 2;
+		var _g = [];
+		var _g2 = 0;
+		while(_g2 < l) {
+			++_g2;
+			_g.push(0);
+		}
+		_g[0] = w;
+		_g[1] = h;
+		v = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
+	}
+	this1 = v;
+	this.inertArr = this1;
+	this.wide = wide_;
+	this.hi = hi_;
 	this.triangles = triangles_;
 	this.dia = dia_;
 	this.gap = gap_;
+	this.offX = offX_;
+	this.offY = offY_;
+	this.diaSq = (this.dia - this.dia / 10000) * (this.dia - this.dia / 10000);
+	this.shapeGenerator = new tetrisTriangles_game_ShapeGenerator($bind(this,this.createTetris));
 };
-$hxClasses["tetrisTriangles.visual.TetrisGenerator"] = tetrisTriangles_visual_TetrisGenerator;
-tetrisTriangles_visual_TetrisGenerator.__name__ = ["tetrisTriangles","visual","TetrisGenerator"];
-tetrisTriangles_visual_TetrisGenerator.prototype = {
-	generateRandom: function(p,col0_id_,col1_id_) {
-		this.col0_id = col0_id_;
-		this.col1_id = col1_id_;
-		var random = Math.round(4 * Math.random());
-		if(random == this.last) {
-			this.generateRandom(p,this.col0_id,this.col1_id);
-			return;
+$hxClasses["tetrisTriangles.game.Controller"] = tetrisTriangles_game_Controller;
+tetrisTriangles_game_Controller.__name__ = ["tetrisTriangles","game","Controller"];
+tetrisTriangles_game_Controller.prototype = {
+	inertArr: null
+	,shapes: null
+	,shapeGenerator: null
+	,bottom: null
+	,background: null
+	,id: null
+	,triangles: null
+	,col0: null
+	,col1: null
+	,dia: null
+	,gap: null
+	,offX: null
+	,offY: null
+	,wide: null
+	,hi: null
+	,diaSq: null
+	,onTetrisShapeLanded: null
+	,onGameEnd: null
+	,createShape: function(p,col0_,col1_,shapePreference) {
+		if(shapePreference == null) {
+			shapePreference = "tetris_random";
 		}
-		var tmp = this.tetrisShapes;
-		var tmp1 = this.tetrisShapes.length;
-		var tmp2;
-		switch(random) {
-		case 0:
-			tmp2 = this.generate_S(p);
-			break;
-		case 1:
-			tmp2 = this.generate_l(p);
-			break;
-		case 2:
-			tmp2 = this.generate_box(p);
-			break;
-		case 3:
-			tmp2 = this.generate_L(p);
-			break;
-		case 4:
-			tmp2 = this.generate_t(p);
-			break;
-		default:
-			tmp2 = this.generate_l(p);
-		}
-		tmp[tmp1] = tmp2;
-		this.last = random;
+		this.col0 = col0_;
+		this.col1 = col1_;
+		var shape = this.shapeGenerator.randomShape(p,col0_,col1_,shapePreference);
+		this.shapes[this.shapes.length] = shape;
+		return shape;
+	}
+	,shapeLocations: function() {
+		var l = this.shapes.length;
+		var arr = [];
+		var _g1 = 0;
+		while(_g1 < l) this.shapes[_g1++].getVirtualCentreInt(arr);
+		return arr;
 	}
 	,hitBottom: function() {
-		this._points = this.horizontal.getPoints([]);
-		var points = this._points;
-		var pl = points.length;
-		var tl = this.tetrisShapes.length;
-		var count = -1;
+		var c1_y;
+		var c1_x;
+		var c0_y;
+		var c0_x;
+		var l = this.shapes.length;
+		var shape;
+		var hit = false;
 		var _g1 = 0;
-		while(_g1 < tl) {
-			var i = _g1++;
-			var _g3 = 0;
-			while(_g3 < pl) if(this.tetrisShapes[i].hitTest(points[_g3++])) {
-				count = i;
+		while(_g1 < l) {
+			shape = this.shapes[_g1++];
+			shape.getLocation();
+			var diaSq = this.diaSq;
+			var vb0 = shape.virtualBlocks;
+			var vb1 = this.bottom.blocks;
+			var l0 = vb0.length;
+			var l1 = vb1.length;
+			var sq0;
+			var sq1;
+			var out = false;
+			var _g11 = 0;
+			while(_g11 < l0) {
+				sq0 = vb0[_g11++];
+				var _g3 = 0;
+				while(_g3 < l1) {
+					sq1 = vb1[_g3++];
+					var dx = sq0.t0.bx;
+					var dy = sq0.t0.by;
+					var ex = sq0.t0.cx;
+					var ey = sq0.t0.cy;
+					if(dx < ex) {
+						c0_x = dx + (ex - dx) / 2;
+					} else {
+						c0_x = ex + (dx - ex) / 2;
+					}
+					if(dy < ey) {
+						c0_y = dy + (ey - dy) / 2;
+					} else {
+						c0_y = dy + (dy - ey) / 2 - sq0.dia;
+					}
+					var dx1 = sq1.t0.bx;
+					var dy1 = sq1.t0.by;
+					var ex1 = sq1.t0.cx;
+					var ey1 = sq1.t0.cy;
+					if(dx1 < ex1) {
+						c1_x = dx1 + (ex1 - dx1) / 2;
+					} else {
+						c1_x = ex1 + (dx1 - ex1) / 2;
+					}
+					if(dy1 < ey1) {
+						c1_y = dy1 + (ey1 - dy1) / 2;
+					} else {
+						c1_y = dy1 + (dy1 - ey1) / 2 - sq1.dia;
+					}
+					var dx2 = c0_x - c1_x;
+					var dy2 = c0_y - c1_y;
+					if(dx2 * dx2 + dy2 * dy2 < diaSq) {
+						out = true;
+						break;
+					}
+				}
+			}
+			if(out) {
+				var beta;
+				if(shape.angle < 0) {
+					beta = -shape.angle + 180;
+				}
+				beta = shape.angle % (2 * Math.PI);
+				shape.rotate(shape.rook - beta);
+				var newLoc;
+				var _g12 = 0;
+				var _g = shape.lastLocation.length;
+				while(_g12 < _g) {
+					var i = _g12++;
+					newLoc = shape.newLocation[i];
+					shape.blocks[i].set_x(newLoc.x * shape.dia);
+					shape.blocks[i].set_y(newLoc.y * shape.dia);
+					shape.virtualBlocks[i].set_x(newLoc.x * shape.dia);
+					shape.virtualBlocks[i].set_y(newLoc.y * shape.dia);
+				}
+				var newBlocks = shape.clearBlocks();
+				var l2 = newBlocks.length;
+				var _g13 = 0;
+				while(_g13 < l2) this.bottom.pushBlock(newBlocks[_g13++]);
+				var arrP = shape.lastLocation;
+				var arr2d = this.inertArr;
+				var lp = arrP.length;
+				var p;
+				var _g14 = 0;
+				while(_g14 < lp) {
+					p = arrP[_g14++];
+					arr2d[2 + arr2d[0] * (p.y + -2) + p.x | 0] = 1;
+				}
+				this.removeFullRows();
+				hit = true;
 			}
 		}
-		if(count != -1) {
-			var newBlocks = this.tetrisShapes[count].clearBlocks();
-			var _g11 = 0;
-			var _g = newBlocks.length;
-			while(_g11 < _g) this.horizontal.pushBlock(newBlocks[_g11++]);
+		var this1 = this.inertArr;
+		var w = this1[0];
+		var s = 2 + w * 0 | 0;
+		var e = s + w;
+		var emp = true;
+		var _g15 = s;
+		while(_g15 < e) if(this1[_g15++] == 1) {
+			emp = false;
+			break;
+		}
+		var end = !emp;
+		if(end) {
+			this.onGameEnd();
+		}
+		if(this.onTetrisShapeLanded != null && hit && !end) {
+			this.onTetrisShapeLanded();
+		}
+		return hit;
+	}
+	,removeFullRows: function(rowsFull,countTrue) {
+		if(rowsFull == null) {
+			var this1 = this.inertArr;
+			var arr = [];
+			var _g1 = 0;
+			var _g = this1[1];
+			while(_g1 < _g) {
+				var y = _g1++;
+				var w = this1[0];
+				var s = 2 + w * y | 0;
+				var e = s + w;
+				var ful = true;
+				var _g11 = s;
+				while(_g11 < e) if(this1[_g11++] == 0) {
+					ful = false;
+					break;
+				}
+				arr[y] = ful;
+			}
+			rowsFull = arr;
+			arr.pop();
+			countTrue = 0;
+			var _g2 = 0;
+			while(_g2 < arr.length) {
+				var row = arr[_g2];
+				++_g2;
+				if(row) {
+					++countTrue;
+				}
+			}
+		}
+		if(countTrue > 0) {
+			var indx = rowsFull.lastIndexOf(true);
+			this.bottom.removeRow(indx + 2);
+			var this2 = this.inertArr;
+			var l = indx - indx + 1;
+			var rowUpto = indx - 1;
+			var _g12 = 0;
+			while(_g12 < indx) {
+				var j = rowUpto - _g12++;
+				var w1 = this2[0];
+				var s0 = 2 + w1 * j | 0;
+				var e0 = 2 + w1 * (j + l) | 0;
+				var _g13 = 0;
+				while(_g13 < w1) {
+					var i = _g13++;
+					this2[e0 + i] = this2[s0 + i];
+					this2[s0 + i] = 0;
+				}
+			}
+			if(l > rowUpto) {
+				var _g14 = 0;
+				var _g3 = l - rowUpto;
+				while(_g14 < _g3) {
+					var w2 = this2[0];
+					var s1 = 2 + w2 * _g14++ | 0;
+					var _g15 = 0;
+					while(_g15 < w2) this2[s1 + _g15++] = 0;
+				}
+			}
+			var this3 = this.inertArr;
+			var arr1 = [];
+			var _g16 = 0;
+			var _g4 = this3[1];
+			while(_g16 < _g4) {
+				var y1 = _g16++;
+				var w3 = this3[0];
+				var s2 = 2 + w3 * y1 | 0;
+				var e1 = s2 + w3;
+				var ful1 = true;
+				var _g17 = s2;
+				while(_g17 < e1) if(this3[_g17++] == 0) {
+					ful1 = false;
+					break;
+				}
+				arr1[y1] = ful1;
+			}
+			rowsFull = arr1;
+			arr1.pop();
+			countTrue = 0;
+			var _g5 = 0;
+			while(_g5 < arr1.length) {
+				var row1 = arr1[_g5];
+				++_g5;
+				if(row1) {
+					++countTrue;
+				}
+			}
+			if(countTrue > 0) {
+				this.removeFullRows(arr1,countTrue);
+			}
+		}
+	}
+	,shapeKill: function(shape,count) {
+		var beta;
+		if(shape.angle < 0) {
+			beta = -shape.angle + 180;
+		}
+		beta = shape.angle % (2 * Math.PI);
+		shape.rotate(shape.rook - beta);
+		var newLoc;
+		var _g1 = 0;
+		var _g = shape.lastLocation.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			newLoc = shape.newLocation[i];
+			shape.blocks[i].set_x(newLoc.x * shape.dia);
+			shape.blocks[i].set_y(newLoc.y * shape.dia);
+			shape.virtualBlocks[i].set_x(newLoc.x * shape.dia);
+			shape.virtualBlocks[i].set_y(newLoc.y * shape.dia);
+		}
+		var newBlocks = shape.clearBlocks();
+		var l = newBlocks.length;
+		var _g11 = 0;
+		while(_g11 < l) this.bottom.pushBlock(newBlocks[_g11++]);
+		var arrP = shape.lastLocation;
+		var arr2d = this.inertArr;
+		var lp = arrP.length;
+		var p;
+		var _g12 = 0;
+		while(_g12 < lp) {
+			p = arrP[_g12++];
+			arr2d[2 + arr2d[0] * (p.y + -2) + p.x | 0] = 1;
+		}
+	}
+	,shapesOnBg: function() {
+		var l = this.shapes.length;
+		var arr = [];
+		var _g1 = 0;
+		while(_g1 < l) this.shapes[_g1++].getVirtualCentreInt(arr);
+		this.bottom.getCentreInt(arr);
+		var _this = this.background;
+		var col0_ = _this.bgCol0;
+		var col1_ = _this.bgCol1;
+		var col2_ = _this.bgCol2;
+		var col3_ = _this.bgCol3;
+		var c0;
+		var c1;
+		var toggle = false;
+		var indx = 0;
+		var _g11 = 0;
+		var _g = _this.wide;
+		while(_g11 < _g) {
+			var w = _g11++;
+			if(toggle) {
+				c0 = col0_;
+				c1 = col1_;
+			} else {
+				c0 = col2_;
+				c1 = col3_;
+			}
+			toggle = !toggle;
+			var _g3 = 0;
+			var _g2 = _this.hi;
+			while(_g3 < _g2) {
+				indx = 2 + _this.wide * _g3++ + w | 0;
+				var _this1 = _this.bgSquares[indx];
+				_this1.col0 = c0;
+				_this1.col1 = c1;
+				_this1.t0.colorID = c0;
+				_this1.t1.colorID = c1;
+				_this1.t0.colorA = c0;
+				_this1.t0.colorB = c0;
+				_this1.t0.colorC = c0;
+				_this1.t1.colorA = c1;
+				_this1.t1.colorB = c1;
+				_this1.t1.colorC = c1;
+			}
+		}
+		var ls = arr.length;
+		var pos;
+		var indx1 = 0;
+		var dx = 0;
+		var dy = 0;
+		var _g12 = 0;
+		while(_g12 < ls) {
+			pos = arr[_g12++];
+			dx = pos.x;
+			dy = pos.y;
+			if(dx > 0 && dx < _this.wide && dy > 0 && dy < _this.hi) {
+				indx1 = 2 + _this.wide * dy + dx | 0;
+				var _this2 = _this.bgSquares[indx1];
+				_this2.col0 = 14;
+				_this2.col1 = 14;
+				_this2.t0.colorID = 14;
+				_this2.t1.colorID = 14;
+				_this2.t0.colorA = 14;
+				_this2.t0.colorB = 14;
+				_this2.t0.colorC = 14;
+				_this2.t1.colorA = 14;
+				_this2.t1.colorB = 14;
+				_this2.t1.colorC = 14;
+			}
 		}
 	}
 	,rotate: function(theta) {
+		var l = this.shapes.length;
 		var _g1 = 0;
-		var _g = this.tetrisShapes.length;
-		while(_g1 < _g) this.tetrisShapes[_g1++].rotate(theta);
+		while(_g1 < l) this.shapes[_g1++].rotate(theta);
+	}
+	,moveX: function(x,leftStop,rightStop) {
+		var l = this.shapes.length;
+		var shape;
+		var _g1 = 0;
+		while(_g1 < l) {
+			shape = this.shapes[_g1++];
+			if(shape.blocks != null && shape.blocks.length != 0) {
+				var sqr = shape.blocks;
+				var sides0;
+				if(sqr == null) {
+					sides0 = null;
+				} else if(sqr.length == 0) {
+					sides0 = null;
+				} else {
+					var l1 = sqr.length;
+					var square = sqr[0];
+					var bx = square.get_x();
+					var br = square.get_right();
+					var _g11 = 1;
+					while(_g11 < l1) {
+						square = sqr[_g11++];
+						bx = Math.min(bx,square.get_x());
+						br = Math.max(br,square.get_right());
+					}
+					sides0 = { x : bx, right : br};
+				}
+				var sqr1 = shape.virtualBlocks;
+				var sides1;
+				if(sqr1 == null) {
+					sides1 = null;
+				} else if(sqr1.length == 0) {
+					sides1 = null;
+				} else {
+					var l2 = sqr1.length;
+					var square1 = sqr1[0];
+					var bx1 = square1.get_x();
+					var br1 = square1.get_right();
+					var _g12 = 1;
+					while(_g12 < l2) {
+						square1 = sqr1[_g12++];
+						bx1 = Math.min(bx1,square1.get_x());
+						br1 = Math.max(br1,square1.get_right());
+					}
+					sides1 = { x : bx1, right : br1};
+				}
+				var sides = { x : Math.min(sides0.x,sides1.x), right : Math.max(sides0.right,sides1.right)};
+				if(sides != null) {
+					if(x < 0) {
+						if(sides.x + x > leftStop) {
+							shape.moveX(x);
+						} else {
+							shape.moveX(leftStop - sides.x);
+						}
+					} else if(x > 0) {
+						if(sides.right + x < rightStop) {
+							shape.moveX(x);
+						} else {
+							shape.moveX(rightStop - sides.right);
+						}
+					}
+				}
+			}
+		}
+	}
+	,moveShapeX: function(shape,x,leftStop,rightStop) {
+		if(shape.blocks != null && shape.blocks.length != 0) {
+			var sqr = shape.blocks;
+			var sides0;
+			if(sqr == null) {
+				sides0 = null;
+			} else if(sqr.length == 0) {
+				sides0 = null;
+			} else {
+				var l = sqr.length;
+				var square = sqr[0];
+				var bx = square.get_x();
+				var br = square.get_right();
+				var _g1 = 1;
+				while(_g1 < l) {
+					square = sqr[_g1++];
+					bx = Math.min(bx,square.get_x());
+					br = Math.max(br,square.get_right());
+				}
+				sides0 = { x : bx, right : br};
+			}
+			var sqr1 = shape.virtualBlocks;
+			var sides1;
+			if(sqr1 == null) {
+				sides1 = null;
+			} else if(sqr1.length == 0) {
+				sides1 = null;
+			} else {
+				var l1 = sqr1.length;
+				var square1 = sqr1[0];
+				var bx1 = square1.get_x();
+				var br1 = square1.get_right();
+				var _g11 = 1;
+				while(_g11 < l1) {
+					square1 = sqr1[_g11++];
+					bx1 = Math.min(bx1,square1.get_x());
+					br1 = Math.max(br1,square1.get_right());
+				}
+				sides1 = { x : bx1, right : br1};
+			}
+			var sides = { x : Math.min(sides0.x,sides1.x), right : Math.max(sides0.right,sides1.right)};
+			if(sides != null) {
+				if(x < 0) {
+					if(sides.x + x > leftStop) {
+						shape.moveX(x);
+					} else {
+						shape.moveX(leftStop - sides.x);
+					}
+				} else if(x > 0) {
+					if(sides.right + x < rightStop) {
+						shape.moveX(x);
+					} else {
+						shape.moveX(rightStop - sides.right);
+					}
+				}
+			}
+		}
 	}
 	,moveDelta: function(x,y) {
+		var l = this.shapes.length;
 		var _g1 = 0;
-		var _g = this.tetrisShapes.length;
-		while(_g1 < _g) this.tetrisShapes[_g1++].moveDelta(x,y);
+		while(_g1 < l) this.shapes[_g1++].moveDelta(x,y);
 	}
-	,createTetris: function(p) {
-		return new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap);
+	,createTetris: function(p,snapped) {
+		return new tetrisTriangles_game_Shape(this.id,this.triangles,p,this.col0,this.col1,this.dia,this.gap,snapped,this.offX,this.offY);
 	}
-	,generate_S: function(p) {
-		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap);
-		ts.addBlock(-0.5,-1);
-		ts.addBlock(0.5,0);
-		ts.addBlock(0.5,-1);
-		ts.addBlock(1.5,0);
-		return ts;
+	,createBg: function(p,wide,hi,col0_,col1_,col2_,col3_) {
+		this.background = new tetrisTriangles_game_Background(new tetrisTriangles_game_Shape(this.id,this.triangles,p,this.col0,this.col1,this.dia,this.gap,null,this.offX,this.offY),wide,hi + 1,col0_,col1_,col0_,col1_);
 	}
-	,generate_l: function(p) {
-		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap);
-		ts.addBlock(-0.5,-2);
-		ts.addBlock(-0.5,-1);
-		ts.addBlock(-0.5,0);
-		ts.addBlock(-0.5,1);
-		return ts;
-	}
-	,generate_box: function(p) {
-		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap);
-		ts.addBlock(-1,-1);
-		ts.addBlock(0,-1);
-		ts.addBlock(-1,0);
-		ts.addBlock(0,0);
-		return ts;
-	}
-	,generate_L: function(p) {
-		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap);
-		ts.addBlock(-1,-1.5);
-		ts.addBlock(-1,-0.5);
-		ts.addBlock(-1,0.5);
-		ts.addBlock(0,0.5);
-		return ts;
-	}
-	,generate_t: function(p) {
-		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap);
-		ts.addBlock(-1,-1.5);
-		ts.addBlock(-1,-0.5);
-		ts.addBlock(-1,0.5);
-		ts.addBlock(0,-0.5);
-		return ts;
-	}
-	,generateBackground: function(p,wide,hi,col0_id_,col1_id_) {
-		this.col0_id = col0_id_;
-		this.col1_id = col1_id_;
-		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap);
+	,addHitPointsInt: function(arrP) {
+		var arr2d = this.inertArr;
+		var lp = arrP.length;
+		var p;
 		var _g1 = 0;
-		while(_g1 < wide) {
-			var w = _g1++;
-			var _g3 = 0;
-			while(_g3 < hi) ts.addBlock(w,_g3++);
+		while(_g1 < lp) {
+			p = arrP[_g1++];
+			arr2d[2 + arr2d[0] * (p.y + -2) + p.x | 0] = 1;
 		}
-		this.background = ts;
 	}
-	,generateHoriz: function(p,wide,col0_id_,col1_id_) {
-		this.col0_id = col0_id_;
-		this.col1_id = col1_id_;
-		var ts = new tetrisTriangles_visual_TetrisShape(this.id,this.triangles,p,this.col0_id,this.col1_id,this.dia,this.gap);
+	,offSetAddPoints: function(arr2d,arrP) {
+		var lp = arrP.length;
+		var p;
 		var _g1 = 0;
-		while(_g1 < wide) ts.addBlock(_g1++,0);
-		this.horizontal = ts;
+		while(_g1 < lp) {
+			p = arrP[_g1++];
+			arr2d[2 + arr2d[0] * (p.y + -2) + p.x | 0] = 1;
+		}
 	}
-	,__class__: tetrisTriangles_visual_TetrisGenerator
+	,createBottom: function(p,wide,col0_,col1_) {
+		var templates = new tetrisTriangles_game_Templates($bind(this,this.createTetris));
+		this.col0 = col0_;
+		this.col1 = col1_;
+		var ts = templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+		var _g1 = 0;
+		while(_g1 < wide) ts.addBlock(_g1++,0,false,true);
+		this.bottom = ts;
+		var arr = [];
+		var bottomPositions = this.bottom.getCentreInt(arr);
+		var arr2d = this.inertArr;
+		var lp = bottomPositions.length;
+		var p1;
+		var _g11 = 0;
+		while(_g11 < lp) {
+			p1 = bottomPositions[_g11++];
+			arr2d[2 + arr2d[0] * (p1.y + -2) + p1.x | 0] = 1;
+		}
+	}
+	,__class__: tetrisTriangles_game_Controller
 };
-var tetrisTriangles_visual_TetrisShape = function(id_,triangles_,centre_,col0_id_,col1_id_,dia_,gap_) {
+var tetrisTriangles_game_Layout = function(controller_,originP_,wide_,hi_,dia_) {
+	this.shapeid = 1;
+	this.noBlocks = 1;
+	this.above = 7;
+	this.controller = controller_;
+	this.wide = wide_;
+	this.hi = hi_;
+	this.dia = dia_;
+	this.originP = originP_;
+	var bottomP = { x : this.originP.x, y : this.originP.y + this.dia * this.hi};
+	this.background();
+	this.fallingBlocks(this.noBlocks,this.above * this.dia);
+	this.bottom(bottomP);
+};
+$hxClasses["tetrisTriangles.game.Layout"] = tetrisTriangles_game_Layout;
+tetrisTriangles_game_Layout.__name__ = ["tetrisTriangles","game","Layout"];
+tetrisTriangles_game_Layout.prototype = {
+	controller: null
+	,above: null
+	,noBlocks: null
+	,originP: null
+	,wide: null
+	,hi: null
+	,dia: null
+	,shapeid: null
+	,background: function() {
+		this.controller.createBg(this.originP,this.wide,this.hi,10,0,9,0);
+	}
+	,fallingBlocks: function(noBlocks,aboveY) {
+		var randX = 0.;
+		var x = this.originP.x;
+		var y = this.originP.y;
+		var _g1 = 0;
+		while(_g1 < noBlocks) {
+			var i = _g1++;
+			var m = i % 6 + 1;
+			randX = this.dia + this.dia * Math.round(Math.random() * (this.wide - 0.5));
+			this.controller.createShape({ x : x + randX, y : y - i * aboveY},m,m + 1);
+		}
+	}
+	,createTile: function() {
+		var x = this.originP.x;
+		var y = this.originP.y;
+		var m = this.shapeid % 6 + 1;
+		var randX = this.dia;
+		var randX1 = this.dia;
+		var randX2 = Math.random();
+		this.controller.createShape({ x : x + (randX + randX1 * Math.round(randX2 * (this.wide - 1.5))), y : y},m,m + 1);
+		this.shapeid++;
+	}
+	,bottom: function(p) {
+		this.controller.createBottom(p,this.wide,8,9);
+	}
+	,__class__: tetrisTriangles_game_Layout
+};
+var tetrisTriangles_game_Movement = function(controller_,dia_) {
+	this.jy = 0.;
+	this.jx = 0.;
+	this.toggleY = false;
+	this.toggleX = false;
+	this.jumpY = .0;
+	this.jumpX = .0;
+	this.jumpSpeed = 7;
+	this.fallSpeed = 0.01;
+	this.controller = controller_;
+	this.dia = dia_;
+};
+$hxClasses["tetrisTriangles.game.Movement"] = tetrisTriangles_game_Movement;
+tetrisTriangles_game_Movement.__name__ = ["tetrisTriangles","game","Movement"];
+tetrisTriangles_game_Movement.prototype = {
+	controller: null
+	,dia: null
+	,fallSpeed: null
+	,jumpSpeed: null
+	,jumpX: null
+	,jumpY: null
+	,toggleX: null
+	,toggleY: null
+	,jx: null
+	,jy: null
+	,leftStop: null
+	,rightStop: null
+	,move: function(x,y) {
+		if(this.toggleX) {
+			return false;
+		} else if(this.toggleY) {
+			return false;
+		} else {
+			if(x != 0) {
+				this.toggleX = true;
+			}
+			if(y != 0) {
+				this.toggleY = true;
+			}
+			this.jumpX = x * this.dia;
+			this.jumpY = y * this.dia;
+			return true;
+		}
+	}
+	,update: function() {
+		var djx = 0.;
+		var djy = 0.;
+		if(this.toggleX) {
+			if(this.jumpX > 0) {
+				djx = this.jumpX / this.jumpSpeed;
+				this.jx += djx;
+				if(this.jx > this.jumpX + djx / 2) {
+					this.toggleX = false;
+					this.jx = 0.;
+					djx = 0.;
+				}
+			} else {
+				djx = this.jumpX / this.jumpSpeed;
+				this.jx += djx;
+				if(this.jx < this.jumpX + djx / 2) {
+					this.toggleX = false;
+					this.jx = 0.;
+					djx = 0.;
+				}
+			}
+		}
+		if(this.toggleY) {
+			if(this.jumpY > 0) {
+				djy = this.jumpY / this.jumpSpeed;
+				this.jy += djy;
+				if(this.jy > this.jumpY + djy / 2) {
+					this.toggleY = false;
+					this.jy = 0.;
+					djy = 0.;
+				}
+			} else {
+				djy = this.jumpY / this.jumpSpeed;
+				this.jy += djx;
+				if(this.jy < this.jumpY + djy / 2) {
+					this.toggleY = false;
+					this.jy = 0.;
+					djy = 0.;
+				}
+			}
+		}
+		if(this.toggleX) {
+			var _this = this.controller;
+			var leftStop = this.leftStop;
+			var rightStop = this.rightStop;
+			var l = _this.shapes.length;
+			var shape;
+			var _g1 = 0;
+			while(_g1 < l) {
+				shape = _this.shapes[_g1++];
+				if(shape.blocks != null && shape.blocks.length != 0) {
+					var sqr = shape.blocks;
+					var sides0;
+					if(sqr == null) {
+						sides0 = null;
+					} else if(sqr.length == 0) {
+						sides0 = null;
+					} else {
+						var l1 = sqr.length;
+						var square = sqr[0];
+						var bx = square.get_x();
+						var br = square.get_right();
+						var _g11 = 1;
+						while(_g11 < l1) {
+							square = sqr[_g11++];
+							bx = Math.min(bx,square.get_x());
+							br = Math.max(br,square.get_right());
+						}
+						sides0 = { x : bx, right : br};
+					}
+					var sqr1 = shape.virtualBlocks;
+					var sides1;
+					if(sqr1 == null) {
+						sides1 = null;
+					} else if(sqr1.length == 0) {
+						sides1 = null;
+					} else {
+						var l2 = sqr1.length;
+						var square1 = sqr1[0];
+						var bx1 = square1.get_x();
+						var br1 = square1.get_right();
+						var _g12 = 1;
+						while(_g12 < l2) {
+							square1 = sqr1[_g12++];
+							bx1 = Math.min(bx1,square1.get_x());
+							br1 = Math.max(br1,square1.get_right());
+						}
+						sides1 = { x : bx1, right : br1};
+					}
+					var sides = { x : Math.min(sides0.x,sides1.x), right : Math.max(sides0.right,sides1.right)};
+					if(sides != null) {
+						if(djx < 0) {
+							if(sides.x + djx > leftStop) {
+								shape.moveX(djx);
+							} else {
+								shape.moveX(leftStop - sides.x);
+							}
+						} else if(djx > 0) {
+							if(sides.right + djx < rightStop) {
+								shape.moveX(djx);
+							} else {
+								shape.moveX(rightStop - sides.right);
+							}
+						}
+					}
+				}
+			}
+		}
+		var _this1 = this.controller;
+		var y = this.fallSpeed + djy;
+		var l3 = _this1.shapes.length;
+		var _g13 = 0;
+		while(_g13 < l3) _this1.shapes[_g13++].moveDelta(0.0,y);
+	}
+	,updateSimple: function() {
+		var _this = this.controller;
+		var x = this.jumpX;
+		var leftStop = this.leftStop;
+		var rightStop = this.rightStop;
+		var l = _this.shapes.length;
+		var shape;
+		var _g1 = 0;
+		while(_g1 < l) {
+			shape = _this.shapes[_g1++];
+			if(shape.blocks != null && shape.blocks.length != 0) {
+				var sqr = shape.blocks;
+				var sides0;
+				if(sqr == null) {
+					sides0 = null;
+				} else if(sqr.length == 0) {
+					sides0 = null;
+				} else {
+					var l1 = sqr.length;
+					var square = sqr[0];
+					var bx = square.get_x();
+					var br = square.get_right();
+					var _g11 = 1;
+					while(_g11 < l1) {
+						square = sqr[_g11++];
+						bx = Math.min(bx,square.get_x());
+						br = Math.max(br,square.get_right());
+					}
+					sides0 = { x : bx, right : br};
+				}
+				var sqr1 = shape.virtualBlocks;
+				var sides1;
+				if(sqr1 == null) {
+					sides1 = null;
+				} else if(sqr1.length == 0) {
+					sides1 = null;
+				} else {
+					var l2 = sqr1.length;
+					var square1 = sqr1[0];
+					var bx1 = square1.get_x();
+					var br1 = square1.get_right();
+					var _g12 = 1;
+					while(_g12 < l2) {
+						square1 = sqr1[_g12++];
+						bx1 = Math.min(bx1,square1.get_x());
+						br1 = Math.max(br1,square1.get_right());
+					}
+					sides1 = { x : bx1, right : br1};
+				}
+				var sides = { x : Math.min(sides0.x,sides1.x), right : Math.max(sides0.right,sides1.right)};
+				if(sides != null) {
+					if(x < 0) {
+						if(sides.x + x > leftStop) {
+							shape.moveX(x);
+						} else {
+							shape.moveX(leftStop - sides.x);
+						}
+					} else if(x > 0) {
+						if(sides.right + x < rightStop) {
+							shape.moveX(x);
+						} else {
+							shape.moveX(rightStop - sides.right);
+						}
+					}
+				}
+			}
+		}
+		var _this1 = this.controller;
+		var y = this.fallSpeed + this.jumpY;
+		var l3 = _this1.shapes.length;
+		var _g13 = 0;
+		while(_g13 < l3) _this1.shapes[_g13++].moveDelta(0.0,y);
+		this.jumpX = 0.;
+		this.jumpY = 0.;
+	}
+	,reset: function() {
+		this.toggleY = false;
+		this.toggleX = false;
+		this.jumpX = 0.;
+		this.jumpY = 0.;
+		this.jy = 0.;
+		this.jx = 0.;
+	}
+	,__class__: tetrisTriangles_game_Movement
+};
+var tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$ = {};
+$hxClasses["tetrisTriangles.game._RookAngle.RookAngle_Impl_"] = tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$;
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.__name__ = ["tetrisTriangles","game","_RookAngle","RookAngle_Impl_"];
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$._new = function(angle) {
+	var this1;
+	if(angle < 0) {
+		var angle1 = -angle % (2 * Math.PI);
+		if(angle1 == 0.) {
+			this1 = 0.;
+		} else if(angle1 < Math.PI / 4) {
+			this1 = 0.;
+		} else if(angle1 < Math.PI / 2 + Math.PI / 4) {
+			this1 = Math.PI + Math.PI / 2;
+		} else if(angle1 < Math.PI + Math.PI / 4) {
+			this1 = Math.PI;
+		} else if(angle1 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+			this1 = Math.PI / 2;
+		} else {
+			this1 = 0.;
+		}
+	} else {
+		var angle2 = angle % (2 * Math.PI);
+		if(angle2 == 0.) {
+			this1 = 0.;
+		} else if(angle2 < Math.PI / 4) {
+			this1 = 0.;
+		} else if(angle2 < Math.PI / 2 + Math.PI / 4) {
+			this1 = Math.PI / 2;
+		} else if(angle2 < Math.PI + Math.PI / 4) {
+			this1 = Math.PI;
+		} else if(angle2 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+			this1 = Math.PI + Math.PI / 2;
+		} else {
+			this1 = 0.;
+		}
+	}
+	return this1;
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat = function(f) {
+	var this1;
+	if(f < 0) {
+		var angle = -f % (2 * Math.PI);
+		if(angle == 0.) {
+			this1 = 0.;
+		} else if(angle < Math.PI / 4) {
+			this1 = 0.;
+		} else if(angle < Math.PI / 2 + Math.PI / 4) {
+			this1 = Math.PI + Math.PI / 2;
+		} else if(angle < Math.PI + Math.PI / 4) {
+			this1 = Math.PI;
+		} else if(angle < Math.PI + Math.PI / 2 + Math.PI / 4) {
+			this1 = Math.PI / 2;
+		} else {
+			this1 = 0.;
+		}
+	} else {
+		var angle1 = f % (2 * Math.PI);
+		if(angle1 == 0.) {
+			this1 = 0.;
+		} else if(angle1 < Math.PI / 4) {
+			this1 = 0.;
+		} else if(angle1 < Math.PI / 2 + Math.PI / 4) {
+			this1 = Math.PI / 2;
+		} else if(angle1 < Math.PI + Math.PI / 4) {
+			this1 = Math.PI;
+		} else if(angle1 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+			this1 = Math.PI + Math.PI / 2;
+		} else {
+			this1 = 0.;
+		}
+	}
+	return this1;
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromInt = function(i) {
+	var angle = i * 1.;
+	var this1;
+	if(angle < 0) {
+		var angle1 = -angle % (2 * Math.PI);
+		if(angle1 == 0.) {
+			this1 = 0.;
+		} else if(angle1 < Math.PI / 4) {
+			this1 = 0.;
+		} else if(angle1 < Math.PI / 2 + Math.PI / 4) {
+			this1 = Math.PI + Math.PI / 2;
+		} else if(angle1 < Math.PI + Math.PI / 4) {
+			this1 = Math.PI;
+		} else if(angle1 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+			this1 = Math.PI / 2;
+		} else {
+			this1 = 0.;
+		}
+	} else {
+		var angle2 = angle % (2 * Math.PI);
+		if(angle2 == 0.) {
+			this1 = 0.;
+		} else if(angle2 < Math.PI / 4) {
+			this1 = 0.;
+		} else if(angle2 < Math.PI / 2 + Math.PI / 4) {
+			this1 = Math.PI / 2;
+		} else if(angle2 < Math.PI + Math.PI / 4) {
+			this1 = Math.PI;
+		} else if(angle2 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+			this1 = Math.PI + Math.PI / 2;
+		} else {
+			this1 = 0.;
+		}
+	}
+	return this1;
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.limit0_2pi = function(angle) {
+	return angle % (2 * Math.PI);
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.rook0_2pi = function(angle) {
+	if(angle == 0.) {
+		return 0.;
+	} else if(angle < Math.PI / 4) {
+		return 0.;
+	} else if(angle < Math.PI / 2 + Math.PI / 4) {
+		return Math.PI / 2;
+	} else if(angle < Math.PI + Math.PI / 4) {
+		return Math.PI;
+	} else if(angle < Math.PI + Math.PI / 2 + Math.PI / 4) {
+		return Math.PI + Math.PI / 2;
+	} else {
+		return 0.;
+	}
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.negativeRook0_2pi = function(angle) {
+	if(angle == 0.) {
+		return 0.;
+	} else if(angle < Math.PI / 4) {
+		return 0.;
+	} else if(angle < Math.PI / 2 + Math.PI / 4) {
+		return Math.PI + Math.PI / 2;
+	} else if(angle < Math.PI + Math.PI / 4) {
+		return Math.PI;
+	} else if(angle < Math.PI + Math.PI / 2 + Math.PI / 4) {
+		return Math.PI / 2;
+	} else {
+		return 0.;
+	}
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.compassString = function(this1) {
+	if(this1 == 0.) {
+		return "North";
+	} else if(this1 == Math.PI / 2) {
+		return "East";
+	} else if(this1 == Math.PI) {
+		return "South";
+	} else if(this1 == Math.PI + Math.PI / 2) {
+		return "West";
+	} else {
+		return "angle not found " + this1;
+	}
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.radiusString = function(this1) {
+	if(this1 == 0.) {
+		return "0";
+	} else if(this1 == Math.PI / 2) {
+		return "pi/2";
+	} else if(this1 == Math.PI) {
+		return "pi";
+	} else if(this1 == Math.PI + Math.PI / 2) {
+		return "3/4 pi";
+	} else {
+		return "angle not found " + this1;
+	}
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.degrees = function(this1) {
+	if(this1 == 0.) {
+		return 0.;
+	} else if(this1 == Math.PI / 2) {
+		return 90.;
+	} else if(this1 == Math.PI) {
+		return 180.;
+	} else if(this1 == Math.PI + Math.PI / 2) {
+		return 270.;
+	} else {
+		return 0;
+	}
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.clockRotate = function(this1) {
+	var angle = this1 + 90;
+	var this2;
+	if(angle < 0) {
+		var angle1 = -angle % (2 * Math.PI);
+		if(angle1 == 0.) {
+			this2 = 0.;
+		} else if(angle1 < Math.PI / 4) {
+			this2 = 0.;
+		} else if(angle1 < Math.PI / 2 + Math.PI / 4) {
+			this2 = Math.PI + Math.PI / 2;
+		} else if(angle1 < Math.PI + Math.PI / 4) {
+			this2 = Math.PI;
+		} else if(angle1 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+			this2 = Math.PI / 2;
+		} else {
+			this2 = 0.;
+		}
+	} else {
+		var angle2 = angle % (2 * Math.PI);
+		if(angle2 == 0.) {
+			this2 = 0.;
+		} else if(angle2 < Math.PI / 4) {
+			this2 = 0.;
+		} else if(angle2 < Math.PI / 2 + Math.PI / 4) {
+			this2 = Math.PI / 2;
+		} else if(angle2 < Math.PI + Math.PI / 4) {
+			this2 = Math.PI;
+		} else if(angle2 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+			this2 = Math.PI + Math.PI / 2;
+		} else {
+			this2 = 0.;
+		}
+	}
+	this1 = this2;
+	return tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this1);
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.antiClockRotate = function(this1) {
+	var angle = this1 - 90;
+	var this2;
+	if(angle < 0) {
+		var angle1 = -angle % (2 * Math.PI);
+		if(angle1 == 0.) {
+			this2 = 0.;
+		} else if(angle1 < Math.PI / 4) {
+			this2 = 0.;
+		} else if(angle1 < Math.PI / 2 + Math.PI / 4) {
+			this2 = Math.PI + Math.PI / 2;
+		} else if(angle1 < Math.PI + Math.PI / 4) {
+			this2 = Math.PI;
+		} else if(angle1 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+			this2 = Math.PI / 2;
+		} else {
+			this2 = 0.;
+		}
+	} else {
+		var angle2 = angle % (2 * Math.PI);
+		if(angle2 == 0.) {
+			this2 = 0.;
+		} else if(angle2 < Math.PI / 4) {
+			this2 = 0.;
+		} else if(angle2 < Math.PI / 2 + Math.PI / 4) {
+			this2 = Math.PI / 2;
+		} else if(angle2 < Math.PI + Math.PI / 4) {
+			this2 = Math.PI;
+		} else if(angle2 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+			this2 = Math.PI + Math.PI / 2;
+		} else {
+			this2 = 0.;
+		}
+	}
+	this1 = this2;
+	return tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this1);
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.upsideDown = function(this1) {
+	var angle = this1 + 180;
+	var this2;
+	if(angle < 0) {
+		var angle1 = -angle % (2 * Math.PI);
+		if(angle1 == 0.) {
+			this2 = 0.;
+		} else if(angle1 < Math.PI / 4) {
+			this2 = 0.;
+		} else if(angle1 < Math.PI / 2 + Math.PI / 4) {
+			this2 = Math.PI + Math.PI / 2;
+		} else if(angle1 < Math.PI + Math.PI / 4) {
+			this2 = Math.PI;
+		} else if(angle1 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+			this2 = Math.PI / 2;
+		} else {
+			this2 = 0.;
+		}
+	} else {
+		var angle2 = angle % (2 * Math.PI);
+		if(angle2 == 0.) {
+			this2 = 0.;
+		} else if(angle2 < Math.PI / 4) {
+			this2 = 0.;
+		} else if(angle2 < Math.PI / 2 + Math.PI / 4) {
+			this2 = Math.PI / 2;
+		} else if(angle2 < Math.PI + Math.PI / 4) {
+			this2 = Math.PI;
+		} else if(angle2 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+			this2 = Math.PI + Math.PI / 2;
+		} else {
+			this2 = 0.;
+		}
+	}
+	this1 = this2;
+	return tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this1);
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.pp = function(this1) {
+	var angle = this1 + 90;
+	var this2;
+	if(angle < 0) {
+		var angle1 = -angle % (2 * Math.PI);
+		if(angle1 == 0.) {
+			this2 = 0.;
+		} else if(angle1 < Math.PI / 4) {
+			this2 = 0.;
+		} else if(angle1 < Math.PI / 2 + Math.PI / 4) {
+			this2 = Math.PI + Math.PI / 2;
+		} else if(angle1 < Math.PI + Math.PI / 4) {
+			this2 = Math.PI;
+		} else if(angle1 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+			this2 = Math.PI / 2;
+		} else {
+			this2 = 0.;
+		}
+	} else {
+		var angle2 = angle % (2 * Math.PI);
+		if(angle2 == 0.) {
+			this2 = 0.;
+		} else if(angle2 < Math.PI / 4) {
+			this2 = 0.;
+		} else if(angle2 < Math.PI / 2 + Math.PI / 4) {
+			this2 = Math.PI / 2;
+		} else if(angle2 < Math.PI + Math.PI / 4) {
+			this2 = Math.PI;
+		} else if(angle2 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+			this2 = Math.PI + Math.PI / 2;
+		} else {
+			this2 = 0.;
+		}
+	}
+	this1 = this2;
+	return tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this1);
+};
+tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.mm = function(this1) {
+	var angle = this1 - 90;
+	var this2;
+	if(angle < 0) {
+		var angle1 = -angle % (2 * Math.PI);
+		if(angle1 == 0.) {
+			this2 = 0.;
+		} else if(angle1 < Math.PI / 4) {
+			this2 = 0.;
+		} else if(angle1 < Math.PI / 2 + Math.PI / 4) {
+			this2 = Math.PI + Math.PI / 2;
+		} else if(angle1 < Math.PI + Math.PI / 4) {
+			this2 = Math.PI;
+		} else if(angle1 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+			this2 = Math.PI / 2;
+		} else {
+			this2 = 0.;
+		}
+	} else {
+		var angle2 = angle % (2 * Math.PI);
+		if(angle2 == 0.) {
+			this2 = 0.;
+		} else if(angle2 < Math.PI / 4) {
+			this2 = 0.;
+		} else if(angle2 < Math.PI / 2 + Math.PI / 4) {
+			this2 = Math.PI / 2;
+		} else if(angle2 < Math.PI + Math.PI / 4) {
+			this2 = Math.PI;
+		} else if(angle2 < Math.PI + Math.PI / 2 + Math.PI / 4) {
+			this2 = Math.PI + Math.PI / 2;
+		} else {
+			this2 = 0.;
+		}
+	}
+	this1 = this2;
+	return tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this1);
+};
+var tetrisTriangles_game_Rotation = function(controller_) {
+	this.rotationSpeed = 20;
+	this.count = 0.;
+	this.toggle = false;
+	this.controller = controller_;
+};
+$hxClasses["tetrisTriangles.game.Rotation"] = tetrisTriangles_game_Rotation;
+tetrisTriangles_game_Rotation.__name__ = ["tetrisTriangles","game","Rotation"];
+tetrisTriangles_game_Rotation.prototype = {
+	controller: null
+	,toggle: null
+	,count: null
+	,rotationSpeed: null
+	,rotate: function(i) {
+		if(this.toggle) {
+			return false;
+		} else {
+			this.toggle = true;
+			this.count = 1.0;
+			return true;
+		}
+	}
+	,update: function() {
+		if(this.toggle) {
+			var _this = this.controller;
+			var theta = Math.PI / this.rotationSpeed;
+			var l = _this.shapes.length;
+			var _g1 = 0;
+			while(_g1 < l) _this.shapes[_g1++].rotate(theta);
+		}
+		if(this.count % (this.rotationSpeed / 2) == 0.) {
+			this.count = 0.;
+			this.toggle = false;
+		}
+		this.count += 1.;
+	}
+	,reset: function() {
+		this.toggle = false;
+		this.count = 0;
+	}
+	,__class__: tetrisTriangles_game_Rotation
+};
+var tetrisTriangles_game_Snapped = $hxClasses["tetrisTriangles.game.Snapped"] = { __ename__ : true, __constructs__ : ["Always","Zero","Ninety","Fix"] };
+tetrisTriangles_game_Snapped.Always = ["Always",0];
+tetrisTriangles_game_Snapped.Always.toString = $estr;
+tetrisTriangles_game_Snapped.Always.__enum__ = tetrisTriangles_game_Snapped;
+tetrisTriangles_game_Snapped.Zero = ["Zero",1];
+tetrisTriangles_game_Snapped.Zero.toString = $estr;
+tetrisTriangles_game_Snapped.Zero.__enum__ = tetrisTriangles_game_Snapped;
+tetrisTriangles_game_Snapped.Ninety = ["Ninety",2];
+tetrisTriangles_game_Snapped.Ninety.toString = $estr;
+tetrisTriangles_game_Snapped.Ninety.__enum__ = tetrisTriangles_game_Snapped;
+tetrisTriangles_game_Snapped.Fix = ["Fix",3];
+tetrisTriangles_game_Snapped.Fix.toString = $estr;
+tetrisTriangles_game_Snapped.Fix.__enum__ = tetrisTriangles_game_Snapped;
+tetrisTriangles_game_Snapped.__empty_constructs__ = [tetrisTriangles_game_Snapped.Always,tetrisTriangles_game_Snapped.Zero,tetrisTriangles_game_Snapped.Ninety,tetrisTriangles_game_Snapped.Fix];
+var tetrisTriangles_game_Shape = function(id_,triangles_,centre_,col0_,col1_,dia_,gap_,snapped_,offX_,offY_) {
+	if(offY_ == null) {
+		offY_ = 0;
+	}
+	if(offX_ == null) {
+		offX_ = 0;
+	}
+	this.newLocation = [];
+	this.lastLocation = [];
+	this.locked = false;
+	this.lastRook = tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(0.);
+	this.rook = tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(0.);
+	this.angle = 0.;
+	if(snapped_ == tetrisTriangles_game_Snapped.Zero || snapped_ == tetrisTriangles_game_Snapped.Fix) {
+		centre_.x -= dia_ / 2;
+	}
 	this.centre = centre_;
+	this.snapped = snapped_;
+	this.offX = offX_;
+	this.offY = offY_;
+	this.start = { x : centre_.x, y : centre_.y};
 	this.id = id_;
 	this.triangles = triangles_;
-	this.col0_id = col0_id_;
-	this.col1_id = col1_id_;
+	this.col0 = col0_;
+	this.col1 = col1_;
 	this.dia = dia_;
 	this.gap = gap_;
 	this.blocks = [];
+	this.virtualBlocks = [];
 };
-$hxClasses["tetrisTriangles.visual.TetrisShape"] = tetrisTriangles_visual_TetrisShape;
-tetrisTriangles_visual_TetrisShape.__name__ = ["tetrisTriangles","visual","TetrisShape"];
-tetrisTriangles_visual_TetrisShape.prototype = {
-	addBlock: function(x_,y_) {
-		this.blocks[this.blocks.length] = new tetrisTriangles_visual_Square(this.id,this.triangles,x_ * this.dia + this.centre.x,y_ * this.dia + this.centre.y,this.col0_id,this.col1_id,this.dia,this.gap);
+$hxClasses["tetrisTriangles.game.Shape"] = tetrisTriangles_game_Shape;
+tetrisTriangles_game_Shape.__name__ = ["tetrisTriangles","game","Shape"];
+tetrisTriangles_game_Shape.getShapeBounds = function(sqr) {
+	if(sqr == null) {
+		return null;
+	} else if(sqr.length == 0) {
+		return null;
+	} else {
+		var l = sqr.length;
+		var square = sqr[0];
+		var bx = square.get_x();
+		var by = square.get_y();
+		var br = square.get_right();
+		var bb = square.get_bottom();
+		var _g1 = 1;
+		while(_g1 < l) {
+			square = sqr[_g1++];
+			bx = Math.min(bx,square.get_x());
+			by = Math.min(by,square.get_y());
+			br = Math.max(br,square.get_right());
+			bb = Math.max(br,square.get_bottom());
+		}
+		return { x : bx, y : by, right : br, bottom : bb};
+	}
+};
+tetrisTriangles_game_Shape.getShapeSides = function(sqr) {
+	if(sqr == null) {
+		return null;
+	} else if(sqr.length == 0) {
+		return null;
+	} else {
+		var l = sqr.length;
+		var square = sqr[0];
+		var bx = square.get_x();
+		var br = square.get_right();
+		var _g1 = 1;
+		while(_g1 < l) {
+			square = sqr[_g1++];
+			bx = Math.min(bx,square.get_x());
+			br = Math.max(br,square.get_right());
+		}
+		return { x : bx, right : br};
+	}
+};
+tetrisTriangles_game_Shape.shapeClose = function(sh0,sh1,diaSq) {
+	var c1_y;
+	var c1_x;
+	var c0_y;
+	var c0_x;
+	var vb0 = sh0.virtualBlocks;
+	var vb1 = sh1.blocks;
+	var l0 = vb0.length;
+	var l1 = vb1.length;
+	var sq0;
+	var sq1;
+	var out = false;
+	var _g1 = 0;
+	while(_g1 < l0) {
+		sq0 = vb0[_g1++];
+		var _g3 = 0;
+		while(_g3 < l1) {
+			sq1 = vb1[_g3++];
+			var dx = sq0.t0.bx;
+			var dy = sq0.t0.by;
+			var ex = sq0.t0.cx;
+			var ey = sq0.t0.cy;
+			if(dx < ex) {
+				c0_x = dx + (ex - dx) / 2;
+			} else {
+				c0_x = ex + (dx - ex) / 2;
+			}
+			if(dy < ey) {
+				c0_y = dy + (ey - dy) / 2;
+			} else {
+				c0_y = dy + (dy - ey) / 2 - sq0.dia;
+			}
+			var dx1 = sq1.t0.bx;
+			var dy1 = sq1.t0.by;
+			var ex1 = sq1.t0.cx;
+			var ey1 = sq1.t0.cy;
+			if(dx1 < ex1) {
+				c1_x = dx1 + (ex1 - dx1) / 2;
+			} else {
+				c1_x = ex1 + (dx1 - ex1) / 2;
+			}
+			if(dy1 < ey1) {
+				c1_y = dy1 + (ey1 - dy1) / 2;
+			} else {
+				c1_y = dy1 + (dy1 - ey1) / 2 - sq1.dia;
+			}
+			var dx2 = c0_x - c1_x;
+			var dy2 = c0_y - c1_y;
+			if(dx2 * dx2 + dy2 * dy2 < diaSq) {
+				out = true;
+				break;
+			}
+		}
+	}
+	return out;
+};
+tetrisTriangles_game_Shape.prototype = {
+	start: null
+	,snapped: null
+	,centre: null
+	,blocks: null
+	,virtualBlocks: null
+	,id: null
+	,triangles: null
+	,col0: null
+	,col1: null
+	,dia: null
+	,gap: null
+	,angle: null
+	,rook: null
+	,lastRook: null
+	,offX: null
+	,offY: null
+	,locked: null
+	,changeColor: function(col0_,col1_) {
+		var _g = 0;
+		var _g1 = this.blocks;
+		while(_g < _g1.length) {
+			var b = _g1[_g];
+			++_g;
+			this.col0 = col0_;
+			this.col1 = col1_;
+			b.col0 = col0_;
+			b.col1 = col1_;
+			b.t0.colorID = col0_;
+			b.t1.colorID = col1_;
+			b.t0.colorA = col0_;
+			b.t0.colorB = col0_;
+			b.t0.colorC = col0_;
+			b.t1.colorA = col1_;
+			b.t1.colorB = col1_;
+			b.t1.colorC = col1_;
+		}
+	}
+	,addBlock: function(x_,y_,addVirtual,show) {
+		if(show == null) {
+			show = true;
+		}
+		if(addVirtual == null) {
+			addVirtual = true;
+		}
+		var x0 = x_ * this.dia + this.centre.x;
+		var y0 = y_ * this.dia + this.centre.y;
+		var tri = this.triangles;
+		if(!show) {
+			tri = [];
+		}
+		if(addVirtual) {
+			this.virtualBlocks[this.blocks.length] = new tetrisTriangles_game_Square(this.id,[],x0,y0,this.dia,this.gap,13,13);
+		}
+		var sq = new tetrisTriangles_game_Square(this.id,tri,x0,y0,this.dia,this.gap,this.col0,this.col1);
+		this.blocks[this.blocks.length] = sq;
+		return sq;
 	}
 	,pushBlock: function(square) {
 		this.blocks[this.blocks.length] = square;
@@ -50578,65 +56585,333 @@ tetrisTriangles_visual_TetrisShape.prototype = {
 			newBlocks[i] = this.blocks[i];
 		}
 		this.blocks = [];
+		this.virtualBlocks = [];
+		this.locked = true;
 		return newBlocks;
 	}
+	,removeRow: function(r) {
+		var sq;
+		var sq1;
+		var posInt;
+		var found = [];
+		var lr = 0;
+		var _g1 = 0;
+		var _g = this.blocks.length;
+		while(_g1 < _g) {
+			sq1 = this.blocks[_g1++];
+			if(sq1 != null) {
+				if(sq1.hasTriangles()) {
+					posInt = sq1.getCentreInt();
+					if(posInt.y == r) {
+						found[lr++] = sq1;
+					}
+				}
+			}
+		}
+		while(found.length != 0) {
+			sq = found.pop();
+			HxOverrides.remove(this.blocks,sq);
+			sq.destroy();
+			sq = null;
+		}
+		this.moveRowsDown(r);
+	}
+	,findRow: function(r) {
+		var sq;
+		var posInt;
+		var found = [];
+		var lr = 0;
+		var _g1 = 0;
+		var _g = this.blocks.length;
+		while(_g1 < _g) {
+			sq = this.blocks[_g1++];
+			if(sq != null) {
+				if(sq.hasTriangles()) {
+					posInt = sq.getCentreInt();
+					if(posInt.y == r) {
+						found[lr++] = sq;
+					}
+				}
+			}
+		}
+		return found;
+	}
+	,moveRowsDown: function(end) {
+		var sq;
+		var posInt;
+		var _g1 = 0;
+		var _g = this.blocks.length;
+		while(_g1 < _g) {
+			sq = this.blocks[_g1++];
+			posInt = sq.getCentreInt();
+			if(posInt.y < end) {
+				sq.moveDelta(0,this.dia);
+			}
+		}
+	}
 	,rotate: function(theta) {
+		this.angle += theta;
+		this.rook = tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this.angle);
 		var l = this.blocks.length;
 		var cos = Math.cos(theta);
 		var sin = Math.sin(theta);
+		var offset;
+		if(this.snapped != null) {
+			switch(this.snapped[1]) {
+			case 0:
+				this.offsetX(0);
+				break;
+			case 1:case 2:
+				offset = -(this.dia / 2) * cos;
+				this.offsetX(offset);
+				break;
+			case 3:
+				offset = this.dia / 2 * cos;
+				this.offsetX(offset);
+				break;
+			}
+		}
+		var cos1 = Math.cos(Math.PI / 2);
+		var sin1 = Math.sin(Math.PI / 2);
+		if(tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this.rook) != this.lastRook) {
+			var l1 = this.virtualBlocks.length;
+			var _g1 = 0;
+			while(_g1 < l1) {
+				var _this = this.virtualBlocks[_g1++];
+				var p = this.centre;
+				var _this1 = _this.t0;
+				var px = p.x;
+				var py = p.y;
+				_this1.ax -= px;
+				_this1.ay -= py;
+				_this1.bx -= px;
+				_this1.by -= py;
+				_this1.cx -= px;
+				_this1.cy -= py;
+				var dx;
+				var dy;
+				dx = _this1.ax;
+				dy = _this1.ay;
+				_this1.ax = dx * cos1 - dy * sin1;
+				_this1.ay = dx * sin1 + dy * cos1;
+				dx = _this1.bx;
+				dy = _this1.by;
+				_this1.bx = dx * cos1 - dy * sin1;
+				_this1.by = dx * sin1 + dy * cos1;
+				dx = _this1.cx;
+				dy = _this1.cy;
+				_this1.cx = dx * cos1 - dy * sin1;
+				_this1.cy = dx * sin1 + dy * cos1;
+				_this1.ax += px;
+				_this1.ay += py;
+				_this1.bx += px;
+				_this1.by += py;
+				_this1.cx += px;
+				_this1.cy += py;
+				var _this2 = _this.t1;
+				var px1 = p.x;
+				var py1 = p.y;
+				_this2.ax -= px1;
+				_this2.ay -= py1;
+				_this2.bx -= px1;
+				_this2.by -= py1;
+				_this2.cx -= px1;
+				_this2.cy -= py1;
+				var dx1;
+				var dy1;
+				dx1 = _this2.ax;
+				dy1 = _this2.ay;
+				_this2.ax = dx1 * cos1 - dy1 * sin1;
+				_this2.ay = dx1 * sin1 + dy1 * cos1;
+				dx1 = _this2.bx;
+				dy1 = _this2.by;
+				_this2.bx = dx1 * cos1 - dy1 * sin1;
+				_this2.by = dx1 * sin1 + dy1 * cos1;
+				dx1 = _this2.cx;
+				dy1 = _this2.cy;
+				_this2.cx = dx1 * cos1 - dy1 * sin1;
+				_this2.cy = dx1 * sin1 + dy1 * cos1;
+				_this2.ax += px1;
+				_this2.ay += py1;
+				_this2.bx += px1;
+				_this2.by += py1;
+				_this2.cx += px1;
+				_this2.cy += py1;
+			}
+		}
+		var _g11 = 0;
+		while(_g11 < l) {
+			var _this3 = this.blocks[_g11++];
+			var p1 = this.centre;
+			var _this4 = _this3.t0;
+			var px2 = p1.x;
+			var py2 = p1.y;
+			_this4.ax -= px2;
+			_this4.ay -= py2;
+			_this4.bx -= px2;
+			_this4.by -= py2;
+			_this4.cx -= px2;
+			_this4.cy -= py2;
+			var dx2;
+			var dy2;
+			dx2 = _this4.ax;
+			dy2 = _this4.ay;
+			_this4.ax = dx2 * cos - dy2 * sin;
+			_this4.ay = dx2 * sin + dy2 * cos;
+			dx2 = _this4.bx;
+			dy2 = _this4.by;
+			_this4.bx = dx2 * cos - dy2 * sin;
+			_this4.by = dx2 * sin + dy2 * cos;
+			dx2 = _this4.cx;
+			dy2 = _this4.cy;
+			_this4.cx = dx2 * cos - dy2 * sin;
+			_this4.cy = dx2 * sin + dy2 * cos;
+			_this4.ax += px2;
+			_this4.ay += py2;
+			_this4.bx += px2;
+			_this4.by += py2;
+			_this4.cx += px2;
+			_this4.cy += py2;
+			var _this5 = _this3.t1;
+			var px3 = p1.x;
+			var py3 = p1.y;
+			_this5.ax -= px3;
+			_this5.ay -= py3;
+			_this5.bx -= px3;
+			_this5.by -= py3;
+			_this5.cx -= px3;
+			_this5.cy -= py3;
+			var dx3;
+			var dy3;
+			dx3 = _this5.ax;
+			dy3 = _this5.ay;
+			_this5.ax = dx3 * cos - dy3 * sin;
+			_this5.ay = dx3 * sin + dy3 * cos;
+			dx3 = _this5.bx;
+			dy3 = _this5.by;
+			_this5.bx = dx3 * cos - dy3 * sin;
+			_this5.by = dx3 * sin + dy3 * cos;
+			dx3 = _this5.cx;
+			dy3 = _this5.cy;
+			_this5.cx = dx3 * cos - dy3 * sin;
+			_this5.cy = dx3 * sin + dy3 * cos;
+			_this5.ax += px3;
+			_this5.ay += py3;
+			_this5.bx += px3;
+			_this5.by += py3;
+			_this5.cx += px3;
+			_this5.cy += py3;
+		}
+		this.lastRook = this.rook;
+	}
+	,rotateVirtual: function(rook) {
+		var cos = Math.cos(Math.PI / 2);
+		var sin = Math.sin(Math.PI / 2);
+		if(tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(rook) != this.lastRook) {
+			var l = this.virtualBlocks.length;
+			var _g1 = 0;
+			while(_g1 < l) {
+				var _this = this.virtualBlocks[_g1++];
+				var p = this.centre;
+				var _this1 = _this.t0;
+				var px = p.x;
+				var py = p.y;
+				_this1.ax -= px;
+				_this1.ay -= py;
+				_this1.bx -= px;
+				_this1.by -= py;
+				_this1.cx -= px;
+				_this1.cy -= py;
+				var dx;
+				var dy;
+				dx = _this1.ax;
+				dy = _this1.ay;
+				_this1.ax = dx * cos - dy * sin;
+				_this1.ay = dx * sin + dy * cos;
+				dx = _this1.bx;
+				dy = _this1.by;
+				_this1.bx = dx * cos - dy * sin;
+				_this1.by = dx * sin + dy * cos;
+				dx = _this1.cx;
+				dy = _this1.cy;
+				_this1.cx = dx * cos - dy * sin;
+				_this1.cy = dx * sin + dy * cos;
+				_this1.ax += px;
+				_this1.ay += py;
+				_this1.bx += px;
+				_this1.by += py;
+				_this1.cx += px;
+				_this1.cy += py;
+				var _this2 = _this.t1;
+				var px1 = p.x;
+				var py1 = p.y;
+				_this2.ax -= px1;
+				_this2.ay -= py1;
+				_this2.bx -= px1;
+				_this2.by -= py1;
+				_this2.cx -= px1;
+				_this2.cy -= py1;
+				var dx1;
+				var dy1;
+				dx1 = _this2.ax;
+				dy1 = _this2.ay;
+				_this2.ax = dx1 * cos - dy1 * sin;
+				_this2.ay = dx1 * sin + dy1 * cos;
+				dx1 = _this2.bx;
+				dy1 = _this2.by;
+				_this2.bx = dx1 * cos - dy1 * sin;
+				_this2.by = dx1 * sin + dy1 * cos;
+				dx1 = _this2.cx;
+				dy1 = _this2.cy;
+				_this2.cx = dx1 * cos - dy1 * sin;
+				_this2.cy = dx1 * sin + dy1 * cos;
+				_this2.ax += px1;
+				_this2.ay += py1;
+				_this2.bx += px1;
+				_this2.by += py1;
+				_this2.cx += px1;
+				_this2.cy += py1;
+			}
+		}
+	}
+	,rookSnapping: function(cos,sin) {
+		var offset;
+		if(this.snapped != null) {
+			switch(this.snapped[1]) {
+			case 0:
+				this.offsetX(0);
+				break;
+			case 1:case 2:
+				offset = -(this.dia / 2) * cos;
+				this.offsetX(offset);
+				break;
+			case 3:
+				offset = this.dia / 2 * cos;
+				this.offsetX(offset);
+				break;
+			}
+		}
+	}
+	,offsetX: function(ox) {
+		this.centre.x = this.start.x + ox;
+	}
+	,snap: function() {
+		var beta;
+		if(this.angle < 0) {
+			beta = -this.angle + 180;
+		}
+		beta = this.angle % (2 * Math.PI);
+		this.rotate(this.rook - beta);
+		var newLoc;
 		var _g1 = 0;
-		while(_g1 < l) {
+		var _g = this.lastLocation.length;
+		while(_g1 < _g) {
 			var i = _g1++;
-			this.blocks[i].moveDelta(this.centre.x,this.centre.y);
-			var _this = this.blocks[i];
-			var p = this.centre;
-			var t = _this.t0;
-			_this.dirtyX = true;
-			_this.dirtyY = true;
-			t.moveDelta(-p.x,-p.y);
-			t.moveDelta(-p.x,-p.y);
-			var x;
-			var y;
-			x = t.ax;
-			y = t.ay;
-			t.ax = x * cos - y * sin;
-			t.ay = x * sin + y * cos;
-			x = t.bx;
-			y = t.by;
-			t.bx = x * cos - y * sin;
-			t.by = x * sin + y * cos;
-			x = t.cx;
-			y = t.cy;
-			t.cx = x * cos - y * sin;
-			t.cy = x * sin + y * cos;
-			t.moveDelta(p.x,p.y);
-			t.moveDelta(p.x,p.y);
-			_this.dirtyX = true;
-			_this.dirtyY = true;
-			var t1 = _this.t1;
-			_this.dirtyX = true;
-			_this.dirtyY = true;
-			t1.moveDelta(-p.x,-p.y);
-			t1.moveDelta(-p.x,-p.y);
-			var x1;
-			var y1;
-			x1 = t1.ax;
-			y1 = t1.ay;
-			t1.ax = x1 * cos - y1 * sin;
-			t1.ay = x1 * sin + y1 * cos;
-			x1 = t1.bx;
-			y1 = t1.by;
-			t1.bx = x1 * cos - y1 * sin;
-			t1.by = x1 * sin + y1 * cos;
-			x1 = t1.cx;
-			y1 = t1.cy;
-			t1.cx = x1 * cos - y1 * sin;
-			t1.cy = x1 * sin + y1 * cos;
-			t1.moveDelta(p.x,p.y);
-			t1.moveDelta(p.x,p.y);
-			_this.dirtyX = true;
-			_this.dirtyY = true;
-			this.blocks[i].moveDelta(-this.centre.x,-this.centre.y);
+			newLoc = this.newLocation[i];
+			this.blocks[i].set_x(newLoc.x * this.dia);
+			this.blocks[i].set_y(newLoc.y * this.dia);
+			this.virtualBlocks[i].set_x(newLoc.x * this.dia);
+			this.virtualBlocks[i].set_y(newLoc.y * this.dia);
 		}
 	}
 	,getPoints: function(points) {
@@ -50645,23 +56920,1690 @@ tetrisTriangles_visual_TetrisShape.prototype = {
 		while(_g1 < l) this.blocks[_g1++].getPoints(points);
 		return points;
 	}
+	,moveX: function(dx) {
+		this.start.x += dx;
+		var l = this.blocks.length;
+		var _g1 = 0;
+		while(_g1 < l) this.blocks[_g1++].moveDelta(dx,0.);
+		var _g11 = 0;
+		while(_g11 < l) this.virtualBlocks[_g11++].moveDelta(dx,0.);
+	}
 	,moveDelta: function(dx,dy) {
+		if(this.blocks.length == 0) {
+			return;
+		}
+		if(this.blocks == null) {
+			return;
+		}
 		this.centre.x += dx;
 		this.centre.y += dy;
 		var l = this.blocks.length;
 		var _g1 = 0;
 		while(_g1 < l) this.blocks[_g1++].moveDelta(dx,dy);
+		var _g11 = 0;
+		while(_g11 < l) this.virtualBlocks[_g11++].moveDelta(dx,dy);
 	}
-	,hitTest: function(p) {
+	,hitInt: function(p) {
 		var out = false;
-		var l = this.blocks.length;
+		var l = this.virtualBlocks.length;
+		var p2;
 		var _g1 = 0;
-		while(_g1 < l) if(this.blocks[_g1++].hitTest(p)) {
-			out = true;
+		while(_g1 < l) {
+			p2 = this.virtualBlocks[_g1++].getCentreInt();
+			if(p2.x == p.x && p2.y == p.y) {
+				out = true;
+				break;
+			}
 		}
 		return out;
 	}
-	,__class__: tetrisTriangles_visual_TetrisShape
+	,lastLocation: null
+	,newLocation: null
+	,getLocation: function() {
+		this.lastLocation = this.newLocation;
+		var arr = [];
+		this.newLocation = arr;
+		if(this.locked) {
+			return arr;
+		}
+		return this.getVirtualCentreInt(this.newLocation);
+	}
+	,getLocationNew: function() {
+		this.lastLocation = this.newLocation;
+		var arr = [];
+		this.newLocation = arr;
+		if(this.locked) {
+			return arr;
+		}
+		return this.getCentreInt(this.newLocation);
+	}
+	,getCentreInt: function(centresInt) {
+		var l = this.blocks.length;
+		var lc = centresInt.length;
+		if(this.locked) {
+			return centresInt;
+		}
+		var _g1 = 0;
+		while(_g1 < l) {
+			var i = _g1++;
+			centresInt[i + lc] = this.blocks[i].getCentreInt();
+		}
+		return centresInt;
+	}
+	,getVirtualCentreInt: function(virtualInt) {
+		var l = this.virtualBlocks.length;
+		if(this.locked) {
+			return virtualInt;
+		}
+		var _g1 = 0;
+		while(_g1 < l) {
+			var i = _g1++;
+			virtualInt[i] = this.virtualBlocks[i].getCentreInt();
+		}
+		return virtualInt;
+	}
+	,__class__: tetrisTriangles_game_Shape
+};
+var tetrisTriangles_game_ShapeGenerator = function(createShape) {
+	this.random = 0;
+	this.last = -1;
+	this.templates = new tetrisTriangles_game_Templates(createShape);
+};
+$hxClasses["tetrisTriangles.game.ShapeGenerator"] = tetrisTriangles_game_ShapeGenerator;
+tetrisTriangles_game_ShapeGenerator.__name__ = ["tetrisTriangles","game","ShapeGenerator"];
+tetrisTriangles_game_ShapeGenerator.prototype = {
+	templates: null
+	,abc: null
+	,last: null
+	,random: null
+	,randomShape: function(p,col0_,col1_,shape) {
+		if(shape == null) {
+			shape = "tetris_random";
+		}
+		var ts;
+		if(shape == null) {
+			if(shape == null) {
+				var ts1 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+				ts1.addBlock(-1,-1);
+				ts1.addBlock(0,-1);
+				ts1.addBlock(-1,0);
+				ts1.addBlock(0,0);
+				ts = ts1;
+			} else {
+				switch(shape) {
+				case "tetris_L":
+					var ts2 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+					ts2.addBlock(-1,-1.5);
+					ts2.addBlock(-1,-0.5);
+					ts2.addBlock(-1,0.5);
+					ts2.addBlock(0,0.5);
+					ts = ts2;
+					break;
+				case "tetris_Z":
+					var ts3 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
+					ts3.addBlock(-0.5,-1);
+					ts3.addBlock(0.5,0);
+					ts3.addBlock(0.5,-1);
+					ts3.addBlock(1.5,0);
+					ts = ts3;
+					break;
+				case "tetris_box":
+					var ts4 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+					ts4.addBlock(-1,-1);
+					ts4.addBlock(0,-1);
+					ts4.addBlock(-1,0);
+					ts4.addBlock(0,0);
+					ts = ts4;
+					break;
+				case "tetris_l":
+					var ts5 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Zero);
+					ts5.addBlock(-0.5,-2);
+					ts5.addBlock(-0.5,-1);
+					ts5.addBlock(-0.5,0);
+					ts5.addBlock(-0.5,1);
+					ts = ts5;
+					break;
+				case "tetris_t":
+					var ts6 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+					ts6.addBlock(-1,-1.5);
+					ts6.addBlock(-1,-0.5);
+					ts6.addBlock(-1,0.5);
+					ts6.addBlock(0,-0.5);
+					ts = ts6;
+					break;
+				default:
+					var ts7 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+					ts7.addBlock(-1,-1);
+					ts7.addBlock(0,-1);
+					ts7.addBlock(-1,0);
+					ts7.addBlock(0,0);
+					ts = ts7;
+				}
+			}
+		} else if(shape == "tetris_random") {
+			var random = 4 * Math.random() | 0;
+			if(random == this.last) {
+				return this.randomShape(p,col0_,col1_);
+			}
+			switch(random) {
+			case 0:
+				var ts8 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
+				ts8.addBlock(-0.5,-1);
+				ts8.addBlock(0.5,0);
+				ts8.addBlock(0.5,-1);
+				ts8.addBlock(1.5,0);
+				ts = ts8;
+				ts = ts8;
+				break;
+			case 1:
+				var ts9 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+				ts9.addBlock(-1,-1.5);
+				ts9.addBlock(-1,-0.5);
+				ts9.addBlock(-1,0.5);
+				ts9.addBlock(0,0.5);
+				ts = ts9;
+				ts = ts9;
+				break;
+			case 2:
+				var ts10 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+				ts10.addBlock(-1,-1);
+				ts10.addBlock(0,-1);
+				ts10.addBlock(-1,0);
+				ts10.addBlock(0,0);
+				ts = ts10;
+				ts = ts10;
+				break;
+			case 3:
+				var ts11 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+				ts11.addBlock(-1,-1.5);
+				ts11.addBlock(-1,-0.5);
+				ts11.addBlock(-1,0.5);
+				ts11.addBlock(0,-0.5);
+				ts = ts11;
+				ts = ts11;
+				break;
+			case 4:
+				var ts12 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Zero);
+				ts12.addBlock(-0.5,-2);
+				ts12.addBlock(-0.5,-1);
+				ts12.addBlock(-0.5,0);
+				ts12.addBlock(-0.5,1);
+				ts = ts12;
+				ts = ts12;
+				break;
+			default:
+				var ts13 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
+				ts13.addBlock(-0.5,-1);
+				ts13.addBlock(0.5,0);
+				ts13.addBlock(0.5,-1);
+				ts13.addBlock(1.5,0);
+				ts = ts13;
+				ts = ts13;
+			}
+		} else if(shape == null) {
+			var ts14 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+			ts14.addBlock(-1,-1);
+			ts14.addBlock(0,-1);
+			ts14.addBlock(-1,0);
+			ts14.addBlock(0,0);
+			ts = ts14;
+		} else {
+			switch(shape) {
+			case "tetris_L":
+				var ts15 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+				ts15.addBlock(-1,-1.5);
+				ts15.addBlock(-1,-0.5);
+				ts15.addBlock(-1,0.5);
+				ts15.addBlock(0,0.5);
+				ts = ts15;
+				break;
+			case "tetris_Z":
+				var ts16 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
+				ts16.addBlock(-0.5,-1);
+				ts16.addBlock(0.5,0);
+				ts16.addBlock(0.5,-1);
+				ts16.addBlock(1.5,0);
+				ts = ts16;
+				break;
+			case "tetris_box":
+				var ts17 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+				ts17.addBlock(-1,-1);
+				ts17.addBlock(0,-1);
+				ts17.addBlock(-1,0);
+				ts17.addBlock(0,0);
+				ts = ts17;
+				break;
+			case "tetris_l":
+				var ts18 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Zero);
+				ts18.addBlock(-0.5,-2);
+				ts18.addBlock(-0.5,-1);
+				ts18.addBlock(-0.5,0);
+				ts18.addBlock(-0.5,1);
+				ts = ts18;
+				break;
+			case "tetris_t":
+				var ts19 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+				ts19.addBlock(-1,-1.5);
+				ts19.addBlock(-1,-0.5);
+				ts19.addBlock(-1,0.5);
+				ts19.addBlock(0,-0.5);
+				ts = ts19;
+				break;
+			default:
+				var ts20 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+				ts20.addBlock(-1,-1);
+				ts20.addBlock(0,-1);
+				ts20.addBlock(-1,0);
+				ts20.addBlock(0,0);
+				ts = ts20;
+			}
+		}
+		this.last = this.random;
+		return ts;
+	}
+	,__class__: tetrisTriangles_game_ShapeGenerator
+};
+var tetrisTriangles_game_Square = function(id,triangles_,x_,y_,dia_,gap_,col0_,col1_) {
+	this._x = x_;
+	this._y = y_;
+	this.col0 = col0_;
+	this.col1 = col1_;
+	this.dia = dia_;
+	this.gap = 0.;
+	this._x2 = x_ + dia_;
+	this._y2 = y_ + dia_;
+	var x2 = this._x2;
+	var y2 = this._y2;
+	this.triangles = triangles_;
+	var l = triangles_.length;
+	this.t0 = new justTriangles_Triangle(id,true,{ x : x_, y : y_},{ x : x2, y : y_},{ x : x_, y : y2},0,this.col0);
+	this.t1 = new justTriangles_Triangle(id,true,{ x : x_, y : y2},{ x : x2, y : y_},{ x : x2, y : y2},0,this.col1);
+	this.triangles[l++] = this.t0;
+	this.triangles[l++] = this.t1;
+};
+$hxClasses["tetrisTriangles.game.Square"] = tetrisTriangles_game_Square;
+tetrisTriangles_game_Square.__name__ = ["tetrisTriangles","game","Square"];
+tetrisTriangles_game_Square.squareClose = function(s0,s1,diaSq) {
+	var dx = s0.t0.bx;
+	var dy = s0.t0.by;
+	var ex = s0.t0.cx;
+	var ey = s0.t0.cy;
+	var dx1 = s1.t0.bx;
+	var dy1 = s1.t0.by;
+	var ex1 = s1.t0.cx;
+	var ey1 = s1.t0.cy;
+	var dx2 = (dx < ex ? dx + (ex - dx) / 2 : ex + (dx - ex) / 2) - (dx1 < ex1 ? dx1 + (ex1 - dx1) / 2 : ex1 + (dx1 - ex1) / 2);
+	var dy2 = (dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2 - s0.dia) - (dy1 < ey1 ? dy1 + (ey1 - dy1) / 2 : dy1 + (dy1 - ey1) / 2 - s1.dia);
+	return dx2 * dx2 + dy2 * dy2 < diaSq;
+};
+tetrisTriangles_game_Square.prototype = {
+	t0: null
+	,t1: null
+	,id: null
+	,col0: null
+	,col1: null
+	,dia: null
+	,gap: null
+	,_x: null
+	,_y: null
+	,_x2: null
+	,_y2: null
+	,triangles: null
+	,destroy: function() {
+		this.removeTriangles();
+		this.t0 = null;
+		this.t1 = null;
+	}
+	,removeTriangles: function() {
+		HxOverrides.remove(this.triangles,this.t0);
+		HxOverrides.remove(this.triangles,this.t1);
+	}
+	,changeColor: function(col0_,col1_) {
+		this.col0 = col0_;
+		this.col1 = col1_;
+		this.t0.colorID = col0_;
+		this.t1.colorID = col1_;
+		this.t0.colorA = col0_;
+		this.t0.colorB = col0_;
+		this.t0.colorC = col0_;
+		this.t1.colorA = col1_;
+		this.t1.colorB = col1_;
+		this.t1.colorC = col1_;
+	}
+	,getPoints: function(arr) {
+		var l = arr.length;
+		arr[l++] = { x : this.t0.ax, y : this.t0.ay};
+		arr[l++] = { x : this.t0.bx, y : this.t0.by};
+		arr[l++] = { x : this.t0.cx, y : this.t0.cy};
+		arr[l++] = { x : this.t1.ax, y : this.t1.ay};
+		arr[l++] = { x : this.t1.bx, y : this.t1.by};
+		arr[l++] = { x : this.t1.cx, y : this.t1.cy};
+		return arr;
+	}
+	,moveDelta: function(dx,dy) {
+		var _this = this.t0;
+		_this.ax += dx;
+		_this.ay += dy;
+		_this.bx += dx;
+		_this.by += dy;
+		_this.cx += dx;
+		_this.cy += dy;
+		var _this1 = this.t1;
+		_this1.ax += dx;
+		_this1.ay += dy;
+		_this1.bx += dx;
+		_this1.by += dy;
+		_this1.cx += dx;
+		_this1.cy += dy;
+	}
+	,rotateAroundTheta: function(p,theta) {
+		var cos = Math.cos(theta);
+		var sin = Math.sin(theta);
+		var _this = this.t0;
+		var px = p.x;
+		var py = p.y;
+		_this.ax -= px;
+		_this.ay -= py;
+		_this.bx -= px;
+		_this.by -= py;
+		_this.cx -= px;
+		_this.cy -= py;
+		var dx;
+		var dy;
+		dx = _this.ax;
+		dy = _this.ay;
+		_this.ax = dx * cos - dy * sin;
+		_this.ay = dx * sin + dy * cos;
+		dx = _this.bx;
+		dy = _this.by;
+		_this.bx = dx * cos - dy * sin;
+		_this.by = dx * sin + dy * cos;
+		dx = _this.cx;
+		dy = _this.cy;
+		_this.cx = dx * cos - dy * sin;
+		_this.cy = dx * sin + dy * cos;
+		_this.ax += px;
+		_this.ay += py;
+		_this.bx += px;
+		_this.by += py;
+		_this.cx += px;
+		_this.cy += py;
+		var _this1 = this.t1;
+		var px1 = p.x;
+		var py1 = p.y;
+		_this1.ax -= px1;
+		_this1.ay -= py1;
+		_this1.bx -= px1;
+		_this1.by -= py1;
+		_this1.cx -= px1;
+		_this1.cy -= py1;
+		var dx1;
+		var dy1;
+		dx1 = _this1.ax;
+		dy1 = _this1.ay;
+		_this1.ax = dx1 * cos - dy1 * sin;
+		_this1.ay = dx1 * sin + dy1 * cos;
+		dx1 = _this1.bx;
+		dy1 = _this1.by;
+		_this1.bx = dx1 * cos - dy1 * sin;
+		_this1.by = dx1 * sin + dy1 * cos;
+		dx1 = _this1.cx;
+		dy1 = _this1.cy;
+		_this1.cx = dx1 * cos - dy1 * sin;
+		_this1.cy = dx1 * sin + dy1 * cos;
+		_this1.ax += px1;
+		_this1.ay += py1;
+		_this1.bx += px1;
+		_this1.by += py1;
+		_this1.cx += px1;
+		_this1.cy += py1;
+	}
+	,rotateAround: function(p,cos,sin) {
+		var _this = this.t0;
+		var px = p.x;
+		var py = p.y;
+		_this.ax -= px;
+		_this.ay -= py;
+		_this.bx -= px;
+		_this.by -= py;
+		_this.cx -= px;
+		_this.cy -= py;
+		var dx;
+		var dy;
+		dx = _this.ax;
+		dy = _this.ay;
+		_this.ax = dx * cos - dy * sin;
+		_this.ay = dx * sin + dy * cos;
+		dx = _this.bx;
+		dy = _this.by;
+		_this.bx = dx * cos - dy * sin;
+		_this.by = dx * sin + dy * cos;
+		dx = _this.cx;
+		dy = _this.cy;
+		_this.cx = dx * cos - dy * sin;
+		_this.cy = dx * sin + dy * cos;
+		_this.ax += px;
+		_this.ay += py;
+		_this.bx += px;
+		_this.by += py;
+		_this.cx += px;
+		_this.cy += py;
+		var _this1 = this.t1;
+		var px1 = p.x;
+		var py1 = p.y;
+		_this1.ax -= px1;
+		_this1.ay -= py1;
+		_this1.bx -= px1;
+		_this1.by -= py1;
+		_this1.cx -= px1;
+		_this1.cy -= py1;
+		var dx1;
+		var dy1;
+		dx1 = _this1.ax;
+		dy1 = _this1.ay;
+		_this1.ax = dx1 * cos - dy1 * sin;
+		_this1.ay = dx1 * sin + dy1 * cos;
+		dx1 = _this1.bx;
+		dy1 = _this1.by;
+		_this1.bx = dx1 * cos - dy1 * sin;
+		_this1.by = dx1 * sin + dy1 * cos;
+		dx1 = _this1.cx;
+		dy1 = _this1.cy;
+		_this1.cx = dx1 * cos - dy1 * sin;
+		_this1.cy = dx1 * sin + dy1 * cos;
+		_this1.ax += px1;
+		_this1.ay += py1;
+		_this1.bx += px1;
+		_this1.by += py1;
+		_this1.cx += px1;
+		_this1.cy += py1;
+	}
+	,hasTriangles: function() {
+		if(this.t0 != null) {
+			return this.t1 != null;
+		} else {
+			return false;
+		}
+	}
+	,getCentre: function() {
+		var dx = this.t0.bx;
+		var dy = this.t0.by;
+		var ex = this.t0.cx;
+		var ey = this.t0.cy;
+		return { x : dx < ex ? dx + (ex - dx) / 2 : ex + (dx - ex) / 2, y : dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2 - this.dia};
+	}
+	,getCentreInt: function() {
+		var dx = this.t0.bx;
+		var dy = this.t0.by;
+		var ex = this.t0.cx;
+		var ey = this.t0.cy;
+		return { x : (dx < ex ? dx + (ex - dx) / 2 : ex + (dx - ex) / 2) / this.dia | 0, y : (dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2 - this.dia) / this.dia | 0};
+	}
+	,get_right: function() {
+		return Math.max(this.t0.get_right(),this.t1.get_right());
+	}
+	,get_bottom: function() {
+		return Math.max(this.t0.get_bottom(),this.t1.get_bottom());
+	}
+	,get_x: function() {
+		return Math.min(this.t0.get_x(),this.t1.get_x());
+	}
+	,set_x: function(x_) {
+		var x0 = this.t0.get_x();
+		var x1 = this.t1.get_x();
+		if(x0 < x1) {
+			this.t0.set_x(x_);
+			var _g = this.t1;
+			_g.set_x(_g.get_x() + (x_ - x0));
+		} else {
+			this.t1.set_x(x_);
+			var _g1 = this.t0;
+			_g1.set_x(_g1.get_x() + (x_ - x1));
+		}
+		this._x = x_;
+		return x_;
+	}
+	,get_y: function() {
+		return Math.min(this.t0.get_y(),this.t1.get_y());
+	}
+	,set_y: function(y_) {
+		var y0 = this.t0.get_y();
+		var y1 = this.t1.get_y();
+		if(y0 < y1) {
+			this.t0.set_y(y_);
+			var _g = this.t1;
+			_g.set_y(_g.get_y() + (y_ - y0));
+		} else {
+			this.t1.set_y(y_);
+			var _g1 = this.t0;
+			_g1.set_y(_g1.get_y() + (y_ - y1));
+		}
+		this._y = y_;
+		return y_;
+	}
+	,hitTest: function(p) {
+		if(!this.t0.hitTest(p)) {
+			return this.t1.hitTest(p);
+		} else {
+			return true;
+		}
+	}
+	,__class__: tetrisTriangles_game_Square
+};
+var tetrisTriangles_game_Templates = function(createTetris_) {
+	this.createTetris = createTetris_;
+};
+$hxClasses["tetrisTriangles.game.Templates"] = tetrisTriangles_game_Templates;
+tetrisTriangles_game_Templates.__name__ = ["tetrisTriangles","game","Templates"];
+tetrisTriangles_game_Templates.prototype = {
+	createTetris: null
+	,Z: function(p) {
+		var ts = this.createTetris(p,tetrisTriangles_game_Snapped.Fix);
+		ts.addBlock(-0.5,-1);
+		ts.addBlock(0.5,0);
+		ts.addBlock(0.5,-1);
+		ts.addBlock(1.5,0);
+		return ts;
+	}
+	,l: function(p) {
+		var ts = this.createTetris(p,tetrisTriangles_game_Snapped.Zero);
+		ts.addBlock(-0.5,-2);
+		ts.addBlock(-0.5,-1);
+		ts.addBlock(-0.5,0);
+		ts.addBlock(-0.5,1);
+		return ts;
+	}
+	,box: function(p) {
+		var ts = this.createTetris(p,tetrisTriangles_game_Snapped.Always);
+		ts.addBlock(-1,-1);
+		ts.addBlock(0,-1);
+		ts.addBlock(-1,0);
+		ts.addBlock(0,0);
+		return ts;
+	}
+	,L: function(p) {
+		var ts = this.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+		ts.addBlock(-1,-1.5);
+		ts.addBlock(-1,-0.5);
+		ts.addBlock(-1,0.5);
+		ts.addBlock(0,0.5);
+		return ts;
+	}
+	,t: function(p) {
+		var ts = this.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+		ts.addBlock(-1,-1.5);
+		ts.addBlock(-1,-0.5);
+		ts.addBlock(-1,0.5);
+		ts.addBlock(0,-0.5);
+		return ts;
+	}
+	,bottom: function(p,wide) {
+		var ts = this.createTetris(p,tetrisTriangles_game_Snapped.Always);
+		var _g1 = 0;
+		while(_g1 < wide) ts.addBlock(_g1++,0,false,true);
+		return ts;
+	}
+	,__class__: tetrisTriangles_game_Templates
+};
+var tetrisTriangles_game_Tetris = function(scale) {
+	if(scale == null) {
+		scale = 1;
+	}
+	this.end = false;
+	this.offY = 0;
+	this.offX = 0;
+	this.hi = 30;
+	this.wide = 8;
+	this.edge = 0.01;
+	this.dia = 0.075;
+	this.scaleDimensions(scale);
+	this.createTetris();
+	this.interaction();
+	this.startGame();
+};
+$hxClasses["tetrisTriangles.game.Tetris"] = tetrisTriangles_game_Tetris;
+tetrisTriangles_game_Tetris.__name__ = ["tetrisTriangles","game","Tetris"];
+tetrisTriangles_game_Tetris.prototype = {
+	controller: null
+	,dia: null
+	,edge: null
+	,wide: null
+	,hi: null
+	,offX: null
+	,offY: null
+	,layout: null
+	,rotation: null
+	,movement: null
+	,end: null
+	,scaleDimensions: function(scale) {
+		this.dia = scale * this.dia;
+		this.edge = scale * this.edge;
+	}
+	,setLeftRightStops: function() {
+		this.movement.leftStop = this.dia * this.offX;
+		this.movement.rightStop = this.dia * this.offX + this.wide * this.dia;
+	}
+	,createTetris: function() {
+		this.controller = new tetrisTriangles_game_Controller(0,justTriangles_Triangle.triangles,this.wide,this.hi,this.dia,this.edge,this.offX,this.offY - 4);
+	}
+	,startGame: function() {
+		this.layout = new tetrisTriangles_game_Layout(this.controller,{ x : this.dia * this.offX, y : this.dia * this.offY},this.wide,this.hi,this.dia);
+		this.controller.onTetrisShapeLanded = $bind(this,this.newShape);
+		this.controller.onGameEnd = $bind(this,this.gameEnd);
+	}
+	,newShape: function() {
+		this.rotation.reset();
+		this.movement.reset();
+		this.layout.createTile();
+	}
+	,gameEnd: function() {
+		this.end = true;
+	}
+	,interaction: function() {
+		this.rotation = new tetrisTriangles_game_Rotation(this.controller);
+		this.movement = new tetrisTriangles_game_Movement(this.controller,this.dia);
+		this.setLeftRightStops();
+	}
+	,update: function() {
+		var c1_y;
+		var c1_x;
+		var c0_y;
+		var c0_x;
+		if(this.end) {
+			return;
+		}
+		var _this = this.controller;
+		var l = _this.shapes.length;
+		var shape;
+		var hit = false;
+		var _g1 = 0;
+		while(_g1 < l) {
+			shape = _this.shapes[_g1++];
+			shape.getLocation();
+			var diaSq = _this.diaSq;
+			var vb0 = shape.virtualBlocks;
+			var vb1 = _this.bottom.blocks;
+			var l0 = vb0.length;
+			var l1 = vb1.length;
+			var sq0;
+			var sq1;
+			var out = false;
+			var _g11 = 0;
+			while(_g11 < l0) {
+				sq0 = vb0[_g11++];
+				var _g3 = 0;
+				while(_g3 < l1) {
+					sq1 = vb1[_g3++];
+					var dx = sq0.t0.bx;
+					var dy = sq0.t0.by;
+					var ex = sq0.t0.cx;
+					var ey = sq0.t0.cy;
+					if(dx < ex) {
+						c0_x = dx + (ex - dx) / 2;
+					} else {
+						c0_x = ex + (dx - ex) / 2;
+					}
+					if(dy < ey) {
+						c0_y = dy + (ey - dy) / 2;
+					} else {
+						c0_y = dy + (dy - ey) / 2 - sq0.dia;
+					}
+					var dx1 = sq1.t0.bx;
+					var dy1 = sq1.t0.by;
+					var ex1 = sq1.t0.cx;
+					var ey1 = sq1.t0.cy;
+					if(dx1 < ex1) {
+						c1_x = dx1 + (ex1 - dx1) / 2;
+					} else {
+						c1_x = ex1 + (dx1 - ex1) / 2;
+					}
+					if(dy1 < ey1) {
+						c1_y = dy1 + (ey1 - dy1) / 2;
+					} else {
+						c1_y = dy1 + (dy1 - ey1) / 2 - sq1.dia;
+					}
+					var dx2 = c0_x - c1_x;
+					var dy2 = c0_y - c1_y;
+					if(dx2 * dx2 + dy2 * dy2 < diaSq) {
+						out = true;
+						break;
+					}
+				}
+			}
+			if(out) {
+				var beta;
+				if(shape.angle < 0) {
+					beta = -shape.angle + 180;
+				}
+				beta = shape.angle % (2 * Math.PI);
+				shape.rotate(shape.rook - beta);
+				var newLoc;
+				var _g12 = 0;
+				var _g = shape.lastLocation.length;
+				while(_g12 < _g) {
+					var i = _g12++;
+					newLoc = shape.newLocation[i];
+					shape.blocks[i].set_x(newLoc.x * shape.dia);
+					shape.blocks[i].set_y(newLoc.y * shape.dia);
+					shape.virtualBlocks[i].set_x(newLoc.x * shape.dia);
+					shape.virtualBlocks[i].set_y(newLoc.y * shape.dia);
+				}
+				var newBlocks = shape.clearBlocks();
+				var l2 = newBlocks.length;
+				var _g13 = 0;
+				while(_g13 < l2) _this.bottom.pushBlock(newBlocks[_g13++]);
+				var arrP = shape.lastLocation;
+				var arr2d = _this.inertArr;
+				var lp = arrP.length;
+				var p;
+				var _g14 = 0;
+				while(_g14 < lp) {
+					p = arrP[_g14++];
+					arr2d[2 + arr2d[0] * (p.y + -2) + p.x | 0] = 1;
+				}
+				_this.removeFullRows();
+				hit = true;
+			}
+		}
+		var this1 = _this.inertArr;
+		var w = this1[0];
+		var s = 2 + w * 0 | 0;
+		var e = s + w;
+		var emp = true;
+		var _g15 = s;
+		while(_g15 < e) if(this1[_g15++] == 1) {
+			emp = false;
+			break;
+		}
+		var end = !emp;
+		if(end) {
+			_this.onGameEnd();
+		}
+		if(_this.onTetrisShapeLanded != null && hit && !end) {
+			_this.onTetrisShapeLanded();
+		}
+		if(!hit) {
+			var _this1 = this.rotation;
+			if(_this1.toggle) {
+				var _this2 = _this1.controller;
+				var theta = Math.PI / _this1.rotationSpeed;
+				var l3 = _this2.shapes.length;
+				var _g16 = 0;
+				while(_g16 < l3) _this2.shapes[_g16++].rotate(theta);
+			}
+			if(_this1.count % (_this1.rotationSpeed / 2) == 0.) {
+				_this1.count = 0.;
+				_this1.toggle = false;
+			}
+			_this1.count += 1.;
+			var _this3 = this.movement;
+			var djx = 0.;
+			var djy = 0.;
+			if(_this3.toggleX) {
+				if(_this3.jumpX > 0) {
+					djx = _this3.jumpX / _this3.jumpSpeed;
+					if((_this3.jx += djx) > _this3.jumpX + djx / 2) {
+						_this3.toggleX = false;
+						_this3.jx = 0.;
+						djx = 0.;
+					}
+				} else {
+					djx = _this3.jumpX / _this3.jumpSpeed;
+					if((_this3.jx += djx) < _this3.jumpX + djx / 2) {
+						_this3.toggleX = false;
+						_this3.jx = 0.;
+						djx = 0.;
+					}
+				}
+			}
+			if(_this3.toggleY) {
+				if(_this3.jumpY > 0) {
+					djy = _this3.jumpY / _this3.jumpSpeed;
+					if((_this3.jy += djy) > _this3.jumpY + djy / 2) {
+						_this3.toggleY = false;
+						_this3.jy = 0.;
+						djy = 0.;
+					}
+				} else {
+					djy = _this3.jumpY / _this3.jumpSpeed;
+					if((_this3.jy += djx) < _this3.jumpY + djy / 2) {
+						_this3.toggleY = false;
+						_this3.jy = 0.;
+						djy = 0.;
+					}
+				}
+			}
+			if(_this3.toggleX) {
+				var _this4 = _this3.controller;
+				var leftStop = _this3.leftStop;
+				var rightStop = _this3.rightStop;
+				var l4 = _this4.shapes.length;
+				var shape1;
+				var _g17 = 0;
+				while(_g17 < l4) {
+					shape1 = _this4.shapes[_g17++];
+					if(shape1.blocks != null && shape1.blocks.length != 0) {
+						var sqr = shape1.blocks;
+						var sides0;
+						if(sqr == null) {
+							sides0 = null;
+						} else if(sqr.length == 0) {
+							sides0 = null;
+						} else {
+							var l5 = sqr.length;
+							var square = sqr[0];
+							var bx = square.get_x();
+							var br = square.get_right();
+							var _g18 = 1;
+							while(_g18 < l5) {
+								square = sqr[_g18++];
+								bx = Math.min(bx,square.get_x());
+								br = Math.max(br,square.get_right());
+							}
+							sides0 = { x : bx, right : br};
+						}
+						var sqr1 = shape1.virtualBlocks;
+						var sides1;
+						if(sqr1 == null) {
+							sides1 = null;
+						} else if(sqr1.length == 0) {
+							sides1 = null;
+						} else {
+							var l6 = sqr1.length;
+							var square1 = sqr1[0];
+							var bx1 = square1.get_x();
+							var br1 = square1.get_right();
+							var _g19 = 1;
+							while(_g19 < l6) {
+								square1 = sqr1[_g19++];
+								bx1 = Math.min(bx1,square1.get_x());
+								br1 = Math.max(br1,square1.get_right());
+							}
+							sides1 = { x : bx1, right : br1};
+						}
+						var sides = { x : Math.min(sides0.x,sides1.x), right : Math.max(sides0.right,sides1.right)};
+						if(sides != null) {
+							if(djx < 0) {
+								if(sides.x + djx > leftStop) {
+									shape1.moveX(djx);
+								} else {
+									shape1.moveX(leftStop - sides.x);
+								}
+							} else if(djx > 0) {
+								if(sides.right + djx < rightStop) {
+									shape1.moveX(djx);
+								} else {
+									shape1.moveX(rightStop - sides.right);
+								}
+							}
+						}
+					}
+				}
+			}
+			var _this5 = _this3.controller;
+			var y = _this3.fallSpeed + djy;
+			var l7 = _this5.shapes.length;
+			var _g110 = 0;
+			while(_g110 < l7) _this5.shapes[_g110++].moveDelta(0.0,y);
+		}
+	}
+	,rotate: function(i) {
+		var _this = this.rotation;
+		if(!_this.toggle) {
+			_this.toggle = true;
+			_this.count = 1.0;
+		}
+	}
+	,move: function(x,y) {
+		var _this = this.movement;
+		if(!_this.toggleX) {
+			if(!_this.toggleY) {
+				if(x != 0) {
+					_this.toggleX = true;
+				}
+				if(y != 0) {
+					_this.toggleY = true;
+				}
+				_this.jumpX = x * _this.dia;
+				_this.jumpY = y * _this.dia;
+			}
+		}
+	}
+	,__class__: tetrisTriangles_game_Tetris
+};
+var tetrisTriangles_test_Arr2DTest = function() {
+	haxe_unit_TestCase.call(this);
+};
+$hxClasses["tetrisTriangles.test.Arr2DTest"] = tetrisTriangles_test_Arr2DTest;
+tetrisTriangles_test_Arr2DTest.__name__ = ["tetrisTriangles","test","Arr2DTest"];
+tetrisTriangles_test_Arr2DTest.UnitTest = function() {
+	var r = new haxe_unit_TestRunner();
+	haxe_Log.trace("Running unit test",{ fileName : "Arr2DTest.hx", lineNumber : 8, className : "tetrisTriangles.test.Arr2DTest", methodName : "UnitTest"});
+	r.add(new tetrisTriangles_test_Arr2DTest());
+	r.run();
+	haxe_Log.trace(r,{ fileName : "Arr2DTest.hx", lineNumber : 11, className : "tetrisTriangles.test.Arr2DTest", methodName : "UnitTest"});
+};
+tetrisTriangles_test_Arr2DTest.__super__ = haxe_unit_TestCase;
+tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,{
+	filledArr2D: null
+	,emptyArr2D: null
+	,testClear: function() {
+		var w = this.filledArr2D[0];
+		var h = this.filledArr2D[1];
+		var v = null;
+		var this1;
+		if(v == null) {
+			if(w == null) {
+				w = 100;
+			}
+			if(h == null) {
+				h = 100;
+			}
+			var l = w * h + 2;
+			var _g = [];
+			var _g2 = 0;
+			while(_g2 < l) {
+				++_g2;
+				_g.push(0);
+			}
+			_g[0] = w;
+			_g[1] = h;
+			v = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
+		}
+		this1 = v;
+		this.filledArr2D = this1;
+		this.assertTrue(this.filledArr2D.toString() == this.emptyArr2D.toString(),{ fileName : "Arr2DTest.hx", lineNumber : 15, className : "tetrisTriangles.test.Arr2DTest", methodName : "testClear"});
+	}
+	,testFill: function() {
+		var this1 = this.emptyArr2D;
+		var i = 2;
+		var l = this1.length;
+		while(i < l) {
+			this1[i] = 1;
+			++i;
+		}
+		this.assertTrue(this.filledArr2D.toString() == this.emptyArr2D.toString(),{ fileName : "Arr2DTest.hx", lineNumber : 19, className : "tetrisTriangles.test.Arr2DTest", methodName : "testFill"});
+	}
+	,testAddOne: function() {
+		var this1 = this.emptyArr2D;
+		this1[2 + this1[0] * 0 | 0] = 1;
+		var this2 = this.emptyArr2D;
+		this.assertTrue(this2[2 + this2[0] * 0 | 0] == 1,{ fileName : "Arr2DTest.hx", lineNumber : 23, className : "tetrisTriangles.test.Arr2DTest", methodName : "testAddOne"});
+		var this3 = this.emptyArr2D;
+		this.assertFalse(this3[2 + this3[0] | 0] == 1,{ fileName : "Arr2DTest.hx", lineNumber : 24, className : "tetrisTriangles.test.Arr2DTest", methodName : "testAddOne"});
+	}
+	,testAddZero: function() {
+		var this1 = this.filledArr2D;
+		this1[2 + this1[0] * 0 | 0] = 0;
+		var this2 = this.filledArr2D;
+		this.assertTrue(this2[2 + this2[0] * 0 | 0] == 0,{ fileName : "Arr2DTest.hx", lineNumber : 28, className : "tetrisTriangles.test.Arr2DTest", methodName : "testAddZero"});
+		var this3 = this.filledArr2D;
+		this.assertFalse(this3[2 + this3[0] | 0] == 0,{ fileName : "Arr2DTest.hx", lineNumber : 29, className : "tetrisTriangles.test.Arr2DTest", methodName : "testAddZero"});
+	}
+	,testIsZero: function() {
+		var _g = 0;
+		while(_g < 3) {
+			var iy = _g++;
+			var _g1 = 0;
+			while(_g1 < 3) {
+				var ix = _g1++;
+				var this1 = this.emptyArr2D;
+				this.assertTrue(this1[2 + this1[0] * iy + ix | 0] == 0,{ fileName : "Arr2DTest.hx", lineNumber : 34, className : "tetrisTriangles.test.Arr2DTest", methodName : "testIsZero"});
+				var this2 = this.filledArr2D;
+				this.assertFalse(this2[2 + this2[0] * iy + ix | 0] == 0,{ fileName : "Arr2DTest.hx", lineNumber : 35, className : "tetrisTriangles.test.Arr2DTest", methodName : "testIsZero"});
+			}
+		}
+	}
+	,testIsOne: function() {
+		var _g = 0;
+		while(_g < 3) {
+			var iy = _g++;
+			var _g1 = 0;
+			while(_g1 < 3) {
+				var ix = _g1++;
+				var this1 = this.emptyArr2D;
+				this.assertFalse(this1[2 + this1[0] * iy + ix | 0] == 1,{ fileName : "Arr2DTest.hx", lineNumber : 42, className : "tetrisTriangles.test.Arr2DTest", methodName : "testIsOne"});
+				var this2 = this.filledArr2D;
+				this.assertTrue(this2[2 + this2[0] * iy + ix | 0] == 1,{ fileName : "Arr2DTest.hx", lineNumber : 43, className : "tetrisTriangles.test.Arr2DTest", methodName : "testIsOne"});
+			}
+		}
+	}
+	,testLength: function() {
+		this.assertTrue(this.filledArr2D.length == 11,{ fileName : "Arr2DTest.hx", lineNumber : 48, className : "tetrisTriangles.test.Arr2DTest", methodName : "testLength"});
+	}
+	,testRowFull: function() {
+		var _g = 0;
+		while(_g < 3) {
+			var iy = _g++;
+			var this1 = this.emptyArr2D;
+			this1[2 + this1[0] * iy | 0] = 1;
+			var this2 = this.emptyArr2D;
+			this2[2 + this2[0] * iy + 1 | 0] = 1;
+			var this3 = this.emptyArr2D;
+			this3[2 + this3[0] * iy + 2 | 0] = 1;
+			var this4 = this.emptyArr2D;
+			var w = this4[0];
+			var s = 2 + w * iy | 0;
+			var e = s + w;
+			var ful = true;
+			var _g1 = s;
+			while(_g1 < e) if(this4[_g1++] == 0) {
+				ful = false;
+				break;
+			}
+			this.assertTrue(ful,{ fileName : "Arr2DTest.hx", lineNumber : 55, className : "tetrisTriangles.test.Arr2DTest", methodName : "testRowFull"});
+			this.setup();
+		}
+		var _g2 = 0;
+		while(_g2 < 3) {
+			var iy1 = _g2++;
+			var this5 = this.filledArr2D;
+			this5[2 + this5[0] * iy1 | 0] = 0;
+			var this6 = this.filledArr2D;
+			this6[2 + this6[0] * iy1 + 1 | 0] = 0;
+			var this7 = this.filledArr2D;
+			this7[2 + this7[0] * iy1 + 2 | 0] = 0;
+			var this8 = this.filledArr2D;
+			var w1 = this8[0];
+			var s1 = 2 + w1 * iy1 | 0;
+			var e1 = s1 + w1;
+			var ful1 = true;
+			var _g11 = s1;
+			while(_g11 < e1) if(this8[_g11++] == 0) {
+				ful1 = false;
+				break;
+			}
+			this.assertFalse(ful1,{ fileName : "Arr2DTest.hx", lineNumber : 62, className : "tetrisTriangles.test.Arr2DTest", methodName : "testRowFull"});
+			this.setup();
+		}
+	}
+	,testMoveRow: function() {
+		var this1 = this.filledArr2D;
+		var w = this1[0];
+		var s0 = 2 + w | 0;
+		var e0 = 2 + w * 2 | 0;
+		var _g1 = 0;
+		while(_g1 < w) {
+			var i = _g1++;
+			this1[e0 + i] = this1[s0 + i];
+			this1[s0 + i] = 0;
+		}
+		var this2 = this.filledArr2D;
+		var w1 = this2[0];
+		var s = 2 + w1 * 0 | 0;
+		var e = s + w1;
+		var ful = true;
+		var _g11 = s;
+		while(_g11 < e) if(this2[_g11++] == 0) {
+			ful = false;
+			break;
+		}
+		this.assertTrue(ful,{ fileName : "Arr2DTest.hx", lineNumber : 68, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMoveRow"});
+		var this3 = this.filledArr2D;
+		var w2 = this3[0];
+		var s1 = 2 + w2 | 0;
+		var e1 = s1 + w2;
+		var ful1 = true;
+		var _g12 = s1;
+		while(_g12 < e1) if(this3[_g12++] == 0) {
+			ful1 = false;
+			break;
+		}
+		this.assertFalse(ful1,{ fileName : "Arr2DTest.hx", lineNumber : 69, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMoveRow"});
+		var this4 = this.filledArr2D;
+		var w3 = this4[0];
+		var s2 = 2 + w3 * 2 | 0;
+		var e2 = s2 + w3;
+		var ful2 = true;
+		var _g13 = s2;
+		while(_g13 < e2) if(this4[_g13++] == 0) {
+			ful2 = false;
+			break;
+		}
+		this.assertTrue(ful2,{ fileName : "Arr2DTest.hx", lineNumber : 70, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMoveRow"});
+	}
+	,testCopyRow: function() {
+		var this1 = this.emptyArr2D;
+		this1[2 + this1[0] | 0] = 1;
+		var this2 = this.emptyArr2D;
+		this2[2 + this2[0] + 1 | 0] = 1;
+		var this3 = this.emptyArr2D;
+		this3[2 + this3[0] + 2 | 0] = 1;
+		var this4 = this.emptyArr2D;
+		var w = this4[0];
+		var s0 = 2 + w | 0;
+		var e0 = 2 + w * 2 | 0;
+		var _g1 = 0;
+		while(_g1 < w) {
+			var i = _g1++;
+			this4[e0 + i] = this4[s0 + i];
+		}
+		var this5 = this.emptyArr2D;
+		var w1 = this5[0];
+		var s = 2 + w1 * 0 | 0;
+		var e = s + w1;
+		var ful = true;
+		var _g11 = s;
+		while(_g11 < e) if(this5[_g11++] == 0) {
+			ful = false;
+			break;
+		}
+		this.assertFalse(ful,{ fileName : "Arr2DTest.hx", lineNumber : 77, className : "tetrisTriangles.test.Arr2DTest", methodName : "testCopyRow"});
+		var this6 = this.emptyArr2D;
+		var w2 = this6[0];
+		var s1 = 2 + w2 | 0;
+		var e1 = s1 + w2;
+		var ful1 = true;
+		var _g12 = s1;
+		while(_g12 < e1) if(this6[_g12++] == 0) {
+			ful1 = false;
+			break;
+		}
+		this.assertTrue(ful1,{ fileName : "Arr2DTest.hx", lineNumber : 78, className : "tetrisTriangles.test.Arr2DTest", methodName : "testCopyRow"});
+		var this7 = this.emptyArr2D;
+		var w3 = this7[0];
+		var s2 = 2 + w3 * 2 | 0;
+		var e2 = s2 + w3;
+		var ful2 = true;
+		var _g13 = s2;
+		while(_g13 < e2) if(this7[_g13++] == 0) {
+			ful2 = false;
+			break;
+		}
+		this.assertTrue(ful2,{ fileName : "Arr2DTest.hx", lineNumber : 79, className : "tetrisTriangles.test.Arr2DTest", methodName : "testCopyRow"});
+	}
+	,testOneRow: function() {
+		var this1 = this.emptyArr2D;
+		var w = this1[0];
+		var s = 2 + w | 0;
+		var _g1 = 0;
+		while(_g1 < w) this1[s + _g1++] = 1;
+		var this2 = this.emptyArr2D;
+		var w1 = this2[0];
+		var s1 = 2 + w1 | 0;
+		var e = s1 + w1;
+		var ful = true;
+		var _g11 = s1;
+		while(_g11 < e) if(this2[_g11++] == 0) {
+			ful = false;
+			break;
+		}
+		this.assertTrue(ful,{ fileName : "Arr2DTest.hx", lineNumber : 83, className : "tetrisTriangles.test.Arr2DTest", methodName : "testOneRow"});
+	}
+	,testZeroRow: function() {
+		var this1 = this.filledArr2D;
+		var w = this1[0];
+		var s = 2 + w | 0;
+		var _g1 = 0;
+		while(_g1 < w) this1[s + _g1++] = 0;
+		var this2 = this.filledArr2D;
+		var w1 = this2[0];
+		var s1 = 2 + w1 | 0;
+		var e = s1 + w1;
+		var emp = true;
+		var _g11 = s1;
+		while(_g11 < e) if(this2[_g11++] == 1) {
+			emp = false;
+			break;
+		}
+		this.assertTrue(emp,{ fileName : "Arr2DTest.hx", lineNumber : 87, className : "tetrisTriangles.test.Arr2DTest", methodName : "testZeroRow"});
+	}
+	,testRemoveRowsUnshift0: function() {
+		var this1 = this.filledArr2D;
+		this1[2 + this1[0] + 1 | 0] = 0;
+		var this2 = this.filledArr2D;
+		this2[2 + this2[0] * 2 + 1 | 0] = 0;
+		var this3 = this.filledArr2D;
+		var _g1 = 0;
+		while(_g1 < 1) {
+			var j = 0 - _g1++;
+			var w = this3[0];
+			var s0 = 2 + w * j | 0;
+			var e0 = 2 + w * (j + 2) | 0;
+			var _g11 = 0;
+			while(_g11 < w) {
+				var i = _g11++;
+				this3[e0 + i] = this3[s0 + i];
+				this3[s0 + i] = 0;
+			}
+		}
+		var _g12 = 0;
+		while(_g12 < 2) {
+			var w1 = this3[0];
+			var s = 2 + w1 * _g12++ | 0;
+			var _g13 = 0;
+			while(_g13 < w1) this3[s + _g13++] = 0;
+		}
+		var this4 = this.filledArr2D;
+		var w2 = this4[0];
+		var s1 = 2 + w2 * 0 | 0;
+		var e = s1 + w2;
+		var emp = true;
+		var _g14 = s1;
+		while(_g14 < e) if(this4[_g14++] == 1) {
+			emp = false;
+			break;
+		}
+		this.assertTrue(emp,{ fileName : "Arr2DTest.hx", lineNumber : 93, className : "tetrisTriangles.test.Arr2DTest", methodName : "testRemoveRowsUnshift0"});
+		var this5 = this.filledArr2D;
+		var w3 = this5[0];
+		var s2 = 2 + w3 | 0;
+		var e1 = s2 + w3;
+		var emp1 = true;
+		var _g15 = s2;
+		while(_g15 < e1) if(this5[_g15++] == 1) {
+			emp1 = false;
+			break;
+		}
+		this.assertTrue(emp1,{ fileName : "Arr2DTest.hx", lineNumber : 94, className : "tetrisTriangles.test.Arr2DTest", methodName : "testRemoveRowsUnshift0"});
+		var this6 = this.filledArr2D;
+		var w4 = this6[0];
+		var s3 = 2 + w4 * 2 | 0;
+		var e2 = s3 + w4;
+		var ful = true;
+		var _g16 = s3;
+		while(_g16 < e2) if(this6[_g16++] == 0) {
+			ful = false;
+			break;
+		}
+		this.assertTrue(ful,{ fileName : "Arr2DTest.hx", lineNumber : 95, className : "tetrisTriangles.test.Arr2DTest", methodName : "testRemoveRowsUnshift0"});
+	}
+	,testClash: function() {
+		var this1 = this.emptyArr2D;
+		this1[2 + this1[0] * 0 | 0] = 1;
+		var this2 = this.emptyArr2D;
+		this2[2 + this2[0] | 0] = 1;
+		var this3 = this.emptyArr2D;
+		this3[2 + this3[0] * 2 | 0] = 1;
+		var a2 = [{ x : 1, y : 0},{ x : 1, y : 1},{ x : 1, y : 2}];
+		var this4 = this.emptyArr2D;
+		var lp = a2.length;
+		var p;
+		var clash = false;
+		var _g1 = 0;
+		while(_g1 < lp) {
+			p = a2[_g1++];
+			if(this4[2 + this4[0] * p.y + p.x | 0] == 1) {
+				clash = true;
+				break;
+			}
+		}
+		this.assertFalse(clash,{ fileName : "Arr2DTest.hx", lineNumber : 102, className : "tetrisTriangles.test.Arr2DTest", methodName : "testClash"});
+		var this5 = this.emptyArr2D;
+		this5[2 + this5[0] * 0 | 0] = 1;
+		var this6 = this.emptyArr2D;
+		this6[2 + this6[0] | 0] = 1;
+		var this7 = this.emptyArr2D;
+		this7[2 + this7[0] * 2 | 0] = 1;
+		var a21 = [{ x : 0, y : 0},{ x : 0, y : 1},{ x : 0, y : 2}];
+		var this8 = this.emptyArr2D;
+		var lp1 = a21.length;
+		var p1;
+		var clash1 = false;
+		var _g11 = 0;
+		while(_g11 < lp1) {
+			p1 = a21[_g11++];
+			if(this8[2 + this8[0] * p1.y + p1.x | 0] == 1) {
+				clash1 = true;
+				break;
+			}
+		}
+		this.assertTrue(clash1,{ fileName : "Arr2DTest.hx", lineNumber : 107, className : "tetrisTriangles.test.Arr2DTest", methodName : "testClash"});
+	}
+	,testAddPoints: function() {
+		var a2 = [{ x : 0, y : 1},{ x : 1, y : 1},{ x : 2, y : 1}];
+		var this1 = this.emptyArr2D;
+		var lp = a2.length;
+		var p;
+		var _g1 = 0;
+		while(_g1 < lp) {
+			p = a2[_g1++];
+			this1[2 + this1[0] * p.y + p.x | 0] = 1;
+		}
+		var this2 = this.emptyArr2D;
+		var w = this2[0];
+		var s = 2 + w * 0 | 0;
+		var e = s + w;
+		var ful = true;
+		var _g11 = s;
+		while(_g11 < e) if(this2[_g11++] == 0) {
+			ful = false;
+			break;
+		}
+		this.assertFalse(ful,{ fileName : "Arr2DTest.hx", lineNumber : 112, className : "tetrisTriangles.test.Arr2DTest", methodName : "testAddPoints"});
+		var this3 = this.emptyArr2D;
+		var w1 = this3[0];
+		var s1 = 2 + w1 | 0;
+		var e1 = s1 + w1;
+		var ful1 = true;
+		var _g12 = s1;
+		while(_g12 < e1) if(this3[_g12++] == 0) {
+			ful1 = false;
+			break;
+		}
+		this.assertTrue(ful1,{ fileName : "Arr2DTest.hx", lineNumber : 113, className : "tetrisTriangles.test.Arr2DTest", methodName : "testAddPoints"});
+		var this4 = this.emptyArr2D;
+		var w2 = this4[0];
+		var s2 = 2 + w2 * 2 | 0;
+		var e2 = s2 + w2;
+		var ful2 = true;
+		var _g13 = s2;
+		while(_g13 < e2) if(this4[_g13++] == 0) {
+			ful2 = false;
+			break;
+		}
+		this.assertFalse(ful2,{ fileName : "Arr2DTest.hx", lineNumber : 114, className : "tetrisTriangles.test.Arr2DTest", methodName : "testAddPoints"});
+	}
+	,testOverlap: function() {
+		var a = this.filledArr2D;
+		var b = this.emptyArr2D;
+		var la = a.length;
+		if(la != b.length) {
+			throw new js__$Boot_HaxeError("can t compare Arr2D");
+		}
+		var overlapped = false;
+		var ai;
+		var bi;
+		var _g1 = 2;
+		while(_g1 < la) {
+			var i = _g1++;
+			ai = a[i];
+			bi = b[i];
+			if(ai == 1 && bi == 1) {
+				overlapped = true;
+				break;
+			}
+		}
+		this.assertFalse(overlapped,{ fileName : "Arr2DTest.hx", lineNumber : 117, className : "tetrisTriangles.test.Arr2DTest", methodName : "testOverlap"});
+	}
+	,testID: function() {
+		var w = 4;
+		var h = 3;
+		var v = null;
+		var this1;
+		if(v == null) {
+			if(false) {
+				w = 100;
+			}
+			if(false) {
+				h = 100;
+			}
+			var l = w * h + 2;
+			var _g = [];
+			var _g2 = 0;
+			while(_g2 < l) {
+				++_g2;
+				_g.push(0);
+			}
+			_g[0] = w;
+			_g[1] = h;
+			v = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
+		}
+		this1 = v;
+		var a0 = this1;
+		a0[2 + a0[0] * 2 | 0] = 1;
+		a0[2 + a0[0] | 0] = 1;
+		this.assertTrue(a0.toString() == "4,3,0,0,0,0,1,0,0,0,1,0,0,0",{ fileName : "Arr2DTest.hx", lineNumber : 124, className : "tetrisTriangles.test.Arr2DTest", methodName : "testID"});
+		var count = 2;
+		var _g1 = 0;
+		while(_g1 < 4) {
+			var y = _g1++;
+			var _g3 = 0;
+			while(_g3 < 3) {
+				this.assertTrue((2 + 3 * y + _g3++ | 0) == count,{ fileName : "Arr2DTest.hx", lineNumber : 130, className : "tetrisTriangles.test.Arr2DTest", methodName : "testID"});
+				++count;
+			}
+		}
+	}
+	,testMerge: function(b) {
+		var this1 = this.emptyArr2D;
+		this1[2 + this1[0] | 0] = 1;
+		var this2 = this.emptyArr2D;
+		this2[2 + this2[0] + 1 | 0] = 1;
+		var this3 = this.emptyArr2D;
+		this3[2 + this3[0] + 2 | 0] = 1;
+		var this4 = this.emptyArr2D;
+		var w = this4[0];
+		var s = 2 + w | 0;
+		var e = s + w;
+		var ful = true;
+		var _g1 = s;
+		while(_g1 < e) if(this4[_g1++] == 0) {
+			ful = false;
+			break;
+		}
+		this.assertTrue(ful,{ fileName : "Arr2DTest.hx", lineNumber : 139, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
+		var w1 = 3;
+		var h = 3;
+		var v = null;
+		var this5;
+		if(v == null) {
+			if(false) {
+				w1 = 100;
+			}
+			if(false) {
+				h = 100;
+			}
+			var l = w1 * h + 2;
+			var _g = [];
+			var _g2 = 0;
+			while(_g2 < l) {
+				++_g2;
+				_g.push(0);
+			}
+			_g[0] = w1;
+			_g[1] = h;
+			v = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w1,h,_g);
+		}
+		this5 = v;
+		var a0 = this5;
+		a0[2 + a0[0] * 2 | 0] = 1;
+		a0[2 + a0[0] * 2 + 1 | 0] = 1;
+		a0[2 + a0[0] * 2 + 2 | 0] = 1;
+		var w2 = a0[0];
+		var s1 = 2 + w2 * 2 | 0;
+		var e1 = s1 + w2;
+		var ful1 = true;
+		var _g11 = s1;
+		while(_g11 < e1) if(a0[_g11++] == 0) {
+			ful1 = false;
+			break;
+		}
+		this.assertTrue(ful1,{ fileName : "Arr2DTest.hx", lineNumber : 144, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
+		var a = this.emptyArr2D;
+		var la = a.length;
+		if(la != a0.length) {
+			throw new js__$Boot_HaxeError("can t compare Arr2D");
+		}
+		var overlapped = false;
+		var ai;
+		var bi;
+		var _g12 = 2;
+		while(_g12 < la) {
+			var i = _g12++;
+			ai = a[i];
+			bi = a0[i];
+			if(ai == 1 && bi == 1) {
+				overlapped = true;
+				break;
+			}
+		}
+		this.assertFalse(overlapped,{ fileName : "Arr2DTest.hx", lineNumber : 145, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
+		var this6 = this.emptyArr2D;
+		var tmp;
+		var la1 = this6.length;
+		if(la1 != a0.length) {
+			throw new js__$Boot_HaxeError("can t compare Arr2D");
+		}
+		var overlapped1 = false;
+		var ai1;
+		var bi1;
+		var _g13 = 2;
+		while(_g13 < la1) {
+			var i1 = _g13++;
+			ai1 = this6[i1];
+			bi1 = a0[i1];
+			if(ai1 == 1 && bi1 == 1) {
+				overlapped1 = true;
+				break;
+			}
+		}
+		if(overlapped1) {
+			tmp = false;
+		} else {
+			var la2 = this6.length;
+			var ai2;
+			var _g14 = 2;
+			while(_g14 < la2) {
+				var i2 = _g14++;
+				ai2 = this6[i2];
+				if(ai2 == 0) {
+					this6[i2] = a0[i2];
+				}
+			}
+			tmp = true;
+		}
+		this.assertTrue(tmp,{ fileName : "Arr2DTest.hx", lineNumber : 146, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
+		var this7 = this.emptyArr2D;
+		var w3 = this7[0];
+		var s2 = 2 + w3 * 0 | 0;
+		var e2 = s2 + w3;
+		var ful2 = true;
+		var _g15 = s2;
+		while(_g15 < e2) if(this7[_g15++] == 0) {
+			ful2 = false;
+			break;
+		}
+		this.assertFalse(ful2,{ fileName : "Arr2DTest.hx", lineNumber : 147, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
+		var this8 = this.emptyArr2D;
+		var w4 = this8[0];
+		var s3 = 2 + w4 | 0;
+		var e3 = s3 + w4;
+		var ful3 = true;
+		var _g16 = s3;
+		while(_g16 < e3) if(this8[_g16++] == 0) {
+			ful3 = false;
+			break;
+		}
+		this.assertTrue(ful3,{ fileName : "Arr2DTest.hx", lineNumber : 148, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
+		var this9 = this.emptyArr2D;
+		var w5 = this9[0];
+		var s4 = 2 + w5 * 2 | 0;
+		var e4 = s4 + w5;
+		var ful4 = true;
+		var _g17 = s4;
+		while(_g17 < e4) if(this9[_g17++] == 0) {
+			ful4 = false;
+			break;
+		}
+		this.assertTrue(ful4,{ fileName : "Arr2DTest.hx", lineNumber : 149, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
+	}
+	,testRowToString: function() {
+		var this1 = this.emptyArr2D;
+		this1[2 + this1[0] * 0 | 0] = 1;
+		var this2 = this.emptyArr2D;
+		var w = this2[0];
+		var s = 2 + w * 0 | 0;
+		var e = s + w;
+		var str = "\n";
+		var _g1 = s;
+		while(_g1 < e) str = str + this2[_g1++] + "  ";
+		this.assertTrue(str == "\n1  0  0  ",{ fileName : "Arr2DTest.hx", lineNumber : 154, className : "tetrisTriangles.test.Arr2DTest", methodName : "testRowToString"});
+	}
+	,testPrettyString: function() {
+		var str = "\n1  0  0  " + "\n0  0  0  " + "\n0  0  0  ";
+		var this1 = this.emptyArr2D;
+		this1[2 + this1[0] * 0 | 0] = 1;
+		var this2 = this.emptyArr2D;
+		var str1 = "";
+		var _g1 = 0;
+		var _g = this2[1];
+		while(_g1 < _g) {
+			var w = this2[0];
+			var s = 2 + w * _g1++ | 0;
+			var e = s + w;
+			var str2 = "\n";
+			var _g11 = s;
+			while(_g11 < e) str2 = str2 + this2[_g11++] + "  ";
+			str1 += str2;
+		}
+		this.assertTrue(str1 == str,{ fileName : "Arr2DTest.hx", lineNumber : 161, className : "tetrisTriangles.test.Arr2DTest", methodName : "testPrettyString"});
+	}
+	,setup: function() {
+		this.createfilledArr2D();
+		var w = 3;
+		var h = 3;
+		var v = null;
+		var this1;
+		if(v == null) {
+			if(false) {
+				w = 100;
+			}
+			if(false) {
+				h = 100;
+			}
+			var l = w * h + 2;
+			var _g = [];
+			var _g2 = 0;
+			while(_g2 < l) {
+				++_g2;
+				_g.push(0);
+			}
+			_g[0] = w;
+			_g[1] = h;
+			v = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
+		}
+		this1 = v;
+		this.emptyArr2D = this1;
+	}
+	,createfilledArr2D: function() {
+		var w = 3;
+		var h = 3;
+		var v = null;
+		var this1;
+		if(v == null) {
+			if(false) {
+				w = 100;
+			}
+			if(false) {
+				h = 100;
+			}
+			var l = w * h + 2;
+			var _g = [];
+			var _g2 = 0;
+			while(_g2 < l) {
+				++_g2;
+				_g.push(0);
+			}
+			_g[0] = w;
+			_g[1] = h;
+			v = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
+		}
+		this1 = v;
+		this.filledArr2D = this1;
+		var _g1 = 0;
+		while(_g1 < 3) {
+			var iy = _g1++;
+			var _g11 = 0;
+			while(_g11 < 3) {
+				var this2 = this.filledArr2D;
+				this2[2 + this2[0] * iy + _g11++ | 0] = 1;
+			}
+		}
+	}
+	,__class__: tetrisTriangles_test_Arr2DTest
+});
+var tetrisTriangles_test_UnitTest = function() {
+	var r = new haxe_unit_TestRunner();
+	haxe_Log.trace("Running unit test",{ fileName : "UnitTest.hx", lineNumber : 6, className : "tetrisTriangles.test.UnitTest", methodName : "new"});
+	r.add(new tetrisTriangles_test_Arr2DTest());
+	r.run();
+	haxe_Log.trace(r,{ fileName : "UnitTest.hx", lineNumber : 9, className : "tetrisTriangles.test.UnitTest", methodName : "new"});
+};
+$hxClasses["tetrisTriangles.test.UnitTest"] = tetrisTriangles_test_UnitTest;
+tetrisTriangles_test_UnitTest.__name__ = ["tetrisTriangles","test","UnitTest"];
+tetrisTriangles_test_UnitTest.prototype = {
+	__class__: tetrisTriangles_test_UnitTest
 };
 function $iterator(o) { if( o instanceof Array ) return function() { return HxOverrides.iter(o); }; return typeof(o.iterator) == 'function' ? $bind(o,o.iterator) : o.iterator; }
 var $_, $fid = 0;

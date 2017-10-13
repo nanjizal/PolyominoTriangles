@@ -1,7 +1,6 @@
 -js ../binSVG/_.js
 -cp ../src
 -lib htmlHelper
--lib justTriangles
 -lib justDrawing
 -main tetrisTriangles.TetrisTrianglesSvg
 #-D js-flatten 

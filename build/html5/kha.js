@@ -5102,27 +5102,12 @@ justTriangles_Triangle.prototype = {
 	,__class__: justTriangles_Triangle
 };
 var kha__$Assets_ImageList = function() {
-	this.names = ["ball"];
-	this.ballDescription = { files : ["ball.png"], original_height : 50, type : "image", original_width : 50, name : "ball"};
-	this.ballName = "ball";
-	this.ball = null;
+	this.names = [];
 };
 $hxClasses["kha._Assets.ImageList"] = kha__$Assets_ImageList;
 kha__$Assets_ImageList.__name__ = ["kha","_Assets","ImageList"];
 kha__$Assets_ImageList.prototype = {
-	ball: null
-	,ballName: null
-	,ballDescription: null
-	,ballLoad: function(done) {
-		kha_Assets.loadImage("ball",function(image) {
-			done();
-		});
-	}
-	,ballUnload: function() {
-		this.ball.unload();
-		this.ball = null;
-	}
-	,names: null
+	names: null
 	,__class__: kha__$Assets_ImageList
 };
 var kha__$Assets_SoundList = function() {
@@ -26108,13 +26093,13 @@ tetrisTriangles_TetrisTrianglesKha2.prototype = {
 			var l = _this1.shapes.length;
 			var shape;
 			var hit = false;
-			var diaSq = _this1.dia * _this1.dia;
 			var _g1 = 0;
 			var _g = l;
 			while(_g1 < _g) {
 				var i = _g1++;
 				shape = _this1.shapes[i];
 				shape.getLocation();
+				var diaSq = _this1.diaSq;
 				var vb0 = shape.virtualBlocks;
 				var vb1 = _this1.bottom.blocks;
 				var l0 = vb0.length;
@@ -30473,6 +30458,7 @@ var tetrisTriangles_game_Controller = function(id_,triangles_,wide_,hi_,dia_,gap
 	this.gap = gap_;
 	this.offX = offX_;
 	this.offY = offY_;
+	this.diaSq = (this.dia - this.dia / 10000) * (this.dia - this.dia / 10000);
 	this.shapeGenerator = new tetrisTriangles_game_ShapeGenerator($bind(this,this.createTetris));
 };
 $hxClasses["tetrisTriangles.game.Controller"] = tetrisTriangles_game_Controller;
@@ -30493,6 +30479,7 @@ tetrisTriangles_game_Controller.prototype = {
 	,offY: null
 	,wide: null
 	,hi: null
+	,diaSq: null
 	,onTetrisShapeLanded: null
 	,onGameEnd: null
 	,createShape: function(p,col0_,col1_,shapePreference) {
@@ -30520,13 +30507,13 @@ tetrisTriangles_game_Controller.prototype = {
 		var l = this.shapes.length;
 		var shape;
 		var hit = false;
-		var diaSq = this.dia * this.dia;
 		var _g1 = 0;
 		var _g = l;
 		while(_g1 < _g) {
 			var i = _g1++;
 			shape = this.shapes[i];
 			shape.getLocation();
+			var diaSq = this.diaSq;
 			var vb0 = shape.virtualBlocks;
 			var vb1 = this.bottom.blocks;
 			var l0 = vb0.length;
@@ -32773,218 +32760,164 @@ tetrisTriangles_game_ShapeGenerator.prototype = {
 					ts2.addBlock(0,0.5);
 					ts = ts2;
 					break;
-				case "tetris_S":
-					var ts3 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
-					ts3.addBlock(0.5,-1);
-					ts3.addBlock(-0.5,0);
-					ts3.addBlock(-0.5,-1);
-					ts3.addBlock(-1.5,0);
-					ts = ts3;
-					ts = ts;
-					break;
 				case "tetris_Z":
-					var ts4 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
-					ts4.addBlock(-0.5,-1);
-					ts4.addBlock(0.5,0);
-					ts4.addBlock(0.5,-1);
-					ts4.addBlock(1.5,0);
-					ts = ts4;
+					var ts3 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
+					ts3.addBlock(-0.5,-1);
+					ts3.addBlock(0.5,0);
+					ts3.addBlock(0.5,-1);
+					ts3.addBlock(1.5,0);
+					ts = ts3;
 					break;
 				case "tetris_box":
-					var ts5 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
-					ts5.addBlock(-1,-1);
-					ts5.addBlock(0,-1);
-					ts5.addBlock(-1,0);
-					ts5.addBlock(0,0);
-					ts = ts5;
+					var ts4 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+					ts4.addBlock(-1,-1);
+					ts4.addBlock(0,-1);
+					ts4.addBlock(-1,0);
+					ts4.addBlock(0,0);
+					ts = ts4;
 					break;
 				case "tetris_l":
-					var ts6 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Zero);
-					ts6.addBlock(-0.5,-2);
-					ts6.addBlock(-0.5,-1);
-					ts6.addBlock(-0.5,0);
-					ts6.addBlock(-0.5,1);
-					ts = ts6;
-					break;
-				case "tetris_rL":
-					var ts7 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
-					ts7.addBlock(1,-1.5);
-					ts7.addBlock(1,-0.5);
-					ts7.addBlock(1,0.5);
-					ts7.addBlock(0,0.5);
-					ts = ts7;
-					ts = ts;
+					var ts5 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Zero);
+					ts5.addBlock(-0.5,-2);
+					ts5.addBlock(-0.5,-1);
+					ts5.addBlock(-0.5,0);
+					ts5.addBlock(-0.5,1);
+					ts = ts5;
 					break;
 				case "tetris_t":
-					var ts8 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
-					ts8.addBlock(-1,-1.5);
-					ts8.addBlock(-1,-0.5);
-					ts8.addBlock(-1,0.5);
-					ts8.addBlock(0,-0.5);
-					ts = ts8;
+					var ts6 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+					ts6.addBlock(-1,-1.5);
+					ts6.addBlock(-1,-0.5);
+					ts6.addBlock(-1,0.5);
+					ts6.addBlock(0,-0.5);
+					ts = ts6;
 					break;
 				default:
-					var ts9 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
-					ts9.addBlock(-1,-1);
-					ts9.addBlock(0,-1);
-					ts9.addBlock(-1,0);
-					ts9.addBlock(0,0);
-					ts = ts9;
+					var ts7 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+					ts7.addBlock(-1,-1);
+					ts7.addBlock(0,-1);
+					ts7.addBlock(-1,0);
+					ts7.addBlock(0,0);
+					ts = ts7;
 				}
 			}
 		} else if(shape == "tetris_random") {
-			var no = 6;
+			var no = 4;
 			var random = no * Math.random() | 0;
 			if(random == this.last) {
 				return this.randomShape(p,col0_,col1_);
 			}
 			switch(random) {
 			case 0:
-				var ts10 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
-				ts10.addBlock(-0.5,-1);
-				ts10.addBlock(0.5,0);
-				ts10.addBlock(0.5,-1);
-				ts10.addBlock(1.5,0);
-				ts = ts10;
+				var ts8 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
+				ts8.addBlock(-0.5,-1);
+				ts8.addBlock(0.5,0);
+				ts8.addBlock(0.5,-1);
+				ts8.addBlock(1.5,0);
+				ts = ts8;
 				ts = ts;
 				break;
 			case 1:
+				var ts9 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+				ts9.addBlock(-1,-1.5);
+				ts9.addBlock(-1,-0.5);
+				ts9.addBlock(-1,0.5);
+				ts9.addBlock(0,0.5);
+				ts = ts9;
+				ts = ts;
+				break;
+			case 2:
+				var ts10 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+				ts10.addBlock(-1,-1);
+				ts10.addBlock(0,-1);
+				ts10.addBlock(-1,0);
+				ts10.addBlock(0,0);
+				ts = ts10;
+				ts = ts;
+				break;
+			case 3:
 				var ts11 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
 				ts11.addBlock(-1,-1.5);
 				ts11.addBlock(-1,-0.5);
 				ts11.addBlock(-1,0.5);
-				ts11.addBlock(0,0.5);
+				ts11.addBlock(0,-0.5);
 				ts = ts11;
 				ts = ts;
 				break;
-			case 2:
-				var ts12 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
-				ts12.addBlock(-1,-1);
-				ts12.addBlock(0,-1);
-				ts12.addBlock(-1,0);
-				ts12.addBlock(0,0);
+			case 4:
+				var ts12 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Zero);
+				ts12.addBlock(-0.5,-2);
+				ts12.addBlock(-0.5,-1);
+				ts12.addBlock(-0.5,0);
+				ts12.addBlock(-0.5,1);
 				ts = ts12;
 				ts = ts;
 				break;
-			case 3:
-				var ts13 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
-				ts13.addBlock(-1,-1.5);
-				ts13.addBlock(-1,-0.5);
-				ts13.addBlock(-1,0.5);
-				ts13.addBlock(0,-0.5);
-				ts = ts13;
-				ts = ts;
-				break;
-			case 4:
-				var ts14 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Zero);
-				ts14.addBlock(-0.5,-2);
-				ts14.addBlock(-0.5,-1);
-				ts14.addBlock(-0.5,0);
-				ts14.addBlock(-0.5,1);
-				ts = ts14;
-				ts = ts;
-				break;
-			case 5:
-				var ts15 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
-				ts15.addBlock(0.5,-1);
-				ts15.addBlock(-0.5,0);
-				ts15.addBlock(-0.5,-1);
-				ts15.addBlock(-1.5,0);
-				ts = ts15;
-				ts = ts;
-				break;
-			case 6:
-				var ts16 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
-				ts16.addBlock(1,-1.5);
-				ts16.addBlock(1,-0.5);
-				ts16.addBlock(1,0.5);
-				ts16.addBlock(0,0.5);
-				ts = ts16;
-				ts = ts;
-				break;
 			default:
-				var ts17 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
-				ts17.addBlock(-0.5,-1);
-				ts17.addBlock(0.5,0);
-				ts17.addBlock(0.5,-1);
-				ts17.addBlock(1.5,0);
-				ts = ts17;
+				var ts13 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
+				ts13.addBlock(-0.5,-1);
+				ts13.addBlock(0.5,0);
+				ts13.addBlock(0.5,-1);
+				ts13.addBlock(1.5,0);
+				ts = ts13;
 				ts = ts;
 			}
 		} else if(shape == null) {
-			var ts18 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
-			ts18.addBlock(-1,-1);
-			ts18.addBlock(0,-1);
-			ts18.addBlock(-1,0);
-			ts18.addBlock(0,0);
-			ts = ts18;
+			var ts14 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+			ts14.addBlock(-1,-1);
+			ts14.addBlock(0,-1);
+			ts14.addBlock(-1,0);
+			ts14.addBlock(0,0);
+			ts = ts14;
 		} else {
 			switch(shape) {
 			case "tetris_L":
+				var ts15 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+				ts15.addBlock(-1,-1.5);
+				ts15.addBlock(-1,-0.5);
+				ts15.addBlock(-1,0.5);
+				ts15.addBlock(0,0.5);
+				ts = ts15;
+				break;
+			case "tetris_Z":
+				var ts16 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
+				ts16.addBlock(-0.5,-1);
+				ts16.addBlock(0.5,0);
+				ts16.addBlock(0.5,-1);
+				ts16.addBlock(1.5,0);
+				ts = ts16;
+				break;
+			case "tetris_box":
+				var ts17 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+				ts17.addBlock(-1,-1);
+				ts17.addBlock(0,-1);
+				ts17.addBlock(-1,0);
+				ts17.addBlock(0,0);
+				ts = ts17;
+				break;
+			case "tetris_l":
+				var ts18 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Zero);
+				ts18.addBlock(-0.5,-2);
+				ts18.addBlock(-0.5,-1);
+				ts18.addBlock(-0.5,0);
+				ts18.addBlock(-0.5,1);
+				ts = ts18;
+				break;
+			case "tetris_t":
 				var ts19 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
 				ts19.addBlock(-1,-1.5);
 				ts19.addBlock(-1,-0.5);
 				ts19.addBlock(-1,0.5);
-				ts19.addBlock(0,0.5);
+				ts19.addBlock(0,-0.5);
 				ts = ts19;
 				break;
-			case "tetris_S":
-				var ts20 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
-				ts20.addBlock(0.5,-1);
-				ts20.addBlock(-0.5,0);
-				ts20.addBlock(-0.5,-1);
-				ts20.addBlock(-1.5,0);
-				ts = ts20;
-				ts = ts;
-				break;
-			case "tetris_Z":
-				var ts21 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
-				ts21.addBlock(-0.5,-1);
-				ts21.addBlock(0.5,0);
-				ts21.addBlock(0.5,-1);
-				ts21.addBlock(1.5,0);
-				ts = ts21;
-				break;
-			case "tetris_box":
-				var ts22 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
-				ts22.addBlock(-1,-1);
-				ts22.addBlock(0,-1);
-				ts22.addBlock(-1,0);
-				ts22.addBlock(0,0);
-				ts = ts22;
-				break;
-			case "tetris_l":
-				var ts23 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Zero);
-				ts23.addBlock(-0.5,-2);
-				ts23.addBlock(-0.5,-1);
-				ts23.addBlock(-0.5,0);
-				ts23.addBlock(-0.5,1);
-				ts = ts23;
-				break;
-			case "tetris_rL":
-				var ts24 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
-				ts24.addBlock(1,-1.5);
-				ts24.addBlock(1,-0.5);
-				ts24.addBlock(1,0.5);
-				ts24.addBlock(0,0.5);
-				ts = ts24;
-				ts = ts;
-				break;
-			case "tetris_t":
-				var ts25 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
-				ts25.addBlock(-1,-1.5);
-				ts25.addBlock(-1,-0.5);
-				ts25.addBlock(-1,0.5);
-				ts25.addBlock(0,-0.5);
-				ts = ts25;
-				break;
 			default:
-				var ts26 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
-				ts26.addBlock(-1,-1);
-				ts26.addBlock(0,-1);
-				ts26.addBlock(-1,0);
-				ts26.addBlock(0,0);
-				ts = ts26;
+				var ts20 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+				ts20.addBlock(-1,-1);
+				ts20.addBlock(0,-1);
+				ts20.addBlock(-1,0);
+				ts20.addBlock(0,0);
+				ts = ts20;
 			}
 		}
 		this.last = this.random;
@@ -33337,14 +33270,6 @@ tetrisTriangles_game_Templates.prototype = {
 		ts.addBlock(1.5,0);
 		return ts;
 	}
-	,S: function(p) {
-		var ts = this.createTetris(p,tetrisTriangles_game_Snapped.Fix);
-		ts.addBlock(0.5,-1);
-		ts.addBlock(-0.5,0);
-		ts.addBlock(-0.5,-1);
-		ts.addBlock(-1.5,0);
-		return ts;
-	}
 	,l: function(p) {
 		var ts = this.createTetris(p,tetrisTriangles_game_Snapped.Zero);
 		ts.addBlock(-0.5,-2);
@@ -33366,14 +33291,6 @@ tetrisTriangles_game_Templates.prototype = {
 		ts.addBlock(-1,-1.5);
 		ts.addBlock(-1,-0.5);
 		ts.addBlock(-1,0.5);
-		ts.addBlock(0,0.5);
-		return ts;
-	}
-	,rL: function(p) {
-		var ts = this.createTetris(p,tetrisTriangles_game_Snapped.Fix);
-		ts.addBlock(1,-1.5);
-		ts.addBlock(1,-0.5);
-		ts.addBlock(1,0.5);
 		ts.addBlock(0,0.5);
 		return ts;
 	}
@@ -33465,13 +33382,13 @@ tetrisTriangles_game_Tetris.prototype = {
 		var l = _this.shapes.length;
 		var shape;
 		var hit = false;
-		var diaSq = _this.dia * _this.dia;
 		var _g1 = 0;
 		var _g = l;
 		while(_g1 < _g) {
 			var i = _g1++;
 			shape = _this.shapes[i];
 			shape.getLocation();
+			var diaSq = _this.diaSq;
 			var vb0 = shape.virtualBlocks;
 			var vb1 = _this.bottom.blocks;
 			var l0 = vb0.length;
@@ -34727,7 +34644,6 @@ kha_CompilerDefines.kha_html5 = "1";
 kha_CompilerDefines["js-es5"] = "1";
 kha_CompilerDefines.js_es5 = "1";
 kha_CompilerDefines.sys_a2 = "1";
-kha_CompilerDefines.fullTetris = "1";
 kha_CompilerDefines.dce = "std";
 kha_CompilerDefines.sys_g1 = "1";
 kha_CompilerDefines["true"] = "1";

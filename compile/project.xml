@@ -5,7 +5,7 @@
 	<source path="../src/" />
 	<haxelib name="openfl" />
     <haxelib name="justTriangles" />
-    <window width="1024" height="768" unless="mobile" />
+    <window width="1024" height="768" background="0x181818" unless="mobile" />
 	<!--assets path="../binOpenFL/Assets" rename="assets" exclude="openfl.svg" /-->
 	<!--<icon path="../binLuxe/Assets/openfl.svg" /-->
 </project>
