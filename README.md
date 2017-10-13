@@ -12,10 +12,10 @@ Simple experimental Haxe tetrisTriangles, WIP
 
 - [Heaps ->](https://rawgit.com/nanjizal/tetrisTriangles/master/binHeaps/index.html?1) 
 
-- [WebGL ->](https://rawgit.com/nanjizal/tetrisTriangles/master/binLuxe/binWebGL/index.html?1) 
+- [WebGL ->](https://rawgit.com/nanjizal/tetrisTriangles/master/binWebGL/index.html?1) 
 
-- [OpenFL ->](https://rawgit.com/nanjizal/tetrisTriangles/master/binLuxe/binOpenFL/index.html?1) 
+- [OpenFL ->](https://rawgit.com/nanjizal/tetrisTriangles/master/binOpenFL/index.html?1) 
 
-- [Canvas ->](https://rawgit.com/nanjizal/tetrisTriangles/master/binLuxe/binCanvas/index.html?1) 
+- [Canvas ->](https://rawgit.com/nanjizal/tetrisTriangles/master/binCanvas/index.html?1) 
 
 This is for educational learning and exploration purposes.
