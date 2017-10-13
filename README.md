@@ -6,7 +6,7 @@ Simple experimental Haxe tetrisTriangles, WIP
 
 - [Kha ->](https://rawgit.com/nanjizal/tetrisTriangles/master/build/html5/index.html?12) 
 
-- [NME jsprime -> ](https://rawgit.com/nanjizal/tetrisTriangles/master/binNME/jsprime/TetrisTrianglesFlash/index.html?1)
+- [NME jsprime -> ](https://rawgit.com/nanjizal/tetrisTriangles/master/binNme/jsprime/TetrisTrianglesFlash/index.html?1)
 
 - [Luxe ->](https://rawgit.com/nanjizal/tetrisTriangles/master/binLuxe/web/index.html?1) 
 
