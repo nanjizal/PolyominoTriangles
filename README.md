@@ -18,4 +18,6 @@ Simple experimental Haxe tetrisTriangles, WIP
 
 - [Canvas ->](https://rawgit.com/nanjizal/tetrisTriangles/master/binCanvas/index.html?1) 
 
+Use the arrow keys to navigate.
+
 This is for educational learning and exploration purposes.
