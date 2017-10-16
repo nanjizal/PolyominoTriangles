@@ -1,0 +1,35 @@
+{
+	luxe:{
+		window: {
+			width:1024,
+			height:768,
+			title:'Polyomino Triangles',
+			fullscreen:false,
+			resizable:true,
+			borderless:false
+		}
+	},
+
+	project : {
+		name : 'polyominoTriangles',
+		version : '0.0.0',
+		author : 'Nanjizal',
+		app : {
+			main: 'polyominoTriangles.PolyominoTrianglesLuxe',
+			name:'polyominoTrianglesLuxe',
+			output: '../binLuxe',
+			codepaths: '../src',
+			package : 'net.nanjizal.polyominoTriangles'
+		},
+		build : {
+			dependencies : {
+				luxe : '*'
+			}
+		},
+
+        files : {
+          assets : 'assets/',
+          index : { path:'custom_index.html => index.html', template:'project', not_listed:true }
+        }
+	}
+}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<meta title="Tetris Triangles" package="net.nanjizal.tetrisTriangles" version="1.0.0" company="Nanjizal" />
-	<app main="tetrisTriangles.TetrisTrianglesFlash" path="../binOpenFL/Exports" file="TetrisTrianglesFlash" />
+	<meta title="Polyomino Triangles" package="net.nanjizal.polyominoTriangles" version="1.0.0" company="Nanjizal" />
+	<app main="polyominoTriangles.PolyominoTrianglesFlash" path="../binOpenFL/Exports" file="PolyominoTrianglesFlash" />
 	<source path="../src/" />
 	<haxelib name="openfl" />
     <haxelib name="justTriangles" />

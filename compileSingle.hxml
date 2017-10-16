@@ -1,10 +1,10 @@
 #-cmd open -a Terminal .
-#-cmd cd compile
-#-cmd haxe tetrisTrianglesLime.hxml
-#-cmd haxe tetrisTrianglesNME.hxml
-#-cmd haxe tetrisTrianglesHeapsWeb.hxml
-#-cmd haxe tetrisTrianglesCanvas.hxml
-#-cmd haxe tetrisTrianglesWebGL.hxml
-#-cmd haxe tetrisTrianglesLuxeWeb.hxml
-#-cmd haxe tetrisTrianglesSVG.hxml
--cmd node Kha/make -t html5
+-cmd cd compile
+#-cmd haxe polyominoTrianglesLime.hxml
+#-cmd haxe polyominoTrianglesNME.hxml
+#-cmd haxe polyominoTrianglesHeapsWeb.hxml
+#-cmd haxe polyominoTrianglesCanvas.hxml
+#-cmd haxe polyominoTrianglesWebGL.hxml
+#-cmd haxe polyominoTrianglesLuxeWeb.hxml
+-cmd haxe polyominoTrianglesSVG.hxml
+#-cmd node Kha/make -t html5

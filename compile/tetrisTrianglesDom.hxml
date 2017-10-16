@@ -1,8 +1,0 @@
--js ../binDom/_.js
--cp ../src
--lib htmlHelper
--main tetrisTriangles.TetrisTrianglesDom
-#-D js-flatten 
---next
--cmd echo '<!DOCTYPE html><meta charset="UTF-8"><html><body><script src="_.js"></script></body></html>' >../binDom/index.html
--cmd open ../binDom/index.html

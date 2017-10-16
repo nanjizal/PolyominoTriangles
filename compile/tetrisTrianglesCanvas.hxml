@@ -1,9 +1,0 @@
--js ../binCanvas/_.js
--cp ../src
--lib htmlHelper
--lib justDrawing
--main tetrisTriangles.TetrisTrianglesCanvas
-#-D js-flatten 
---next
--cmd echo '<!DOCTYPE html><meta charset="UTF-8"><html><body><script src="_.js"></script></body></html>' >../binCanvas/index.html
--cmd open ../binCanvas/index.html

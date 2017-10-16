@@ -3781,7 +3781,7 @@ justTriangles_Triangle.prototype = {
 	}
 	,__class__: justTriangles_Triangle
 };
-var tetrisTriangles_TetrisTrianglesSvg = function() {
+var polyominoTriangles_PolyominoTrianglesSvg = function() {
 	this.upDown = false;
 	this.downDown = false;
 	this.rightDown = false;
@@ -3803,7 +3803,7 @@ var tetrisTriangles_TetrisTrianglesSvg = function() {
 	svgRoot.setAttribute("height","768");
 	this.surface = new justDrawing_Surface(svgRoot);
 	justTriangles_Draw.drawTri = justTriangles_Triangle.drawTri;
-	this.tetris = new tetrisTriangles_game_Tetris(1);
+	this.polyomino = new polyominoTriangles_game_Polyomino(1);
 	if(htmlHelper_tools_AnimateTimer.s == null) {
 		htmlHelper_tools_AnimateTimer.s = window.document.createElement("style");
 		htmlHelper_tools_AnimateTimer.s.innerHTML = "@keyframes spin { from { transform:rotate( 0deg ); } to { transform:rotate( 360deg ); } }";
@@ -3815,13 +3815,13 @@ var tetrisTriangles_TetrisTrianglesSvg = function() {
 	window.document.onkeydown = $bind(this,this.keyDown);
 	window.document.onkeyup = $bind(this,this.keyUp);
 };
-tetrisTriangles_TetrisTrianglesSvg.__name__ = ["tetrisTriangles","TetrisTrianglesSvg"];
-tetrisTriangles_TetrisTrianglesSvg.main = function() {
-	new tetrisTriangles_TetrisTrianglesSvg();
+polyominoTriangles_PolyominoTrianglesSvg.__name__ = ["polyominoTriangles","PolyominoTrianglesSvg"];
+polyominoTriangles_PolyominoTrianglesSvg.main = function() {
+	new polyominoTriangles_PolyominoTrianglesSvg();
 };
-tetrisTriangles_TetrisTrianglesSvg.prototype = {
+polyominoTriangles_PolyominoTrianglesSvg.prototype = {
 	surface: null
-	,tetris: null
+	,polyomino: null
 	,gameColors: null
 	,leftDown: null
 	,rightDown: null
@@ -3832,7 +3832,7 @@ tetrisTriangles_TetrisTrianglesSvg.prototype = {
 		var c1_x;
 		var c0_y;
 		var c0_x;
-		var _this = this.tetris;
+		var _this = this.polyomino;
 		if(!_this.end) {
 			var _this1 = _this.controller;
 			var l = _this1.shapes.length;
@@ -3941,8 +3941,8 @@ tetrisTriangles_TetrisTrianglesSvg.prototype = {
 			if(end) {
 				_this1.onGameEnd();
 			}
-			if(_this1.onTetrisShapeLanded != null && hit && !end) {
-				_this1.onTetrisShapeLanded();
+			if(_this1.onPolyominoShapeLanded != null && hit && !end) {
+				_this1.onPolyominoShapeLanded();
 			}
 			if(!hit) {
 				var _this2 = _this.rotation;
@@ -4120,13 +4120,13 @@ tetrisTriangles_TetrisTrianglesSvg.prototype = {
 		default:
 		}
 		if(this.upDown) {
-			var _this = this.tetris.rotation;
+			var _this = this.polyomino.rotation;
 			if(!_this.toggle) {
 				_this.toggle = true;
 				_this.count = 1.0;
 			}
 		} else if(this.downDown) {
-			var _this1 = this.tetris.movement;
+			var _this1 = this.polyomino.movement;
 			if(!_this1.toggleX) {
 				if(!_this1.toggleY) {
 					_this1.toggleY = true;
@@ -4136,7 +4136,7 @@ tetrisTriangles_TetrisTrianglesSvg.prototype = {
 			}
 		}
 		if(this.leftDown) {
-			var _this2 = this.tetris.movement;
+			var _this2 = this.polyomino.movement;
 			if(!_this2.toggleX) {
 				if(!_this2.toggleY) {
 					_this2.toggleX = true;
@@ -4145,7 +4145,7 @@ tetrisTriangles_TetrisTrianglesSvg.prototype = {
 				}
 			}
 		} else if(this.rightDown) {
-			var _this3 = this.tetris.movement;
+			var _this3 = this.polyomino.movement;
 			if(!_this3.toggleX) {
 				if(!_this3.toggleY) {
 					_this3.toggleX = true;
@@ -4179,13 +4179,13 @@ tetrisTriangles_TetrisTrianglesSvg.prototype = {
 	}
 	,update: function() {
 		if(this.upDown) {
-			var _this = this.tetris.rotation;
+			var _this = this.polyomino.rotation;
 			if(!_this.toggle) {
 				_this.toggle = true;
 				_this.count = 1.0;
 			}
 		} else if(this.downDown) {
-			var _this1 = this.tetris.movement;
+			var _this1 = this.polyomino.movement;
 			if(!_this1.toggleX) {
 				if(!_this1.toggleY) {
 					_this1.toggleY = true;
@@ -4195,7 +4195,7 @@ tetrisTriangles_TetrisTrianglesSvg.prototype = {
 			}
 		}
 		if(this.leftDown) {
-			var _this2 = this.tetris.movement;
+			var _this2 = this.polyomino.movement;
 			if(!_this2.toggleX) {
 				if(!_this2.toggleY) {
 					_this2.toggleX = true;
@@ -4204,7 +4204,7 @@ tetrisTriangles_TetrisTrianglesSvg.prototype = {
 				}
 			}
 		} else if(this.rightDown) {
-			var _this3 = this.tetris.movement;
+			var _this3 = this.polyomino.movement;
 			if(!_this3.toggleX) {
 				if(!_this3.toggleY) {
 					_this3.toggleX = true;
@@ -4218,14 +4218,14 @@ tetrisTriangles_TetrisTrianglesSvg.prototype = {
 		this.downDown = false;
 		this.upDown = false;
 	}
-	,__class__: tetrisTriangles_TetrisTrianglesSvg
+	,__class__: polyominoTriangles_PolyominoTrianglesSvg
 };
-var tetrisTriangles_game_ABC = function(createTetris_) {
-	this.createTetris = createTetris_;
+var polyominoTriangles_game_ABC = function(createPolyomino_) {
+	this.createPolyomino = createPolyomino_;
 };
-tetrisTriangles_game_ABC.__name__ = ["tetrisTriangles","game","ABC"];
-tetrisTriangles_game_ABC.prototype = {
-	createTetris: null
+polyominoTriangles_game_ABC.__name__ = ["polyominoTriangles","game","ABC"];
+polyominoTriangles_game_ABC.prototype = {
+	createPolyomino: null
 	,rnd: function(p) {
 		return this.createABC(HxOverrides.substr("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",Math.round(Math.random() * ("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".length - 1)),1),p);
 	}
@@ -4244,15 +4244,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g[0] = 100;
 				_g[1] = 100;
-				v = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g);
+				v = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g);
 			}
 			this1 = v;
 			arr = this1;
 			var snapped = null;
 			if(snapped == null) {
-				snapped = tetrisTriangles_game_Snapped.Always;
+				snapped = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts = this.createTetris(p,snapped);
+			var ts = this.createPolyomino(p,snapped);
 			var w = arr[0];
 			var h = arr[1];
 			var _g1 = 0;
@@ -4279,15 +4279,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g4[0] = 100;
 				_g4[1] = 100;
-				v1 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g4);
+				v1 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g4);
 			}
 			this2 = v1;
 			arr = this2;
 			var snapped1 = null;
 			if(snapped1 == null) {
-				snapped1 = tetrisTriangles_game_Snapped.Always;
+				snapped1 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts1 = this.createTetris(p,snapped1);
+			var ts1 = this.createPolyomino(p,snapped1);
 			var w1 = arr[0];
 			var h1 = arr[1];
 			var _g11 = 0;
@@ -4314,15 +4314,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g5[0] = 100;
 				_g5[1] = 100;
-				v2 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g5);
+				v2 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g5);
 			}
 			this3 = v2;
 			arr = this3;
 			var snapped2 = null;
 			if(snapped2 == null) {
-				snapped2 = tetrisTriangles_game_Snapped.Always;
+				snapped2 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts2 = this.createTetris(p,snapped2);
+			var ts2 = this.createPolyomino(p,snapped2);
 			var w2 = arr[0];
 			var h2 = arr[1];
 			var _g12 = 0;
@@ -4349,15 +4349,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g6[0] = 100;
 				_g6[1] = 100;
-				v3 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g6);
+				v3 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g6);
 			}
 			this4 = v3;
 			arr = this4;
 			var snapped3 = null;
 			if(snapped3 == null) {
-				snapped3 = tetrisTriangles_game_Snapped.Always;
+				snapped3 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts3 = this.createTetris(p,snapped3);
+			var ts3 = this.createPolyomino(p,snapped3);
 			var w3 = arr[0];
 			var h3 = arr[1];
 			var _g13 = 0;
@@ -4384,15 +4384,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g7[0] = 100;
 				_g7[1] = 100;
-				v4 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g7);
+				v4 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g7);
 			}
 			this5 = v4;
 			arr = this5;
 			var snapped4 = null;
 			if(snapped4 == null) {
-				snapped4 = tetrisTriangles_game_Snapped.Always;
+				snapped4 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts4 = this.createTetris(p,snapped4);
+			var ts4 = this.createPolyomino(p,snapped4);
 			var w4 = arr[0];
 			var h4 = arr[1];
 			var _g14 = 0;
@@ -4419,15 +4419,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g8[0] = 100;
 				_g8[1] = 100;
-				v5 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g8);
+				v5 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g8);
 			}
 			this6 = v5;
 			arr = this6;
 			var snapped5 = null;
 			if(snapped5 == null) {
-				snapped5 = tetrisTriangles_game_Snapped.Always;
+				snapped5 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts5 = this.createTetris(p,snapped5);
+			var ts5 = this.createPolyomino(p,snapped5);
 			var w5 = arr[0];
 			var h5 = arr[1];
 			var _g15 = 0;
@@ -4454,15 +4454,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g9[0] = 100;
 				_g9[1] = 100;
-				v6 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g9);
+				v6 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g9);
 			}
 			this7 = v6;
 			arr = this7;
 			var snapped6 = null;
 			if(snapped6 == null) {
-				snapped6 = tetrisTriangles_game_Snapped.Always;
+				snapped6 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts6 = this.createTetris(p,snapped6);
+			var ts6 = this.createPolyomino(p,snapped6);
 			var w6 = arr[0];
 			var h6 = arr[1];
 			var _g16 = 0;
@@ -4489,15 +4489,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g10[0] = 100;
 				_g10[1] = 100;
-				v7 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g10);
+				v7 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g10);
 			}
 			this8 = v7;
 			arr = this8;
 			var snapped7 = null;
 			if(snapped7 == null) {
-				snapped7 = tetrisTriangles_game_Snapped.Always;
+				snapped7 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts7 = this.createTetris(p,snapped7);
+			var ts7 = this.createPolyomino(p,snapped7);
 			var w7 = arr[0];
 			var h7 = arr[1];
 			var _g17 = 0;
@@ -4524,15 +4524,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g18[0] = 100;
 				_g18[1] = 100;
-				v8 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g18);
+				v8 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g18);
 			}
 			this9 = v8;
 			arr = this9;
 			var snapped8 = null;
 			if(snapped8 == null) {
-				snapped8 = tetrisTriangles_game_Snapped.Always;
+				snapped8 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts8 = this.createTetris(p,snapped8);
+			var ts8 = this.createPolyomino(p,snapped8);
 			var w8 = arr[0];
 			var h8 = arr[1];
 			var _g19 = 0;
@@ -4559,15 +4559,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g20[0] = 100;
 				_g20[1] = 100;
-				v9 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g20);
+				v9 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g20);
 			}
 			this10 = v9;
 			arr = this10;
 			var snapped9 = null;
 			if(snapped9 == null) {
-				snapped9 = tetrisTriangles_game_Snapped.Always;
+				snapped9 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts9 = this.createTetris(p,snapped9);
+			var ts9 = this.createPolyomino(p,snapped9);
 			var w9 = arr[0];
 			var h9 = arr[1];
 			var _g110 = 0;
@@ -4594,15 +4594,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g30[0] = 100;
 				_g30[1] = 100;
-				v10 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g30);
+				v10 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g30);
 			}
 			this11 = v10;
 			arr = this11;
 			var snapped10 = null;
 			if(snapped10 == null) {
-				snapped10 = tetrisTriangles_game_Snapped.Always;
+				snapped10 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts10 = this.createTetris(p,snapped10);
+			var ts10 = this.createPolyomino(p,snapped10);
 			var w10 = arr[0];
 			var h10 = arr[1];
 			var _g111 = 0;
@@ -4629,15 +4629,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g40[0] = 100;
 				_g40[1] = 100;
-				v11 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g40);
+				v11 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g40);
 			}
 			this12 = v11;
 			arr = this12;
 			var snapped11 = null;
 			if(snapped11 == null) {
-				snapped11 = tetrisTriangles_game_Snapped.Always;
+				snapped11 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts11 = this.createTetris(p,snapped11);
+			var ts11 = this.createPolyomino(p,snapped11);
 			var w11 = arr[0];
 			var h11 = arr[1];
 			var _g112 = 0;
@@ -4664,15 +4664,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g41[0] = 100;
 				_g41[1] = 100;
-				v12 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g41);
+				v12 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g41);
 			}
 			this13 = v12;
 			arr = this13;
 			var snapped12 = null;
 			if(snapped12 == null) {
-				snapped12 = tetrisTriangles_game_Snapped.Always;
+				snapped12 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts12 = this.createTetris(p,snapped12);
+			var ts12 = this.createPolyomino(p,snapped12);
 			var w12 = arr[0];
 			var h12 = arr[1];
 			var _g113 = 0;
@@ -4699,15 +4699,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g42[0] = 100;
 				_g42[1] = 100;
-				v13 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g42);
+				v13 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g42);
 			}
 			this14 = v13;
 			arr = this14;
 			var snapped13 = null;
 			if(snapped13 == null) {
-				snapped13 = tetrisTriangles_game_Snapped.Always;
+				snapped13 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts13 = this.createTetris(p,snapped13);
+			var ts13 = this.createPolyomino(p,snapped13);
 			var w13 = arr[0];
 			var h13 = arr[1];
 			var _g114 = 0;
@@ -4734,15 +4734,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g43[0] = 100;
 				_g43[1] = 100;
-				v14 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g43);
+				v14 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g43);
 			}
 			this15 = v14;
 			arr = this15;
 			var snapped14 = null;
 			if(snapped14 == null) {
-				snapped14 = tetrisTriangles_game_Snapped.Always;
+				snapped14 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts14 = this.createTetris(p,snapped14);
+			var ts14 = this.createPolyomino(p,snapped14);
 			var w14 = arr[0];
 			var h14 = arr[1];
 			var _g115 = 0;
@@ -4769,15 +4769,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g44[0] = 100;
 				_g44[1] = 100;
-				v15 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g44);
+				v15 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g44);
 			}
 			this16 = v15;
 			arr = this16;
 			var snapped15 = null;
 			if(snapped15 == null) {
-				snapped15 = tetrisTriangles_game_Snapped.Always;
+				snapped15 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts15 = this.createTetris(p,snapped15);
+			var ts15 = this.createPolyomino(p,snapped15);
 			var w15 = arr[0];
 			var h15 = arr[1];
 			var _g116 = 0;
@@ -4804,15 +4804,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g45[0] = 100;
 				_g45[1] = 100;
-				v16 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g45);
+				v16 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g45);
 			}
 			this17 = v16;
 			arr = this17;
 			var snapped16 = null;
 			if(snapped16 == null) {
-				snapped16 = tetrisTriangles_game_Snapped.Always;
+				snapped16 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts16 = this.createTetris(p,snapped16);
+			var ts16 = this.createPolyomino(p,snapped16);
 			var w16 = arr[0];
 			var h16 = arr[1];
 			var _g117 = 0;
@@ -4839,15 +4839,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g46[0] = 100;
 				_g46[1] = 100;
-				v17 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g46);
+				v17 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g46);
 			}
 			this18 = v17;
 			arr = this18;
 			var snapped17 = null;
 			if(snapped17 == null) {
-				snapped17 = tetrisTriangles_game_Snapped.Always;
+				snapped17 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts17 = this.createTetris(p,snapped17);
+			var ts17 = this.createPolyomino(p,snapped17);
 			var w17 = arr[0];
 			var h17 = arr[1];
 			var _g118 = 0;
@@ -4874,15 +4874,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g47[0] = 100;
 				_g47[1] = 100;
-				v18 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g47);
+				v18 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g47);
 			}
 			this19 = v18;
 			arr = this19;
 			var snapped18 = null;
 			if(snapped18 == null) {
-				snapped18 = tetrisTriangles_game_Snapped.Always;
+				snapped18 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts18 = this.createTetris(p,snapped18);
+			var ts18 = this.createPolyomino(p,snapped18);
 			var w18 = arr[0];
 			var h18 = arr[1];
 			var _g119 = 0;
@@ -4909,15 +4909,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g48[0] = 100;
 				_g48[1] = 100;
-				v19 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g48);
+				v19 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g48);
 			}
 			this20 = v19;
 			arr = this20;
 			var snapped19 = null;
 			if(snapped19 == null) {
-				snapped19 = tetrisTriangles_game_Snapped.Always;
+				snapped19 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts19 = this.createTetris(p,snapped19);
+			var ts19 = this.createPolyomino(p,snapped19);
 			var w19 = arr[0];
 			var h19 = arr[1];
 			var _g120 = 0;
@@ -4944,15 +4944,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g49[0] = 100;
 				_g49[1] = 100;
-				v20 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g49);
+				v20 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g49);
 			}
 			this21 = v20;
 			arr = this21;
 			var snapped20 = null;
 			if(snapped20 == null) {
-				snapped20 = tetrisTriangles_game_Snapped.Always;
+				snapped20 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts20 = this.createTetris(p,snapped20);
+			var ts20 = this.createPolyomino(p,snapped20);
 			var w20 = arr[0];
 			var h20 = arr[1];
 			var _g121 = 0;
@@ -4979,15 +4979,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g50[0] = 100;
 				_g50[1] = 100;
-				v21 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g50);
+				v21 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g50);
 			}
 			this22 = v21;
 			arr = this22;
 			var snapped21 = null;
 			if(snapped21 == null) {
-				snapped21 = tetrisTriangles_game_Snapped.Always;
+				snapped21 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts21 = this.createTetris(p,snapped21);
+			var ts21 = this.createPolyomino(p,snapped21);
 			var w21 = arr[0];
 			var h21 = arr[1];
 			var _g122 = 0;
@@ -5014,15 +5014,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g51[0] = 100;
 				_g51[1] = 100;
-				v22 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g51);
+				v22 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g51);
 			}
 			this23 = v22;
 			arr = this23;
 			var snapped22 = null;
 			if(snapped22 == null) {
-				snapped22 = tetrisTriangles_game_Snapped.Always;
+				snapped22 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts22 = this.createTetris(p,snapped22);
+			var ts22 = this.createPolyomino(p,snapped22);
 			var w22 = arr[0];
 			var h22 = arr[1];
 			var _g123 = 0;
@@ -5049,15 +5049,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g52[0] = 100;
 				_g52[1] = 100;
-				v23 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g52);
+				v23 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g52);
 			}
 			this24 = v23;
 			arr = this24;
 			var snapped23 = null;
 			if(snapped23 == null) {
-				snapped23 = tetrisTriangles_game_Snapped.Always;
+				snapped23 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts23 = this.createTetris(p,snapped23);
+			var ts23 = this.createPolyomino(p,snapped23);
 			var w23 = arr[0];
 			var h23 = arr[1];
 			var _g124 = 0;
@@ -5084,15 +5084,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g53[0] = 100;
 				_g53[1] = 100;
-				v24 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g53);
+				v24 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g53);
 			}
 			this25 = v24;
 			arr = this25;
 			var snapped24 = null;
 			if(snapped24 == null) {
-				snapped24 = tetrisTriangles_game_Snapped.Always;
+				snapped24 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts24 = this.createTetris(p,snapped24);
+			var ts24 = this.createPolyomino(p,snapped24);
 			var w24 = arr[0];
 			var h24 = arr[1];
 			var _g125 = 0;
@@ -5119,15 +5119,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g54[0] = 100;
 				_g54[1] = 100;
-				v25 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g54);
+				v25 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g54);
 			}
 			this26 = v25;
 			arr = this26;
 			var snapped25 = null;
 			if(snapped25 == null) {
-				snapped25 = tetrisTriangles_game_Snapped.Always;
+				snapped25 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts25 = this.createTetris(p,snapped25);
+			var ts25 = this.createPolyomino(p,snapped25);
 			var w25 = arr[0];
 			var h25 = arr[1];
 			var _g126 = 0;
@@ -5154,15 +5154,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g55[0] = 100;
 				_g55[1] = 100;
-				v26 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g55);
+				v26 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g55);
 			}
 			this27 = v26;
 			arr = this27;
 			var snapped26 = null;
 			if(snapped26 == null) {
-				snapped26 = tetrisTriangles_game_Snapped.Always;
+				snapped26 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts26 = this.createTetris(p,snapped26);
+			var ts26 = this.createPolyomino(p,snapped26);
 			var w26 = arr[0];
 			var h26 = arr[1];
 			var _g127 = 0;
@@ -5189,15 +5189,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g56[0] = 100;
 				_g56[1] = 100;
-				v27 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g56);
+				v27 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g56);
 			}
 			this28 = v27;
 			arr = this28;
 			var snapped27 = null;
 			if(snapped27 == null) {
-				snapped27 = tetrisTriangles_game_Snapped.Always;
+				snapped27 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts27 = this.createTetris(p,snapped27);
+			var ts27 = this.createPolyomino(p,snapped27);
 			var w27 = arr[0];
 			var h27 = arr[1];
 			var _g128 = 0;
@@ -5224,15 +5224,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g57[0] = 100;
 				_g57[1] = 100;
-				v28 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g57);
+				v28 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g57);
 			}
 			this29 = v28;
 			arr = this29;
 			var snapped28 = null;
 			if(snapped28 == null) {
-				snapped28 = tetrisTriangles_game_Snapped.Always;
+				snapped28 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts28 = this.createTetris(p,snapped28);
+			var ts28 = this.createPolyomino(p,snapped28);
 			var w28 = arr[0];
 			var h28 = arr[1];
 			var _g129 = 0;
@@ -5259,15 +5259,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g58[0] = 100;
 				_g58[1] = 100;
-				v29 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g58);
+				v29 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g58);
 			}
 			this30 = v29;
 			arr = this30;
 			var snapped29 = null;
 			if(snapped29 == null) {
-				snapped29 = tetrisTriangles_game_Snapped.Always;
+				snapped29 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts29 = this.createTetris(p,snapped29);
+			var ts29 = this.createPolyomino(p,snapped29);
 			var w29 = arr[0];
 			var h29 = arr[1];
 			var _g130 = 0;
@@ -5294,15 +5294,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g59[0] = 100;
 				_g59[1] = 100;
-				v30 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g59);
+				v30 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g59);
 			}
 			this31 = v30;
 			arr = this31;
 			var snapped30 = null;
 			if(snapped30 == null) {
-				snapped30 = tetrisTriangles_game_Snapped.Always;
+				snapped30 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts30 = this.createTetris(p,snapped30);
+			var ts30 = this.createPolyomino(p,snapped30);
 			var w30 = arr[0];
 			var h30 = arr[1];
 			var _g131 = 0;
@@ -5329,15 +5329,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g60[0] = 100;
 				_g60[1] = 100;
-				v31 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g60);
+				v31 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g60);
 			}
 			this32 = v31;
 			arr = this32;
 			var snapped31 = null;
 			if(snapped31 == null) {
-				snapped31 = tetrisTriangles_game_Snapped.Always;
+				snapped31 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts31 = this.createTetris(p,snapped31);
+			var ts31 = this.createPolyomino(p,snapped31);
 			var w31 = arr[0];
 			var h31 = arr[1];
 			var _g132 = 0;
@@ -5364,15 +5364,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g61[0] = 100;
 				_g61[1] = 100;
-				v32 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g61);
+				v32 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g61);
 			}
 			this33 = v32;
 			arr = this33;
 			var snapped32 = null;
 			if(snapped32 == null) {
-				snapped32 = tetrisTriangles_game_Snapped.Always;
+				snapped32 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts32 = this.createTetris(p,snapped32);
+			var ts32 = this.createPolyomino(p,snapped32);
 			var w32 = arr[0];
 			var h32 = arr[1];
 			var _g133 = 0;
@@ -5399,15 +5399,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g62[0] = 100;
 				_g62[1] = 100;
-				v33 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g62);
+				v33 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g62);
 			}
 			this34 = v33;
 			arr = this34;
 			var snapped33 = null;
 			if(snapped33 == null) {
-				snapped33 = tetrisTriangles_game_Snapped.Always;
+				snapped33 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts33 = this.createTetris(p,snapped33);
+			var ts33 = this.createPolyomino(p,snapped33);
 			var w33 = arr[0];
 			var h33 = arr[1];
 			var _g134 = 0;
@@ -5434,15 +5434,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g63[0] = 100;
 				_g63[1] = 100;
-				v34 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g63);
+				v34 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g63);
 			}
 			this35 = v34;
 			arr = this35;
 			var snapped34 = null;
 			if(snapped34 == null) {
-				snapped34 = tetrisTriangles_game_Snapped.Always;
+				snapped34 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts34 = this.createTetris(p,snapped34);
+			var ts34 = this.createPolyomino(p,snapped34);
 			var w34 = arr[0];
 			var h34 = arr[1];
 			var _g135 = 0;
@@ -5469,15 +5469,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g64[0] = 100;
 				_g64[1] = 100;
-				v35 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g64);
+				v35 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g64);
 			}
 			this36 = v35;
 			arr = this36;
 			var snapped35 = null;
 			if(snapped35 == null) {
-				snapped35 = tetrisTriangles_game_Snapped.Always;
+				snapped35 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts35 = this.createTetris(p,snapped35);
+			var ts35 = this.createPolyomino(p,snapped35);
 			var w35 = arr[0];
 			var h35 = arr[1];
 			var _g136 = 0;
@@ -5504,15 +5504,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g65[0] = 100;
 				_g65[1] = 100;
-				v36 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g65);
+				v36 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g65);
 			}
 			this37 = v36;
 			arr = this37;
 			var snapped36 = null;
 			if(snapped36 == null) {
-				snapped36 = tetrisTriangles_game_Snapped.Always;
+				snapped36 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts36 = this.createTetris(p,snapped36);
+			var ts36 = this.createPolyomino(p,snapped36);
 			var w36 = arr[0];
 			var h36 = arr[1];
 			var _g137 = 0;
@@ -5539,15 +5539,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g66[0] = 100;
 				_g66[1] = 100;
-				v37 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g66);
+				v37 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g66);
 			}
 			this38 = v37;
 			arr = this38;
 			var snapped37 = null;
 			if(snapped37 == null) {
-				snapped37 = tetrisTriangles_game_Snapped.Always;
+				snapped37 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts37 = this.createTetris(p,snapped37);
+			var ts37 = this.createPolyomino(p,snapped37);
 			var w37 = arr[0];
 			var h37 = arr[1];
 			var _g138 = 0;
@@ -5574,15 +5574,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g67[0] = 100;
 				_g67[1] = 100;
-				v38 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g67);
+				v38 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g67);
 			}
 			this39 = v38;
 			arr = this39;
 			var snapped38 = null;
 			if(snapped38 == null) {
-				snapped38 = tetrisTriangles_game_Snapped.Always;
+				snapped38 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts38 = this.createTetris(p,snapped38);
+			var ts38 = this.createPolyomino(p,snapped38);
 			var w38 = arr[0];
 			var h38 = arr[1];
 			var _g139 = 0;
@@ -5609,15 +5609,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g68[0] = 100;
 				_g68[1] = 100;
-				v39 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g68);
+				v39 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g68);
 			}
 			this40 = v39;
 			arr = this40;
 			var snapped39 = null;
 			if(snapped39 == null) {
-				snapped39 = tetrisTriangles_game_Snapped.Always;
+				snapped39 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts39 = this.createTetris(p,snapped39);
+			var ts39 = this.createPolyomino(p,snapped39);
 			var w39 = arr[0];
 			var h39 = arr[1];
 			var _g140 = 0;
@@ -5644,15 +5644,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g69[0] = 100;
 				_g69[1] = 100;
-				v40 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g69);
+				v40 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g69);
 			}
 			this41 = v40;
 			arr = this41;
 			var snapped40 = null;
 			if(snapped40 == null) {
-				snapped40 = tetrisTriangles_game_Snapped.Always;
+				snapped40 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts40 = this.createTetris(p,snapped40);
+			var ts40 = this.createPolyomino(p,snapped40);
 			var w40 = arr[0];
 			var h40 = arr[1];
 			var _g141 = 0;
@@ -5679,15 +5679,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g70[0] = 100;
 				_g70[1] = 100;
-				v41 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g70);
+				v41 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g70);
 			}
 			this42 = v41;
 			arr = this42;
 			var snapped41 = null;
 			if(snapped41 == null) {
-				snapped41 = tetrisTriangles_game_Snapped.Always;
+				snapped41 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts41 = this.createTetris(p,snapped41);
+			var ts41 = this.createPolyomino(p,snapped41);
 			var w41 = arr[0];
 			var h41 = arr[1];
 			var _g142 = 0;
@@ -5714,15 +5714,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g71[0] = 100;
 				_g71[1] = 100;
-				v42 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g71);
+				v42 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g71);
 			}
 			this43 = v42;
 			arr = this43;
 			var snapped42 = null;
 			if(snapped42 == null) {
-				snapped42 = tetrisTriangles_game_Snapped.Always;
+				snapped42 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts42 = this.createTetris(p,snapped42);
+			var ts42 = this.createPolyomino(p,snapped42);
 			var w42 = arr[0];
 			var h42 = arr[1];
 			var _g143 = 0;
@@ -5749,15 +5749,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g72[0] = 100;
 				_g72[1] = 100;
-				v43 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g72);
+				v43 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g72);
 			}
 			this44 = v43;
 			arr = this44;
 			var snapped43 = null;
 			if(snapped43 == null) {
-				snapped43 = tetrisTriangles_game_Snapped.Always;
+				snapped43 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts43 = this.createTetris(p,snapped43);
+			var ts43 = this.createPolyomino(p,snapped43);
 			var w43 = arr[0];
 			var h43 = arr[1];
 			var _g144 = 0;
@@ -5784,15 +5784,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g73[0] = 100;
 				_g73[1] = 100;
-				v44 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g73);
+				v44 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g73);
 			}
 			this45 = v44;
 			arr = this45;
 			var snapped44 = null;
 			if(snapped44 == null) {
-				snapped44 = tetrisTriangles_game_Snapped.Always;
+				snapped44 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts44 = this.createTetris(p,snapped44);
+			var ts44 = this.createPolyomino(p,snapped44);
 			var w44 = arr[0];
 			var h44 = arr[1];
 			var _g145 = 0;
@@ -5819,15 +5819,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g74[0] = 100;
 				_g74[1] = 100;
-				v45 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g74);
+				v45 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g74);
 			}
 			this46 = v45;
 			arr = this46;
 			var snapped45 = null;
 			if(snapped45 == null) {
-				snapped45 = tetrisTriangles_game_Snapped.Always;
+				snapped45 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts45 = this.createTetris(p,snapped45);
+			var ts45 = this.createPolyomino(p,snapped45);
 			var w45 = arr[0];
 			var h45 = arr[1];
 			var _g146 = 0;
@@ -5854,15 +5854,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g75[0] = 100;
 				_g75[1] = 100;
-				v46 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g75);
+				v46 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g75);
 			}
 			this47 = v46;
 			arr = this47;
 			var snapped46 = null;
 			if(snapped46 == null) {
-				snapped46 = tetrisTriangles_game_Snapped.Always;
+				snapped46 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts46 = this.createTetris(p,snapped46);
+			var ts46 = this.createPolyomino(p,snapped46);
 			var w46 = arr[0];
 			var h46 = arr[1];
 			var _g147 = 0;
@@ -5889,15 +5889,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g76[0] = 100;
 				_g76[1] = 100;
-				v47 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g76);
+				v47 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g76);
 			}
 			this48 = v47;
 			arr = this48;
 			var snapped47 = null;
 			if(snapped47 == null) {
-				snapped47 = tetrisTriangles_game_Snapped.Always;
+				snapped47 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts47 = this.createTetris(p,snapped47);
+			var ts47 = this.createPolyomino(p,snapped47);
 			var w47 = arr[0];
 			var h47 = arr[1];
 			var _g148 = 0;
@@ -5924,15 +5924,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g77[0] = 100;
 				_g77[1] = 100;
-				v48 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g77);
+				v48 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g77);
 			}
 			this49 = v48;
 			arr = this49;
 			var snapped48 = null;
 			if(snapped48 == null) {
-				snapped48 = tetrisTriangles_game_Snapped.Always;
+				snapped48 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts48 = this.createTetris(p,snapped48);
+			var ts48 = this.createPolyomino(p,snapped48);
 			var w48 = arr[0];
 			var h48 = arr[1];
 			var _g149 = 0;
@@ -5959,15 +5959,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g78[0] = 100;
 				_g78[1] = 100;
-				v49 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g78);
+				v49 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g78);
 			}
 			this50 = v49;
 			arr = this50;
 			var snapped49 = null;
 			if(snapped49 == null) {
-				snapped49 = tetrisTriangles_game_Snapped.Always;
+				snapped49 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts49 = this.createTetris(p,snapped49);
+			var ts49 = this.createPolyomino(p,snapped49);
 			var w49 = arr[0];
 			var h49 = arr[1];
 			var _g150 = 0;
@@ -5994,15 +5994,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g79[0] = 100;
 				_g79[1] = 100;
-				v50 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g79);
+				v50 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g79);
 			}
 			this51 = v50;
 			arr = this51;
 			var snapped50 = null;
 			if(snapped50 == null) {
-				snapped50 = tetrisTriangles_game_Snapped.Always;
+				snapped50 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts50 = this.createTetris(p,snapped50);
+			var ts50 = this.createPolyomino(p,snapped50);
 			var w50 = arr[0];
 			var h50 = arr[1];
 			var _g151 = 0;
@@ -6029,15 +6029,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g80[0] = 100;
 				_g80[1] = 100;
-				v51 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g80);
+				v51 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g80);
 			}
 			this52 = v51;
 			arr = this52;
 			var snapped51 = null;
 			if(snapped51 == null) {
-				snapped51 = tetrisTriangles_game_Snapped.Always;
+				snapped51 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts51 = this.createTetris(p,snapped51);
+			var ts51 = this.createPolyomino(p,snapped51);
 			var w51 = arr[0];
 			var h51 = arr[1];
 			var _g152 = 0;
@@ -6064,15 +6064,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g81[0] = 100;
 				_g81[1] = 100;
-				v52 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g81);
+				v52 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g81);
 			}
 			this53 = v52;
 			arr = this53;
 			var snapped52 = null;
 			if(snapped52 == null) {
-				snapped52 = tetrisTriangles_game_Snapped.Always;
+				snapped52 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts52 = this.createTetris(p,snapped52);
+			var ts52 = this.createPolyomino(p,snapped52);
 			var w52 = arr[0];
 			var h52 = arr[1];
 			var _g153 = 0;
@@ -6099,15 +6099,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g82[0] = 100;
 				_g82[1] = 100;
-				v53 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g82);
+				v53 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g82);
 			}
 			this54 = v53;
 			arr = this54;
 			var snapped53 = null;
 			if(snapped53 == null) {
-				snapped53 = tetrisTriangles_game_Snapped.Always;
+				snapped53 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts53 = this.createTetris(p,snapped53);
+			var ts53 = this.createPolyomino(p,snapped53);
 			var w53 = arr[0];
 			var h53 = arr[1];
 			var _g154 = 0;
@@ -6134,15 +6134,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g83[0] = 100;
 				_g83[1] = 100;
-				v54 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g83);
+				v54 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g83);
 			}
 			this55 = v54;
 			arr = this55;
 			var snapped54 = null;
 			if(snapped54 == null) {
-				snapped54 = tetrisTriangles_game_Snapped.Always;
+				snapped54 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts54 = this.createTetris(p,snapped54);
+			var ts54 = this.createPolyomino(p,snapped54);
 			var w54 = arr[0];
 			var h54 = arr[1];
 			var _g155 = 0;
@@ -6169,15 +6169,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g84[0] = 100;
 				_g84[1] = 100;
-				v55 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g84);
+				v55 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g84);
 			}
 			this56 = v55;
 			arr = this56;
 			var snapped55 = null;
 			if(snapped55 == null) {
-				snapped55 = tetrisTriangles_game_Snapped.Always;
+				snapped55 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts55 = this.createTetris(p,snapped55);
+			var ts55 = this.createPolyomino(p,snapped55);
 			var w55 = arr[0];
 			var h55 = arr[1];
 			var _g156 = 0;
@@ -6204,15 +6204,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g85[0] = 100;
 				_g85[1] = 100;
-				v56 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g85);
+				v56 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g85);
 			}
 			this57 = v56;
 			arr = this57;
 			var snapped56 = null;
 			if(snapped56 == null) {
-				snapped56 = tetrisTriangles_game_Snapped.Always;
+				snapped56 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts56 = this.createTetris(p,snapped56);
+			var ts56 = this.createPolyomino(p,snapped56);
 			var w56 = arr[0];
 			var h56 = arr[1];
 			var _g157 = 0;
@@ -6239,15 +6239,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g86[0] = 100;
 				_g86[1] = 100;
-				v57 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g86);
+				v57 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g86);
 			}
 			this58 = v57;
 			arr = this58;
 			var snapped57 = null;
 			if(snapped57 == null) {
-				snapped57 = tetrisTriangles_game_Snapped.Always;
+				snapped57 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts57 = this.createTetris(p,snapped57);
+			var ts57 = this.createPolyomino(p,snapped57);
 			var w57 = arr[0];
 			var h57 = arr[1];
 			var _g158 = 0;
@@ -6274,15 +6274,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g87[0] = 100;
 				_g87[1] = 100;
-				v58 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g87);
+				v58 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g87);
 			}
 			this59 = v58;
 			arr = this59;
 			var snapped58 = null;
 			if(snapped58 == null) {
-				snapped58 = tetrisTriangles_game_Snapped.Always;
+				snapped58 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts58 = this.createTetris(p,snapped58);
+			var ts58 = this.createPolyomino(p,snapped58);
 			var w58 = arr[0];
 			var h58 = arr[1];
 			var _g159 = 0;
@@ -6309,15 +6309,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g88[0] = 100;
 				_g88[1] = 100;
-				v59 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g88);
+				v59 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g88);
 			}
 			this60 = v59;
 			arr = this60;
 			var snapped59 = null;
 			if(snapped59 == null) {
-				snapped59 = tetrisTriangles_game_Snapped.Always;
+				snapped59 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts59 = this.createTetris(p,snapped59);
+			var ts59 = this.createPolyomino(p,snapped59);
 			var w59 = arr[0];
 			var h59 = arr[1];
 			var _g160 = 0;
@@ -6344,15 +6344,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g89[0] = 100;
 				_g89[1] = 100;
-				v60 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g89);
+				v60 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g89);
 			}
 			this61 = v60;
 			arr = this61;
 			var snapped60 = null;
 			if(snapped60 == null) {
-				snapped60 = tetrisTriangles_game_Snapped.Always;
+				snapped60 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts60 = this.createTetris(p,snapped60);
+			var ts60 = this.createPolyomino(p,snapped60);
 			var w60 = arr[0];
 			var h60 = arr[1];
 			var _g161 = 0;
@@ -6379,15 +6379,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g90[0] = 100;
 				_g90[1] = 100;
-				v61 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g90);
+				v61 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g90);
 			}
 			this62 = v61;
 			arr = this62;
 			var snapped61 = null;
 			if(snapped61 == null) {
-				snapped61 = tetrisTriangles_game_Snapped.Always;
+				snapped61 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts61 = this.createTetris(p,snapped61);
+			var ts61 = this.createPolyomino(p,snapped61);
 			var w61 = arr[0];
 			var h61 = arr[1];
 			var _g162 = 0;
@@ -6414,15 +6414,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g91[0] = 100;
 				_g91[1] = 100;
-				v62 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g91);
+				v62 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g91);
 			}
 			this63 = v62;
 			arr = this63;
 			var snapped62 = null;
 			if(snapped62 == null) {
-				snapped62 = tetrisTriangles_game_Snapped.Always;
+				snapped62 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts62 = this.createTetris(p,snapped62);
+			var ts62 = this.createPolyomino(p,snapped62);
 			var w62 = arr[0];
 			var h62 = arr[1];
 			var _g163 = 0;
@@ -6449,15 +6449,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g92[0] = 100;
 				_g92[1] = 100;
-				v63 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g92);
+				v63 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g92);
 			}
 			this64 = v63;
 			arr = this64;
 			var snapped63 = null;
 			if(snapped63 == null) {
-				snapped63 = tetrisTriangles_game_Snapped.Always;
+				snapped63 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts63 = this.createTetris(p,snapped63);
+			var ts63 = this.createPolyomino(p,snapped63);
 			var w63 = arr[0];
 			var h63 = arr[1];
 			var _g164 = 0;
@@ -6484,15 +6484,15 @@ tetrisTriangles_game_ABC.prototype = {
 				}
 				_g93[0] = 100;
 				_g93[1] = 100;
-				v64 = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g93);
+				v64 = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(100,100,_g93);
 			}
 			this65 = v64;
 			arr = this65;
 			var snapped64 = null;
 			if(snapped64 == null) {
-				snapped64 = tetrisTriangles_game_Snapped.Always;
+				snapped64 = polyominoTriangles_game_Snapped.Always;
 			}
-			var ts64 = this.createTetris(p,snapped64);
+			var ts64 = this.createPolyomino(p,snapped64);
 			var w64 = arr[0];
 			var h64 = arr[1];
 			var _g165 = 0;
@@ -6511,9 +6511,9 @@ tetrisTriangles_game_ABC.prototype = {
 	}
 	,abc: function(p,pos,snapped) {
 		if(snapped == null) {
-			snapped = tetrisTriangles_game_Snapped.Always;
+			snapped = polyominoTriangles_game_Snapped.Always;
 		}
-		var ts = this.createTetris(p,snapped);
+		var ts = this.createPolyomino(p,snapped);
 		var w = pos[0];
 		var h = pos[1];
 		var _g1 = 0;
@@ -6529,11 +6529,11 @@ tetrisTriangles_game_ABC.prototype = {
 		}
 		return ts;
 	}
-	,__class__: tetrisTriangles_game_ABC
+	,__class__: polyominoTriangles_game_ABC
 };
-var tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$ = {};
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.__name__ = ["tetrisTriangles","game","_Arr2D","Arr2D_Impl_"];
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new = function(w,h,v) {
+var polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$ = {};
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.__name__ = ["polyominoTriangles","game","_Arr2D","Arr2D_Impl_"];
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new = function(w,h,v) {
 	if(h == null) {
 		h = 100;
 	}
@@ -6557,12 +6557,12 @@ tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new = function(w,h,v) {
 		}
 		_g[0] = w;
 		_g[1] = h;
-		v = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
+		v = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
 	}
 	this1 = v;
 	return this1;
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.getEmpty = function(w,h) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.getEmpty = function(w,h) {
 	var l = w * h + 2;
 	var _g = [];
 	var _g2 = 0;
@@ -6572,9 +6572,9 @@ tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.getEmpty = function(w,h) {
 	}
 	_g[0] = w;
 	_g[1] = h;
-	return tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
+	return polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.clear = function(this1) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.clear = function(this1) {
 	var w = this1[0];
 	var h = this1[1];
 	var v = null;
@@ -6595,12 +6595,12 @@ tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.clear = function(this1) {
 		}
 		_g[0] = w;
 		_g[1] = h;
-		v = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
+		v = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
 	}
 	this2 = v;
 	this1 = this2;
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.fill = function(this1) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.fill = function(this1) {
 	var i = 2;
 	var l = this1.length;
 	while(i < l) {
@@ -6608,35 +6608,35 @@ tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.fill = function(this1) {
 		++i;
 	}
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.addOne = function(this1,x,y) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.addOne = function(this1,x,y) {
 	this1[2 + this1[0] * y + x | 0] = 1;
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.addZero = function(this1,x,y) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.addZero = function(this1,x,y) {
 	this1[2 + this1[0] * y + x | 0] = 0;
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.id = function(x,y,w) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.id = function(x,y,w) {
 	return 2 + w * y + x | 0;
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.get_width = function(this1) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.get_width = function(this1) {
 	return this1[0];
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.get_height = function(this1) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.get_height = function(this1) {
 	return this1[1];
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.isZero = function(this1,x,y) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.isZero = function(this1,x,y) {
 	return this1[2 + this1[0] * y + x | 0] == 0;
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.isOne = function(this1,x,y) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.isOne = function(this1,x,y) {
 	return this1[2 + this1[0] * y + x | 0] == 1;
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.getValue = function(this1,x,y) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.getValue = function(this1,x,y) {
 	return this1[2 + this1[0] * y + x | 0];
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.setValue = function(this1,x,y,value) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.setValue = function(this1,x,y,value) {
 	this1[2 + this1[0] * y + x | 0] = value;
 	return value;
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.rowFull = function(this1,y) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.rowFull = function(this1,y) {
 	var w = this1[0];
 	var s = 2 + w * y | 0;
 	var e = s + w;
@@ -6648,7 +6648,7 @@ tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.rowFull = function(this1,y) {
 	}
 	return ful;
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.getFullRows = function(this1) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.getFullRows = function(this1) {
 	var arr = [];
 	var _g1 = 0;
 	var _g = this1[1];
@@ -6667,7 +6667,7 @@ tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.getFullRows = function(this1) {
 	}
 	return arr;
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.rowEmpty = function(this1,y) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.rowEmpty = function(this1,y) {
 	var w = this1[0];
 	var s = 2 + w * y | 0;
 	var e = s + w;
@@ -6679,7 +6679,7 @@ tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.rowEmpty = function(this1,y) {
 	}
 	return emp;
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.moveRow = function(this1,startY,endY) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.moveRow = function(this1,startY,endY) {
 	var w = this1[0];
 	var s0 = 2 + w * startY | 0;
 	var e0 = 2 + w * endY | 0;
@@ -6690,7 +6690,7 @@ tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.moveRow = function(this1,startY,endY)
 		this1[s0 + i] = 0;
 	}
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.copyRow = function(this1,startY,endY) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.copyRow = function(this1,startY,endY) {
 	var w = this1[0];
 	var s0 = 2 + w * startY | 0;
 	var e0 = 2 + w * endY | 0;
@@ -6700,19 +6700,19 @@ tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.copyRow = function(this1,startY,endY)
 		this1[e0 + i] = this1[s0 + i];
 	}
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.oneRow = function(this1,y) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.oneRow = function(this1,y) {
 	var w = this1[0];
 	var s = 2 + w * y | 0;
 	var _g1 = 0;
 	while(_g1 < w) this1[s + _g1++] = 1;
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.zeroRow = function(this1,y) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.zeroRow = function(this1,y) {
 	var w = this1[0];
 	var s = 2 + w * y | 0;
 	var _g1 = 0;
 	while(_g1 < w) this1[s + _g1++] = 0;
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.removeRowsUnshift0 = function(this1,rowStart,rowEnd) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.removeRowsUnshift0 = function(this1,rowStart,rowEnd) {
 	var l = rowEnd - rowStart + 1;
 	var rowUpto = rowStart - 1;
 	var _g1 = 0;
@@ -6739,7 +6739,7 @@ tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.removeRowsUnshift0 = function(this1,r
 		}
 	}
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.rowToString = function(this1,y) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.rowToString = function(this1,y) {
 	var w = this1[0];
 	var s = 2 + w * y | 0;
 	var e = s + w;
@@ -6748,7 +6748,7 @@ tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.rowToString = function(this1,y) {
 	while(_g1 < e) str = str + this1[_g1++] + "  ";
 	return str;
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.clash = function(this1,arrP,offX,offY) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.clash = function(this1,arrP,offX,offY) {
 	if(offY == null) {
 		offY = 0;
 	}
@@ -6768,7 +6768,7 @@ tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.clash = function(this1,arrP,offX,offY
 	}
 	return clash;
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.addPoints = function(this1,arrP,offX,offY) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.addPoints = function(this1,arrP,offX,offY) {
 	if(offY == null) {
 		offY = 0;
 	}
@@ -6783,7 +6783,7 @@ tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.addPoints = function(this1,arrP,offX,
 		this1[2 + this1[0] * (p.y + offY) + (p.x + offX) | 0] = 1;
 	}
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.overlap = function(a,b) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.overlap = function(a,b) {
 	var la = a.length;
 	if(la != b.length) {
 		throw new js__$Boot_HaxeError("can t compare Arr2D");
@@ -6803,7 +6803,7 @@ tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.overlap = function(a,b) {
 	}
 	return overlapped;
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.merge = function(this1,b) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.merge = function(this1,b) {
 	var la = this1.length;
 	if(la != b.length) {
 		throw new js__$Boot_HaxeError("can t compare Arr2D");
@@ -6837,7 +6837,7 @@ tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.merge = function(this1,b) {
 		return true;
 	}
 };
-tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.prettyString = function(this1) {
+polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$.prettyString = function(this1) {
 	var str = "";
 	var _g1 = 0;
 	var _g = this1[1];
@@ -6852,7 +6852,7 @@ tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$.prettyString = function(this1) {
 	}
 	return str;
 };
-var tetrisTriangles_game_Background = function(shape_,wide_,hi_,col0_,col1_,col2_,col3_) {
+var polyominoTriangles_game_Background = function(shape_,wide_,hi_,col0_,col1_,col2_,col3_) {
 	this.shape = shape_;
 	this.wide = wide_;
 	this.hi = hi_;
@@ -6882,8 +6882,8 @@ var tetrisTriangles_game_Background = function(shape_,wide_,hi_,col0_,col1_,col2
 		}
 	}
 };
-tetrisTriangles_game_Background.__name__ = ["tetrisTriangles","game","Background"];
-tetrisTriangles_game_Background.prototype = {
+polyominoTriangles_game_Background.__name__ = ["polyominoTriangles","game","Background"];
+polyominoTriangles_game_Background.prototype = {
 	shape: null
 	,wide: null
 	,hi: null
@@ -6892,7 +6892,7 @@ tetrisTriangles_game_Background.prototype = {
 	,bgCol2: null
 	,bgCol3: null
 	,bgSquares: null
-	,drawTetris: function(shapePositions,offX,offY) {
+	,drawPolyomino: function(shapePositions,offX,offY) {
 		var col0_ = this.bgCol0;
 		var col1_ = this.bgCol1;
 		var col2_ = this.bgCol2;
@@ -6998,9 +6998,9 @@ tetrisTriangles_game_Background.prototype = {
 	,locations: function(arr) {
 		return this.shape.getCentreInt(arr);
 	}
-	,__class__: tetrisTriangles_game_Background
+	,__class__: polyominoTriangles_game_Background
 };
-var tetrisTriangles_game_Controller = function(id_,triangles_,wide_,hi_,dia_,gap_,offX_,offY_) {
+var polyominoTriangles_game_Controller = function(id_,triangles_,wide_,hi_,dia_,gap_,offX_,offY_) {
 	this.col1 = 5;
 	this.col0 = 1;
 	this.shapes = [];
@@ -7025,7 +7025,7 @@ var tetrisTriangles_game_Controller = function(id_,triangles_,wide_,hi_,dia_,gap
 		}
 		_g[0] = w;
 		_g[1] = h;
-		v = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
+		v = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
 	}
 	this1 = v;
 	this.inertArr = this1;
@@ -7037,10 +7037,10 @@ var tetrisTriangles_game_Controller = function(id_,triangles_,wide_,hi_,dia_,gap
 	this.offX = offX_;
 	this.offY = offY_;
 	this.diaSq = (this.dia - this.dia / 10000) * (this.dia - this.dia / 10000);
-	this.shapeGenerator = new tetrisTriangles_game_ShapeGenerator($bind(this,this.createTetris));
+	this.shapeGenerator = new polyominoTriangles_game_ShapeGenerator($bind(this,this.createPolyomino));
 };
-tetrisTriangles_game_Controller.__name__ = ["tetrisTriangles","game","Controller"];
-tetrisTriangles_game_Controller.prototype = {
+polyominoTriangles_game_Controller.__name__ = ["polyominoTriangles","game","Controller"];
+polyominoTriangles_game_Controller.prototype = {
 	inertArr: null
 	,shapes: null
 	,shapeGenerator: null
@@ -7057,11 +7057,11 @@ tetrisTriangles_game_Controller.prototype = {
 	,wide: null
 	,hi: null
 	,diaSq: null
-	,onTetrisShapeLanded: null
+	,onPolyominoShapeLanded: null
 	,onGameEnd: null
 	,createShape: function(p,col0_,col1_,shapePreference) {
 		if(shapePreference == null) {
-			shapePreference = "tetris_random";
+			shapePreference = "polyomino_random";
 		}
 		this.col0 = col0_;
 		this.col1 = col1_;
@@ -7187,8 +7187,8 @@ tetrisTriangles_game_Controller.prototype = {
 		if(end) {
 			this.onGameEnd();
 		}
-		if(this.onTetrisShapeLanded != null && hit && !end) {
-			this.onTetrisShapeLanded();
+		if(this.onPolyominoShapeLanded != null && hit && !end) {
+			this.onPolyominoShapeLanded();
 		}
 		return hit;
 	}
@@ -7519,11 +7519,11 @@ tetrisTriangles_game_Controller.prototype = {
 		var _g1 = 0;
 		while(_g1 < l) this.shapes[_g1++].moveDelta(x,y);
 	}
-	,createTetris: function(p,snapped) {
-		return new tetrisTriangles_game_Shape(this.id,this.triangles,p,this.col0,this.col1,this.dia,this.gap,snapped,this.offX,this.offY);
+	,createPolyomino: function(p,snapped) {
+		return new polyominoTriangles_game_Shape(this.id,this.triangles,p,this.col0,this.col1,this.dia,this.gap,snapped,this.offX,this.offY);
 	}
 	,createBg: function(p,wide,hi,col0_,col1_,col2_,col3_) {
-		this.background = new tetrisTriangles_game_Background(new tetrisTriangles_game_Shape(this.id,this.triangles,p,this.col0,this.col1,this.dia,this.gap,null,this.offX,this.offY),wide,hi + 1,col0_,col1_,col0_,col1_);
+		this.background = new polyominoTriangles_game_Background(new polyominoTriangles_game_Shape(this.id,this.triangles,p,this.col0,this.col1,this.dia,this.gap,null,this.offX,this.offY),wide,hi + 1,col0_,col1_,col0_,col1_);
 	}
 	,addHitPointsInt: function(arrP) {
 		var arr2d = this.inertArr;
@@ -7545,10 +7545,10 @@ tetrisTriangles_game_Controller.prototype = {
 		}
 	}
 	,createBottom: function(p,wide,col0_,col1_) {
-		var templates = new tetrisTriangles_game_Templates($bind(this,this.createTetris));
+		var templates = new polyominoTriangles_game_Templates($bind(this,this.createPolyomino));
 		this.col0 = col0_;
 		this.col1 = col1_;
-		var ts = templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+		var ts = templates.createPolyomino(p,polyominoTriangles_game_Snapped.Always);
 		var _g1 = 0;
 		while(_g1 < wide) ts.addBlock(_g1++,0,false,true);
 		this.bottom = ts;
@@ -7563,9 +7563,9 @@ tetrisTriangles_game_Controller.prototype = {
 			arr2d[2 + arr2d[0] * (p1.y + -2) + p1.x | 0] = 1;
 		}
 	}
-	,__class__: tetrisTriangles_game_Controller
+	,__class__: polyominoTriangles_game_Controller
 };
-var tetrisTriangles_game_Layout = function(controller_,originP_,wide_,hi_,dia_) {
+var polyominoTriangles_game_Layout = function(controller_,originP_,wide_,hi_,dia_) {
 	this.shapeid = 1;
 	this.noBlocks = 1;
 	this.above = 7;
@@ -7579,8 +7579,8 @@ var tetrisTriangles_game_Layout = function(controller_,originP_,wide_,hi_,dia_) 
 	this.fallingBlocks(this.noBlocks,this.above * this.dia);
 	this.bottom(bottomP);
 };
-tetrisTriangles_game_Layout.__name__ = ["tetrisTriangles","game","Layout"];
-tetrisTriangles_game_Layout.prototype = {
+polyominoTriangles_game_Layout.__name__ = ["polyominoTriangles","game","Layout"];
+polyominoTriangles_game_Layout.prototype = {
 	controller: null
 	,above: null
 	,noBlocks: null
@@ -7600,7 +7600,7 @@ tetrisTriangles_game_Layout.prototype = {
 		while(_g1 < noBlocks) {
 			var i = _g1++;
 			var m = i % 6 + 1;
-			randX = this.dia + this.dia * Math.round(Math.random() * (this.wide - 0.5));
+			randX = this.dia + this.dia * Math.round(Math.random() * (this.wide - 2));
 			this.controller.createShape({ x : x + randX, y : y - i * aboveY},m,m + 1);
 		}
 	}
@@ -7611,15 +7611,15 @@ tetrisTriangles_game_Layout.prototype = {
 		var randX = this.dia;
 		var randX1 = this.dia;
 		var randX2 = Math.random();
-		this.controller.createShape({ x : x + (randX + randX1 * Math.round(randX2 * (this.wide - 1.5))), y : y},m,m + 1);
+		this.controller.createShape({ x : x + (randX + randX1 * Math.round(randX2 * (this.wide - 2))), y : y},m,m + 1);
 		this.shapeid++;
 	}
 	,bottom: function(p) {
 		this.controller.createBottom(p,this.wide,8,9);
 	}
-	,__class__: tetrisTriangles_game_Layout
+	,__class__: polyominoTriangles_game_Layout
 };
-var tetrisTriangles_game_Movement = function(controller_,dia_) {
+var polyominoTriangles_game_Movement = function(controller_,dia_) {
 	this.jy = 0.;
 	this.jx = 0.;
 	this.toggleY = false;
@@ -7631,8 +7631,8 @@ var tetrisTriangles_game_Movement = function(controller_,dia_) {
 	this.controller = controller_;
 	this.dia = dia_;
 };
-tetrisTriangles_game_Movement.__name__ = ["tetrisTriangles","game","Movement"];
-tetrisTriangles_game_Movement.prototype = {
+polyominoTriangles_game_Movement.__name__ = ["polyominoTriangles","game","Movement"];
+polyominoTriangles_game_Movement.prototype = {
 	controller: null
 	,dia: null
 	,fallSpeed: null
@@ -7859,11 +7859,336 @@ tetrisTriangles_game_Movement.prototype = {
 		this.jy = 0.;
 		this.jx = 0.;
 	}
-	,__class__: tetrisTriangles_game_Movement
+	,__class__: polyominoTriangles_game_Movement
 };
-var tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$ = {};
-tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.__name__ = ["tetrisTriangles","game","_RookAngle","RookAngle_Impl_"];
-tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$._new = function(angle) {
+var polyominoTriangles_game_Polyomino = function(scale) {
+	if(scale == null) {
+		scale = 1;
+	}
+	this.end = false;
+	this.offY = 0;
+	this.offX = 0;
+	this.hi = 30;
+	this.wide = 8;
+	this.edge = 0.01;
+	this.dia = 0.075;
+	this.scaleDimensions(scale);
+	this.createPolyomino();
+	this.interaction();
+	this.startGame();
+};
+polyominoTriangles_game_Polyomino.__name__ = ["polyominoTriangles","game","Polyomino"];
+polyominoTriangles_game_Polyomino.prototype = {
+	controller: null
+	,dia: null
+	,edge: null
+	,wide: null
+	,hi: null
+	,offX: null
+	,offY: null
+	,layout: null
+	,rotation: null
+	,movement: null
+	,end: null
+	,scaleDimensions: function(scale) {
+		this.dia = scale * this.dia;
+		this.edge = scale * this.edge;
+	}
+	,setLeftRightStops: function() {
+		this.movement.leftStop = this.dia * this.offX;
+		this.movement.rightStop = this.dia * this.offX + this.wide * this.dia;
+	}
+	,createPolyomino: function() {
+		this.controller = new polyominoTriangles_game_Controller(0,justTriangles_Triangle.triangles,this.wide,this.hi,this.dia,this.edge,this.offX,this.offY - 4);
+	}
+	,startGame: function() {
+		this.layout = new polyominoTriangles_game_Layout(this.controller,{ x : this.dia * this.offX, y : this.dia * this.offY},this.wide,this.hi,this.dia);
+		this.controller.onPolyominoShapeLanded = $bind(this,this.newShape);
+		this.controller.onGameEnd = $bind(this,this.gameEnd);
+	}
+	,newShape: function() {
+		this.rotation.reset();
+		this.movement.reset();
+		this.layout.createTile();
+	}
+	,gameEnd: function() {
+		this.end = true;
+	}
+	,interaction: function() {
+		this.rotation = new polyominoTriangles_game_Rotation(this.controller);
+		this.movement = new polyominoTriangles_game_Movement(this.controller,this.dia);
+		this.setLeftRightStops();
+	}
+	,update: function() {
+		var c1_y;
+		var c1_x;
+		var c0_y;
+		var c0_x;
+		if(this.end) {
+			return;
+		}
+		var _this = this.controller;
+		var l = _this.shapes.length;
+		var shape;
+		var hit = false;
+		var _g1 = 0;
+		while(_g1 < l) {
+			shape = _this.shapes[_g1++];
+			shape.getLocation();
+			var diaSq = _this.diaSq;
+			var vb0 = shape.virtualBlocks;
+			var vb1 = _this.bottom.blocks;
+			var l0 = vb0.length;
+			var l1 = vb1.length;
+			var sq0;
+			var sq1;
+			var out = false;
+			var _g11 = 0;
+			while(_g11 < l0) {
+				sq0 = vb0[_g11++];
+				var _g3 = 0;
+				while(_g3 < l1) {
+					sq1 = vb1[_g3++];
+					var dx = sq0.t0.bx;
+					var dy = sq0.t0.by;
+					var ex = sq0.t0.cx;
+					var ey = sq0.t0.cy;
+					if(dx < ex) {
+						c0_x = dx + (ex - dx) / 2;
+					} else {
+						c0_x = ex + (dx - ex) / 2;
+					}
+					if(dy < ey) {
+						c0_y = dy + (ey - dy) / 2;
+					} else {
+						c0_y = dy + (dy - ey) / 2 - sq0.dia;
+					}
+					var dx1 = sq1.t0.bx;
+					var dy1 = sq1.t0.by;
+					var ex1 = sq1.t0.cx;
+					var ey1 = sq1.t0.cy;
+					if(dx1 < ex1) {
+						c1_x = dx1 + (ex1 - dx1) / 2;
+					} else {
+						c1_x = ex1 + (dx1 - ex1) / 2;
+					}
+					if(dy1 < ey1) {
+						c1_y = dy1 + (ey1 - dy1) / 2;
+					} else {
+						c1_y = dy1 + (dy1 - ey1) / 2 - sq1.dia;
+					}
+					var dx2 = c0_x - c1_x;
+					var dy2 = c0_y - c1_y;
+					if(dx2 * dx2 + dy2 * dy2 < diaSq) {
+						out = true;
+						break;
+					}
+				}
+			}
+			if(out) {
+				var beta;
+				if(shape.angle < 0) {
+					beta = -shape.angle + 180;
+				}
+				beta = shape.angle % (2 * Math.PI);
+				shape.rotate(shape.rook - beta);
+				var newLoc;
+				var _g12 = 0;
+				var _g = shape.lastLocation.length;
+				while(_g12 < _g) {
+					var i = _g12++;
+					newLoc = shape.newLocation[i];
+					shape.blocks[i].set_x(newLoc.x * shape.dia);
+					shape.blocks[i].set_y(newLoc.y * shape.dia);
+					shape.virtualBlocks[i].set_x(newLoc.x * shape.dia);
+					shape.virtualBlocks[i].set_y(newLoc.y * shape.dia);
+				}
+				var newBlocks = shape.clearBlocks();
+				var l2 = newBlocks.length;
+				var _g13 = 0;
+				while(_g13 < l2) _this.bottom.pushBlock(newBlocks[_g13++]);
+				var arrP = shape.lastLocation;
+				var arr2d = _this.inertArr;
+				var lp = arrP.length;
+				var p;
+				var _g14 = 0;
+				while(_g14 < lp) {
+					p = arrP[_g14++];
+					arr2d[2 + arr2d[0] * (p.y + -2) + p.x | 0] = 1;
+				}
+				_this.removeFullRows();
+				hit = true;
+			}
+		}
+		var this1 = _this.inertArr;
+		var w = this1[0];
+		var s = 2 + w * 0 | 0;
+		var e = s + w;
+		var emp = true;
+		var _g15 = s;
+		while(_g15 < e) if(this1[_g15++] == 1) {
+			emp = false;
+			break;
+		}
+		var end = !emp;
+		if(end) {
+			_this.onGameEnd();
+		}
+		if(_this.onPolyominoShapeLanded != null && hit && !end) {
+			_this.onPolyominoShapeLanded();
+		}
+		if(!hit) {
+			var _this1 = this.rotation;
+			if(_this1.toggle) {
+				var _this2 = _this1.controller;
+				var theta = Math.PI / _this1.rotationSpeed;
+				var l3 = _this2.shapes.length;
+				var _g16 = 0;
+				while(_g16 < l3) _this2.shapes[_g16++].rotate(theta);
+			}
+			if(_this1.count % (_this1.rotationSpeed / 2) == 0.) {
+				_this1.count = 0.;
+				_this1.toggle = false;
+			}
+			_this1.count += 1.;
+			var _this3 = this.movement;
+			var djx = 0.;
+			var djy = 0.;
+			if(_this3.toggleX) {
+				if(_this3.jumpX > 0) {
+					djx = _this3.jumpX / _this3.jumpSpeed;
+					if((_this3.jx += djx) > _this3.jumpX + djx / 2) {
+						_this3.toggleX = false;
+						_this3.jx = 0.;
+						djx = 0.;
+					}
+				} else {
+					djx = _this3.jumpX / _this3.jumpSpeed;
+					if((_this3.jx += djx) < _this3.jumpX + djx / 2) {
+						_this3.toggleX = false;
+						_this3.jx = 0.;
+						djx = 0.;
+					}
+				}
+			}
+			if(_this3.toggleY) {
+				if(_this3.jumpY > 0) {
+					djy = _this3.jumpY / _this3.jumpSpeed;
+					if((_this3.jy += djy) > _this3.jumpY + djy / 2) {
+						_this3.toggleY = false;
+						_this3.jy = 0.;
+						djy = 0.;
+					}
+				} else {
+					djy = _this3.jumpY / _this3.jumpSpeed;
+					if((_this3.jy += djx) < _this3.jumpY + djy / 2) {
+						_this3.toggleY = false;
+						_this3.jy = 0.;
+						djy = 0.;
+					}
+				}
+			}
+			if(_this3.toggleX) {
+				var _this4 = _this3.controller;
+				var leftStop = _this3.leftStop;
+				var rightStop = _this3.rightStop;
+				var l4 = _this4.shapes.length;
+				var shape1;
+				var _g17 = 0;
+				while(_g17 < l4) {
+					shape1 = _this4.shapes[_g17++];
+					if(shape1.blocks != null && shape1.blocks.length != 0) {
+						var sqr = shape1.blocks;
+						var sides0;
+						if(sqr == null) {
+							sides0 = null;
+						} else if(sqr.length == 0) {
+							sides0 = null;
+						} else {
+							var l5 = sqr.length;
+							var square = sqr[0];
+							var bx = square.get_x();
+							var br = square.get_right();
+							var _g18 = 1;
+							while(_g18 < l5) {
+								square = sqr[_g18++];
+								bx = Math.min(bx,square.get_x());
+								br = Math.max(br,square.get_right());
+							}
+							sides0 = { x : bx, right : br};
+						}
+						var sqr1 = shape1.virtualBlocks;
+						var sides1;
+						if(sqr1 == null) {
+							sides1 = null;
+						} else if(sqr1.length == 0) {
+							sides1 = null;
+						} else {
+							var l6 = sqr1.length;
+							var square1 = sqr1[0];
+							var bx1 = square1.get_x();
+							var br1 = square1.get_right();
+							var _g19 = 1;
+							while(_g19 < l6) {
+								square1 = sqr1[_g19++];
+								bx1 = Math.min(bx1,square1.get_x());
+								br1 = Math.max(br1,square1.get_right());
+							}
+							sides1 = { x : bx1, right : br1};
+						}
+						var sides = { x : Math.min(sides0.x,sides1.x), right : Math.max(sides0.right,sides1.right)};
+						if(sides != null) {
+							if(djx < 0) {
+								if(sides.x + djx > leftStop) {
+									shape1.moveX(djx);
+								} else {
+									shape1.moveX(leftStop - sides.x);
+								}
+							} else if(djx > 0) {
+								if(sides.right + djx < rightStop) {
+									shape1.moveX(djx);
+								} else {
+									shape1.moveX(rightStop - sides.right);
+								}
+							}
+						}
+					}
+				}
+			}
+			var _this5 = _this3.controller;
+			var y = _this3.fallSpeed + djy;
+			var l7 = _this5.shapes.length;
+			var _g110 = 0;
+			while(_g110 < l7) _this5.shapes[_g110++].moveDelta(0.0,y);
+		}
+	}
+	,rotate: function(i) {
+		var _this = this.rotation;
+		if(!_this.toggle) {
+			_this.toggle = true;
+			_this.count = 1.0;
+		}
+	}
+	,move: function(x,y) {
+		var _this = this.movement;
+		if(!_this.toggleX) {
+			if(!_this.toggleY) {
+				if(x != 0) {
+					_this.toggleX = true;
+				}
+				if(y != 0) {
+					_this.toggleY = true;
+				}
+				_this.jumpX = x * _this.dia;
+				_this.jumpY = y * _this.dia;
+			}
+		}
+	}
+	,__class__: polyominoTriangles_game_Polyomino
+};
+var polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$ = {};
+polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.__name__ = ["polyominoTriangles","game","_RookAngle","RookAngle_Impl_"];
+polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$._new = function(angle) {
 	var this1;
 	if(angle < 0) {
 		var angle1 = -angle % (2 * Math.PI);
@@ -7898,7 +8223,7 @@ tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$._new = function(angle) {
 	}
 	return this1;
 };
-tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat = function(f) {
+polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat = function(f) {
 	var this1;
 	if(f < 0) {
 		var angle = -f % (2 * Math.PI);
@@ -7933,7 +8258,7 @@ tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat = function(f) {
 	}
 	return this1;
 };
-tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromInt = function(i) {
+polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.fromInt = function(i) {
 	var angle = i * 1.;
 	var this1;
 	if(angle < 0) {
@@ -7969,10 +8294,10 @@ tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromInt = function(i) {
 	}
 	return this1;
 };
-tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.limit0_2pi = function(angle) {
+polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.limit0_2pi = function(angle) {
 	return angle % (2 * Math.PI);
 };
-tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.rook0_2pi = function(angle) {
+polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.rook0_2pi = function(angle) {
 	if(angle == 0.) {
 		return 0.;
 	} else if(angle < Math.PI / 4) {
@@ -7987,7 +8312,7 @@ tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.rook0_2pi = function(angle) {
 		return 0.;
 	}
 };
-tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.negativeRook0_2pi = function(angle) {
+polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.negativeRook0_2pi = function(angle) {
 	if(angle == 0.) {
 		return 0.;
 	} else if(angle < Math.PI / 4) {
@@ -8002,7 +8327,7 @@ tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.negativeRook0_2pi = function(
 		return 0.;
 	}
 };
-tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.compassString = function(this1) {
+polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.compassString = function(this1) {
 	if(this1 == 0.) {
 		return "North";
 	} else if(this1 == Math.PI / 2) {
@@ -8015,7 +8340,7 @@ tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.compassString = function(this
 		return "angle not found " + this1;
 	}
 };
-tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.radiusString = function(this1) {
+polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.radiusString = function(this1) {
 	if(this1 == 0.) {
 		return "0";
 	} else if(this1 == Math.PI / 2) {
@@ -8028,7 +8353,7 @@ tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.radiusString = function(this1
 		return "angle not found " + this1;
 	}
 };
-tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.degrees = function(this1) {
+polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.degrees = function(this1) {
 	if(this1 == 0.) {
 		return 0.;
 	} else if(this1 == Math.PI / 2) {
@@ -8041,7 +8366,7 @@ tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.degrees = function(this1) {
 		return 0;
 	}
 };
-tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.clockRotate = function(this1) {
+polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.clockRotate = function(this1) {
 	var angle = this1 + 90;
 	var this2;
 	if(angle < 0) {
@@ -8076,9 +8401,9 @@ tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.clockRotate = function(this1)
 		}
 	}
 	this1 = this2;
-	return tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this1);
+	return polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this1);
 };
-tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.antiClockRotate = function(this1) {
+polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.antiClockRotate = function(this1) {
 	var angle = this1 - 90;
 	var this2;
 	if(angle < 0) {
@@ -8113,9 +8438,9 @@ tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.antiClockRotate = function(th
 		}
 	}
 	this1 = this2;
-	return tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this1);
+	return polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this1);
 };
-tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.upsideDown = function(this1) {
+polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.upsideDown = function(this1) {
 	var angle = this1 + 180;
 	var this2;
 	if(angle < 0) {
@@ -8150,9 +8475,9 @@ tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.upsideDown = function(this1) 
 		}
 	}
 	this1 = this2;
-	return tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this1);
+	return polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this1);
 };
-tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.pp = function(this1) {
+polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.pp = function(this1) {
 	var angle = this1 + 90;
 	var this2;
 	if(angle < 0) {
@@ -8187,9 +8512,9 @@ tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.pp = function(this1) {
 		}
 	}
 	this1 = this2;
-	return tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this1);
+	return polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this1);
 };
-tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.mm = function(this1) {
+polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.mm = function(this1) {
 	var angle = this1 - 90;
 	var this2;
 	if(angle < 0) {
@@ -8224,16 +8549,16 @@ tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.mm = function(this1) {
 		}
 	}
 	this1 = this2;
-	return tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this1);
+	return polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this1);
 };
-var tetrisTriangles_game_Rotation = function(controller_) {
+var polyominoTriangles_game_Rotation = function(controller_) {
 	this.rotationSpeed = 20;
 	this.count = 0.;
 	this.toggle = false;
 	this.controller = controller_;
 };
-tetrisTriangles_game_Rotation.__name__ = ["tetrisTriangles","game","Rotation"];
-tetrisTriangles_game_Rotation.prototype = {
+polyominoTriangles_game_Rotation.__name__ = ["polyominoTriangles","game","Rotation"];
+polyominoTriangles_game_Rotation.prototype = {
 	controller: null
 	,toggle: null
 	,count: null
@@ -8265,22 +8590,22 @@ tetrisTriangles_game_Rotation.prototype = {
 		this.toggle = false;
 		this.count = 0;
 	}
-	,__class__: tetrisTriangles_game_Rotation
+	,__class__: polyominoTriangles_game_Rotation
 };
-var tetrisTriangles_game_Snapped = { __ename__ : true, __constructs__ : ["Always","Zero","Ninety","Fix"] };
-tetrisTriangles_game_Snapped.Always = ["Always",0];
-tetrisTriangles_game_Snapped.Always.toString = $estr;
-tetrisTriangles_game_Snapped.Always.__enum__ = tetrisTriangles_game_Snapped;
-tetrisTriangles_game_Snapped.Zero = ["Zero",1];
-tetrisTriangles_game_Snapped.Zero.toString = $estr;
-tetrisTriangles_game_Snapped.Zero.__enum__ = tetrisTriangles_game_Snapped;
-tetrisTriangles_game_Snapped.Ninety = ["Ninety",2];
-tetrisTriangles_game_Snapped.Ninety.toString = $estr;
-tetrisTriangles_game_Snapped.Ninety.__enum__ = tetrisTriangles_game_Snapped;
-tetrisTriangles_game_Snapped.Fix = ["Fix",3];
-tetrisTriangles_game_Snapped.Fix.toString = $estr;
-tetrisTriangles_game_Snapped.Fix.__enum__ = tetrisTriangles_game_Snapped;
-var tetrisTriangles_game_Shape = function(id_,triangles_,centre_,col0_,col1_,dia_,gap_,snapped_,offX_,offY_) {
+var polyominoTriangles_game_Snapped = { __ename__ : true, __constructs__ : ["Always","Zero","Ninety","Fix"] };
+polyominoTriangles_game_Snapped.Always = ["Always",0];
+polyominoTriangles_game_Snapped.Always.toString = $estr;
+polyominoTriangles_game_Snapped.Always.__enum__ = polyominoTriangles_game_Snapped;
+polyominoTriangles_game_Snapped.Zero = ["Zero",1];
+polyominoTriangles_game_Snapped.Zero.toString = $estr;
+polyominoTriangles_game_Snapped.Zero.__enum__ = polyominoTriangles_game_Snapped;
+polyominoTriangles_game_Snapped.Ninety = ["Ninety",2];
+polyominoTriangles_game_Snapped.Ninety.toString = $estr;
+polyominoTriangles_game_Snapped.Ninety.__enum__ = polyominoTriangles_game_Snapped;
+polyominoTriangles_game_Snapped.Fix = ["Fix",3];
+polyominoTriangles_game_Snapped.Fix.toString = $estr;
+polyominoTriangles_game_Snapped.Fix.__enum__ = polyominoTriangles_game_Snapped;
+var polyominoTriangles_game_Shape = function(id_,triangles_,centre_,col0_,col1_,dia_,gap_,snapped_,offX_,offY_) {
 	if(offY_ == null) {
 		offY_ = 0;
 	}
@@ -8290,10 +8615,10 @@ var tetrisTriangles_game_Shape = function(id_,triangles_,centre_,col0_,col1_,dia
 	this.newLocation = [];
 	this.lastLocation = [];
 	this.locked = false;
-	this.lastRook = tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(0.);
-	this.rook = tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(0.);
+	this.lastRook = polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(0.);
+	this.rook = polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(0.);
 	this.angle = 0.;
-	if(snapped_ == tetrisTriangles_game_Snapped.Zero || snapped_ == tetrisTriangles_game_Snapped.Fix) {
+	if(snapped_ == polyominoTriangles_game_Snapped.Zero || snapped_ == polyominoTriangles_game_Snapped.Fix) {
 		centre_.x -= dia_ / 2;
 	}
 	this.centre = centre_;
@@ -8310,8 +8635,8 @@ var tetrisTriangles_game_Shape = function(id_,triangles_,centre_,col0_,col1_,dia
 	this.blocks = [];
 	this.virtualBlocks = [];
 };
-tetrisTriangles_game_Shape.__name__ = ["tetrisTriangles","game","Shape"];
-tetrisTriangles_game_Shape.getShapeBounds = function(sqr) {
+polyominoTriangles_game_Shape.__name__ = ["polyominoTriangles","game","Shape"];
+polyominoTriangles_game_Shape.getShapeBounds = function(sqr) {
 	if(sqr == null) {
 		return null;
 	} else if(sqr.length == 0) {
@@ -8334,7 +8659,7 @@ tetrisTriangles_game_Shape.getShapeBounds = function(sqr) {
 		return { x : bx, y : by, right : br, bottom : bb};
 	}
 };
-tetrisTriangles_game_Shape.getShapeSides = function(sqr) {
+polyominoTriangles_game_Shape.getShapeSides = function(sqr) {
 	if(sqr == null) {
 		return null;
 	} else if(sqr.length == 0) {
@@ -8353,7 +8678,7 @@ tetrisTriangles_game_Shape.getShapeSides = function(sqr) {
 		return { x : bx, right : br};
 	}
 };
-tetrisTriangles_game_Shape.shapeClose = function(sh0,sh1,diaSq) {
+polyominoTriangles_game_Shape.shapeClose = function(sh0,sh1,diaSq) {
 	var c1_y;
 	var c1_x;
 	var c0_y;
@@ -8409,7 +8734,7 @@ tetrisTriangles_game_Shape.shapeClose = function(sh0,sh1,diaSq) {
 	}
 	return out;
 };
-tetrisTriangles_game_Shape.prototype = {
+polyominoTriangles_game_Shape.prototype = {
 	start: null
 	,snapped: null
 	,centre: null
@@ -8461,9 +8786,9 @@ tetrisTriangles_game_Shape.prototype = {
 			tri = [];
 		}
 		if(addVirtual) {
-			this.virtualBlocks[this.blocks.length] = new tetrisTriangles_game_Square(this.id,[],x0,y0,this.dia,this.gap,13,13);
+			this.virtualBlocks[this.blocks.length] = new polyominoTriangles_game_Square(this.id,[],x0,y0,this.dia,this.gap,13,13);
 		}
-		var sq = new tetrisTriangles_game_Square(this.id,tri,x0,y0,this.dia,this.gap,this.col0,this.col1);
+		var sq = new polyominoTriangles_game_Square(this.id,tri,x0,y0,this.dia,this.gap,this.col0,this.col1);
 		this.blocks[this.blocks.length] = sq;
 		return sq;
 	}
@@ -8545,7 +8870,7 @@ tetrisTriangles_game_Shape.prototype = {
 	}
 	,rotate: function(theta) {
 		this.angle += theta;
-		this.rook = tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this.angle);
+		this.rook = polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this.angle);
 		var l = this.blocks.length;
 		var cos = Math.cos(theta);
 		var sin = Math.sin(theta);
@@ -8567,7 +8892,7 @@ tetrisTriangles_game_Shape.prototype = {
 		}
 		var cos1 = Math.cos(Math.PI / 2);
 		var sin1 = Math.sin(Math.PI / 2);
-		if(tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this.rook) != this.lastRook) {
+		if(polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(this.rook) != this.lastRook) {
 			var l1 = this.virtualBlocks.length;
 			var _g1 = 0;
 			while(_g1 < l1) {
@@ -8701,7 +9026,7 @@ tetrisTriangles_game_Shape.prototype = {
 	,rotateVirtual: function(rook) {
 		var cos = Math.cos(Math.PI / 2);
 		var sin = Math.sin(Math.PI / 2);
-		if(tetrisTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(rook) != this.lastRook) {
+		if(polyominoTriangles_game__$RookAngle_RookAngle_$Impl_$.fromFloat(rook) != this.lastRook) {
 			var l = this.virtualBlocks.length;
 			var _g1 = 0;
 			while(_g1 < l) {
@@ -8896,27 +9221,27 @@ tetrisTriangles_game_Shape.prototype = {
 		}
 		return virtualInt;
 	}
-	,__class__: tetrisTriangles_game_Shape
+	,__class__: polyominoTriangles_game_Shape
 };
-var tetrisTriangles_game_ShapeGenerator = function(createShape) {
+var polyominoTriangles_game_ShapeGenerator = function(createShape) {
 	this.random = 0;
 	this.last = -1;
-	this.templates = new tetrisTriangles_game_Templates(createShape);
+	this.templates = new polyominoTriangles_game_Templates(createShape);
 };
-tetrisTriangles_game_ShapeGenerator.__name__ = ["tetrisTriangles","game","ShapeGenerator"];
-tetrisTriangles_game_ShapeGenerator.prototype = {
+polyominoTriangles_game_ShapeGenerator.__name__ = ["polyominoTriangles","game","ShapeGenerator"];
+polyominoTriangles_game_ShapeGenerator.prototype = {
 	templates: null
 	,abc: null
 	,last: null
 	,random: null
 	,randomShape: function(p,col0_,col1_,shape) {
 		if(shape == null) {
-			shape = "tetris_random";
+			shape = "polyomino_random";
 		}
 		var ts;
 		if(shape == null) {
 			if(shape == null) {
-				var ts1 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+				var ts1 = this.templates.createPolyomino(p,polyominoTriangles_game_Snapped.Always);
 				ts1.addBlock(-1,-1);
 				ts1.addBlock(0,-1);
 				ts1.addBlock(-1,0);
@@ -8924,40 +9249,40 @@ tetrisTriangles_game_ShapeGenerator.prototype = {
 				ts = ts1;
 			} else {
 				switch(shape) {
-				case "tetris_L":
-					var ts2 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+				case "polyomino_L":
+					var ts2 = this.templates.createPolyomino(p,polyominoTriangles_game_Snapped.Ninety);
 					ts2.addBlock(-1,-1.5);
 					ts2.addBlock(-1,-0.5);
 					ts2.addBlock(-1,0.5);
 					ts2.addBlock(0,0.5);
 					ts = ts2;
 					break;
-				case "tetris_Z":
-					var ts3 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
+				case "polyomino_Z":
+					var ts3 = this.templates.createPolyomino(p,polyominoTriangles_game_Snapped.Fix);
 					ts3.addBlock(-0.5,-1);
 					ts3.addBlock(0.5,0);
 					ts3.addBlock(0.5,-1);
 					ts3.addBlock(1.5,0);
 					ts = ts3;
 					break;
-				case "tetris_box":
-					var ts4 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+				case "polyomino_box":
+					var ts4 = this.templates.createPolyomino(p,polyominoTriangles_game_Snapped.Always);
 					ts4.addBlock(-1,-1);
 					ts4.addBlock(0,-1);
 					ts4.addBlock(-1,0);
 					ts4.addBlock(0,0);
 					ts = ts4;
 					break;
-				case "tetris_l":
-					var ts5 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Zero);
+				case "polyomino_l":
+					var ts5 = this.templates.createPolyomino(p,polyominoTriangles_game_Snapped.Zero);
 					ts5.addBlock(-0.5,-2);
 					ts5.addBlock(-0.5,-1);
 					ts5.addBlock(-0.5,0);
 					ts5.addBlock(-0.5,1);
 					ts = ts5;
 					break;
-				case "tetris_t":
-					var ts6 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+				case "polyomino_t":
+					var ts6 = this.templates.createPolyomino(p,polyominoTriangles_game_Snapped.Ninety);
 					ts6.addBlock(-1,-1.5);
 					ts6.addBlock(-1,-0.5);
 					ts6.addBlock(-1,0.5);
@@ -8965,7 +9290,7 @@ tetrisTriangles_game_ShapeGenerator.prototype = {
 					ts = ts6;
 					break;
 				default:
-					var ts7 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+					var ts7 = this.templates.createPolyomino(p,polyominoTriangles_game_Snapped.Always);
 					ts7.addBlock(-1,-1);
 					ts7.addBlock(0,-1);
 					ts7.addBlock(-1,0);
@@ -8973,14 +9298,15 @@ tetrisTriangles_game_ShapeGenerator.prototype = {
 					ts = ts7;
 				}
 			}
-		} else if(shape == "tetris_random") {
-			var random = 4 * Math.random() | 0;
+		} else if(shape == "polyomino_random") {
+			var random = Math.round(4 * Math.random());
+			haxe_Log.trace(random,{ fileName : "ShapeGenerator.hx", lineNumber : 47, className : "polyominoTriangles.game.ShapeGenerator", methodName : "randomShape"});
 			if(random == this.last) {
 				return this.randomShape(p,col0_,col1_);
 			}
 			switch(random) {
 			case 0:
-				var ts8 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
+				var ts8 = this.templates.createPolyomino(p,polyominoTriangles_game_Snapped.Fix);
 				ts8.addBlock(-0.5,-1);
 				ts8.addBlock(0.5,0);
 				ts8.addBlock(0.5,-1);
@@ -8989,7 +9315,7 @@ tetrisTriangles_game_ShapeGenerator.prototype = {
 				ts = ts8;
 				break;
 			case 1:
-				var ts9 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+				var ts9 = this.templates.createPolyomino(p,polyominoTriangles_game_Snapped.Ninety);
 				ts9.addBlock(-1,-1.5);
 				ts9.addBlock(-1,-0.5);
 				ts9.addBlock(-1,0.5);
@@ -8998,7 +9324,7 @@ tetrisTriangles_game_ShapeGenerator.prototype = {
 				ts = ts9;
 				break;
 			case 2:
-				var ts10 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+				var ts10 = this.templates.createPolyomino(p,polyominoTriangles_game_Snapped.Always);
 				ts10.addBlock(-1,-1);
 				ts10.addBlock(0,-1);
 				ts10.addBlock(-1,0);
@@ -9007,7 +9333,7 @@ tetrisTriangles_game_ShapeGenerator.prototype = {
 				ts = ts10;
 				break;
 			case 3:
-				var ts11 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+				var ts11 = this.templates.createPolyomino(p,polyominoTriangles_game_Snapped.Ninety);
 				ts11.addBlock(-1,-1.5);
 				ts11.addBlock(-1,-0.5);
 				ts11.addBlock(-1,0.5);
@@ -9016,7 +9342,7 @@ tetrisTriangles_game_ShapeGenerator.prototype = {
 				ts = ts11;
 				break;
 			case 4:
-				var ts12 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Zero);
+				var ts12 = this.templates.createPolyomino(p,polyominoTriangles_game_Snapped.Zero);
 				ts12.addBlock(-0.5,-2);
 				ts12.addBlock(-0.5,-1);
 				ts12.addBlock(-0.5,0);
@@ -9025,7 +9351,7 @@ tetrisTriangles_game_ShapeGenerator.prototype = {
 				ts = ts12;
 				break;
 			default:
-				var ts13 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
+				var ts13 = this.templates.createPolyomino(p,polyominoTriangles_game_Snapped.Fix);
 				ts13.addBlock(-0.5,-1);
 				ts13.addBlock(0.5,0);
 				ts13.addBlock(0.5,-1);
@@ -9034,7 +9360,7 @@ tetrisTriangles_game_ShapeGenerator.prototype = {
 				ts = ts13;
 			}
 		} else if(shape == null) {
-			var ts14 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+			var ts14 = this.templates.createPolyomino(p,polyominoTriangles_game_Snapped.Always);
 			ts14.addBlock(-1,-1);
 			ts14.addBlock(0,-1);
 			ts14.addBlock(-1,0);
@@ -9042,40 +9368,40 @@ tetrisTriangles_game_ShapeGenerator.prototype = {
 			ts = ts14;
 		} else {
 			switch(shape) {
-			case "tetris_L":
-				var ts15 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+			case "polyomino_L":
+				var ts15 = this.templates.createPolyomino(p,polyominoTriangles_game_Snapped.Ninety);
 				ts15.addBlock(-1,-1.5);
 				ts15.addBlock(-1,-0.5);
 				ts15.addBlock(-1,0.5);
 				ts15.addBlock(0,0.5);
 				ts = ts15;
 				break;
-			case "tetris_Z":
-				var ts16 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Fix);
+			case "polyomino_Z":
+				var ts16 = this.templates.createPolyomino(p,polyominoTriangles_game_Snapped.Fix);
 				ts16.addBlock(-0.5,-1);
 				ts16.addBlock(0.5,0);
 				ts16.addBlock(0.5,-1);
 				ts16.addBlock(1.5,0);
 				ts = ts16;
 				break;
-			case "tetris_box":
-				var ts17 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+			case "polyomino_box":
+				var ts17 = this.templates.createPolyomino(p,polyominoTriangles_game_Snapped.Always);
 				ts17.addBlock(-1,-1);
 				ts17.addBlock(0,-1);
 				ts17.addBlock(-1,0);
 				ts17.addBlock(0,0);
 				ts = ts17;
 				break;
-			case "tetris_l":
-				var ts18 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Zero);
+			case "polyomino_l":
+				var ts18 = this.templates.createPolyomino(p,polyominoTriangles_game_Snapped.Zero);
 				ts18.addBlock(-0.5,-2);
 				ts18.addBlock(-0.5,-1);
 				ts18.addBlock(-0.5,0);
 				ts18.addBlock(-0.5,1);
 				ts = ts18;
 				break;
-			case "tetris_t":
-				var ts19 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+			case "polyomino_t":
+				var ts19 = this.templates.createPolyomino(p,polyominoTriangles_game_Snapped.Ninety);
 				ts19.addBlock(-1,-1.5);
 				ts19.addBlock(-1,-0.5);
 				ts19.addBlock(-1,0.5);
@@ -9083,7 +9409,7 @@ tetrisTriangles_game_ShapeGenerator.prototype = {
 				ts = ts19;
 				break;
 			default:
-				var ts20 = this.templates.createTetris(p,tetrisTriangles_game_Snapped.Always);
+				var ts20 = this.templates.createPolyomino(p,polyominoTriangles_game_Snapped.Always);
 				ts20.addBlock(-1,-1);
 				ts20.addBlock(0,-1);
 				ts20.addBlock(-1,0);
@@ -9094,9 +9420,9 @@ tetrisTriangles_game_ShapeGenerator.prototype = {
 		this.last = this.random;
 		return ts;
 	}
-	,__class__: tetrisTriangles_game_ShapeGenerator
+	,__class__: polyominoTriangles_game_ShapeGenerator
 };
-var tetrisTriangles_game_Square = function(id,triangles_,x_,y_,dia_,gap_,col0_,col1_) {
+var polyominoTriangles_game_Square = function(id,triangles_,x_,y_,dia_,gap_,col0_,col1_) {
 	this._x = x_;
 	this._y = y_;
 	this.col0 = col0_;
@@ -9114,8 +9440,8 @@ var tetrisTriangles_game_Square = function(id,triangles_,x_,y_,dia_,gap_,col0_,c
 	this.triangles[l++] = this.t0;
 	this.triangles[l++] = this.t1;
 };
-tetrisTriangles_game_Square.__name__ = ["tetrisTriangles","game","Square"];
-tetrisTriangles_game_Square.squareClose = function(s0,s1,diaSq) {
+polyominoTriangles_game_Square.__name__ = ["polyominoTriangles","game","Square"];
+polyominoTriangles_game_Square.squareClose = function(s0,s1,diaSq) {
 	var dx = s0.t0.bx;
 	var dy = s0.t0.by;
 	var ex = s0.t0.cx;
@@ -9128,7 +9454,7 @@ tetrisTriangles_game_Square.squareClose = function(s0,s1,diaSq) {
 	var dy2 = (dy < ey ? dy + (ey - dy) / 2 : dy + (dy - ey) / 2 - s0.dia) - (dy1 < ey1 ? dy1 + (ey1 - dy1) / 2 : dy1 + (dy1 - ey1) / 2 - s1.dia);
 	return dx2 * dx2 + dy2 * dy2 < diaSq;
 };
-tetrisTriangles_game_Square.prototype = {
+polyominoTriangles_game_Square.prototype = {
 	t0: null
 	,t1: null
 	,id: null
@@ -9380,16 +9706,16 @@ tetrisTriangles_game_Square.prototype = {
 			return true;
 		}
 	}
-	,__class__: tetrisTriangles_game_Square
+	,__class__: polyominoTriangles_game_Square
 };
-var tetrisTriangles_game_Templates = function(createTetris_) {
-	this.createTetris = createTetris_;
+var polyominoTriangles_game_Templates = function(createPolyomino_) {
+	this.createPolyomino = createPolyomino_;
 };
-tetrisTriangles_game_Templates.__name__ = ["tetrisTriangles","game","Templates"];
-tetrisTriangles_game_Templates.prototype = {
-	createTetris: null
+polyominoTriangles_game_Templates.__name__ = ["polyominoTriangles","game","Templates"];
+polyominoTriangles_game_Templates.prototype = {
+	createPolyomino: null
 	,Z: function(p) {
-		var ts = this.createTetris(p,tetrisTriangles_game_Snapped.Fix);
+		var ts = this.createPolyomino(p,polyominoTriangles_game_Snapped.Fix);
 		ts.addBlock(-0.5,-1);
 		ts.addBlock(0.5,0);
 		ts.addBlock(0.5,-1);
@@ -9397,7 +9723,7 @@ tetrisTriangles_game_Templates.prototype = {
 		return ts;
 	}
 	,l: function(p) {
-		var ts = this.createTetris(p,tetrisTriangles_game_Snapped.Zero);
+		var ts = this.createPolyomino(p,polyominoTriangles_game_Snapped.Zero);
 		ts.addBlock(-0.5,-2);
 		ts.addBlock(-0.5,-1);
 		ts.addBlock(-0.5,0);
@@ -9405,7 +9731,7 @@ tetrisTriangles_game_Templates.prototype = {
 		return ts;
 	}
 	,box: function(p) {
-		var ts = this.createTetris(p,tetrisTriangles_game_Snapped.Always);
+		var ts = this.createPolyomino(p,polyominoTriangles_game_Snapped.Always);
 		ts.addBlock(-1,-1);
 		ts.addBlock(0,-1);
 		ts.addBlock(-1,0);
@@ -9413,7 +9739,7 @@ tetrisTriangles_game_Templates.prototype = {
 		return ts;
 	}
 	,L: function(p) {
-		var ts = this.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+		var ts = this.createPolyomino(p,polyominoTriangles_game_Snapped.Ninety);
 		ts.addBlock(-1,-1.5);
 		ts.addBlock(-1,-0.5);
 		ts.addBlock(-1,0.5);
@@ -9421,7 +9747,7 @@ tetrisTriangles_game_Templates.prototype = {
 		return ts;
 	}
 	,t: function(p) {
-		var ts = this.createTetris(p,tetrisTriangles_game_Snapped.Ninety);
+		var ts = this.createPolyomino(p,polyominoTriangles_game_Snapped.Ninety);
 		ts.addBlock(-1,-1.5);
 		ts.addBlock(-1,-0.5);
 		ts.addBlock(-1,0.5);
@@ -9429,351 +9755,26 @@ tetrisTriangles_game_Templates.prototype = {
 		return ts;
 	}
 	,bottom: function(p,wide) {
-		var ts = this.createTetris(p,tetrisTriangles_game_Snapped.Always);
+		var ts = this.createPolyomino(p,polyominoTriangles_game_Snapped.Always);
 		var _g1 = 0;
 		while(_g1 < wide) ts.addBlock(_g1++,0,false,true);
 		return ts;
 	}
-	,__class__: tetrisTriangles_game_Templates
+	,__class__: polyominoTriangles_game_Templates
 };
-var tetrisTriangles_game_Tetris = function(scale) {
-	if(scale == null) {
-		scale = 1;
-	}
-	this.end = false;
-	this.offY = 0;
-	this.offX = 0;
-	this.hi = 30;
-	this.wide = 8;
-	this.edge = 0.01;
-	this.dia = 0.075;
-	this.scaleDimensions(scale);
-	this.createTetris();
-	this.interaction();
-	this.startGame();
-};
-tetrisTriangles_game_Tetris.__name__ = ["tetrisTriangles","game","Tetris"];
-tetrisTriangles_game_Tetris.prototype = {
-	controller: null
-	,dia: null
-	,edge: null
-	,wide: null
-	,hi: null
-	,offX: null
-	,offY: null
-	,layout: null
-	,rotation: null
-	,movement: null
-	,end: null
-	,scaleDimensions: function(scale) {
-		this.dia = scale * this.dia;
-		this.edge = scale * this.edge;
-	}
-	,setLeftRightStops: function() {
-		this.movement.leftStop = this.dia * this.offX;
-		this.movement.rightStop = this.dia * this.offX + this.wide * this.dia;
-	}
-	,createTetris: function() {
-		this.controller = new tetrisTriangles_game_Controller(0,justTriangles_Triangle.triangles,this.wide,this.hi,this.dia,this.edge,this.offX,this.offY - 4);
-	}
-	,startGame: function() {
-		this.layout = new tetrisTriangles_game_Layout(this.controller,{ x : this.dia * this.offX, y : this.dia * this.offY},this.wide,this.hi,this.dia);
-		this.controller.onTetrisShapeLanded = $bind(this,this.newShape);
-		this.controller.onGameEnd = $bind(this,this.gameEnd);
-	}
-	,newShape: function() {
-		this.rotation.reset();
-		this.movement.reset();
-		this.layout.createTile();
-	}
-	,gameEnd: function() {
-		this.end = true;
-	}
-	,interaction: function() {
-		this.rotation = new tetrisTriangles_game_Rotation(this.controller);
-		this.movement = new tetrisTriangles_game_Movement(this.controller,this.dia);
-		this.setLeftRightStops();
-	}
-	,update: function() {
-		var c1_y;
-		var c1_x;
-		var c0_y;
-		var c0_x;
-		if(this.end) {
-			return;
-		}
-		var _this = this.controller;
-		var l = _this.shapes.length;
-		var shape;
-		var hit = false;
-		var _g1 = 0;
-		while(_g1 < l) {
-			shape = _this.shapes[_g1++];
-			shape.getLocation();
-			var diaSq = _this.diaSq;
-			var vb0 = shape.virtualBlocks;
-			var vb1 = _this.bottom.blocks;
-			var l0 = vb0.length;
-			var l1 = vb1.length;
-			var sq0;
-			var sq1;
-			var out = false;
-			var _g11 = 0;
-			while(_g11 < l0) {
-				sq0 = vb0[_g11++];
-				var _g3 = 0;
-				while(_g3 < l1) {
-					sq1 = vb1[_g3++];
-					var dx = sq0.t0.bx;
-					var dy = sq0.t0.by;
-					var ex = sq0.t0.cx;
-					var ey = sq0.t0.cy;
-					if(dx < ex) {
-						c0_x = dx + (ex - dx) / 2;
-					} else {
-						c0_x = ex + (dx - ex) / 2;
-					}
-					if(dy < ey) {
-						c0_y = dy + (ey - dy) / 2;
-					} else {
-						c0_y = dy + (dy - ey) / 2 - sq0.dia;
-					}
-					var dx1 = sq1.t0.bx;
-					var dy1 = sq1.t0.by;
-					var ex1 = sq1.t0.cx;
-					var ey1 = sq1.t0.cy;
-					if(dx1 < ex1) {
-						c1_x = dx1 + (ex1 - dx1) / 2;
-					} else {
-						c1_x = ex1 + (dx1 - ex1) / 2;
-					}
-					if(dy1 < ey1) {
-						c1_y = dy1 + (ey1 - dy1) / 2;
-					} else {
-						c1_y = dy1 + (dy1 - ey1) / 2 - sq1.dia;
-					}
-					var dx2 = c0_x - c1_x;
-					var dy2 = c0_y - c1_y;
-					if(dx2 * dx2 + dy2 * dy2 < diaSq) {
-						out = true;
-						break;
-					}
-				}
-			}
-			if(out) {
-				var beta;
-				if(shape.angle < 0) {
-					beta = -shape.angle + 180;
-				}
-				beta = shape.angle % (2 * Math.PI);
-				shape.rotate(shape.rook - beta);
-				var newLoc;
-				var _g12 = 0;
-				var _g = shape.lastLocation.length;
-				while(_g12 < _g) {
-					var i = _g12++;
-					newLoc = shape.newLocation[i];
-					shape.blocks[i].set_x(newLoc.x * shape.dia);
-					shape.blocks[i].set_y(newLoc.y * shape.dia);
-					shape.virtualBlocks[i].set_x(newLoc.x * shape.dia);
-					shape.virtualBlocks[i].set_y(newLoc.y * shape.dia);
-				}
-				var newBlocks = shape.clearBlocks();
-				var l2 = newBlocks.length;
-				var _g13 = 0;
-				while(_g13 < l2) _this.bottom.pushBlock(newBlocks[_g13++]);
-				var arrP = shape.lastLocation;
-				var arr2d = _this.inertArr;
-				var lp = arrP.length;
-				var p;
-				var _g14 = 0;
-				while(_g14 < lp) {
-					p = arrP[_g14++];
-					arr2d[2 + arr2d[0] * (p.y + -2) + p.x | 0] = 1;
-				}
-				_this.removeFullRows();
-				hit = true;
-			}
-		}
-		var this1 = _this.inertArr;
-		var w = this1[0];
-		var s = 2 + w * 0 | 0;
-		var e = s + w;
-		var emp = true;
-		var _g15 = s;
-		while(_g15 < e) if(this1[_g15++] == 1) {
-			emp = false;
-			break;
-		}
-		var end = !emp;
-		if(end) {
-			_this.onGameEnd();
-		}
-		if(_this.onTetrisShapeLanded != null && hit && !end) {
-			_this.onTetrisShapeLanded();
-		}
-		if(!hit) {
-			var _this1 = this.rotation;
-			if(_this1.toggle) {
-				var _this2 = _this1.controller;
-				var theta = Math.PI / _this1.rotationSpeed;
-				var l3 = _this2.shapes.length;
-				var _g16 = 0;
-				while(_g16 < l3) _this2.shapes[_g16++].rotate(theta);
-			}
-			if(_this1.count % (_this1.rotationSpeed / 2) == 0.) {
-				_this1.count = 0.;
-				_this1.toggle = false;
-			}
-			_this1.count += 1.;
-			var _this3 = this.movement;
-			var djx = 0.;
-			var djy = 0.;
-			if(_this3.toggleX) {
-				if(_this3.jumpX > 0) {
-					djx = _this3.jumpX / _this3.jumpSpeed;
-					if((_this3.jx += djx) > _this3.jumpX + djx / 2) {
-						_this3.toggleX = false;
-						_this3.jx = 0.;
-						djx = 0.;
-					}
-				} else {
-					djx = _this3.jumpX / _this3.jumpSpeed;
-					if((_this3.jx += djx) < _this3.jumpX + djx / 2) {
-						_this3.toggleX = false;
-						_this3.jx = 0.;
-						djx = 0.;
-					}
-				}
-			}
-			if(_this3.toggleY) {
-				if(_this3.jumpY > 0) {
-					djy = _this3.jumpY / _this3.jumpSpeed;
-					if((_this3.jy += djy) > _this3.jumpY + djy / 2) {
-						_this3.toggleY = false;
-						_this3.jy = 0.;
-						djy = 0.;
-					}
-				} else {
-					djy = _this3.jumpY / _this3.jumpSpeed;
-					if((_this3.jy += djx) < _this3.jumpY + djy / 2) {
-						_this3.toggleY = false;
-						_this3.jy = 0.;
-						djy = 0.;
-					}
-				}
-			}
-			if(_this3.toggleX) {
-				var _this4 = _this3.controller;
-				var leftStop = _this3.leftStop;
-				var rightStop = _this3.rightStop;
-				var l4 = _this4.shapes.length;
-				var shape1;
-				var _g17 = 0;
-				while(_g17 < l4) {
-					shape1 = _this4.shapes[_g17++];
-					if(shape1.blocks != null && shape1.blocks.length != 0) {
-						var sqr = shape1.blocks;
-						var sides0;
-						if(sqr == null) {
-							sides0 = null;
-						} else if(sqr.length == 0) {
-							sides0 = null;
-						} else {
-							var l5 = sqr.length;
-							var square = sqr[0];
-							var bx = square.get_x();
-							var br = square.get_right();
-							var _g18 = 1;
-							while(_g18 < l5) {
-								square = sqr[_g18++];
-								bx = Math.min(bx,square.get_x());
-								br = Math.max(br,square.get_right());
-							}
-							sides0 = { x : bx, right : br};
-						}
-						var sqr1 = shape1.virtualBlocks;
-						var sides1;
-						if(sqr1 == null) {
-							sides1 = null;
-						} else if(sqr1.length == 0) {
-							sides1 = null;
-						} else {
-							var l6 = sqr1.length;
-							var square1 = sqr1[0];
-							var bx1 = square1.get_x();
-							var br1 = square1.get_right();
-							var _g19 = 1;
-							while(_g19 < l6) {
-								square1 = sqr1[_g19++];
-								bx1 = Math.min(bx1,square1.get_x());
-								br1 = Math.max(br1,square1.get_right());
-							}
-							sides1 = { x : bx1, right : br1};
-						}
-						var sides = { x : Math.min(sides0.x,sides1.x), right : Math.max(sides0.right,sides1.right)};
-						if(sides != null) {
-							if(djx < 0) {
-								if(sides.x + djx > leftStop) {
-									shape1.moveX(djx);
-								} else {
-									shape1.moveX(leftStop - sides.x);
-								}
-							} else if(djx > 0) {
-								if(sides.right + djx < rightStop) {
-									shape1.moveX(djx);
-								} else {
-									shape1.moveX(rightStop - sides.right);
-								}
-							}
-						}
-					}
-				}
-			}
-			var _this5 = _this3.controller;
-			var y = _this3.fallSpeed + djy;
-			var l7 = _this5.shapes.length;
-			var _g110 = 0;
-			while(_g110 < l7) _this5.shapes[_g110++].moveDelta(0.0,y);
-		}
-	}
-	,rotate: function(i) {
-		var _this = this.rotation;
-		if(!_this.toggle) {
-			_this.toggle = true;
-			_this.count = 1.0;
-		}
-	}
-	,move: function(x,y) {
-		var _this = this.movement;
-		if(!_this.toggleX) {
-			if(!_this.toggleY) {
-				if(x != 0) {
-					_this.toggleX = true;
-				}
-				if(y != 0) {
-					_this.toggleY = true;
-				}
-				_this.jumpX = x * _this.dia;
-				_this.jumpY = y * _this.dia;
-			}
-		}
-	}
-	,__class__: tetrisTriangles_game_Tetris
-};
-var tetrisTriangles_test_Arr2DTest = function() {
+var polyominoTriangles_test_Arr2DTest = function() {
 	haxe_unit_TestCase.call(this);
 };
-tetrisTriangles_test_Arr2DTest.__name__ = ["tetrisTriangles","test","Arr2DTest"];
-tetrisTriangles_test_Arr2DTest.UnitTest = function() {
+polyominoTriangles_test_Arr2DTest.__name__ = ["polyominoTriangles","test","Arr2DTest"];
+polyominoTriangles_test_Arr2DTest.UnitTest = function() {
 	var r = new haxe_unit_TestRunner();
-	haxe_Log.trace("Running unit test",{ fileName : "Arr2DTest.hx", lineNumber : 8, className : "tetrisTriangles.test.Arr2DTest", methodName : "UnitTest"});
-	r.add(new tetrisTriangles_test_Arr2DTest());
+	haxe_Log.trace("Running unit test",{ fileName : "Arr2DTest.hx", lineNumber : 8, className : "polyominoTriangles.test.Arr2DTest", methodName : "UnitTest"});
+	r.add(new polyominoTriangles_test_Arr2DTest());
 	r.run();
-	haxe_Log.trace(r,{ fileName : "Arr2DTest.hx", lineNumber : 11, className : "tetrisTriangles.test.Arr2DTest", methodName : "UnitTest"});
+	haxe_Log.trace(r,{ fileName : "Arr2DTest.hx", lineNumber : 11, className : "polyominoTriangles.test.Arr2DTest", methodName : "UnitTest"});
 };
-tetrisTriangles_test_Arr2DTest.__super__ = haxe_unit_TestCase;
-tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,{
+polyominoTriangles_test_Arr2DTest.__super__ = haxe_unit_TestCase;
+polyominoTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,{
 	filledArr2D: null
 	,emptyArr2D: null
 	,testClear: function() {
@@ -9797,11 +9798,11 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			}
 			_g[0] = w;
 			_g[1] = h;
-			v = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
+			v = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
 		}
 		this1 = v;
 		this.filledArr2D = this1;
-		this.assertTrue(this.filledArr2D.toString() == this.emptyArr2D.toString(),{ fileName : "Arr2DTest.hx", lineNumber : 15, className : "tetrisTriangles.test.Arr2DTest", methodName : "testClear"});
+		this.assertTrue(this.filledArr2D.toString() == this.emptyArr2D.toString(),{ fileName : "Arr2DTest.hx", lineNumber : 15, className : "polyominoTriangles.test.Arr2DTest", methodName : "testClear"});
 	}
 	,testFill: function() {
 		var this1 = this.emptyArr2D;
@@ -9811,23 +9812,23 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			this1[i] = 1;
 			++i;
 		}
-		this.assertTrue(this.filledArr2D.toString() == this.emptyArr2D.toString(),{ fileName : "Arr2DTest.hx", lineNumber : 19, className : "tetrisTriangles.test.Arr2DTest", methodName : "testFill"});
+		this.assertTrue(this.filledArr2D.toString() == this.emptyArr2D.toString(),{ fileName : "Arr2DTest.hx", lineNumber : 19, className : "polyominoTriangles.test.Arr2DTest", methodName : "testFill"});
 	}
 	,testAddOne: function() {
 		var this1 = this.emptyArr2D;
 		this1[2 + this1[0] * 0 | 0] = 1;
 		var this2 = this.emptyArr2D;
-		this.assertTrue(this2[2 + this2[0] * 0 | 0] == 1,{ fileName : "Arr2DTest.hx", lineNumber : 23, className : "tetrisTriangles.test.Arr2DTest", methodName : "testAddOne"});
+		this.assertTrue(this2[2 + this2[0] * 0 | 0] == 1,{ fileName : "Arr2DTest.hx", lineNumber : 23, className : "polyominoTriangles.test.Arr2DTest", methodName : "testAddOne"});
 		var this3 = this.emptyArr2D;
-		this.assertFalse(this3[2 + this3[0] | 0] == 1,{ fileName : "Arr2DTest.hx", lineNumber : 24, className : "tetrisTriangles.test.Arr2DTest", methodName : "testAddOne"});
+		this.assertFalse(this3[2 + this3[0] | 0] == 1,{ fileName : "Arr2DTest.hx", lineNumber : 24, className : "polyominoTriangles.test.Arr2DTest", methodName : "testAddOne"});
 	}
 	,testAddZero: function() {
 		var this1 = this.filledArr2D;
 		this1[2 + this1[0] * 0 | 0] = 0;
 		var this2 = this.filledArr2D;
-		this.assertTrue(this2[2 + this2[0] * 0 | 0] == 0,{ fileName : "Arr2DTest.hx", lineNumber : 28, className : "tetrisTriangles.test.Arr2DTest", methodName : "testAddZero"});
+		this.assertTrue(this2[2 + this2[0] * 0 | 0] == 0,{ fileName : "Arr2DTest.hx", lineNumber : 28, className : "polyominoTriangles.test.Arr2DTest", methodName : "testAddZero"});
 		var this3 = this.filledArr2D;
-		this.assertFalse(this3[2 + this3[0] | 0] == 0,{ fileName : "Arr2DTest.hx", lineNumber : 29, className : "tetrisTriangles.test.Arr2DTest", methodName : "testAddZero"});
+		this.assertFalse(this3[2 + this3[0] | 0] == 0,{ fileName : "Arr2DTest.hx", lineNumber : 29, className : "polyominoTriangles.test.Arr2DTest", methodName : "testAddZero"});
 	}
 	,testIsZero: function() {
 		var _g = 0;
@@ -9837,9 +9838,9 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			while(_g1 < 3) {
 				var ix = _g1++;
 				var this1 = this.emptyArr2D;
-				this.assertTrue(this1[2 + this1[0] * iy + ix | 0] == 0,{ fileName : "Arr2DTest.hx", lineNumber : 34, className : "tetrisTriangles.test.Arr2DTest", methodName : "testIsZero"});
+				this.assertTrue(this1[2 + this1[0] * iy + ix | 0] == 0,{ fileName : "Arr2DTest.hx", lineNumber : 34, className : "polyominoTriangles.test.Arr2DTest", methodName : "testIsZero"});
 				var this2 = this.filledArr2D;
-				this.assertFalse(this2[2 + this2[0] * iy + ix | 0] == 0,{ fileName : "Arr2DTest.hx", lineNumber : 35, className : "tetrisTriangles.test.Arr2DTest", methodName : "testIsZero"});
+				this.assertFalse(this2[2 + this2[0] * iy + ix | 0] == 0,{ fileName : "Arr2DTest.hx", lineNumber : 35, className : "polyominoTriangles.test.Arr2DTest", methodName : "testIsZero"});
 			}
 		}
 	}
@@ -9851,14 +9852,14 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			while(_g1 < 3) {
 				var ix = _g1++;
 				var this1 = this.emptyArr2D;
-				this.assertFalse(this1[2 + this1[0] * iy + ix | 0] == 1,{ fileName : "Arr2DTest.hx", lineNumber : 42, className : "tetrisTriangles.test.Arr2DTest", methodName : "testIsOne"});
+				this.assertFalse(this1[2 + this1[0] * iy + ix | 0] == 1,{ fileName : "Arr2DTest.hx", lineNumber : 42, className : "polyominoTriangles.test.Arr2DTest", methodName : "testIsOne"});
 				var this2 = this.filledArr2D;
-				this.assertTrue(this2[2 + this2[0] * iy + ix | 0] == 1,{ fileName : "Arr2DTest.hx", lineNumber : 43, className : "tetrisTriangles.test.Arr2DTest", methodName : "testIsOne"});
+				this.assertTrue(this2[2 + this2[0] * iy + ix | 0] == 1,{ fileName : "Arr2DTest.hx", lineNumber : 43, className : "polyominoTriangles.test.Arr2DTest", methodName : "testIsOne"});
 			}
 		}
 	}
 	,testLength: function() {
-		this.assertTrue(this.filledArr2D.length == 11,{ fileName : "Arr2DTest.hx", lineNumber : 48, className : "tetrisTriangles.test.Arr2DTest", methodName : "testLength"});
+		this.assertTrue(this.filledArr2D.length == 11,{ fileName : "Arr2DTest.hx", lineNumber : 48, className : "polyominoTriangles.test.Arr2DTest", methodName : "testLength"});
 	}
 	,testRowFull: function() {
 		var _g = 0;
@@ -9880,7 +9881,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 				ful = false;
 				break;
 			}
-			this.assertTrue(ful,{ fileName : "Arr2DTest.hx", lineNumber : 55, className : "tetrisTriangles.test.Arr2DTest", methodName : "testRowFull"});
+			this.assertTrue(ful,{ fileName : "Arr2DTest.hx", lineNumber : 55, className : "polyominoTriangles.test.Arr2DTest", methodName : "testRowFull"});
 			this.setup();
 		}
 		var _g2 = 0;
@@ -9902,7 +9903,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 				ful1 = false;
 				break;
 			}
-			this.assertFalse(ful1,{ fileName : "Arr2DTest.hx", lineNumber : 62, className : "tetrisTriangles.test.Arr2DTest", methodName : "testRowFull"});
+			this.assertFalse(ful1,{ fileName : "Arr2DTest.hx", lineNumber : 62, className : "polyominoTriangles.test.Arr2DTest", methodName : "testRowFull"});
 			this.setup();
 		}
 	}
@@ -9927,7 +9928,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			ful = false;
 			break;
 		}
-		this.assertTrue(ful,{ fileName : "Arr2DTest.hx", lineNumber : 68, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMoveRow"});
+		this.assertTrue(ful,{ fileName : "Arr2DTest.hx", lineNumber : 68, className : "polyominoTriangles.test.Arr2DTest", methodName : "testMoveRow"});
 		var this3 = this.filledArr2D;
 		var w2 = this3[0];
 		var s1 = 2 + w2 | 0;
@@ -9938,7 +9939,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			ful1 = false;
 			break;
 		}
-		this.assertFalse(ful1,{ fileName : "Arr2DTest.hx", lineNumber : 69, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMoveRow"});
+		this.assertFalse(ful1,{ fileName : "Arr2DTest.hx", lineNumber : 69, className : "polyominoTriangles.test.Arr2DTest", methodName : "testMoveRow"});
 		var this4 = this.filledArr2D;
 		var w3 = this4[0];
 		var s2 = 2 + w3 * 2 | 0;
@@ -9949,7 +9950,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			ful2 = false;
 			break;
 		}
-		this.assertTrue(ful2,{ fileName : "Arr2DTest.hx", lineNumber : 70, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMoveRow"});
+		this.assertTrue(ful2,{ fileName : "Arr2DTest.hx", lineNumber : 70, className : "polyominoTriangles.test.Arr2DTest", methodName : "testMoveRow"});
 	}
 	,testCopyRow: function() {
 		var this1 = this.emptyArr2D;
@@ -9977,7 +9978,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			ful = false;
 			break;
 		}
-		this.assertFalse(ful,{ fileName : "Arr2DTest.hx", lineNumber : 77, className : "tetrisTriangles.test.Arr2DTest", methodName : "testCopyRow"});
+		this.assertFalse(ful,{ fileName : "Arr2DTest.hx", lineNumber : 77, className : "polyominoTriangles.test.Arr2DTest", methodName : "testCopyRow"});
 		var this6 = this.emptyArr2D;
 		var w2 = this6[0];
 		var s1 = 2 + w2 | 0;
@@ -9988,7 +9989,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			ful1 = false;
 			break;
 		}
-		this.assertTrue(ful1,{ fileName : "Arr2DTest.hx", lineNumber : 78, className : "tetrisTriangles.test.Arr2DTest", methodName : "testCopyRow"});
+		this.assertTrue(ful1,{ fileName : "Arr2DTest.hx", lineNumber : 78, className : "polyominoTriangles.test.Arr2DTest", methodName : "testCopyRow"});
 		var this7 = this.emptyArr2D;
 		var w3 = this7[0];
 		var s2 = 2 + w3 * 2 | 0;
@@ -9999,7 +10000,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			ful2 = false;
 			break;
 		}
-		this.assertTrue(ful2,{ fileName : "Arr2DTest.hx", lineNumber : 79, className : "tetrisTriangles.test.Arr2DTest", methodName : "testCopyRow"});
+		this.assertTrue(ful2,{ fileName : "Arr2DTest.hx", lineNumber : 79, className : "polyominoTriangles.test.Arr2DTest", methodName : "testCopyRow"});
 	}
 	,testOneRow: function() {
 		var this1 = this.emptyArr2D;
@@ -10017,7 +10018,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			ful = false;
 			break;
 		}
-		this.assertTrue(ful,{ fileName : "Arr2DTest.hx", lineNumber : 83, className : "tetrisTriangles.test.Arr2DTest", methodName : "testOneRow"});
+		this.assertTrue(ful,{ fileName : "Arr2DTest.hx", lineNumber : 83, className : "polyominoTriangles.test.Arr2DTest", methodName : "testOneRow"});
 	}
 	,testZeroRow: function() {
 		var this1 = this.filledArr2D;
@@ -10035,7 +10036,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			emp = false;
 			break;
 		}
-		this.assertTrue(emp,{ fileName : "Arr2DTest.hx", lineNumber : 87, className : "tetrisTriangles.test.Arr2DTest", methodName : "testZeroRow"});
+		this.assertTrue(emp,{ fileName : "Arr2DTest.hx", lineNumber : 87, className : "polyominoTriangles.test.Arr2DTest", methodName : "testZeroRow"});
 	}
 	,testRemoveRowsUnshift0: function() {
 		var this1 = this.filledArr2D;
@@ -10073,7 +10074,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			emp = false;
 			break;
 		}
-		this.assertTrue(emp,{ fileName : "Arr2DTest.hx", lineNumber : 93, className : "tetrisTriangles.test.Arr2DTest", methodName : "testRemoveRowsUnshift0"});
+		this.assertTrue(emp,{ fileName : "Arr2DTest.hx", lineNumber : 93, className : "polyominoTriangles.test.Arr2DTest", methodName : "testRemoveRowsUnshift0"});
 		var this5 = this.filledArr2D;
 		var w3 = this5[0];
 		var s2 = 2 + w3 | 0;
@@ -10084,7 +10085,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			emp1 = false;
 			break;
 		}
-		this.assertTrue(emp1,{ fileName : "Arr2DTest.hx", lineNumber : 94, className : "tetrisTriangles.test.Arr2DTest", methodName : "testRemoveRowsUnshift0"});
+		this.assertTrue(emp1,{ fileName : "Arr2DTest.hx", lineNumber : 94, className : "polyominoTriangles.test.Arr2DTest", methodName : "testRemoveRowsUnshift0"});
 		var this6 = this.filledArr2D;
 		var w4 = this6[0];
 		var s3 = 2 + w4 * 2 | 0;
@@ -10095,7 +10096,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			ful = false;
 			break;
 		}
-		this.assertTrue(ful,{ fileName : "Arr2DTest.hx", lineNumber : 95, className : "tetrisTriangles.test.Arr2DTest", methodName : "testRemoveRowsUnshift0"});
+		this.assertTrue(ful,{ fileName : "Arr2DTest.hx", lineNumber : 95, className : "polyominoTriangles.test.Arr2DTest", methodName : "testRemoveRowsUnshift0"});
 	}
 	,testClash: function() {
 		var this1 = this.emptyArr2D;
@@ -10117,7 +10118,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 				break;
 			}
 		}
-		this.assertFalse(clash,{ fileName : "Arr2DTest.hx", lineNumber : 102, className : "tetrisTriangles.test.Arr2DTest", methodName : "testClash"});
+		this.assertFalse(clash,{ fileName : "Arr2DTest.hx", lineNumber : 102, className : "polyominoTriangles.test.Arr2DTest", methodName : "testClash"});
 		var this5 = this.emptyArr2D;
 		this5[2 + this5[0] * 0 | 0] = 1;
 		var this6 = this.emptyArr2D;
@@ -10137,7 +10138,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 				break;
 			}
 		}
-		this.assertTrue(clash1,{ fileName : "Arr2DTest.hx", lineNumber : 107, className : "tetrisTriangles.test.Arr2DTest", methodName : "testClash"});
+		this.assertTrue(clash1,{ fileName : "Arr2DTest.hx", lineNumber : 107, className : "polyominoTriangles.test.Arr2DTest", methodName : "testClash"});
 	}
 	,testAddPoints: function() {
 		var a2 = [{ x : 0, y : 1},{ x : 1, y : 1},{ x : 2, y : 1}];
@@ -10159,7 +10160,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			ful = false;
 			break;
 		}
-		this.assertFalse(ful,{ fileName : "Arr2DTest.hx", lineNumber : 112, className : "tetrisTriangles.test.Arr2DTest", methodName : "testAddPoints"});
+		this.assertFalse(ful,{ fileName : "Arr2DTest.hx", lineNumber : 112, className : "polyominoTriangles.test.Arr2DTest", methodName : "testAddPoints"});
 		var this3 = this.emptyArr2D;
 		var w1 = this3[0];
 		var s1 = 2 + w1 | 0;
@@ -10170,7 +10171,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			ful1 = false;
 			break;
 		}
-		this.assertTrue(ful1,{ fileName : "Arr2DTest.hx", lineNumber : 113, className : "tetrisTriangles.test.Arr2DTest", methodName : "testAddPoints"});
+		this.assertTrue(ful1,{ fileName : "Arr2DTest.hx", lineNumber : 113, className : "polyominoTriangles.test.Arr2DTest", methodName : "testAddPoints"});
 		var this4 = this.emptyArr2D;
 		var w2 = this4[0];
 		var s2 = 2 + w2 * 2 | 0;
@@ -10181,7 +10182,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			ful2 = false;
 			break;
 		}
-		this.assertFalse(ful2,{ fileName : "Arr2DTest.hx", lineNumber : 114, className : "tetrisTriangles.test.Arr2DTest", methodName : "testAddPoints"});
+		this.assertFalse(ful2,{ fileName : "Arr2DTest.hx", lineNumber : 114, className : "polyominoTriangles.test.Arr2DTest", methodName : "testAddPoints"});
 	}
 	,testOverlap: function() {
 		var a = this.filledArr2D;
@@ -10203,7 +10204,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 				break;
 			}
 		}
-		this.assertFalse(overlapped,{ fileName : "Arr2DTest.hx", lineNumber : 117, className : "tetrisTriangles.test.Arr2DTest", methodName : "testOverlap"});
+		this.assertFalse(overlapped,{ fileName : "Arr2DTest.hx", lineNumber : 117, className : "polyominoTriangles.test.Arr2DTest", methodName : "testOverlap"});
 	}
 	,testID: function() {
 		var w = 4;
@@ -10226,20 +10227,20 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			}
 			_g[0] = w;
 			_g[1] = h;
-			v = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
+			v = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
 		}
 		this1 = v;
 		var a0 = this1;
 		a0[2 + a0[0] * 2 | 0] = 1;
 		a0[2 + a0[0] | 0] = 1;
-		this.assertTrue(a0.toString() == "4,3,0,0,0,0,1,0,0,0,1,0,0,0",{ fileName : "Arr2DTest.hx", lineNumber : 124, className : "tetrisTriangles.test.Arr2DTest", methodName : "testID"});
+		this.assertTrue(a0.toString() == "4,3,0,0,0,0,1,0,0,0,1,0,0,0",{ fileName : "Arr2DTest.hx", lineNumber : 124, className : "polyominoTriangles.test.Arr2DTest", methodName : "testID"});
 		var count = 2;
 		var _g1 = 0;
 		while(_g1 < 4) {
 			var y = _g1++;
 			var _g3 = 0;
 			while(_g3 < 3) {
-				this.assertTrue((2 + 3 * y + _g3++ | 0) == count,{ fileName : "Arr2DTest.hx", lineNumber : 130, className : "tetrisTriangles.test.Arr2DTest", methodName : "testID"});
+				this.assertTrue((2 + 3 * y + _g3++ | 0) == count,{ fileName : "Arr2DTest.hx", lineNumber : 130, className : "polyominoTriangles.test.Arr2DTest", methodName : "testID"});
 				++count;
 			}
 		}
@@ -10261,7 +10262,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			ful = false;
 			break;
 		}
-		this.assertTrue(ful,{ fileName : "Arr2DTest.hx", lineNumber : 139, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
+		this.assertTrue(ful,{ fileName : "Arr2DTest.hx", lineNumber : 139, className : "polyominoTriangles.test.Arr2DTest", methodName : "testMerge"});
 		var w1 = 3;
 		var h = 3;
 		var v = null;
@@ -10282,7 +10283,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			}
 			_g[0] = w1;
 			_g[1] = h;
-			v = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w1,h,_g);
+			v = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w1,h,_g);
 		}
 		this5 = v;
 		var a0 = this5;
@@ -10298,7 +10299,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			ful1 = false;
 			break;
 		}
-		this.assertTrue(ful1,{ fileName : "Arr2DTest.hx", lineNumber : 144, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
+		this.assertTrue(ful1,{ fileName : "Arr2DTest.hx", lineNumber : 144, className : "polyominoTriangles.test.Arr2DTest", methodName : "testMerge"});
 		var a = this.emptyArr2D;
 		var la = a.length;
 		if(la != a0.length) {
@@ -10317,7 +10318,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 				break;
 			}
 		}
-		this.assertFalse(overlapped,{ fileName : "Arr2DTest.hx", lineNumber : 145, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
+		this.assertFalse(overlapped,{ fileName : "Arr2DTest.hx", lineNumber : 145, className : "polyominoTriangles.test.Arr2DTest", methodName : "testMerge"});
 		var this6 = this.emptyArr2D;
 		var tmp;
 		var la1 = this6.length;
@@ -10352,7 +10353,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			}
 			tmp = true;
 		}
-		this.assertTrue(tmp,{ fileName : "Arr2DTest.hx", lineNumber : 146, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
+		this.assertTrue(tmp,{ fileName : "Arr2DTest.hx", lineNumber : 146, className : "polyominoTriangles.test.Arr2DTest", methodName : "testMerge"});
 		var this7 = this.emptyArr2D;
 		var w3 = this7[0];
 		var s2 = 2 + w3 * 0 | 0;
@@ -10363,7 +10364,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			ful2 = false;
 			break;
 		}
-		this.assertFalse(ful2,{ fileName : "Arr2DTest.hx", lineNumber : 147, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
+		this.assertFalse(ful2,{ fileName : "Arr2DTest.hx", lineNumber : 147, className : "polyominoTriangles.test.Arr2DTest", methodName : "testMerge"});
 		var this8 = this.emptyArr2D;
 		var w4 = this8[0];
 		var s3 = 2 + w4 | 0;
@@ -10374,7 +10375,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			ful3 = false;
 			break;
 		}
-		this.assertTrue(ful3,{ fileName : "Arr2DTest.hx", lineNumber : 148, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
+		this.assertTrue(ful3,{ fileName : "Arr2DTest.hx", lineNumber : 148, className : "polyominoTriangles.test.Arr2DTest", methodName : "testMerge"});
 		var this9 = this.emptyArr2D;
 		var w5 = this9[0];
 		var s4 = 2 + w5 * 2 | 0;
@@ -10385,7 +10386,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			ful4 = false;
 			break;
 		}
-		this.assertTrue(ful4,{ fileName : "Arr2DTest.hx", lineNumber : 149, className : "tetrisTriangles.test.Arr2DTest", methodName : "testMerge"});
+		this.assertTrue(ful4,{ fileName : "Arr2DTest.hx", lineNumber : 149, className : "polyominoTriangles.test.Arr2DTest", methodName : "testMerge"});
 	}
 	,testRowToString: function() {
 		var this1 = this.emptyArr2D;
@@ -10397,7 +10398,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 		var str = "\n";
 		var _g1 = s;
 		while(_g1 < e) str = str + this2[_g1++] + "  ";
-		this.assertTrue(str == "\n1  0  0  ",{ fileName : "Arr2DTest.hx", lineNumber : 154, className : "tetrisTriangles.test.Arr2DTest", methodName : "testRowToString"});
+		this.assertTrue(str == "\n1  0  0  ",{ fileName : "Arr2DTest.hx", lineNumber : 154, className : "polyominoTriangles.test.Arr2DTest", methodName : "testRowToString"});
 	}
 	,testPrettyString: function() {
 		var str = "\n1  0  0  " + "\n0  0  0  " + "\n0  0  0  ";
@@ -10416,7 +10417,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			while(_g11 < e) str2 = str2 + this2[_g11++] + "  ";
 			str1 += str2;
 		}
-		this.assertTrue(str1 == str,{ fileName : "Arr2DTest.hx", lineNumber : 161, className : "tetrisTriangles.test.Arr2DTest", methodName : "testPrettyString"});
+		this.assertTrue(str1 == str,{ fileName : "Arr2DTest.hx", lineNumber : 161, className : "polyominoTriangles.test.Arr2DTest", methodName : "testPrettyString"});
 	}
 	,setup: function() {
 		this.createfilledArr2D();
@@ -10440,7 +10441,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			}
 			_g[0] = w;
 			_g[1] = h;
-			v = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
+			v = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
 		}
 		this1 = v;
 		this.emptyArr2D = this1;
@@ -10466,7 +10467,7 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			}
 			_g[0] = w;
 			_g[1] = h;
-			v = tetrisTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
+			v = polyominoTriangles_game__$Arr2D_Arr2D_$Impl_$._new(w,h,_g);
 		}
 		this1 = v;
 		this.filledArr2D = this1;
@@ -10480,18 +10481,18 @@ tetrisTriangles_test_Arr2DTest.prototype = $extend(haxe_unit_TestCase.prototype,
 			}
 		}
 	}
-	,__class__: tetrisTriangles_test_Arr2DTest
+	,__class__: polyominoTriangles_test_Arr2DTest
 });
-var tetrisTriangles_test_UnitTest = function() {
+var polyominoTriangles_test_UnitTest = function() {
 	var r = new haxe_unit_TestRunner();
-	haxe_Log.trace("Running unit test",{ fileName : "UnitTest.hx", lineNumber : 6, className : "tetrisTriangles.test.UnitTest", methodName : "new"});
-	r.add(new tetrisTriangles_test_Arr2DTest());
+	haxe_Log.trace("Running unit test",{ fileName : "UnitTest.hx", lineNumber : 6, className : "polyominoTriangles.test.UnitTest", methodName : "new"});
+	r.add(new polyominoTriangles_test_Arr2DTest());
 	r.run();
-	haxe_Log.trace(r,{ fileName : "UnitTest.hx", lineNumber : 9, className : "tetrisTriangles.test.UnitTest", methodName : "new"});
+	haxe_Log.trace(r,{ fileName : "UnitTest.hx", lineNumber : 9, className : "polyominoTriangles.test.UnitTest", methodName : "new"});
 };
-tetrisTriangles_test_UnitTest.__name__ = ["tetrisTriangles","test","UnitTest"];
-tetrisTriangles_test_UnitTest.prototype = {
-	__class__: tetrisTriangles_test_UnitTest
+polyominoTriangles_test_UnitTest.__name__ = ["polyominoTriangles","test","UnitTest"];
+polyominoTriangles_test_UnitTest.prototype = {
+	__class__: polyominoTriangles_test_UnitTest
 };
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
@@ -10515,5 +10516,5 @@ justTriangles_Draw.circleSides = 60;
 justTriangles_ShapePoints.quadStep = 0.03;
 justTriangles_ShapePoints.cubicStep = 0.03;
 justTriangles_Triangle.triangles = [];
-tetrisTriangles_TetrisTrianglesSvg.main();
+polyominoTriangles_PolyominoTrianglesSvg.main();
 })(typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);

@@ -3,10 +3,10 @@
 	<!-- NMML reference: https://gist.github.com/1763850 -->
 	
 	<!-- metadata, make sure 'package' is at least 3 segments (ie. com.mycompany.myproject) -->
-	<meta title="Tetris Triangles" package="net.nanjizal.tetrisTriangles" version="1.0.0" company="Nanjizal" />
+	<meta title="Polyomino Triangles" package="net.nanjizal.polyominoTriangles" version="1.0.0" company="Nanjizal" />
 
 	<!-- output -->
-	<app main="tetrisTriangles.TetrisTrianglesFlash" path="../binNme" file="TetrisTrianglesFlash" />
+	<app main="polyominoTriangles.PolyominoTrianglesFlash" path="../binNme" file="PolyominoTrianglesFlash" />
 
 	<!-- window properties -->
 	<window background="#FFFFFF" fps="60" />
