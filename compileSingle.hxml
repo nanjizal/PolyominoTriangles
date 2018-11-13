@@ -2,9 +2,9 @@
 -cmd cd compile
 #-cmd haxe polyominoTrianglesLime.hxml
 #-cmd haxe polyominoTrianglesNME.hxml
-#-cmd haxe polyominoTrianglesHeapsWeb.hxml
+-cmd haxe polyominoTrianglesHeapsWeb.hxml
 #-cmd haxe polyominoTrianglesCanvas.hxml
 #-cmd haxe polyominoTrianglesWebGL.hxml
 #-cmd haxe polyominoTrianglesLuxeWeb.hxml
--cmd haxe polyominoTrianglesSVG.hxml
+#-cmd haxe polyominoTrianglesSVG.hxml
 #-cmd node Kha/make -t html5
