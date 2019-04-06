@@ -8,7 +8,7 @@ Simple experimental Haxe PolyominoTriangles, WIP
 
 - [NME jsprime -> ](https://nanjizal.github.io/PolyominoTriangles/binNme/jsprime/PolyominoTrianglesFlash/index.html?2)
 
-- [Luxe ->](https://nanjizal.github.io/PolyominoTriangles/web/index.html?2) 
+- [Luxe ->](https://nanjizal.github.io/PolyominoTriangles/binLuxe/web/index.html) 
 
 - [Heaps ->](https://nanjizal.github.io/PolyominoTriangles/binHeaps/index.html?2) 
 
